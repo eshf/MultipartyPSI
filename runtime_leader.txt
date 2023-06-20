@@ -1,0 +1,14 @@
+=========avg==========
+numParty: 5  numCorrupted: 2  setSize: 32  nTrials:1
+Leader Idx: 4
+#Output Intersection: 16
+#Expected Intersection: 16
+offlineTime:  1297 ms
+hashingTime:  0 ms
+getOPRFTime:  1 ms
+ssClientTime:  0 ms
+ssLeaderTime:  37 ms
+intersection:  0 ms
+onlineTime:  38 ms
+Total time: 1.335 s
+------------------
