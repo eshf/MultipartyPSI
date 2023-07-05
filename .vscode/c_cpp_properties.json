@@ -3,21 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/npsi/multipartypsi/**",
-                "${workspaceFolder}/npsi/multipartypsi/frontendapp/**",
-                "${workspaceFolder}/npsi/multipartypsi/cryptoTools/**",
-                "${workspaceFolder}/npsi/multipartypsi/frontend/**",
-                "${workspaceFolder}/npsi/multipartypsi/include/**",
-                "${workspaceFolder}/npsi/multipartypsi/lib/**",
-                "${workspaceFolder}/npsi/multipartypsi/libOPRF/**",
-                "${workspaceFolder}/npsi/multipartypsi/libOTe/**",
-                "${workspaceFolder}/npsi/multipartypsi/libPSI_Tests/**",
-                "${workspaceFolder}/npsi/multipartypsi/libPSI_TestsVS/**",
-                "${workspaceFolder}/npsi/multipartypsi/stdlib/**",
-                "${workspaceFolder}/npsi/multipartypsi/w64devkit/**",
-                "${workspaceFolder}/npsi/multipartypsi/bin/include/**",
-                "${workspaceFolder}/npsi/multipartypsi/thirdparty/**"
+                "${workspaceFolder}/**"
             ],
             "defines": ["VERSION=1"],
             "intelliSenseMode": "linux-gcc-x64",
@@ -25,7 +11,7 @@
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c99",
             "cppStandard": "c++98",
-            "configurationProvider": "ms-vscode.cpp-tools",
+            "configurationProvider": "ms-vscode.cpptools",
             "browse": {
                 "limitSymbolsToIncludedHeaders": true
             },
