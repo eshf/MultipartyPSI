@@ -2,7 +2,7 @@
 ### NPSI LIBRARY MAIN
 ########################################################################################################################
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.22)
 
 ########################################################################################################################
 ### PROJECT DESCRIPTION AND META INFO
@@ -10,10 +10,14 @@ cmake_minimum_required(VERSION 3.2)
 
 set(NPSI_PROJECT_NAME        "npsi")
 set(NPSI_PROJECT_DESCRIPTION "A simple norie project written in C++")
-set(NPSI_AUTHOR_DOMAIN       "https://github.com/eshf/npsi")
+set(NPSI_AUTHOR_DOMAIN       "https://github.com/eshf/MultipartyPSI")
 set(NPSI_VERSION_MAJOR       "0")
 set(NPSI_VERSION_MINOR       "0")
 set(NPSI_VERSION_PATCH       "1")
+
+set( CMAKE_CXX_STANDARD 11 )
+
+
 
 set(NPSI_VERSION
     "${NPSI_VERSION_MAJOR}.${NPSI_VERSION_MINOR}.${NPSI_VERSION_PATCH}")
@@ -24,23 +28,58 @@ set(NPSI_NAME_VERSION
 ### DECLARE PROJECT
 ########################################################################################################################
 
-project(${NPSI_PROJECT_NAME})
-
-
+project( HelloMPSI )
 
 #############################################
-#               Build frontend.exe           #
+#               Build app          #
 #############################################
 
+file(GLOB sourceFiles CONFIGURE_DEPENDS
+"*.h"
+"*.cpp"
+"*.sh"
+"*.sln"
+"*.json"
+"*.txt"
+"*.js"
+"*.h"
+"*.gch"
+"include/lib/*.a"
+"include/libOPRF/libOPRF.dir/Hashing/**"
+"include/libOPRF/libOPRF.dir/OPPRF/**"
+"include/libOPRF/OPPRF/*.cpp"
+"include/libOPRF/OPPRF/*.h"
+"include/libOTe/Base/*.h"
+"include/libOTe/Base/*.cpp"
+"include/libOTe/NChooseK/*.cpp"
+"include/libOTe/NChooseK/*.h"
+"include/libOTe/NChooseOne/*.cpp"
+"include/libOTe/NChooseOne/*.h"
+"include/libOTe/Tools/*.bin"
+"include/libOTe/Tools/*.txt"
+"include/libOTe/Tools/*.cpp"
+"include/libOTe/Tools/*.h"
+"include/libOTe/Tools/*.cpp"
+"include/libOTe/TwoChooseOne/*.h"
+"include/libOTe/TwoChooseOne/*.cpp"
+"include/NTL/.h"
+"thirdparty/linux/miracl/miracl/include/*.h"
+"thirdparty/linux/miracl/miracl/source/*.c"
+"thirdparty/linux/miracl/miracl/source/**"
+"thirdparty/linux/miracl/miracl/source/p1363/*.c"
+"thirdparty/linux/miracl/miracl/source/p1363/*.h"
+"thirdparty/linux/miracl/miracl_osmt/include/**"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/pairing/*.cpp"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/pairing/*.txt"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/pairing/*.c"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/pairing/*.h"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/*.cpp"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/*.txt"
+"thirdparty/linux/miracl/miracl_osmt/source/curve/*.h"
+"thirdparty/linux/miracl/miracl_osmt/source/p1363/*.c"
+"thirdparty/linux/miracl/miracl_osmt/source/p1363/*.h"
+"thirdparty/linux/ntl/doc/**"
+"thirdparty/linux/ntl/include/NTL/*.h"
+"thirdparty/linux/ntl/include/NTL/*.h")
 
-
-
-add_executable(npsimain ${FRONTEND_NPSI})
-
-
-#############################################
-#            Link our libraries             #
-#############################################
-#target_link_libraries(npsimain libPSI_Tests)
-target_link_libraries(npsimain libOPRF)
-target_link_libraries(npsimain libOTe)
+add_executable(mpsiApp ${sourceFiles})

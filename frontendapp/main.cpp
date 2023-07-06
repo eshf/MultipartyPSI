@@ -1,13 +1,17 @@
-using namespace std;
-using namespace osuCrypto;
+
 #include <iostream>
+#include "Network/BtChannel.h"
+#include "Network/BtEndpoint.h"
+
+using namespace std;
+#include "Common/Defines.h"
+using namespace osuCrypto;
+
 #include "OtBinMain.h"
 #include "bitPosition.h"
+
 #include <numeric>
 #include "Common/Log.h"
-#include "Common/Defines.h"
-#include "Network/BtEndpoint.h"
-#include "Network/BtChannel.h"
 //int miraclTestMain();
 
 
