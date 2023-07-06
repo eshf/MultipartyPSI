@@ -170,6 +170,7 @@ char Ky571[] = "0349DC807F4FBF374F4AEADE3BCA95314DD58CEC9F307A54FFC61EFC006D8A2C
 
 #endif
 
+extern "C"{
 void primemod(int bits, big p)
 {
     do {
@@ -1168,3 +1169,4 @@ int miraclTestMain()
 //    return 0;
 }
 
+}

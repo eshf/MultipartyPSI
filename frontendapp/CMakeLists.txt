@@ -33,7 +33,7 @@ project( HelloMPSI )
 #############################################
 #               Build app          #
 #############################################
-
+# "*" wildcard added to file types to include all files in the directory (recursive search for all file extensions in current folder and subdirectories)
 file(GLOB sourceFiles CONFIGURE_DEPENDS
 "*.h"
 "*.cpp"
@@ -62,7 +62,7 @@ file(GLOB sourceFiles CONFIGURE_DEPENDS
 "include/libOTe/Tools/*.cpp"
 "include/libOTe/TwoChooseOne/*.h"
 "include/libOTe/TwoChooseOne/*.cpp"
-"include/NTL/.h"
+"include/NTL/*.h"
 "thirdparty/linux/miracl/miracl/include/*.h"
 "thirdparty/linux/miracl/miracl/source/*.c"
 "thirdparty/linux/miracl/miracl/source/**"
@@ -80,6 +80,25 @@ file(GLOB sourceFiles CONFIGURE_DEPENDS
 "thirdparty/linux/miracl/miracl_osmt/source/p1363/*.h"
 "thirdparty/linux/ntl/doc/**"
 "thirdparty/linux/ntl/include/NTL/*.h"
-"thirdparty/linux/ntl/include/NTL/*.h")
+"thirdparty/linux/ntl/include/NTL/*.h"
+"frontend/*.cpp"
+"frontend/*.h"
+"frontend/*.txt"
+"cryptoTools/Common/*.h"
+"cryptoTools/Common/*.cpp"
+"cryptoTools/Crypto/*.cpp"
+"cryptoTools/Crypto/*.h"
+"cryptoTools/Crypto/*.hpp"
+"cryptoTools/asm/**"
+"cryptoTools/Network/*.cpp"
+"cryptoTools/Network/*.h"
+"cryptoTools/Network/*.txt"
+"libPSI_Tests/*.cpp"
+"libPSI_Tests/*.h"
+"libPSI_Tests/*.txt"
+"libPSI_TestsVS/*.cpp"
+"libPSI_TestsVS/*.cpp"
+""
+)
 
 add_executable(mpsiApp ${sourceFiles})

@@ -14,21 +14,21 @@
             nPSI
             <hr>
           </h2>
+          <p id="results"></p>
         </div>
-        <form class="form" action="appindex.js" method="post">
+        <form class="form" id="npsiForm" action="submitnpsi.js" method="post">
         <div class="labelTitle">No. of Parties
-        <input class="form-input" type="text" name="npsi" id="npsi" formaction="appindex.js" method="post">
-        <input type="radio" id="semiH" name="psimodel" value="semiH" formaction="appindex.js" method="post">
+        <input class="form-input" type="text" name="npsi" id="npsi" onsubmit="getFormData()">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" onsubmit="getFormData()">
         <label for="semiH">Semi Honest</label>
-        <input type="radio" id="augmented" name="psimodel" value="augmented" formaction="appindex.js" method="post">
+        <input type="radio" id="augmented" name="psimodel" value="augmented" onsubmit="getFormData()">
         <label for="augmented">Augmented</label>
-        <input type="radio" id="leader" name="role" value="leader" formaction="appindex.js" method="post">
+        <input type="radio" id="leader" name="role" value="leader" onsubmit="getFormData()">
         <label for="leader">Leader</label>
-        <input type="radio" id="member" name="role" value="member"formaction="appindex.js" method="post">
-
+        <input type="radio" id="member" name="role" value="member" onsubmit="getFormData()">
         <label for="member">Member</label>
         </div>
-        <input type="submit" formaction="appindex.js" method="post"></button>
+        <button type="submit" onclick="submitFormData()">Submit</button>
         </form>
       </div>
   </body>

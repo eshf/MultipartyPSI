@@ -20,7 +20,7 @@ using namespace osuCrypto;
 #include <set>
 
 
-
+extern "C"
 void Bit_Position_Test()
 {
 	u64 setSize = 32;

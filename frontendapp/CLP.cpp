@@ -4,7 +4,7 @@
 #include <string>
 
 
-
+extern "C"{
 
 
 void CLP::parse(int argc, char** argv)
@@ -196,3 +196,4 @@ std::string CLP::getString(std::vector<std::string> names, std::string failMessa
     throw CommandLineParserError();
 }
 
+}

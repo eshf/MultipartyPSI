@@ -21,6 +21,7 @@ using namespace osuCrypto;
 #include "bitPosition.h"
 #include <set>
 
+
 void Bit_Position_Test()
 {
 	u64 setSize = 32;
