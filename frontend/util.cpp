@@ -5,7 +5,7 @@ using namespace osuCrypto;
 #include "Common/ByteStream.h"
 #define tryCount 2
 
-
+extern "C"{
 void senderGetLatency(Channel& chl)
 {
 
@@ -75,4 +75,5 @@ void recverGetLatency(Channel& chl)
 
     chl.asyncSend(dummy, 1);
 
+}
 }
