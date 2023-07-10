@@ -1,7 +1,7 @@
 #include "CLP.h"
 #include <sstream>
 #include <iostream>
-
+#include <string>
 
 
 void CLP::parse(int argc, char** argv)
