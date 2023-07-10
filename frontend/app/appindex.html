@@ -14,7 +14,6 @@
             nPSI
             <hr>
           </h2>
-          <p id="results"></p>
         </div>
         <form class="form" id="npsiForm" action="getnpsi.js" method="post">
         <div class="labelTitle">No. of Parties
@@ -28,7 +27,9 @@
         <input type="radio" id="member" name="role" value="member" onsubmit="getFormData()">
         <label for="member">Member</label>
         </div>
-        <button type="submit" onclick="submitFormData()">Submit</button>
+        </form>
+         
+        <button type="submit" onchange="getnpsiForm()">Submit</button>
         </form>
       </div>
   </body>

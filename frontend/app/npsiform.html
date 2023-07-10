@@ -1,11 +1,16 @@
-function submitFormData() {
-  let form = document.getElementById("npsiForm");
-  form.submit();
-}
+<!DOCTYPE html>
+<html>
 
-function getnpsiForm()
-{
-    Module['onRuntimeInitialized'] = function() {
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MultipartyPSI Results</title>
+<head>
+</head>
+<body>
+    <script>
+  Module['onRuntimeInitialized'] = function() {
      
     console.log("wasm loaded ");
         
@@ -18,4 +23,7 @@ function getnpsiForm()
     ['bigint'], // argument types
     [myIdx], [setSize], [nTrials])); // arguments
   }
-}
+</script>
+</body>
+</html>
+
