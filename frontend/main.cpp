@@ -14,7 +14,6 @@ using namespace osuCrypto;
 #include "Common/Log.h"
 //int miraclTestMain();
 
-extern "C"{
 void usage(const char* argv0)
 {
 	std::cout << "Error! Please use:" << std::endl;
@@ -147,5 +146,4 @@ int main(int argc, char** argv)
 	}
 
 	return 0;
-}
 }

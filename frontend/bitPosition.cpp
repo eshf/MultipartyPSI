@@ -21,7 +21,7 @@ using namespace osuCrypto;
 #include "bitPosition.h"
 #include <set>
 
-extern "C"{
+
 void Bit_Position_Test()
 {
 	u64 setSize = 32;
@@ -273,5 +273,4 @@ void Channel_Test() {
 	}
 
 	ios.stop();
-}
 }

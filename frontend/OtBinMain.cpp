@@ -32,7 +32,7 @@ u64 opt = 0;
 
 bool isNTLThreadSafe = false;
 
-extern "C"{
+
 void Channel_test()
 {
 	std::string name("psi");
@@ -3909,7 +3909,7 @@ void OPPRFnt_EmptrySet_Test_Impl()
 
 }
 
-}
+
 //void OPPRF_EmptrySet_Test_Impl1()
 //{
 //	u64 setSize = 2 << 8, psiSecParam = 40, bitSize = 128;

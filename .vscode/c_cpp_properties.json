@@ -22,8 +22,8 @@
             "intelliSenseMode": "linux-gcc-x64",
             "windowsSdkVersion": "10.0.18362.0",
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c17",
-            "cppStandard": "c++20",
+            "cStandard": "c99",
+            "cppStandard": "c++98",
             "configurationProvider": "ms-vscode.cpptools",
             "browse": {
                 "limitSymbolsToIncludedHeaders": true
