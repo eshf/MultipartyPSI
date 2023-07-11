@@ -14,21 +14,21 @@
             nPSI
             <hr>
           </h2>
-          <p id="results"></p>
         </div>
-        <form class="form" id="npsiForm" action="submitnpsi.js" method="post">
+        <form class="form" action="getnpsi.js" method="post">
         <div class="labelTitle">No. of Parties
-        <input class="form-input" type="text" name="npsi" id="npsi" onsubmit="getFormData()">
-        <input type="radio" id="semiH" name="psimodel" value="semiH" onsubmit="getFormData()">
+        <input class="form-input" type="text" name="npsi" id="npsi" formaction="getnpsi.js" method="post">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" formaction="getnpsi.js" method="post">
         <label for="semiH">Semi Honest</label>
-        <input type="radio" id="augmented" name="psimodel" value="augmented" onsubmit="getFormData()">
+        <input type="radio" id="augmented" name="psimodel" value="augmented" formaction="getnpsi.js" method="post">
         <label for="augmented">Augmented</label>
-        <input type="radio" id="leader" name="role" value="leader" onsubmit="getFormData()">
+        <input type="radio" id="leader" name="role" value="leader" formaction="getnspi.js" method="post">
         <label for="leader">Leader</label>
-        <input type="radio" id="member" name="role" value="member" onsubmit="getFormData()">
+        <input type="radio" id="member" name="role" value="member"formaction="getnpsi.js" method="post">
+
         <label for="member">Member</label>
         </div>
-        <button type="submit" onclick="submitFormData()">Submit</button>
+        <input type="submit" formaction="getnpsi.js" method="post"></button>
         </form>
       </div>
   </body>

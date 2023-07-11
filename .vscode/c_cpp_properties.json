@@ -3,7 +3,20 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/MultipartyPSI/**",
+                "${workspaceFolder}/MultipartyPSI/cryptoTools/**",
+                "${workspaceFolder}/MultipartyPSI/frontend/**",
+                "${workspaceFolder}/MultipartyPSI/include/**",
+                "${workspaceFolder}/MultipartyPSI/lib/**",
+                "${workspaceFolder}/MultipartyPSI/libOPRF/**",
+                "${workspaceFolder}/MultipartyPSI/libOTe/**",
+                "${workspaceFolder}/MultipartyPSI/libPSI_Tests/**",
+                "${workspaceFolder}/MultipartyPSI/libPSI_TestsVS/**",
+                "${workspaceFolder}/MultipartyPSI/stdlib/**",
+                "${workspaceFolder}/MultipartyPSI/w64devkit/**",
+                "${workspaceFolder}/MultipartyPSI/bin/include/**",
+                "${workspaceFolder}/MultipartyPSI/thirdparty/**"
             ],
             "defines": ["VERSION=1"],
             "intelliSenseMode": "linux-gcc-x64",
