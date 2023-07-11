@@ -11,7 +11,6 @@ include_directories(lib)
 ########################################################################################################################
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/app")
-add_executable(a ${SOURCES})
 
 set( CMAKE_CXX_STANDARD 11 )
 set(NPSI_PROJECT_NAME        "npsi")
@@ -31,6 +30,7 @@ set(NPSI_VERSION
     "${NPSI_VERSION_MAJOR}.${NPSI_VERSION_MINOR}.${NPSI_VERSION_PATCH}")
 set(NPSI_NAME_VERSION
     "${NPSI_PROJECT_NAME} v${NPSI_VERSION} (${NPSI_VERSION_REVISION})")
+
 
 ########################################################################################################################
 ### DECLARE PROJECT
