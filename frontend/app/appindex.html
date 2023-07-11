@@ -1,6 +1,56 @@
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:frontend/app/appindex.html
 <!DOCTYPE html>
 <html>
   <head>
+=======
+<html>
+  <head>
+    <meta charset="utf-8">
+>>>>>>> Stashed changes
+    <title>Title of the document</title>
+         
+    <link rel="stylesheet" href="styles.css">
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="title">
+          <h2>
+            nPSI
+            <hr>
+          </h2>
+<<<<<<< Updated upstream
+        </div>
+        <form class="form" id="npsiForm" action="getnpsi.js" method="post">
+=======
+          <p id="results"></p>
+        </div>
+        <form class="form" id="npsiForm" action="submitnpsi.js" method="post">
+>>>>>>> Stashed changes
+        <div class="labelTitle">No. of Parties
+        <input class="form-input" type="text" name="npsi" id="npsi" onsubmit="getFormData()">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" onsubmit="getFormData()">
+        <label for="semiH">Semi Honest</label>
+        <input type="radio" id="augmented" name="psimodel" value="augmented" onsubmit="getFormData()">
+        <label for="augmented">Augmented</label>
+        <input type="radio" id="leader" name="role" value="leader" onsubmit="getFormData()">
+        <label for="leader">Leader</label>
+        <input type="radio" id="member" name="role" value="member" onsubmit="getFormData()">
+        <label for="member">Member</label>
+        </div>
+<<<<<<< Updated upstream
+        </form>
+         
+        <button type="submit" onchange="getnpsiForm()">Submit</button>
+        </form>
+      </div>
+  </body>
+========
+<html>
+  <head>
+    <meta charset="utf-8">
     <title>Title of the document</title>
          
     <link rel="stylesheet" href="styles.css">
@@ -15,22 +65,28 @@
             <hr>
           </h2>
         </div>
-        <form class="form" id="npsiForm" action="getnpsi.js" method="post">
+        <form class="form" action="getnpsi.js" method="post">
         <div class="labelTitle">No. of Parties
-        <input class="form-input" type="text" name="npsi" id="npsi" onsubmit="getFormData()">
-        <input type="radio" id="semiH" name="psimodel" value="semiH" onsubmit="getFormData()">
+        <input class="form-input" type="text" name="npsi" id="npsi" formaction="getnpsi.js" method="post">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" formaction="getnpsi.js" method="post">
         <label for="semiH">Semi Honest</label>
-        <input type="radio" id="augmented" name="psimodel" value="augmented" onsubmit="getFormData()">
+        <input type="radio" id="augmented" name="psimodel" value="augmented" formaction="getnpsi.js" method="post">
         <label for="augmented">Augmented</label>
-        <input type="radio" id="leader" name="role" value="leader" onsubmit="getFormData()">
+        <input type="radio" id="leader" name="role" value="leader" formaction="getnspi.js" method="post">
         <label for="leader">Leader</label>
-        <input type="radio" id="member" name="role" value="member" onsubmit="getFormData()">
+        <input type="radio" id="member" name="role" value="member"formaction="getnpsi.js" method="post">
+
         <label for="member">Member</label>
         </div>
-        </form>
-         
-        <button type="submit" onchange="getnpsiForm()">Submit</button>
+        <input type="submit" formaction="getnpsi.js" method="post"></button>
         </form>
       </div>
   </body>
+>>>>>>>> Stashed changes:frontend/appindex.html
+=======
+        <button type="submit" onclick="submitFormData()">Submit</button>
+        </form>
+      </div>
+  </body>
+>>>>>>> Stashed changes
 </html>
