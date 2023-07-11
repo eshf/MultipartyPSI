@@ -1,0 +1,12 @@
+=========avg==========
+numParty: 5  numCorrupted: 2  setSize: 32  nTrials:1
+Client Idx: 0
+offlineTime:  1298 ms
+hashingTime:  0 ms
+getOPRFTime:  3 ms
+ssClientTime:  2 ms
+ssLeaderTime:  0 ms
+intersection:  0 ms
+onlineTime:  5 ms
+Total time: 1.303 s
+------------------

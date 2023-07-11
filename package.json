@@ -1,0 +1,40 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "nan": "^2.17.0",
+    "no": "^0.0.1",
+    "nodemon": "^2.0.22",
+    "upgrade": "^1.1.0",
+    "yarn": "^1.22.19"
+  },
+  "name": "multipartypsi",
+  "description": "This is the implementation of our [CCS 2017](http://dl.acm.org/xxx)  paper: **Practical Multi-party Private Set Intersection from Symmetric-Key Techniques**[[ePrint](https://eprint.iacr.org/2017/xxx)].",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "multipartypsi": "bin/server.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osu-crypto/MultipartyPSI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/osu-crypto/MultipartyPSI/issues"
+  },
+  "homepage": "https://github.com/osu-crypto/MultipartyPSI#readme",
+  "devDependencies": {
+    "coffee-script": "^1.12.7"
+  },
+  "gypfile": true
+}
