@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)
 ﻿$uri = 'http://www.cryptopp.com/cryptopp563.zip'
 
 # Update this if needed
@@ -74,6 +77,7 @@ cd "$PWD\cryptopp"
 
 
 cd $startDir
+<<<<<<< HEAD
 =======
 ﻿$uri = 'http://www.cryptopp.com/cryptopp563.zip'
 
@@ -151,3 +155,5 @@ cd "$PWD\cryptopp"
 
 cd $startDir
 >>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)

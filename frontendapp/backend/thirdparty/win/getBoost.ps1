@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)
 ﻿$ErrorActionPreference = "Stop"
 
 $uri = 'https://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.zip/download'
@@ -53,6 +56,7 @@ cd ..
 If (Test-Path $destination){
 	Remove-Item $destination
 }
+<<<<<<< HEAD
 =======
 ﻿$ErrorActionPreference = "Stop"
 
@@ -109,3 +113,5 @@ If (Test-Path $destination){
 	Remove-Item $destination
 }
 >>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)

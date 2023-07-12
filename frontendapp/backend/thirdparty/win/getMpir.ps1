@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)
 ﻿
 # Update this if needed
 $MSBuild = 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
@@ -71,6 +74,7 @@ echo ""
 echo ""
 
 cd $startDir
+<<<<<<< HEAD
 =======
 ﻿
 # Update this if needed
@@ -145,3 +149,5 @@ echo ""
 
 cd $startDir
 >>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)

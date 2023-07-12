@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)
 /* gmpxx.h -- C++ class wrapper for GMP types.  -*- C++ -*-
 
 Copyright 2001, 2002, 2003, 2006, 2008, 2011, 2012 Free Software Foundation,
@@ -3610,6 +3613,7 @@ namespace std {
 #undef __GMPXX_CONSTANT
 
 #endif /* __GMP_PLUSPLUS__ */
+<<<<<<< HEAD
 =======
 /* gmpxx.h -- C++ class wrapper for GMP types.  -*- C++ -*-
 
@@ -7223,3 +7227,5 @@ namespace std {
 
 #endif /* __GMP_PLUSPLUS__ */
 >>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)

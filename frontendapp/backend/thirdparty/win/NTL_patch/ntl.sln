@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
@@ -27,6 +30,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
+<<<<<<< HEAD
 =======
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
@@ -57,3 +61,5 @@ Global
 	EndGlobalSection
 EndGlobal
 >>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
+=======
+>>>>>>> a5fd074d (commit 12.7.2023)
