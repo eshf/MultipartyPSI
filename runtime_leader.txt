@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 =========avg==========
 numParty: 5  numCorrupted: 2  setSize: 32  nTrials:1
 Leader Idx: 4
@@ -12,3 +13,19 @@ intersection:  0 ms
 onlineTime:  38 ms
 Total time: 1.335 s
 ------------------
+=======
+=========avg==========
+numParty: 5  numCorrupted: 2  setSize: 32  nTrials:1
+Leader Idx: 4
+#Output Intersection: 16
+#Expected Intersection: 16
+offlineTime:  1297 ms
+hashingTime:  0 ms
+getOPRFTime:  1 ms
+ssClientTime:  0 ms
+ssLeaderTime:  37 ms
+intersection:  0 ms
+onlineTime:  38 ms
+Total time: 1.335 s
+------------------
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)

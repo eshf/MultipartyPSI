@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 setSize: 32
 offlineTime:  4052 ms
 hashingTime:  15 ms
@@ -6,3 +7,13 @@ secretSharing:  166 ms
 intersection:  0 ms
 onlineTime:  255 ms
 Total time: 4.308 s
+=======
+setSize: 32
+offlineTime:  4052 ms
+hashingTime:  15 ms
+getOPRFTime:  74 ms
+secretSharing:  166 ms
+intersection:  0 ms
+onlineTime:  255 ms
+Total time: 4.308 s
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)

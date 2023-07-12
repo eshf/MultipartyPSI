@@ -1,0 +1,15 @@
+/home/norieprojects/MultipartyPSI/CMakeFiles/edit_cache.dir
+/home/norieprojects/MultipartyPSI/CMakeFiles/rebuild_cache.dir
+/home/norieprojects/MultipartyPSI/cryptoTools/CMakeFiles/sha_asm.dir
+/home/norieprojects/MultipartyPSI/cryptoTools/CMakeFiles/cryptoTools.dir
+/home/norieprojects/MultipartyPSI/cryptoTools/CMakeFiles/edit_cache.dir
+/home/norieprojects/MultipartyPSI/cryptoTools/CMakeFiles/rebuild_cache.dir
+/home/norieprojects/MultipartyPSI/libOTe/CMakeFiles/libOTe.dir
+/home/norieprojects/MultipartyPSI/libOTe/CMakeFiles/edit_cache.dir
+/home/norieprojects/MultipartyPSI/libOTe/CMakeFiles/rebuild_cache.dir
+/home/norieprojects/MultipartyPSI/libOPRF/CMakeFiles/libOPRF.dir
+/home/norieprojects/MultipartyPSI/libOPRF/CMakeFiles/edit_cache.dir
+/home/norieprojects/MultipartyPSI/libOPRF/CMakeFiles/rebuild_cache.dir
+/home/norieprojects/MultipartyPSI/frontend/CMakeFiles/frontend.exe.dir
+/home/norieprojects/MultipartyPSI/frontend/CMakeFiles/edit_cache.dir
+/home/norieprojects/MultipartyPSI/frontend/CMakeFiles/rebuild_cache.dir

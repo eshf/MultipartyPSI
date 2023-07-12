@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 #ifndef NTL_vec_long__H
 #define NTL_vec_long__H
@@ -11,3 +12,18 @@ typedef Vec<long> vec_long;
 NTL_CLOSE_NNS
 
 #endif
+=======
+
+#ifndef NTL_vec_long__H
+#define NTL_vec_long__H
+
+#include <NTL/vector.h>
+
+NTL_OPEN_NNS
+
+typedef Vec<long> vec_long;
+
+NTL_CLOSE_NNS
+
+#endif
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)

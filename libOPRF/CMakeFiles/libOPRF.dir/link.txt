@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 /usr/bin/ar qc ../lib/liblibOPRF.a CMakeFiles/libOPRF.dir/Hashing/BitPosition.cpp.o CMakeFiles/libOPRF.dir/Hashing/CuckooHasher1.cpp.o CMakeFiles/libOPRF.dir/Hashing/SimpleHasher1.cpp.o CMakeFiles/libOPRF.dir/OPPRF/OPPRFReceiver.cpp.o CMakeFiles/libOPRF.dir/OPPRF/OPPRFSender.cpp.o CMakeFiles/libOPRF.dir/OPPRF/binSet.cpp.o
 /usr/bin/ranlib ../lib/liblibOPRF.a
+=======
+/usr/bin/ar qc ../lib/liblibOPRF.a CMakeFiles/libOPRF.dir/Hashing/BitPosition.cpp.o CMakeFiles/libOPRF.dir/Hashing/CuckooHasher1.cpp.o CMakeFiles/libOPRF.dir/Hashing/SimpleHasher1.cpp.o CMakeFiles/libOPRF.dir/OPPRF/OPPRFReceiver.cpp.o CMakeFiles/libOPRF.dir/OPPRF/OPPRFSender.cpp.o CMakeFiles/libOPRF.dir/OPPRF/binSet.cpp.o
+/usr/bin/ranlib ../lib/liblibOPRF.a
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)

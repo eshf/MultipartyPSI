@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
 	"folders": [
 		{
@@ -7,4 +8,15 @@
 	"settings": {
 		"csharpextensions.includeNamespaces": true
 	}
+=======
+{
+	"folders": [
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {
+		"csharpextensions.includeNamespaces": true
+	}
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
 }

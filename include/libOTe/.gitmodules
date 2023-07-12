@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 [submodule "cryptoTools"]
 	path = cryptoTools
 	url = https://github.com/ladnir/cryptoTools.git
+=======
+[submodule "cryptoTools"]
+	path = cryptoTools
+	url = https://github.com/ladnir/cryptoTools.git
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)

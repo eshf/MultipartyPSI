@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
   <head>
@@ -33,4 +34,41 @@
         </form>
       </div>
   </body>
+=======
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the document</title>
+         
+    <link rel="stylesheet" href="styles.css">
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="title">
+          <h2>
+            nPSI
+            <hr>
+          </h2>
+        </div>
+        <form class="form" id="npsiForm" action="getnpsi.js" method="post">
+        <div class="labelTitle">No. of Parties
+        <input class="form-input" type="text" name="npsi" id="npsi" onsubmit="getFormData()">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" onsubmit="getFormData()">
+        <label for="semiH">Semi Honest</label>
+        <input type="radio" id="augmented" name="psimodel" value="augmented" onsubmit="getFormData()">
+        <label for="augmented">Augmented</label>
+        <input type="radio" id="leader" name="role" value="leader" onsubmit="getFormData()">
+        <label for="leader">Leader</label>
+        <input type="radio" id="member" name="role" value="member" onsubmit="getFormData()">
+        <label for="member">Member</label>
+        </div>
+        </form>
+         
+        <button type="submit" onchange="getnpsiForm()">Submit</button>
+        </form>
+      </div>
+  </body>
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
 </html>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Object files
 *.o
 
@@ -15,3 +16,22 @@
 *.exe
 *.out
 *.app
+=======
+# Object files
+*.o
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+>>>>>>> 3c6e9e06 (Merge pull request #9 from eshf/norieworks)
