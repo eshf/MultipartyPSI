@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MultipartyPSI Results</title>
+<head>
+</head>
+<body>
+    <script type="text/javascript">
+        !function(e, t){
+            console.log("Loading client...");
+            var n = "getnpsi.wasm.js";
+            if(!e.WebAssembly){
+                n = "getnpsi.js"
+            }
+            console.log("Script set to " + n);
+            var o = t.createElement("script");
+            o.async = !0, o.type = "text/javascript", o.src = n, o.onerror = function(t) {
+                console.error("Script Error"), console.error(t), setTimeout(function() {
+                    e.location.reload(!0)
+                }, 3e3)
+            };
+            var r = t.getElementsByTagName("script")[0];
+            r.parentNode.insertBefore(o, r)
+        }(window, document);
+</script>
+</body>
+</html>
+
