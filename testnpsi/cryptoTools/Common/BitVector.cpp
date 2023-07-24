@@ -1,8 +1,6 @@
 #include "BitVector.h"
 #include <sstream>
 #include <cstring>
-
-
 namespace osuCrypto {
 
 

@@ -1,8 +1,8 @@
 #include <string.h>
 
-
+#include "ByteStream.h" 
 #include <sstream>
-#include "ByteStream.h"
+#include "Crypto/Commit.h"
 
 namespace osuCrypto {
 

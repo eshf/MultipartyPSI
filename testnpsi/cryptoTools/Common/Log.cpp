@@ -1,14 +1,10 @@
 #include "Log.h"
 #include <iostream>
-#include "Defines.h"
 #ifdef _MSC_VER
 #include <windows.h>
 #endif
 
-// This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
-#include <string>
-#include <ostream>
-#include <mutex>
+
 namespace osuCrypto
 {
 

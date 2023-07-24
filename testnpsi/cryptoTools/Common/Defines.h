@@ -1,8 +1,18 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use.
 
-#include "ByteStream.h"
+#include <cinttypes>
+#include <iomanip>
+#include <vector>
+#include <emmintrin.h>
+#include <smmintrin.h>
+#include <sstream>
+#include <iostream>
+#include "boost/lexical_cast.hpp"
+#include <memory>
 #include "Timer.h"
+#include "Crypto/Commit.h"
+#include "BitVector.h"
 
 #ifdef GetMessage
 #undef GetMessage

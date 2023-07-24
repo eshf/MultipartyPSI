@@ -1,6 +1,10 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
-#include "Timer.h"
+
+
+#include "Network/Channel.h"
+#include "Crypto/PRNG.h"
+#include "BitIterator.h"
 #include "ArrayView.h"
 namespace osuCrypto {
 

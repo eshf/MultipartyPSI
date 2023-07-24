@@ -1,6 +1,15 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use.  
+#include "Common/Defines.h"
 
+#include "BtAcceptor.h"
+#include "Network/Endpoint.h"
+#include "Network/BtChannel.h"
+#include "Network/BtIOService.h"
+#include <list>
+#include <mutex>
+
+#include "boost/lexical_cast.hpp"
 
 namespace osuCrypto {
 

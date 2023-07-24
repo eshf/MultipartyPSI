@@ -22,7 +22,7 @@
 *   Software.
 */
 #include "Common/Log.h"
-#include "Network/BtSocket.h"
+#include "Common/Defines.h"
 #include <stdint.h>
 #include <string>
 #include "sha1.h"

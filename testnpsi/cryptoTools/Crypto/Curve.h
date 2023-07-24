@@ -3,7 +3,8 @@
 
 
 #include "miracl/include/miracl.h"
-#include "PRNG.h"
+#include "Common/Defines.h"
+#include "Crypto/PRNG.h"
 #include <memory>
 namespace osuCrypto
 {

@@ -1,16 +1,11 @@
 #include "BtEndpoint.h"
-
+#include "Network/BtIOService.h"
+#include "Network/BtChannel.h"
+#include "Network/BtAcceptor.h"
 #include "Common/ByteStream.h"
 #include "Network/BtSocket.h"
 #include "Common/Log.h"
 
-#include "BtAcceptor.h"
-#include "Network/Endpoint.h"
-#include "Network/BtIOService.h"
-#include <list>
-#include <mutex>
-#include "BtChannel.h"
-#include "boost/lexical_cast.hpp"
 
 #include <sstream>
 

@@ -1,3 +1,5 @@
+#include "Common/Defines.h"
+
 #include "BtIOService.h"
 #include <stdio.h>
 #include <algorithm>

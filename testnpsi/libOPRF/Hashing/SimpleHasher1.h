@@ -1,5 +1,4 @@
 #pragma once
-#include "Common/BitVector.h"
 #include "Common/ArrayView.h"
 #include "Hashing/BitPosition.h"
 namespace osuCrypto

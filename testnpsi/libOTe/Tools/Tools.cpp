@@ -1,10 +1,13 @@
-#include "Tools/Tools.h"
-
+#include "Tools.h"
+#include "Common/Defines.h"
 #include <wmmintrin.h>
-
+#include "Common/MatrixView.h"
 #ifndef _MSC_VER
 #include <x86intrin.h>
 #endif 
+
+#include "Common/BitVector.h"
+#include "Common/Log.h"
 
 using std::array;
 

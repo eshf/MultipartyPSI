@@ -1,9 +1,11 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
 
+#include <string>
+#include <memory>
+#include <future>
 
-
-
+#include "Common/Defines.h"
 
 namespace osuCrypto {
 

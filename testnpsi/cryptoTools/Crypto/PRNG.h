@@ -1,7 +1,8 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
+#include "Common/Defines.h"
 #include "Crypto/AES.h"
-#include "sha1.h"
+#include "Crypto/sha1.h"
 #include <vector>
 
 #define SEED_SIZE   AES_BLK_SIZE

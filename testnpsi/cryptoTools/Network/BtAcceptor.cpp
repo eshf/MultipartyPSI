@@ -7,14 +7,6 @@
 
 #include "boost/lexical_cast.hpp"
 
-#include <list>
-#include <future>
-#include <unordered_map>
-#include <atomic>
-#include "Network/BtSocket.h"
-
-#include "BtAcceptor.h"
-
 namespace osuCrypto {
 
 

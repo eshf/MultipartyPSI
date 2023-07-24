@@ -1,14 +1,6 @@
 #include "Channel.h"
 #include "Common/ByteStream.h"
 
-#include "BtSocket.h"
-
-#include <string>
-#include <memory>
-#include <future>
-
-#include "Channel.h"
-
 void osuCrypto::Channel::send(const ChannelBuffer & buf)
 {
     send(buf.ChannelBufferData(), buf.ChannelBufferSize());

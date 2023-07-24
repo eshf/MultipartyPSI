@@ -1,8 +1,6 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
 #include "NcoOtExt.h"
-#include "Network/Channel.h"
-#include <vector>
 
 #ifdef GetMessage
 #undef GetMessage

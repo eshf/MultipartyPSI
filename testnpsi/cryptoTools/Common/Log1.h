@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Log.h"
+#include "Defines.h"
 #include <list>
 #include <atomic>
 #include <boost/thread/tss.hpp>

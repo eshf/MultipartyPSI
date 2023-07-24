@@ -1,8 +1,10 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
  
-#include "Crypto/Commit.h"
-#include "BitVector.h"
+
+#include "BitIterator.h"
+
+
 namespace osuCrypto { 
 
     class Commit; 

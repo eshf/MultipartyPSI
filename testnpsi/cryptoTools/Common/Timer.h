@@ -4,9 +4,8 @@
 #include <chrono>
 #include <string>
 #include <mutex>
-
-#include "BitIterator.h"
-
+#include "Defines.h"
+#include "Log.h"
 namespace osuCrypto
 { 
 
