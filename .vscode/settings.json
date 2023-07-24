@@ -84,5 +84,5 @@
         "hash_map": "cpp",
         "hash_set": "cpp"
     },
-    "cmake.sourceDirectory": "C:/Users/DELL USER/OneDrive/Desktop/MultipartyPSI/frontend",
+    "cmake.sourceDirectory": "/home/norie/MultipartyPSI",
 }

@@ -100,8 +100,6 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
 #else
 extern "C"                    
 {
-	fdgsdfg
-    #pragma message "############################################################################"
     #include "miracl.h"
 }
 #endif
@@ -179,7 +177,7 @@ public:
     Big(unsigned long lg) {MR_INIT_BIG ulgconv(lg,fn);}
 
 #ifdef MR_UTYPE_NOT_INT_OR_LONG
-	//Big(mr_utype ut) {MR_INIT_BIG tconvert(ut,fn);}
+	Big(mr_utype ut) {MR_INIT_BIG tconvert(ut,fn);}
 #endif
 
 #ifdef mr_dltype
@@ -276,7 +274,7 @@ public:
     friend Big operator*(int,const Big&);
     friend Big operator*(const Big&,const Big&);
 
-    friend BOOL fmt(int n,const Big&,const Big&,Big&);   // fast mult - top half
+    friend BOOL fmth(int n,const Big&,const Big&,Big&);   // fast mult - top half
 
     friend Big operator/(const Big&,int);
     friend Big operator/(const Big&,const Big&);
@@ -301,7 +299,12 @@ public:
               {if (mr_compare(b1.fn,b2.fn)>0) return TRUE; else return FALSE;}
 
     friend Big from_binary(int,char *);
-    friend int to_binary(const Big&,int,char *,BOOL justify);
+    
+	friend int to_binary(const Big& b,int max,char *ptr,BOOL justify=FALSE)
+	{
+		return big_to_bytes(max,b.fn,ptr,justify);
+	}
+    //friend int to_binary(const Big&,int,char *,BOOL justify=FALSE);
     friend Big modmult(const Big&,const Big&,const Big&);
     friend Big mad(const Big&,const Big&,const Big&,const Big&,Big&);
     friend Big norm(const Big&);
@@ -323,7 +326,13 @@ public:
                                                          // x^m.y^k mod n 
     friend Big pow(int,Big *,Big *,Big);  // x[0]^m[0].x[1].m[1]... mod n
 
-    friend Big luc(const Big& ,const Big&, const Big&, Big *b4);
+	friend Big luc(const Big& b1,const Big& b2, const Big& b3, Big *b4=NULL)
+	{
+		Big z; if (b4!=NULL) lucas(b1.fn,b2.fn,b3.fn,b4->fn,z.fn); 
+        else          lucas(b1.fn,b2.fn,b3.fn,z.fn,z.fn);
+		return z;
+	}
+    //friend Big luc(const Big& ,const Big&, const Big&, Big *b4=NULL);
 	friend Big moddiv(const Big&,const Big&,const Big&);
     friend Big inverse(const Big&, const Big&);
     friend void multi_inverse(int,Big*,const Big&,Big *);
@@ -355,8 +364,20 @@ public:
     friend void modulo(const Big&);
     friend BOOL modulo(int,int,int,int,BOOL);
     friend Big get_modulus(void);
-    friend int window(const Big&,int,int*,int*,int window_size);
-    friend int naf_window(const Big&,const Big&,int,int*,int*,int store);
+	friend int window(const Big& x,int i,int* nbs,int *nzs,int window_size=5)
+    {
+        return mr_window(x.fn,i,nbs,nzs,window_size);
+    }
+
+
+    //friend int window(const Big&,int,int*,int*,int window_size=5);
+    friend int naf_window(const Big& x,const Big& x3,int i,int* nbs,int* nzs,int store=11)
+	{
+		return mr_naf_window(x.fn,x3.fn,i,nbs,nzs,store);
+	}
+
+
+    //friend int naf_window(const Big&,const Big&,int,int*,int*,int store=11);
     friend void jsf(const Big&,const Big&,Big&,Big&,Big&,Big&);
 
 /* Montgomery stuff */
@@ -422,9 +443,8 @@ extern Big get_modulus(void);
 extern Big rand(int,int); 
 extern Big strong_rand(csprng *,int,int);
 extern Big from_binary(int,char *);
-extern int to_binary(const Big&,int,char *,BOOL);
+//extern int to_binary(const Big&,int,char *,BOOL);
 
 using namespace std;
 
 #endif
-

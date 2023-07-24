@@ -1,19 +1,16 @@
-cmake_minimum_required (VERSION 2.8)
-
-project("libPSI")
-
+project(MultipartyPSI)
+cmake_minimum_required (VERSION 3.9.1)
 
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib)
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib)
-
 
 #############################################
 #            Flag and #defines              #
 #############################################
 add_definitions(-DSOLUTION_DIR=\"${CMAKE_SOURCE_DIR}\")
 set(CMAKE_C_FLAGS "-ffunction-sections -Wall  -maes -msse2 -msse4.1 -mpclmul -Wfatal-errors -pthread")
-set(CMAKE_CXX_FLAGS  "${CMAKE_C_FLAGS}  -std=c++14")
+set(CMAKE_CXX_FLAGS  "${CMAKE_C_FLAGS} -std=c++14")
 
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.
@@ -57,20 +54,17 @@ set(BOOST_ROOT "${CMAKE_SOURCE_DIR}/thirdparty/linux/boost/")
 #############################################
 #            Build cryptoTools              #
 #############################################
-add_subdirectory(cryptoTools)
 include_directories(cryptoTools)
 
 #############################################
 #               Build libOTe                #
 #############################################
-add_subdirectory(libOTe)
 include_directories(libOTe)
 
 
 #############################################
 #               Build libOPRF                 #
 #############################################
-add_subdirectory(libOPRF)
 include_directories(libOPRF)
 
 
@@ -82,8 +76,6 @@ include_directories(libOPRF)
 
 
 #############################################
-#              Build Frontend               #
+#              Build Backend               #
 #############################################
-add_subdirectory(frontend)
-
-
+add_subdirectory(appmpsi)
