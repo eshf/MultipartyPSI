@@ -1,11 +1,10 @@
 #include "LinearCode.h"
 #include <fstream>
-#include "Common/BitVector.h"
-#include "Common/Log.h"
+
 #define BITSET
 #include <bitset>
 
-#include "Common/MatrixView.h"
+
 namespace osuCrypto
 {
 

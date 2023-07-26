@@ -1,23 +1,24 @@
+#include "Network/BtEndpoint.h" 
+
+#include "OPPRF/OPPRFReceiver.h"
+#include "OPPRF/OPPRFSender.h"
+
 #include <fstream>
 using namespace osuCrypto;
+#include "util.h"
+
+#include "Common/Defines.h"
+#include "NChooseOne/KkrtNcoOtReceiver.h"
+#include "NChooseOne/KkrtNcoOtSender.h"
+
+#include "NChooseOne/Oos/OosNcoOtReceiver.h"
+#include "NChooseOne/Oos/OosNcoOtSender.h"
+#include "Common/Log.h"
+#include "Common/Log1.h"
+#include "Common/Timer.h"
+#include "Crypto/PRNG.h"
 #include <numeric>
 #include <iostream>
-#include <stdio.h>
-
-#include "OtBinMain.h"
-
-#include "libOPRF/OPPRF/OPPRFReceiver.h"
-#include "bitPosition.h"
-
-#include "libOTe/NChooseOne/KkrtNcoOtReceiver.h"
-#include "libOTe/NChooseOne/KkrtNcoOtSender.h"
-
-#include "libOTe/NChooseOne/Oos/OosNcoOtReceiver.h"
-#include "libOTe/NChooseOne/Oos/OosNcoOtSender.h"
-#include "cryptoTools/Common/Log1.h"
-#include "cryptoTools/Crypto/PRNG.h"
-
-#include "cryptoTools/Common/Timer.h"
 //#define OOS
 //#define PRINT
 #define pows  { 16/*8,12,,20*/ }
@@ -30,7 +31,6 @@ u64 nParties(3);
 u64 opt = 0;
 
 bool isNTLThreadSafe = false;
-
 
 void Channel_test()
 {
@@ -3992,3 +3992,4 @@ void OPPRFnt_EmptrySet_Test_Impl()
 //	ep1.stop();
 //	ios.stop();
 //}
+

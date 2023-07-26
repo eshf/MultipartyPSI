@@ -1,9 +1,9 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use.  
 
-#include "Tools/LinearCode.h"
-
-#include "KkrtNcoOtSender.h"
+#include "NChooseOne/KkrtNcoOtSender.h"
+#include "Oos/OosDefines.h"
+#include "Common/ByteStream.h"
 #ifdef GetMessage
 #undef GetMessage
 #endif
