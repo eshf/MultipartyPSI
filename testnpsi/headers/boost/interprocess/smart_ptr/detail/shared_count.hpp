@@ -14,23 +14,26 @@
 #ifndef BOOST_INTERPROCESS_DETAIL_SHARED_COUNT_HPP_INCLUDED
 #define BOOST_INTERPROCESS_DETAIL_SHARED_COUNT_HPP_INCLUDED
 
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 # pragma once
 #endif
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 
-#include <boost/checked_delete.hpp>
 #include <boost/intrusive/pointer_traits.hpp>
 #include <boost/interprocess/smart_ptr/detail/bad_weak_ptr.hpp>
 #include <boost/interprocess/smart_ptr/detail/sp_counted_impl.hpp>
 #include <boost/interprocess/detail/utilities.hpp>
 #include <boost/container/allocator_traits.hpp>
-#include <boost/detail/no_exceptions_support.hpp>
-#include <functional>       // std::less
+#include <boost/core/no_exceptions_support.hpp>
+#include <boost/move/adl_move_swap.hpp>
+#include <boost/intrusive/detail/minimal_less_equal_header.hpp>   //std::less
+#include <boost/container/detail/placement_new.hpp>
 
 namespace boost {
 namespace interprocess {
@@ -43,18 +46,21 @@ template<class T, class VoidAllocator, class Deleter>
 class shared_count
 {
    public:
+
+   typedef typename boost::container::
+      allocator_traits<VoidAllocator>::pointer              void_ptr;
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
-         rebind_pointer<T>::type                         pointer;
+      pointer_traits<void_ptr>::template
+         rebind_pointer<T>::type                            pointer;
 
    private:
    typedef sp_counted_impl_pd<VoidAllocator, Deleter>       counted_impl;
 
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<counted_impl>::type                         counted_impl_ptr;
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<sp_counted_base>::type                       counted_base_ptr;
 
    typedef boost::container::allocator_traits<VoidAllocator>         vallocator_traits;
@@ -63,11 +69,11 @@ class shared_count
       portable_rebind_alloc<counted_impl>::type                      counted_impl_allocator;
 
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<const Deleter>::type                         const_deleter_pointer;
 
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<const VoidAllocator>::type                   const_allocator_pointer;
 
    pointer           m_px;
@@ -104,7 +110,7 @@ class shared_count
                         deallocator(m_pi, alloc);
             //It's more correct to use VoidAllocator::construct but
             //this needs copy constructor and we don't like it
-            new(ipcdetail::to_raw_pointer(m_pi))counted_impl(p, a, d);
+            ::new(ipcdetail::to_raw_pointer(m_pi), boost_container_new_t())counted_impl(p, a, d);
             deallocator.release();
          }
       }
@@ -189,7 +195,7 @@ class shared_count
    }
 
    void swap(shared_count & r) // nothrow
-   {  ipcdetail::do_swap(m_px, r.m_px);   ipcdetail::do_swap(m_pi, r.m_pi);   }
+   {  ::boost::adl_move_swap(m_px, r.m_px);  ::boost::adl_move_swap(m_pi, r.m_pi);   }
 
    long use_count() const // nothrow
    {  return m_pi != 0? m_pi->use_count(): 0;  }
@@ -225,8 +231,10 @@ template<class T, class VoidAllocator, class Deleter>
 class weak_count
 {
    public:
+   typedef typename boost::container::
+      allocator_traits<VoidAllocator>::pointer           void_ptr;
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<T>::type                         pointer;
 
    private:
@@ -234,10 +242,10 @@ class weak_count
    typedef sp_counted_impl_pd<VoidAllocator, Deleter>                counted_impl;
 
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<counted_impl>::type                          counted_impl_ptr;
    typedef typename boost::intrusive::
-      pointer_traits<typename VoidAllocator::pointer>::template
+      pointer_traits<void_ptr>::template
          rebind_pointer<sp_counted_base>::type                       counted_base_ptr;
 
    pointer           m_px;
@@ -284,6 +292,7 @@ class weak_count
 
    weak_count & operator= (weak_count const & r) // nothrow
    {
+      m_px = r.m_px;
       counted_impl_ptr tmp = r.m_pi;
       if(tmp != 0) tmp->weak_add_ref();
       if(m_pi != 0) m_pi->weak_release();
@@ -305,7 +314,7 @@ class weak_count
    }
 
    void swap(weak_count & r) // nothrow
-   {  ipcdetail::do_swap(m_px, r.m_px);  ipcdetail::do_swap(m_pi, r.m_pi);   }
+   {  ::boost::adl_move_swap(m_px, r.m_px);  ::boost::adl_move_swap(m_pi, r.m_pi);   }
 
    long use_count() const // nothrow
    {  return m_pi != 0? m_pi->use_count() : 0;   }

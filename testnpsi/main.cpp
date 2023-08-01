@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 	switch (argc) {
 	case 2: //unit test
 		if (argv[1][0] == '-' && argv[1][1] == 'u')
-			OPPRFnt_EmptrySet_Test_Main();
+		OPPRFnt_EmptrySet_Test_Main();
 		break;
 
 	case 7: //2PSI 

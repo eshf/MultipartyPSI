@@ -11,19 +11,25 @@
 #ifndef BOOST_INTERPROCESS_WINDOWS_NAMED_CONDITION_HPP
 #define BOOST_INTERPROCESS_WINDOWS_NAMED_CONDITION_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
+
+#include <boost/interprocess/sync/cv_status.hpp>
 #include <boost/interprocess/sync/windows/named_condition_any.hpp>
 
 namespace boost {
 namespace interprocess {
 namespace ipcdetail {
 
-typedef windows_named_condition_any windows_named_condition;
+typedef winapi_named_condition_any winapi_named_condition;
 
 }  //namespace ipcdetail {
 }  //namespace interprocess {

@@ -4,6 +4,10 @@
 // Copyright (c) 2008-2012 Bruno Lalande, Paris, France.
 // Copyright (c) 2009-2012 Mateusz Loskot, London, UK.
 
+// This file was modified by Oracle on 2020-2021.
+// Modifications copyright (c) 2020-2021, Oracle and/or its affiliates.
+// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
+
 // Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
 // (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
 
@@ -14,15 +18,18 @@
 #ifndef BOOST_GEOMETRY_ALGORITHMS_CLEAR_HPP
 #define BOOST_GEOMETRY_ALGORITHMS_CLEAR_HPP
 
-#include <boost/mpl/assert.hpp>
-#include <boost/type_traits/remove_const.hpp>
 
+#include <type_traits>
+
+#include <boost/geometry/algorithms/not_implemented.hpp>
 #include <boost/geometry/core/access.hpp>
 #include <boost/geometry/core/exterior_ring.hpp>
 #include <boost/geometry/core/interior_rings.hpp>
 #include <boost/geometry/core/mutable_range.hpp>
 #include <boost/geometry/core/tag_cast.hpp>
-
+#include <boost/geometry/core/tags.hpp>
+#include <boost/geometry/core/visit.hpp>
+#include <boost/geometry/geometries/adapted/boost_variant.hpp> // for backward compatibility
 #include <boost/geometry/geometries/concepts/check.hpp>
 
 
@@ -49,14 +56,14 @@ struct polygon_clear
     {
         traits::clear
             <
-                typename boost::remove_reference
+                typename std::remove_reference
                     <
                         typename traits::interior_mutable_type<Polygon>::type
                     >::type
             >::apply(interior_rings(polygon));
         traits::clear
             <
-                typename boost::remove_reference
+                typename std::remove_reference
                     <
                         typename traits::ring_mutable_type<Polygon>::type
                     >::type
@@ -72,6 +79,7 @@ struct no_action
     }
 };
 
+
 }} // namespace detail::clear
 #endif // DOXYGEN_NO_DETAIL
 
@@ -84,14 +92,8 @@ template
     typename Geometry,
     typename Tag = typename tag_cast<typename tag<Geometry>::type, multi_tag>::type
 >
-struct clear
-{
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_OR_NOT_YET_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
-};
+struct clear: not_implemented<Tag>
+{};
 
 // Point/box/segment do not have clear. So specialize to do nothing.
 template <typename Geometry>
@@ -127,6 +129,35 @@ struct clear<Polygon, polygon_tag>
 {};
 
 
+template <typename Geometry>
+struct clear<Geometry, multi_tag>
+    : detail::clear::collection_clear<Geometry>
+{};
+
+
+template <typename Geometry>
+struct clear<Geometry, dynamic_geometry_tag>
+{
+    static void apply(Geometry& geometry)
+    {
+        traits::visit<Geometry>::apply([](auto & g)
+        {
+            clear<std::remove_reference_t<decltype(g)>>::apply(g);
+        }, geometry);
+    }
+};
+
+
+template <typename Geometry>
+struct clear<Geometry, geometry_collection_tag>
+{
+    static void apply(Geometry& geometry)
+    {
+        traits::clear<Geometry>::apply(geometry);
+    }
+};
+
+
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
@@ -147,7 +178,7 @@ struct clear<Polygon, polygon_tag>
 template <typename Geometry>
 inline void clear(Geometry& geometry)
 {
-    concept::check<Geometry>();
+    concepts::check<Geometry>();
 
     dispatch::clear<Geometry>::apply(geometry);
 }

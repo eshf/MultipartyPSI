@@ -11,7 +11,11 @@
 #ifndef BOOST_INTERPROCESS_POSIX_NAMED_CONDITION_HPP
 #define BOOST_INTERPROCESS_POSIX_NAMED_CONDITION_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
@@ -23,9 +27,9 @@
 namespace boost {
 namespace interprocess {
 
-/// @cond
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
 namespace ipcdetail{ class interprocess_tester; }
-/// @endcond
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
 namespace ipcdetail {
 
@@ -61,7 +65,8 @@ class posix_named_semaphore
    bool try_wait()
    {  return semaphore_try_wait(mp_sem); }
 
-   bool timed_wait(const boost::posix_time::ptime &abs_time)
+   template<class TimePoint>
+   bool timed_wait(const TimePoint &abs_time)
    {  return semaphore_timed_wait(mp_sem, abs_time); }
 
    static bool remove(const char *name)

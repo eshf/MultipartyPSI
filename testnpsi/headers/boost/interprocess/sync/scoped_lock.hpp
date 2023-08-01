@@ -16,7 +16,11 @@
 #ifndef BOOST_INTERPROCESS_SCOPED_LOCK_HPP
 #define BOOST_INTERPROCESS_SCOPED_LOCK_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
@@ -27,8 +31,8 @@
 #include <boost/interprocess/exceptions.hpp>
 #include <boost/interprocess/detail/mpl.hpp>
 #include <boost/interprocess/detail/type_traits.hpp>
-#include <boost/move/move.hpp>
-#include <boost/interprocess/detail/posix_time_types_wrk.hpp>
+#include <boost/move/utility_core.hpp>
+#include <boost/interprocess/detail/simple_swap.hpp>
 
 //!\file
 //!Describes the scoped_lock class.
@@ -50,19 +54,19 @@ namespace interprocess {
 template <class Mutex>
 class scoped_lock
 {
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    private:
    typedef scoped_lock<Mutex> this_type;
    BOOST_MOVABLE_BUT_NOT_COPYABLE(scoped_lock)
    typedef bool this_type::*unspecified_bool_type;
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
    public:
 
    typedef Mutex mutex_type;
 
    //!Effects: Default constructs a scoped_lock.
    //!Postconditions: owns() == false and mutex() == 0.
-   scoped_lock()
+   scoped_lock() BOOST_NOEXCEPT
       : mp_mutex(0), m_locked(false)
    {}
 
@@ -109,7 +113,8 @@ class scoped_lock
    //!   handles recursive locking depends upon the mutex. If the mutex_type
    //!   does not support try_lock, this constructor will fail at compile
    //!   time if instantiated, but otherwise have no effect.
-   scoped_lock(mutex_type& m, const boost::posix_time::ptime& abs_time)
+   template<class TimePoint>
+   scoped_lock(mutex_type& m, const TimePoint& abs_time)
       : mp_mutex(&m), m_locked(mp_mutex->timed_lock(abs_time))
    {}
 
@@ -123,7 +128,7 @@ class scoped_lock
    //!   can be moved with the expression: "boost::move(lock);". This
    //!   constructor does not alter the state of the mutex, only potentially
    //!   who owns it.
-   scoped_lock(BOOST_RV_REF(scoped_lock) scop)
+   scoped_lock(BOOST_RV_REF(scoped_lock) scop) BOOST_NOEXCEPT
       : mp_mutex(0), m_locked(scop.owns())
    {  mp_mutex = scop.release(); }
 
@@ -197,8 +202,8 @@ class scoped_lock
    //!   "write lock". If the "read lock" isn't held in the first place, the mutex
    //!   merely changes type to an unlocked "write lock". If the "read lock" is held,
    //!   then mutex transfer occurs only if it can do so in a non-blocking manner.
-   template<class T>
-   scoped_lock(BOOST_RV_REF(upgradable_lock<T>) upgr, boost::posix_time::ptime &abs_time
+   template<class T, class TimePoint>
+   scoped_lock(BOOST_RV_REF(upgradable_lock<T>) upgr, const TimePoint &abs_time
                , typename ipcdetail::enable_if< ipcdetail::is_same<T, Mutex> >::type * = 0)
       : mp_mutex(0), m_locked(false)
    {
@@ -248,8 +253,8 @@ class scoped_lock
    //!Notes: The destructor behavior ensures that the mutex lock is not leaked.*/
    ~scoped_lock()
    {
-      try{  if(m_locked && mp_mutex)   mp_mutex->unlock();  }
-      catch(...){}
+      BOOST_TRY{  if(m_locked && mp_mutex)   mp_mutex->unlock();  }
+      BOOST_CATCH(...){} BOOST_CATCH_END
    }
 
    //!Effects: If owns() before the call, then unlock() is called on mutex().
@@ -302,11 +307,44 @@ class scoped_lock
    //!   owning the mutex, but only if it can obtain ownership by the specified
    //!   time. If the mutex_type does not support timed_lock (), this function
    //!   will fail at compile time if instantiated, but otherwise have no effect.*/
-   bool timed_lock(const boost::posix_time::ptime& abs_time)
+   template<class TimePoint>
+   bool timed_lock(const TimePoint& abs_time)
    {
       if(!mp_mutex || m_locked)
          throw lock_exception();
       m_locked = mp_mutex->timed_lock(abs_time);
+      return m_locked;
+   }
+
+   //!Effects: If mutex() == 0 or if already locked, throws a lock_exception()
+   //!   exception. Calls try_lock_until(abs_time) on the referenced mutex.
+   //!Postconditions: owns() == the value returned from mutex()-> timed_lock(abs_time).
+   //!Notes: The scoped_lock changes from a state of not owning the mutex, to
+   //!   owning the mutex, but only if it can obtain ownership by the specified
+   //!   time. If the mutex_type does not support timed_lock (), this function
+   //!   will fail at compile time if instantiated, but otherwise have no effect.*/
+   template<class TimePoint>
+   bool try_lock_until(const TimePoint& abs_time)
+   {
+      if(!mp_mutex || m_locked)
+         throw lock_exception();
+      m_locked = mp_mutex->try_lock_until(abs_time);
+      return m_locked;
+   }
+
+   //!Effects: If mutex() == 0 or if already locked, throws a lock_exception()
+   //!   exception. Calls try_lock_until(abs_time) on the referenced mutex.
+   //!Postconditions: owns() == the value returned from mutex()-> timed_lock(abs_time).
+   //!Notes: The scoped_lock changes from a state of not owning the mutex, to
+   //!   owning the mutex, but only if it can obtain ownership by the specified
+   //!   time. If the mutex_type does not support timed_lock (), this function
+   //!   will fail at compile time if instantiated, but otherwise have no effect.*/
+   template<class Duration>
+   bool try_lock_for(const Duration& dur)
+   {
+      if(!mp_mutex || m_locked)
+         throw lock_exception();
+      m_locked = mp_mutex->try_lock_for(dur);
       return m_locked;
    }
 
@@ -325,23 +363,23 @@ class scoped_lock
 
    //!Effects: Returns true if this scoped_lock has acquired
    //!the referenced mutex.
-   bool owns() const
+   bool owns() const BOOST_NOEXCEPT
    {  return m_locked && mp_mutex;  }
 
    //!Conversion to bool.
    //!Returns owns().
-   operator unspecified_bool_type() const
+   operator unspecified_bool_type() const BOOST_NOEXCEPT
    {  return m_locked? &this_type::m_locked : 0;   }
 
    //!Effects: Returns a pointer to the referenced mutex, or 0 if
    //!there is no mutex to reference.
-   mutex_type* mutex() const
+   mutex_type* mutex() const BOOST_NOEXCEPT
    {  return  mp_mutex;  }
 
    //!Effects: Returns a pointer to the referenced mutex, or 0 if there is no
    //!   mutex to reference.
    //!Postconditions: mutex() == 0 and owns() == false.
-   mutex_type* release()
+   mutex_type* release() BOOST_NOEXCEPT
    {
       mutex_type *mut = mp_mutex;
       mp_mutex = 0;
@@ -351,17 +389,17 @@ class scoped_lock
 
    //!Effects: Swaps state with moved lock.
    //!Throws: Nothing.
-   void swap( scoped_lock<mutex_type> &other)
+   void swap( scoped_lock<mutex_type> &other) BOOST_NOEXCEPT
    {
-      std::swap(mp_mutex, other.mp_mutex);
-      std::swap(m_locked, other.m_locked);
+      (simple_swap)(mp_mutex, other.mp_mutex);
+      (simple_swap)(m_locked, other.m_locked);
    }
 
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    private:
    mutex_type *mp_mutex;
    bool        m_locked;
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 };
 
 } // namespace interprocess

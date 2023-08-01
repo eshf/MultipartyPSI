@@ -11,14 +11,17 @@
 #ifndef BOOST_INTERPROCESS_POSIX_SEMAPHORE_HPP
 #define BOOST_INTERPROCESS_POSIX_SEMAPHORE_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 
-#include <boost/interprocess/detail/posix_time_types_wrk.hpp>
 #include <boost/interprocess/sync/posix/semaphore_wrapper.hpp>
 
 namespace boost {
@@ -47,7 +50,8 @@ class posix_semaphore
    bool try_wait()
    {  return semaphore_try_wait(&m_sem); }
 
-   bool timed_wait(const boost::posix_time::ptime &abs_time)
+   template<class TimePoint>
+   bool timed_wait(const TimePoint &abs_time)
    {  return semaphore_timed_wait(&m_sem, abs_time); }
 
    private:

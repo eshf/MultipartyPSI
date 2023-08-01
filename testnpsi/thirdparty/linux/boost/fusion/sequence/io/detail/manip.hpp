@@ -75,6 +75,10 @@ namespace boost { namespace fusion
             }
         };
 
+#ifdef _MSC_VER
+#  pragma warning(push)
+#  pragma warning(disable: 4512) // assignment operator could not be generated.
+#endif
         template <typename Tag, typename Stream>
         class string_ios_manip
         {
@@ -131,6 +135,7 @@ namespace boost { namespace fusion
             void
             check_delim(Char c) const
             {
+                using namespace std;
                 if (!isspace(c))
                 {
                     if (stream.get() != c)
@@ -142,11 +147,10 @@ namespace boost { namespace fusion
             }
 
             Stream& stream;
-
-        private:
-            // silence MSVC warning C4512: assignment operator could not be generated
-            string_ios_manip& operator= (string_ios_manip const&);
         };
+#ifdef _MSC_VER
+#  pragma warning(pop)
+#endif
 
     } // detail
 

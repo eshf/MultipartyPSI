@@ -11,17 +11,21 @@
 #ifndef BOOST_INTERPROCESS_MANAGED_HEAP_MEMORY_HPP
 #define BOOST_INTERPROCESS_MANAGED_HEAP_MEMORY_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 #include <boost/interprocess/creation_tags.hpp>
-#include <boost/move/move.hpp>
+#include <boost/move/utility_core.hpp>
 #include <vector>
 #include <boost/interprocess/detail/managed_memory_impl.hpp>
-#include <boost/detail/no_exceptions_support.hpp>
+#include <boost/core/no_exceptions_support.hpp>
 //These includes needed to fulfill default template parameters of
 //predeclarations in interprocess_fwd.hpp
 #include <boost/interprocess/mem_algo/rbtree_best_fit.hpp>
@@ -46,20 +50,21 @@ template
 class basic_managed_heap_memory
    : public ipcdetail::basic_managed_memory_impl <CharType, AllocationAlgorithm, IndexType>
 {
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    private:
 
    typedef ipcdetail::basic_managed_memory_impl
       <CharType, AllocationAlgorithm, IndexType>             base_t;
    BOOST_MOVABLE_BUT_NOT_COPYABLE(basic_managed_heap_memory)
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
    public: //functions
    typedef typename base_t::size_type              size_type;
 
    //!Default constructor. Does nothing.
    //!Useful in combination with move semantics
-   basic_managed_heap_memory(){}
+   basic_managed_heap_memory() BOOST_NOEXCEPT
+   {}
 
    //!Destructor. Liberates the heap memory holding the managed data.
    //!Never throws.
@@ -78,11 +83,11 @@ class basic_managed_heap_memory
    }
 
    //!Moves the ownership of "moved"'s managed memory to *this. Does not throw
-   basic_managed_heap_memory(BOOST_RV_REF(basic_managed_heap_memory) moved)
+   basic_managed_heap_memory(BOOST_RV_REF(basic_managed_heap_memory) moved) BOOST_NOEXCEPT
    {  this->swap(moved);   }
 
    //!Moves the ownership of "moved"'s managed memory to *this. Does not throw
-   basic_managed_heap_memory &operator=(BOOST_RV_REF(basic_managed_heap_memory) moved)
+   basic_managed_heap_memory &operator=(BOOST_RV_REF(basic_managed_heap_memory) moved) BOOST_NOEXCEPT
    {
       basic_managed_heap_memory tmp(boost::move(moved));
       this->swap(tmp);
@@ -119,13 +124,13 @@ class basic_managed_heap_memory
 
    //!Swaps the ownership of the managed heap memories managed by *this and other.
    //!Never throws.
-   void swap(basic_managed_heap_memory &other)
+   void swap(basic_managed_heap_memory &other) BOOST_NOEXCEPT
    {
       base_t::swap(other);
       m_heapmem.swap(other.m_heapmem);
    }
 
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    private:
    //!Frees resources. Never throws.
    void priv_close()
@@ -135,9 +140,28 @@ class basic_managed_heap_memory
    }
 
    std::vector<char>  m_heapmem;
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 };
 
+#ifdef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+
+//!Typedef for a default basic_managed_heap_memory
+//!of narrow characters
+typedef basic_managed_heap_memory
+   <char
+   ,rbtree_best_fit<null_mutex_family>
+   ,iset_index>
+managed_heap_memory;
+
+//!Typedef for a default basic_managed_heap_memory
+//!of wide characters
+typedef basic_managed_heap_memory
+   <wchar_t
+   ,rbtree_best_fit<null_mutex_family>
+   ,iset_index>
+wmanaged_heap_memory;
+
+#endif   //#ifdef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
 }  //namespace interprocess {
 }  //namespace boost {

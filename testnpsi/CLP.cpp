@@ -1,6 +1,7 @@
 #include "CLP.h"
 #include <sstream>
 #include <iostream>
+#include <string>
 
 
 
@@ -192,4 +193,3 @@ std::string CLP::getString(std::vector<std::string> names, std::string failMessa
 
     throw CommandLineParserError();
 }
-

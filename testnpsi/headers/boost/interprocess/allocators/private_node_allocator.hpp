@@ -11,7 +11,11 @@
 #ifndef BOOST_INTERPROCESS_PRIVATE_NODE_ALLOCATOR_HPP
 #define BOOST_INTERPROCESS_PRIVATE_NODE_ALLOCATOR_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
@@ -22,14 +26,15 @@
 
 #include <boost/interprocess/interprocess_fwd.hpp>
 #include <boost/assert.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/utility/addressof.hpp>
 #include <boost/interprocess/allocators/detail/node_pool.hpp>
+#include <boost/interprocess/containers/version_type.hpp>
 #include <boost/container/detail/multiallocation_chain.hpp>
 #include <boost/interprocess/exceptions.hpp>
 #include <boost/interprocess/detail/utilities.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
-#include <memory>
-#include <algorithm>
+#include <boost/move/adl_move_swap.hpp>
 #include <cstddef>
 
 //!\file
@@ -38,7 +43,7 @@
 namespace boost {
 namespace interprocess {
 
-/// @cond
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
 
 namespace ipcdetail {
 
@@ -60,7 +65,7 @@ class private_node_allocator_base
    typedef SegmentManager                                segment_manager;
    typedef typename SegmentManager::void_pointer         void_pointer;
 
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    private:
    typedef private_node_allocator_base
       < Version, T, SegmentManager, NodesPerBlock>       self_t;
@@ -72,7 +77,7 @@ class private_node_allocator_base
 
    BOOST_STATIC_ASSERT((Version <=2));
 
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
    public:
 
@@ -91,7 +96,7 @@ class private_node_allocator_base
    typedef typename segment_manager::difference_type     difference_type;
    typedef boost::interprocess::version_type
       <private_node_allocator_base, Version>              version;
-   typedef boost::container::container_detail::transform_multiallocation_chain
+   typedef boost::container::dtl::transform_multiallocation_chain
       <typename SegmentManager::multiallocation_chain, T>multiallocation_chain;
 
    //!Obtains node_allocator from other node_allocator
@@ -102,7 +107,7 @@ class private_node_allocator_base
          <Version, T2, SegmentManager, NodesPerBlock>   other;
    };
 
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    template <int dummy>
    struct node_pool
    {
@@ -124,7 +129,7 @@ class private_node_allocator_base
 
    //!Not assignable from other private_node_allocator_base
    private_node_allocator_base& operator=(const private_node_allocator_base&);
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
    public:
    //!Constructor from a segment manager
@@ -160,12 +165,12 @@ class private_node_allocator_base
    //!Swaps allocators. Does not throw. If each allocator is placed in a
    //!different shared memory segments, the result is undefined.
    friend void swap(self_t &alloc1,self_t &alloc2)
-   {  alloc1.m_node_pool.swap(alloc2.m_node_pool);  }
+   {  boost::adl_move_swap(alloc1.m_node_pool, alloc2.m_node_pool);  }
 
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    private:
    node_pool_t m_node_pool;
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 };
 
 //!Equality test for same type of private_node_allocator_base
@@ -215,7 +220,7 @@ class private_node_allocator_v1
 
 }  //namespace ipcdetail {
 
-/// @endcond
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
 //!An STL node allocator that uses a segment manager as memory
 //!source. The internal pointer type will of the same type (raw, smart) as
@@ -228,14 +233,14 @@ template < class T
          , std::size_t NodesPerBlock
          >
 class private_node_allocator
-   /// @cond
+   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
    :  public ipcdetail::private_node_allocator_base
          < 2
          , T
          , SegmentManager
          , NodesPerBlock
          >
-   /// @endcond
+   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 {
 
    #ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
@@ -365,11 +370,8 @@ class private_node_allocator
    //!allocate, allocation_command and allocate_many.
    size_type size(const pointer &p) const;
 
-   std::pair<pointer, bool>
-      allocation_command(boost::interprocess::allocation_type command,
-                         size_type limit_size,
-                         size_type preferred_size,
-                         size_type &received_size, const pointer &reuse = 0);
+   pointer allocation_command(boost::interprocess::allocation_type command,
+                         size_type limit_size, size_type &prefer_in_recvd_out_size, pointer &reuse);
 
    //!Allocates many elements of size elem_size in a contiguous block
    //!of memory. The minimum number to be allocated is min_elements,
@@ -377,12 +379,12 @@ class private_node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. The elements must be deallocated
    //!with deallocate(...)
-   multiallocation_chain allocate_many(size_type elem_size, size_type num_elements);
+   void allocate_many(size_type elem_size, size_type num_elements, multiallocation_chain &chain);
 
    //!Allocates n_elements elements, each one of size elem_sizes[i]in a
    //!contiguous block
    //!of memory. The elements must be deallocated
-   multiallocation_chain allocate_many(const size_type *elem_sizes, size_type n_elements);
+   void allocate_many(const size_type *elem_sizes, size_type n_elements, multiallocation_chain &chain);
 
    //!Allocates many elements of size elem_size in a contiguous block
    //!of memory. The minimum number to be allocated is min_elements,
@@ -390,7 +392,7 @@ class private_node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. The elements must be deallocated
    //!with deallocate(...)
-   void deallocate_many(multiallocation_chain chain);
+   void deallocate_many(multiallocation_chain &chain);
 
    //!Allocates just one object. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
@@ -403,7 +405,7 @@ class private_node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
-   multiallocation_chain allocate_individual(size_type num_elements);
+   void allocate_individual(size_type num_elements, multiallocation_chain &chain);
 
    //!Deallocates memory previously allocated with allocate_one().
    //!You should never use deallocate_one to deallocate memory allocated
@@ -416,7 +418,7 @@ class private_node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
-   void deallocate_individual(multiallocation_chain chain);
+   void deallocate_individual(multiallocation_chain &chain);
    #endif
 };
 

@@ -11,32 +11,36 @@
 #ifndef BOOST_INTERPROCESS_SEGMENT_MANAGER_BASE_HPP
 #define BOOST_INTERPROCESS_SEGMENT_MANAGER_BASE_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+#
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 
-#include <boost/intrusive/pointer_traits.hpp>
-
-#include <boost/detail/no_exceptions_support.hpp>
+// interprocess
+#include <boost/interprocess/exceptions.hpp>
+// interprocess/detail
 #include <boost/interprocess/detail/type_traits.hpp>
 #include <boost/interprocess/detail/utilities.hpp>
 #include <boost/interprocess/detail/in_place_interface.hpp>
-#include <boost/interprocess/exceptions.hpp>
-#include <boost/type_traits/make_unsigned.hpp>
-#include <boost/type_traits/alignment_of.hpp>
+// container/detail
+#include <boost/container/detail/type_traits.hpp> //alignment_of
+#include <boost/container/detail/minimal_char_traits_header.hpp>
+// intrusive
 #include <boost/intrusive/pointer_traits.hpp>
-#include <cstddef>   //std::size_t
-#include <string>    //char_traits
-#include <new>       //std::nothrow
-#include <utility>   //std::pair
+// move/detail
+#include <boost/move/detail/type_traits.hpp> //make_unsigned
+#include <boost/move/detail/force_ptr.hpp>
+// other boost
 #include <boost/assert.hpp>   //BOOST_ASSERT
-#include <functional>   //unary_function
-#ifndef BOOST_NO_EXCEPTIONS
-#include <exception>
-#endif
+#include <boost/core/no_exceptions_support.hpp>
+// std
+#include <cstddef>   //std::size_t
 
 //!\file
 //!Describes the object placed in a memory segment that provides
@@ -72,7 +76,6 @@ class mem_algo_deallocator
    {  if(m_ptr) m_algo.deallocate(m_ptr);  }
 };
 
-/// @cond
 template<class size_type>
 struct block_header
 {
@@ -81,20 +84,17 @@ struct block_header
    unsigned char  m_value_alignment;
    unsigned char  m_alloc_type_sizeof_char;
 
-   block_header(size_type value_bytes
-               ,size_type value_alignment
-               ,unsigned char alloc_type
-               ,std::size_t sizeof_char
+   block_header(size_type val_bytes
+               ,size_type val_alignment
+               ,unsigned char al_type
+               ,std::size_t szof_char
                ,std::size_t num_char
                )
-      :  m_value_bytes(value_bytes)
+      :  m_value_bytes(val_bytes)
       ,  m_num_char((unsigned short)num_char)
-      ,  m_value_alignment((unsigned char)value_alignment)
-      ,  m_alloc_type_sizeof_char
-         ( (alloc_type << 5u) |
-           ((unsigned char)sizeof_char & 0x1F)   )
+      ,  m_value_alignment((unsigned char)val_alignment)
+      ,  m_alloc_type_sizeof_char( (unsigned char)((al_type << 5u) | ((unsigned char)szof_char & 0x1F)) )
    {};
-
 
    template<class T>
    block_header &operator= (const T& )
@@ -103,7 +103,7 @@ struct block_header
    size_type total_size() const
    {
       if(alloc_type() != anonymous_type){
-         return name_offset() + (m_num_char+1)*sizeof_char();
+         return name_offset() + (m_num_char+1u)*sizeof_char();
       }
       else{
          return this->value_offset() + m_value_bytes;
@@ -118,7 +118,7 @@ struct block_header
    {
       return get_rounded_size
                ( size_type(sizeof(Header))
-			   , size_type(::boost::alignment_of<block_header<size_type> >::value))
+            , size_type(::boost::container::dtl::alignment_of<block_header<size_type> >::value))
            + total_size();
    }
 
@@ -131,7 +131,7 @@ struct block_header
    template<class CharType>
    CharType *name() const
    {
-      return const_cast<CharType*>(reinterpret_cast<const CharType*>
+      return const_cast<CharType*>(move_detail::force_ptr<const CharType*>
          (reinterpret_cast<const char*>(this) + name_offset()));
    }
 
@@ -158,27 +158,25 @@ struct block_header
    {
       return m_num_char < b.m_num_char ||
              (m_num_char < b.m_num_char &&
-               std::char_traits<CharType>::compare
-                  (name<CharType>(), b.name<CharType>(), m_num_char) < 0);
+              std::char_traits<CharType>::compare(name<CharType>(), b.name<CharType>(), m_num_char) < 0);
    }
 
    template<class CharType>
    bool equal_comp(const block_header<size_type> &b) const
    {
       return m_num_char == b.m_num_char &&
-             std::char_traits<CharType>::compare
-               (name<CharType>(), b.name<CharType>(), m_num_char) == 0;
+             std::char_traits<CharType>::compare(name<CharType>(), b.name<CharType>(), m_num_char) == 0;
    }
 
    template<class T>
    static block_header<size_type> *block_header_from_value(T *value)
-   {  return block_header_from_value(value, sizeof(T), ::boost::alignment_of<T>::value);  }
+   {  return block_header_from_value(value, sizeof(T), ::boost::container::dtl::alignment_of<T>::value);  }
 
    static block_header<size_type> *block_header_from_value(const void *value, std::size_t sz, std::size_t algn)
    {
       block_header * hdr =
          const_cast<block_header*>
-            (reinterpret_cast<const block_header*>(reinterpret_cast<const char*>(value) -
+            (move_detail::force_ptr<const block_header*>(reinterpret_cast<const char*>(value) -
                get_rounded_size(sizeof(block_header), algn)));
       (void)sz;
       //Some sanity checks
@@ -191,8 +189,9 @@ struct block_header
    static block_header<size_type> *from_first_header(Header *header)
    {
       block_header<size_type> * hdr =
-         reinterpret_cast<block_header<size_type>*>(reinterpret_cast<char*>(header) +
-		 get_rounded_size(size_type(sizeof(Header)), size_type(::boost::alignment_of<block_header<size_type> >::value)));
+         move_detail::force_ptr<block_header<size_type>*>(reinterpret_cast<char*>(header) +
+       get_rounded_size( size_type(sizeof(Header))
+                       , size_type(::boost::container::dtl::alignment_of<block_header<size_type> >::value)));
       //Some sanity checks
       return hdr;
    }
@@ -201,8 +200,9 @@ struct block_header
    static Header *to_first_header(block_header<size_type> *bheader)
    {
       Header * hdr =
-         reinterpret_cast<Header*>(reinterpret_cast<char*>(bheader) -
-		 get_rounded_size(size_type(sizeof(Header)), size_type(::boost::alignment_of<block_header<size_type> >::value)));
+         move_detail::force_ptr<Header*>(reinterpret_cast<char*>(bheader) -
+       get_rounded_size( size_type(sizeof(Header))
+                       , size_type(::boost::container::dtl::alignment_of<block_header<size_type> >::value)));
       //Some sanity checks
       return hdr;
    }
@@ -220,8 +220,7 @@ inline void array_construct(void *mem, std::size_t num, in_place_interface &tabl
       std::size_t destroyed = 0;
       table.destroy_n(mem, constructed, destroyed);
       BOOST_RETHROW
-   }
-   BOOST_CATCH_END
+   } BOOST_CATCH_END
 }
 
 template<class CharT>
@@ -276,12 +275,12 @@ struct intrusive_value_type_impl
 
    intrusive_value_type_impl(){}
 
-   enum  {  BlockHdrAlignment = ::boost::alignment_of<block_header<size_type> >::value  };
+   enum  {  BlockHdrAlignment = ::boost::container::dtl::alignment_of<block_header<size_type> >::value  };
 
    block_header<size_type> *get_block_header() const
    {
       return const_cast<block_header<size_type>*>
-         (reinterpret_cast<const block_header<size_type> *>(reinterpret_cast<const char*>(this) +
+         (move_detail::force_ptr<const block_header<size_type> *>(reinterpret_cast<const char*>(this) +
             get_rounded_size(size_type(sizeof(*this)), size_type(BlockHdrAlignment))));
    }
 
@@ -293,7 +292,7 @@ struct intrusive_value_type_impl
 
    static intrusive_value_type_impl *get_intrusive_value_type(block_header<size_type> *hdr)
    {
-      return reinterpret_cast<intrusive_value_type_impl *>(reinterpret_cast<char*>(hdr) -
+      return move_detail::force_ptr<intrusive_value_type_impl*>(reinterpret_cast<char*>(hdr) -
          get_rounded_size(size_type(sizeof(intrusive_value_type_impl)), size_type(BlockHdrAlignment)));
    }
 
@@ -326,6 +325,15 @@ class char_ptr_holder
    operator const CharType *()
    {  return m_name;  }
 
+   const CharType *get() const
+   {  return m_name;  }
+
+   bool is_unique() const
+   {  return m_name == reinterpret_cast<CharType*>(-1);  }
+
+   bool is_anonymous() const
+   {  return m_name == static_cast<CharType*>(0);  }
+
    private:
    const CharType *m_name;
 };
@@ -340,7 +348,7 @@ struct index_key
          rebind_pointer<const CharT>::type               const_char_ptr_t;
    typedef CharT                                         char_type;
    typedef typename boost::intrusive::pointer_traits<const_char_ptr_t>::difference_type difference_type;
-   typedef typename boost::make_unsigned<difference_type>::type size_type;
+   typedef typename boost::move_detail::make_unsigned<difference_type>::type size_type;
 
    private:
    //Offset pointer to the object's name
@@ -350,17 +358,17 @@ struct index_key
    public:
 
    //!Constructor of the key
-   index_key (const char_type *name, size_type length)
-      : mp_str(name), m_len(length) {}
+   index_key (const char_type *nm, size_type length)
+      : mp_str(nm), m_len(length)
+   {}
 
    //!Less than function for index ordering
    bool operator < (const index_key & right) const
    {
       return (m_len < right.m_len) ||
                (m_len == right.m_len &&
-               std::char_traits<char_type>::compare
-                  (to_raw_pointer(mp_str)
-              ,to_raw_pointer(right.mp_str), m_len) < 0);
+                std::char_traits<char_type>::compare
+                  (to_raw_pointer(mp_str),to_raw_pointer(right.mp_str), m_len) < 0);
    }
 
    //!Equal to function for index ordering
@@ -368,12 +376,11 @@ struct index_key
    {
       return   m_len == right.m_len &&
                std::char_traits<char_type>::compare
-                  (to_raw_pointer(mp_str),
-                   to_raw_pointer(right.mp_str), m_len) == 0;
+                  (to_raw_pointer(mp_str), to_raw_pointer(right.mp_str), m_len) == 0;
    }
 
-   void name(const CharT *name)
-   {  mp_str = name; }
+   void name(const CharT *nm)
+   {  mp_str = nm; }
 
    void name_length(size_type len)
    {  m_len = len; }
@@ -392,7 +399,7 @@ struct index_data
 {
    typedef VoidPointer void_pointer;
    void_pointer    m_ptr;
-   index_data(void *ptr) : m_ptr(ptr){}
+   explicit index_data(void *ptr) : m_ptr(ptr){}
 
    void *value() const
    {  return static_cast<void*>(to_raw_pointer(m_ptr));  }
@@ -465,7 +472,7 @@ class segment_manager_iterator_value_adaptor<Iterator, false>
 
    const void *value() const
    {
-      return reinterpret_cast<block_header<size_type>*>
+      return move_detail::force_ptr<block_header<size_type>*>
          (to_raw_pointer(m_val->second.m_ptr))->value();
    }
 
@@ -474,12 +481,10 @@ class segment_manager_iterator_value_adaptor<Iterator, false>
 
 template<class Iterator, bool intrusive>
 struct segment_manager_iterator_transform
-   :  std::unary_function< typename Iterator::value_type
-                         , segment_manager_iterator_value_adaptor<Iterator, intrusive> >
 {
    typedef segment_manager_iterator_value_adaptor<Iterator, intrusive> result_type;
 
-   result_type operator()(const typename Iterator::value_type &arg) const
+   template <class T> result_type operator()(const T &arg) const
    {  return result_type(arg); }
 };
 
