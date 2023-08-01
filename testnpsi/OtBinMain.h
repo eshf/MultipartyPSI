@@ -1,6 +1,8 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #pragma once
 
-#include "Crypto/PRNG.h"
 
 
 
@@ -23,3 +25,6 @@ void OPPRFn_Aug_EmptrySet_Test_Impl();
 void OPPRFnt_EmptrySet_Test_Impl();
 void BinSize(u64 setSize, std::vector<block> set, u64 psiSecParam);
 //void OPPRFn_EmptrySet_Test();
+#ifdef __cplusplus
+}
+#endif

@@ -83,7 +83,9 @@
         "variant": "cpp",
         "hash_map": "cpp",
         "hash_set": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "__config": "cpp",
+        "__verbose_abort": "cpp"
     },
     "cmake.sourceDirectory": "/home/norie/MultipartyPSI",
 }

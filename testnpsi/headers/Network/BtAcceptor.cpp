@@ -23,8 +23,6 @@ namespace osuCrypto {
 
     }
 
-
-
     BtAcceptor::~BtAcceptor()
     {
         stop();

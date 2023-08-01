@@ -19,8 +19,12 @@ using namespace osuCrypto;
 #include "Crypto/PRNG.h"
 #include <numeric>
 #include <iostream>
+#include "Crypto/PRNG.h"
+
 //#define OOS
 //#define PRINT
+
+extern "C"{
 #define pows  { 16/*8,12,,20*/ }
 #define threadss {1/*1,4,16,64*/}
 #define  numTrial 2
@@ -3908,7 +3912,7 @@ void OPPRFnt_EmptrySet_Test_Impl()
 
 }
 
-
+}
 //void OPPRF_EmptrySet_Test_Impl1()
 //{
 //	u64 setSize = 2 << 8, psiSecParam = 40, bitSize = 128;

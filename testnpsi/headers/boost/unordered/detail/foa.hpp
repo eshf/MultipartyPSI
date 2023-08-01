@@ -55,7 +55,7 @@
 #endif
 
 #if defined(BOOST_UNORDERED_SSE2)
-#include <emmintrin.h>
+#include <immintrin.h>
 #elif defined(BOOST_UNORDERED_LITTLE_ENDIAN_NEON)
 #include <arm_neon.h>
 #endif

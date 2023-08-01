@@ -1,8 +1,11 @@
 #pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-
-
-#include "Network/Channel.h"
 void senderGetLatency(osuCrypto::Channel& chl);
 
 void recverGetLatency(osuCrypto::Channel& chl);
+#ifdef __cplusplus
+}
+#endif

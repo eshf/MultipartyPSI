@@ -20,7 +20,9 @@ using namespace osuCrypto;
 #include <numeric>
 #include "bitPosition.h"
 #include <set>
+#include "Hashing/BitPosition.h"
 
+extern "C"{
 void Bit_Position_Test()
 {
 	u64 setSize = 32;
@@ -132,7 +134,7 @@ void Bit_Position_Recursive_Test()
 	b.init(setSize);
 	std::set<int> rs;
 
-	Timer timer;
+	Timer timer;     
 	auto start = timer.setTimePoint("start");
 
 	rs.insert(0);
@@ -272,4 +274,5 @@ void Channel_Test() {
 	}
 
 	ios.stop();
+}
 }

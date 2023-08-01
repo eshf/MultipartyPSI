@@ -12,7 +12,7 @@
     <script type="text/javascript">
         document.getElementById("npsibutton").addEventListener("click", () => {
             alert("check console");
-            const result = Module.ccall('party3','bigint',['bigint'],[myIdx], [setSize], [nTrials]); // arguments
+            const results = Module.ccall('test_party2','bigint',['bigint'],[setSize], [myIdx]); // arguments
           });
 </script>
 </body>

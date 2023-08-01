@@ -133,7 +133,7 @@ scheduler::scheduler(boost::asio::execution_context& ctx,
   if (own_thread)
   {
     ++outstanding_work_;
-    boost::asio::detail::signal_blocker sb;
+    boost::asio::io_service::detail::signal_blocker sb;
     thread_ = new boost::asio::detail::thread(thread_function(this));
   }
 }

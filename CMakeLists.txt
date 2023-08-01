@@ -78,4 +78,4 @@ include_directories(libOPRF)
 #############################################
 #              Build Backend               #
 #############################################
-add_subdirectory(appmpsi)
+add_subdirectory(testnpsi)

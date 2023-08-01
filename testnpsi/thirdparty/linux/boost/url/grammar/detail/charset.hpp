@@ -14,8 +14,7 @@
 #include <type_traits>
 
 #ifdef BOOST_URL_USE_SSE2
-# include <emmintrin.h>
-# include <xmmintrin.h>
+# include <immintrin.h>
 # ifdef _MSC_VER
 #  include <intrin.h>
 # endif
