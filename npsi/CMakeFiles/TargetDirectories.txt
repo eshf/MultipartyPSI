@@ -1,0 +1,3 @@
+/home/norieprojects/npsi/CMakeFiles/frontend.exe.dir
+/home/norieprojects/npsi/CMakeFiles/edit_cache.dir
+/home/norieprojects/npsi/CMakeFiles/rebuild_cache.dir
