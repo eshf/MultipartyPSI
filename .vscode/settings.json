@@ -88,4 +88,5 @@
         "__verbose_abort": "cpp"
     },
     "cmake.sourceDirectory": "/home/norie/MultipartyPSI",
+    "cmake.configureOnOpen": true,
 }
