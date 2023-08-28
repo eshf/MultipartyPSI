@@ -1,2 +1,0 @@
-*** CheckFlag log ***
-g++ -I../include -I.  -march=native -g -O2  -o  CheckCompile CheckCompile.c -lm
