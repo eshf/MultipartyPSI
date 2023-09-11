@@ -1,0 +1,5 @@
+echo "building Mircal"
+cd miracl/miracl/source/
+bash linux64
+cd miracl/miracl_osmt/source/
+bash linux64_cpp

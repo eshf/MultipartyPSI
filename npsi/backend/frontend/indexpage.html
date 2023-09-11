@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the document</title>
+         
+    <link rel="stylesheet" href="styles.css">
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="title">
+          <h2>
+            nPSI
+            <hr>
+          </h2>
+        </div>
+        <form class="form" action="/frontend/indexpage.cgi" method="post">
+        <div class="labelTitle">No. of Parties</labelTitle>
+        <input class="form-input" type="text" name="npsi" id="npsi">
+        <input type="radio" id="semiH" name="psimodel" value="semiH">
+        <label for="semiH">Semi Honest</label></br>
+        <input type="radio" id="augmented" name="psimodel" value="augmented">
+        <label for="augmented">Augmented</label></br>
+        <input type="radio" id="leader" name="role" value="leader">
+        <label for="leader">Leader</label></br>
+        <input type="radio" id="member" name="role" value="member">
+        <label for="member">Member</label></br>
+        </div>
+        <input type="submit" value="Submit">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  norieprojects:
+    image: norieprojects
+    build:
+      context: .
+      dockerfile: ./Dockerfile

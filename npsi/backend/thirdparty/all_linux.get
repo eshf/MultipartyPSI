@@ -1,0 +1,19 @@
+sudo yum4 install bzip2 -y
+sudo yum4 install unzip -y
+sudo yum4 install gcc-c++ -y
+sudo yum4 install m4 -y
+sudo yum4 install nasm
+
+sudo apt-get install bzip2 -y
+sudo apt-get install unzip -y
+sudo apt-get install gcc-c++ -y
+sudo apt-get install gcc-c++ -y
+sudo apt-get install m4
+sudo apt-get install nasm
+
+bash boost.get &
+bash miracl.get &
+bash ntl.get &
+
+wait
+echo "all done!"

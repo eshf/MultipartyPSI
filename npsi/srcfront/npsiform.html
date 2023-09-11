@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MultipartyPSI Results</title>
+<head>
+</head>
+<body>
+    <script type="text/javascript">
+        document.getElementById("npsibutton").addEventListener("click", () => {
+            alert("check console");
+            const results = Module.ccall('test_party2','bigint',['bigint'],[setSize], [myIdx]); // arguments
+          });
+</script>
+</body>
+</html>
+

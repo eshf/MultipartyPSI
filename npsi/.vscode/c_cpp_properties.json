@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/npsi/backend/**",
+                "${workspaceFolder}/npsi/frontendapp/**",
+                "${workspaceFolder}/npsi/backend/cryptoTools/**",
+                "${workspaceFolder}/npsi/backend/frontend/**",
+                "${workspaceFolder}/npsi/backend/include/**",
+                "${workspaceFolder}/npsi/backend/lib/**",
+                "${workspaceFolder}/npsi/backend/libOPRF/**",
+                "${workspaceFolder}/npsi/backend/libOTe/**",
+                "${workspaceFolder}/npsi/backend/libPSI_Tests/**",
+                "${workspaceFolder}/npsi/backend/libPSI_TestsVS/**",
+                "${workspaceFolder}/npsi/backend/stdlib/**",
+                "${workspaceFolder}/npsi/backend/w64devkit/**",
+                "${workspaceFolder}/npsi/backend/bin/include/**",
+                "${workspaceFolder}/npsi/backend/thirdparty/**",
+                "${workspaceFolder}/npsi/srcfront/**"
+            ],
+            "defines": ["VERSION=1"],
+            "intelliSenseMode": "linux-gcc-x64",
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c99",
+            "cppStandard": "c++98",
+            "configurationProvider": "ms-vscode.cpptools",
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "mergeConfigurations": true
+        }
+    ],
+    "version": 4
+}
