@@ -82,11 +82,7 @@
         "valarray": "cpp",
         "variant": "cpp",
         "hash_map": "cpp",
-        "hash_set": "cpp",
-        "*.inc": "cpp",
-        "__config": "cpp",
-        "__verbose_abort": "cpp"
+        "hash_set": "cpp"
     },
-    "cmake.sourceDirectory": "/home/norie/MultipartyPSI/npsi",
-    "cmake.configureOnOpen": true,
+    "cmake.configureOnOpen": true
 }

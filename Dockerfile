@@ -3,35 +3,26 @@
 ########################################################################################################################
 FROM ubuntu:22.04 AS MultipartyPSI
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    libstdc++11
+RUN apk add g++ make python
 
-WORKDIR /MultipartyPSI
+EXPOSE 8080
 
-COPY /MultipartyPSI/ ./MultipartyPSI
-COPY CMakeLists.txt .
+RUN mkdir /MultipartyPSI
 
 WORKDIR /MultipartyPSI/npsi
+
+COPY /MultipartyPSI/npsi ./MultipartyPSI/npsi
+COPY CMakeLists.txt .
 
 RUN cmake -DCMAKE_BUILD_TYPE=Release .. && \
     cmake --build . --parallel 8
 
+COPY . /MultipartyPSI
+
+RUN npm install
+CMD ["npm", "start"]
 ########################################################################################################################
 # npsi image
 ########################################################################################################################
 
-FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libstdc++11
-
-RUN adduser --system --group norie
-
-COPY --chown=norie:norie --from=MultipartyPSI \
-    ./MultipartyPSI/npsi \
-    ./npsi/
-
-ENTRYPOINT ["./npsi/src/testnpsi/main.cpp"]
