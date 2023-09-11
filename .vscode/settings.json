@@ -87,6 +87,6 @@
         "__config": "cpp",
         "__verbose_abort": "cpp"
     },
-    "cmake.sourceDirectory": "/home/norie/MultipartyPSI",
+    "cmake.sourceDirectory": "/home/norie/MultipartyPSI/npsi",
     "cmake.configureOnOpen": true,
 }
