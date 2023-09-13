@@ -84,5 +84,6 @@
         "hash_map": "cpp",
         "hash_set": "cpp"
     },
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "git.terminalAuthentication": false
 }
