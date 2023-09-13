@@ -1,0 +1,72 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "C/C++: g++ build active file",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-g",
+                "${workspaceFolder}/*.cpp",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-I",
+                "${workspaceFolder}/npsi/**",
+                "${workspaceFolder}/npsi/multipartypsi",
+                "${workspaceFolder}/npsi/multipartypsi/frontend/**",
+                "${workspaceFolder}/npsi/multipartypsi/cryptoTools/Common/**",
+                "${workspaceFolder}/npsi/multipartypsi/cryptoTools/Network/**",
+                "${workspaceFolder}/npsi/multipartypsi/cryptoTools/cryptoTools/**",
+                "${workspaceFolder}/npsi/multipartypsi/include/**",
+                "${workspaceFolder}/npsi/multipartypsi/lib/**",
+                "${workspaceFolder}/npsi/multipartypsi/libOPRF/**",
+                "${workspaceFolder}/npsi/multipartypsi/libOTe/**",
+                "${workspaceFolder}/npsi/multipartypsi/libPSI_Tests/**",
+                "${workspaceFolder}/npsi/multipartypsi/libPSI_TestsVS/**",
+                "${workspaceFolder}/npsi/multipartypsi/stdlib/**",
+                "${workspaceFolder}/npsi/multipartypsi/w64devkit/**",
+                "${workspaceFolder}/npsi/multipartypsi/thirdparty/**",
+                "${workspaceFolder}/npsi/multipartypsi/frontendapp/**",
+                "${workspaceFolder}/npsi/multipartypsi/glibc/**",
+                "${workspaceFolder}/npsi/multipartypsi/bin/**",
+                "${workspaceFolder}/npsi/multipartypsi/bin/include/**",
+                "-lsfml-audio",
+                "-lsfml-graphics",
+                "-lsfml-network",
+                "-lsfml-system",
+                "-lsfml-window",
+                "-lshlwapi"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "compiler:/usr/bin/gcc",
+        },
+    {
+    "type": "shell",
+    "label": "cmake",
+    "command": "cmake",
+    "args": [
+        "-Bbuild",
+        "-DCMAKE_CXX_FLAGS=-g",
+        "-DCMAKE_BUILD_TYPE=release",
+    ],
+    "options": {
+        "cwd": "${workspaceFolder}"
+    },
+    "dependsOn": [
+        "clean"
+    ],
+    "problemMatcher": []
+},
+]
+}
+
+

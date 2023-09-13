@@ -1,0 +1,83 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "C/C++: g++ build active file",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-g",
+                "${workspaceFolder}/*.cpp",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-I",
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/testnpsi/headers/**",
+                "${workspaceFolder}/testnpsi/thirdparty/linux/miracl/**",
+                "${workspaceFolder}/testnpsi/thirdparty/linux/ntl/**",
+                "${workspaceFolder}/testnpsi/thirdparty/win/**",
+                "${workspaceFolder}/testnpsi/emsdk/scripts/**",
+                "${workspaceFolder}/testnpsi/emsdk/test/**",
+                "${workspaceFolder}/testnpsi/emsdk/upstream/bin/**",
+                "${workspaceFolder}/testnpsi/emsdk/upstream/emscripten/**",
+                "${workspaceFolder}/testnpsi/emsdk/upstream/lib/**",
+                "${workspaceFolder}/testnpsi/emsdk/upstream/include/c++/v1/**",
+                "${workspaceFolder}/testnpsi/emsdk/upstream/include/c++/v1/**",
+                "${workspaceFolder}/testnpsi/emsdk/upstream/**",
+                "${workspaceFolder}/testnpsi/emsdk/bazel/emscripten_toolchain/**",
+                "${workspaceFolder}/testnpsi/emsdk/bazel/hello-world/**",
+                "${workspaceFolder}/testnpsi/emsdk/bazel/test_external/**",
+                "${workspaceFolder}/testnpsi/emsdk/docker/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/bin/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/share/doc/node/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/share/man/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/share/systemtap/tapset/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/include/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/include/node/cppgc/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/include/node/libplatform/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/include/node/openssl/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/include/node/openssl/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/include/node/uv/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/lib/node_modules/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/lib/node_modules/corepack/dist/**",
+                "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/lib/node_modules/corepack/shims/nodewin/**",
+                "-lsfml-audio",
+                "-lsfml-graphics",
+                "-lsfml-network",
+                "-lsfml-system",
+                "-lsfml-window",
+                "-lshlwapi"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "compiler:/usr/bin/gcc"
+        },
+    {
+    "type": "shell",
+    "label": "cmake",
+    "command": "cmake",
+    "args": [
+        "-Bbuild",
+        "-DCMAKE_CXX_FLAGS=-g",
+        "-DCMAKE_BUILD_TYPE=release",
+    ],
+    "options": {
+        "cwd": "${workspaceFolder}"
+    },
+    "dependsOn": [
+        "clean"
+    ],
+    "problemMatcher": []
+}
+]
+}
+
+

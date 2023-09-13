@@ -1,0 +1,3 @@
+/home/norie/MultipartyPSI/CMakeFiles/npsi.dir
+/home/norie/MultipartyPSI/CMakeFiles/edit_cache.dir
+/home/norie/MultipartyPSI/CMakeFiles/rebuild_cache.dir

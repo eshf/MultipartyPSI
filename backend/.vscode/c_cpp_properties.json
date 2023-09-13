@@ -1,0 +1,39 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": ["${workspaceFolder}/**",
+            "${workspaceFolder}/npsi/multipartypsi/**",
+            "${workspaceFolder}/npsi/multipartypsi/frontend/**",
+            "${workspaceFolder}/npsi/multipartypsi/cryptoTools/Network/**",
+            "${workspaceFolder}/npsi/multipartypsi/cryptoTools/Common/**",
+            "${workspaceFolder}/npsi/multipartypsi/cryptoTools/Crypto/**",
+            "${workspaceFolder}/npsi/multipartypsi/include/**",
+            "${workspaceFolder}/npsi/multipartypsi/lib/**",
+            "${workspaceFolder}/nspi/multipartypsi/libOPRF/**",
+            "${workspaceFolder}/npsi/multipartypsi/libOTe/**",
+            "${workspaceFolder}/npsi/multipartypsi/libPSI_Tests/**",
+            "${workspaceFolder}/npsi/multipartypsi/libPSI_TestsVS/**",
+            "${workspaceFolder}/npsi/multipartypsi/stdlib/**",
+            "${workspaceFolder}/npsi/multipartypsi/w64devkit/**",
+            "${workspaceFolder}/npsi/multipartypsi/thirdparty/**",
+            "${workspaceFolder}/npsi/multipartypsi/frontendapp/**",
+            "${workspaceFolder}/npsi/multipartypsi/glibc/**",
+            "${workspaceFolder}/npsi/multipartypsi/bin/**",
+            "${workspaceFolder}/npsi/multipartypsi/bin/include/**"
+        ],
+            "defines": ["VERSION=1"],
+            "intelliSenseMode": "linux-gcc-x64",
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c99",
+            "cppStandard": "c++98",
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "mergeConfigurations": true,
+            "configurationProvider": "ms-vscode.cpptools"
+        }
+    ],
+    "version": 4
+}
