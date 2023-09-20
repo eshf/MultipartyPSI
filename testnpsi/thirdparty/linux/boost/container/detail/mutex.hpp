@@ -30,8 +30,6 @@
 
 // Extremely Light-Weight wrapper classes for OS thread synchronization
 
-
-
 #define BOOST_MUTEX_HELPER_NONE         0
 #define BOOST_MUTEX_HELPER_WIN32        1
 #define BOOST_MUTEX_HELPER_PTHREAD      2
@@ -52,6 +50,13 @@
          defined(__i386__) || defined(__x86_64__))) ||                     \
       (defined(_MSC_VER) && _MSC_VER>=1310))
       #define BOOST_MUTEX_HELPER BOOST_MUTEX_HELPER_SPINLOCKS
+   #endif
+
+   #if defined(BOOST_WINDOWS)
+      #include <windows.h>
+      #ifndef BOOST_MUTEX_HELPER
+         #define BOOST_MUTEX_HELPER BOOST_MUTEX_HELPER_WIN32
+      #endif
    #elif defined(BOOST_HAS_UNISTD_H)
       #include <unistd.h>
       #if !defined(BOOST_MUTEX_HELPER) && (defined(_POSIX_THREADS) || defined(BOOST_HAS_PTHREADS))
@@ -68,9 +73,23 @@
    //...
 #elif BOOST_MUTEX_HELPER == BOOST_MUTEX_HELPER_SPINLOCKS
    #if defined(_MSC_VER)
-      #include <intrin.h>
+      #ifndef _M_AMD64
+         /* These are already defined on AMD64 builds */
+         #ifdef __cplusplus
+            extern "C" {
+         #endif /* __cplusplus */
+            long __cdecl _InterlockedCompareExchange(long volatile *Dest, long Exchange, long Comp);
+            long __cdecl _InterlockedExchange(long volatile *Target, long Value);
+         #ifdef __cplusplus
+            }
+         #endif /* __cplusplus */
+      #endif /* _M_AMD64 */
+      #pragma intrinsic (_InterlockedCompareExchange)
+      #pragma intrinsic (_InterlockedExchange)
+      #define interlockedcompareexchange _InterlockedCompareExchange
       #define interlockedexchange        _InterlockedExchange
    #elif defined(WIN32) && defined(__GNUC__)
+      #define interlockedcompareexchange(a, b, c) __sync_val_compare_and_swap(a, c, b)
       #define interlockedexchange                 __sync_lock_test_and_set
    #endif /* Win32 */
 
@@ -115,52 +134,8 @@
    /* How to yield for a spin lock */
    #define SPINS_PER_YIELD       63
    #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-      #if !defined( BOOST_USE_WINDOWS_H )
-         #if defined (WIN32_PLATFORM_PSPC)
-            #define BOOST_CONTAINERWINAPI_IMPORT BOOST_SYMBOL_IMPORT
-         #elif defined (_WIN32_WCE)
-            #define BOOST_CONTAINERWINAPI_IMPORT
-         #else
-            #define BOOST_CONTAINERWINAPI_IMPORT BOOST_SYMBOL_IMPORT
-         #endif
-
-         #if defined(WINAPI)
-            #define BOOST_CONTAINERWINAPI_WINAPI_CC WINAPI
-         #else
-            #if defined(_M_IX86) || defined(__i386__)
-               #define BOOST_CONTAINERWINAPI_DETAIL_STDCALL __stdcall
-            #else
-               #define BOOST_CONTAINERWINAPI_DETAIL_STDCALL
-            #endif
-            #define BOOST_CONTAINERWINAPI_WINAPI_CC BOOST_CONTAINERWINAPI_DETAIL_STDCALL
-         #endif
-
-         #if !defined(__LP64__)
-         namespace boost {
-            namespace container_winapi {
-            typedef unsigned long DWORD_;
-            #else
-            typedef unsigned int DWORD_;
-            #endif
-            typedef int BOOL_;
-         }}
-
-      extern "C" {
-         BOOST_CONTAINERWINAPI_IMPORT boost::container_winapi::DWORD_ BOOST_CONTAINERWINAPI_WINAPI_CC
-            SleepEx(
-               boost::container_winapi::DWORD_ dwMilliseconds,
-               boost::container_winapi::BOOL_ bAlertable);
-      } // extern "C"
-      #endif
-
-      namespace boost {
-         namespace container_winapi {
-            using ::SleepEx;
-         }
-      }
-
       #define SLEEP_EX_DURATION     50 /* delay for yield/sleep */
-      #define SPIN_LOCK_YIELD  boost::container_winapi::SleepEx(SLEEP_EX_DURATION, 0)
+      #define SPIN_LOCK_YIELD  SleepEx(SLEEP_EX_DURATION, FALSE)
    #elif defined (__SVR4) && defined (__sun) /* solaris */
       #include <thread.h>
       #define SPIN_LOCK_YIELD   thr_yield();
@@ -196,7 +171,7 @@
 
 namespace boost {
 namespace container {
-namespace dtl {
+namespace container_detail {
 
 #if BOOST_MUTEX_HELPER == BOOST_MUTEX_HELPER_NONE
    class null_mutex
@@ -293,7 +268,7 @@ class scoped_lock
    Mutex &m_;
 };
 
-} // namespace dtl
+} // namespace container_detail
 } // namespace container
 } // namespace boost
 

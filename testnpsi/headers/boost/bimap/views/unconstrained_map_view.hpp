@@ -12,7 +12,7 @@
 #ifndef BOOST_BIMAP_VIEWS_UNCONSTRAINED_MAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNCONSTRAINED_MAP_VIEW_HPP
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
 #pragma once
 #endif
 
@@ -31,8 +31,6 @@ class unconstrained_map_view
     template< class T >
     unconstrained_map_view(const T &) {}
 
-    typedef void iterator;
-    typedef void const_iterator;
     typedef void reference;
     typedef void const_reference;
     typedef void info_type;

@@ -14,11 +14,6 @@
 // using boost::math::isfinite;
 // using boost::math::isnan;
 
-#ifdef _MSC_VER
-# pragma warning(push)
-# pragma warning(disable: 4702) // unreachable code (return after domain_error throw).
-#endif
-
 namespace boost{ namespace math{ namespace detail
 {
 
@@ -103,10 +98,6 @@ inline bool check_x(
       RealType* result,
       const Policy& pol)
 {
-   // Note that this test catches both infinity and NaN.
-   // Some distributions permit x to be infinite, so these must be tested 1st and return,
-   // leaving this test to catch any NaNs.
-   // See Normal, Logistic, Laplace and Cauchy for example.
    if(!(boost::math::isfinite)(x))
    {
       *result = policies::raise_domain_error<RealType>(
@@ -115,27 +106,10 @@ inline bool check_x(
       return false;
    }
    return true;
+   // Note that this test catches both infinity and NaN.
+   // Some special cases permit x to be infinite, so these must be tested 1st,
+   // leaving this test to catch any NaNs.  see Normal and cauchy for example.
 } // bool check_x
-
-template <class RealType, class Policy>
-inline bool check_x_not_NaN(
-  const char* function,
-  RealType x,
-  RealType* result,
-  const Policy& pol)
-{
-  // Note that this test catches only NaN.
-  // Some distributions permit x to be infinite, leaving this test to catch any NaNs.
-  // See Normal, Logistic, Laplace and Cauchy for example.
-  if ((boost::math::isnan)(x))
-  {
-    *result = policies::raise_domain_error<RealType>(
-      function,
-      "Random variate x is %1%, but must be finite or + or - infinity!", x, pol);
-    return false;
-  }
-  return true;
-} // bool check_x_not_NaN
 
 template <class RealType, class Policy>
 inline bool check_x_gt0(
@@ -185,12 +159,11 @@ inline bool check_non_centrality(
       RealType* result,
       const Policy& pol)
 {
-   static const RealType upper_limit = static_cast<RealType>((std::numeric_limits<long long>::max)()) - boost::math::policies::get_max_root_iterations<Policy>();
-   if((ncp < 0) || !(boost::math::isfinite)(ncp) || ncp > upper_limit)
-   {
+   if((ncp < 0) || !(boost::math::isfinite)(ncp))
+   { // Assume scale == 0 is NOT valid for any distribution.
       *result = policies::raise_domain_error<RealType>(
          function,
-         "Non centrality parameter is %1%, but must be > 0, and a countable value such that x+1 != x", ncp, pol);
+         "Non centrality parameter is %1%, but must be > 0 !", ncp, pol);
       return false;
    }
    return true;
@@ -216,9 +189,5 @@ inline bool check_finite(
 } // namespace detail
 } // namespace math
 } // namespace boost
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
 
 #endif // BOOST_MATH_DISTRIBUTIONS_COMMON_ERROR_HANDLING_HPP

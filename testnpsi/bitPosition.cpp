@@ -1,28 +1,16 @@
-#include "Network/BtEndpoint.h" 
 
-#include "OPPRF/OPPRFReceiver.h"
-#include "OPPRF/OPPRFSender.h"
 
 #include <fstream>
 using namespace osuCrypto;
 #include "util.h"
 
-#include "Common/Defines.h"
-#include "NChooseOne/KkrtNcoOtReceiver.h"
-#include "NChooseOne/KkrtNcoOtSender.h"
 
-#include "NChooseOne/Oos/OosNcoOtReceiver.h"
-#include "NChooseOne/Oos/OosNcoOtSender.h"
-#include "Common/Log.h"
-#include "Common/Log1.h"
 #include "Common/Timer.h"
-#include "Crypto/PRNG.h"
-#include <numeric>
-#include "bitPosition.h"
-#include <set>
-#include "Hashing/BitPosition.h"
 
-extern "C"{
+#include <numeric>
+
+#include <set>
+
 void Bit_Position_Test()
 {
 	u64 setSize = 32;
@@ -134,7 +122,7 @@ void Bit_Position_Recursive_Test()
 	b.init(setSize);
 	std::set<int> rs;
 
-	Timer timer;     
+	Timer timer;
 	auto start = timer.setTimePoint("start");
 
 	rs.insert(0);
@@ -274,5 +262,4 @@ void Channel_Test() {
 	}
 
 	ios.stop();
-}
 }

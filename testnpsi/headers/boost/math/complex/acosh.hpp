@@ -16,7 +16,7 @@
 namespace boost{ namespace math{
 
 template<class T> 
-[[deprecated("Replaced by C++11")]] inline std::complex<T> acosh(const std::complex<T>& z)
+inline std::complex<T> acosh(const std::complex<T>& z)
 {
    //
    // We use the relation acosh(z) = +-i acos(z)

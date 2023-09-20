@@ -11,11 +11,7 @@
 #ifndef BOOST_INTERPROCESS_NULL_MUTEX_HPP
 #define BOOST_INTERPROCESS_NULL_MUTEX_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
 #endif
 
@@ -27,21 +23,25 @@
 //!Describes null_mutex classes
 
 namespace boost {
+
+namespace posix_time
+{  class ptime;   }
+
 namespace interprocess {
 
 //!Implements a mutex that simulates a mutex without doing any operation and
 //!simulates a successful operation.
 class null_mutex
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+   /// @cond
    null_mutex(const null_mutex&);
    null_mutex &operator= (const null_mutex&);
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+   /// @endcond
    public:
 
    //!Constructor.
    //!Empty.
-   null_mutex() BOOST_NOEXCEPT {}
+   null_mutex(){}
 
    //!Destructor.
    //!Empty.
@@ -57,21 +57,8 @@ class null_mutex
 
    //!Simulates a mutex timed_lock() operation.
    //!Equivalent to "return true;"
-   template<class TimePoint>
-   bool timed_lock(const TimePoint &)
+   bool timed_lock(const boost::posix_time::ptime &)
    {  return true;   }
-
-   //!Same as `timed_lock`, but this function is modeled after the
-   //!standard library interface.
-   template<class TimePoint>
-   bool try_lock_until(const TimePoint &)
-   {  return true;  }
-
-   //!Same as `timed_lock`, but this function is modeled after the
-   //!standard library interface.
-   template<class Duration> 
-   bool try_lock_for(const Duration &)
-   {  return true; }
 
    //!Simulates a mutex unlock() operation.
    //!Empty function.
@@ -81,35 +68,19 @@ class null_mutex
    //!Empty function.
    void lock_sharable(){}
 
-   //!Same as `lock_sharable` but with a std-compatible interface
-   //! 
-   void lock_shared()
-   {  this->lock_sharable();  }
-
    //!Simulates a mutex try_lock_sharable() operation.
    //!Equivalent to "return true;"
    bool try_lock_sharable()
    {  return true;   }
 
-   //!Same as `try_lock_sharable` but with a std-compatible interface
-   //! 
-   bool try_lock_shared()
-   {  return this->try_lock_sharable();  }
-
    //!Simulates a mutex timed_lock_sharable() operation.
    //!Equivalent to "return true;"
-   template<class TimePoint>
-   bool timed_lock_sharable(const TimePoint &)
+   bool timed_lock_sharable(const boost::posix_time::ptime &)
    {  return true;   }
 
    //!Simulates a mutex unlock_sharable() operation.
    //!Empty function.
    void unlock_sharable(){}
-
-   //!Same as `unlock_sharable` but with a std-compatible interface
-   //! 
-   void unlock_shared()
-   {  this->unlock_sharable();  }
 
    //!Simulates a mutex lock_upgradable() operation.
    //!Empty function.
@@ -122,8 +93,7 @@ class null_mutex
 
    //!Simulates a mutex timed_lock_upgradable() operation.
    //!Equivalent to "return true;"
-   template<class TimePoint>
-   bool timed_lock_upgradable(const TimePoint &)
+   bool timed_lock_upgradable(const boost::posix_time::ptime &)
    {  return true;   }
 
    //!Simulates a mutex unlock_upgradable() operation.
@@ -155,8 +125,7 @@ class null_mutex
 
    //!Simulates timed_unlock_upgradable_and_lock().
    //!Equivalent to "return true;"
-   template<class TimePoint>
-   bool timed_unlock_upgradable_and_lock(const TimePoint &)
+   bool timed_unlock_upgradable_and_lock(const boost::posix_time::ptime &)
    {  return true;   }
 
    //!Simulates try_unlock_sharable_and_lock().

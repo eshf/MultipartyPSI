@@ -14,7 +14,38 @@
 #ifndef BOOST_GEOMETRY_MULTI_IO_WKT_DETAIL_PREFIX_HPP
 #define BOOST_GEOMETRY_MULTI_IO_WKT_DETAIL_PREFIX_HPP
 
-#include <boost/config/pragma_message.hpp>
-BOOST_PRAGMA_MESSAGE("This include file is deprecated and will be removed in the future.")
+#include <boost/geometry/multi/core/tags.hpp>
+
+namespace boost { namespace geometry
+{
+
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail { namespace wkt
+{
+
+struct prefix_null
+{
+    static inline const char* apply() { return ""; }
+};
+
+struct prefix_multipoint
+{
+    static inline const char* apply() { return "MULTIPOINT"; }
+};
+
+struct prefix_multilinestring
+{
+    static inline const char* apply() { return "MULTILINESTRING"; }
+};
+
+struct prefix_multipolygon
+{
+    static inline const char* apply() { return "MULTIPOLYGON"; }
+};
+
+}} // namespace wkt::impl
+#endif
+
+}} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_MULTI_IO_WKT_DETAIL_PREFIX_HPP

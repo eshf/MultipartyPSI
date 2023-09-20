@@ -20,11 +20,7 @@
 #include <boost/heap/detail/heap_node.hpp>
 #include <boost/heap/detail/stable_heap.hpp>
 #include <boost/heap/detail/tree_iterator.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
-#endif
 
 #ifndef BOOST_DOXYGEN_INVOKED
 #ifdef BOOST_HEAP_SANITYCHECKS
@@ -88,7 +84,7 @@ struct skew_heap_node:
         children.assign(0);
     }
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifdef BOOST_HAS_RVALUE_REFS
     skew_heap_node(value_type && v):
         value(v)
     {
@@ -179,7 +175,7 @@ struct make_skew_heap_base
 {
     static const bool constant_time_size = parameter::binding<BoundArgs,
                                                               tag::constant_time_size,
-                                                              boost::true_type
+                                                              boost::mpl::true_
                                                              >::type::value;
 
     typedef typename make_heap_base<T, BoundArgs, constant_time_size>::type base_type;
@@ -189,11 +185,11 @@ struct make_skew_heap_base
     static const bool is_mutable = extract_mutable<BoundArgs>::value;
     static const bool store_parent_pointer = parameter::binding<BoundArgs,
                                                               tag::store_parent_pointer,
-                                                              boost::false_type>::type::value || is_mutable;
+                                                              boost::mpl::false_>::type::value || is_mutable;
 
     typedef skew_heap_node<typename base_type::internal_type, store_parent_pointer> node_type;
 
-    typedef typename boost::allocator_rebind<allocator_argument, node_type>::type allocator_type;
+    typedef typename allocator_argument::template rebind<node_type>::other allocator_type;
 
     struct type:
         base_type,
@@ -203,7 +199,7 @@ struct make_skew_heap_base
             base_type(arg)
         {}
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifdef BOOST_HAS_RVALUE_REFS
         type(type && rhs):
             base_type(std::move(static_cast<base_type&>(rhs))),
             allocator_type(std::move(static_cast<allocator_type&>(rhs)))
@@ -291,15 +287,15 @@ class skew_heap:
         typedef typename base_maker::allocator_type allocator_type;
 
         typedef typename base_maker::node_type node;
-        typedef typename boost::allocator_pointer<allocator_type>::type node_pointer;
-        typedef typename boost::allocator_const_pointer<allocator_type>::type const_node_pointer;
+        typedef typename allocator_type::pointer node_pointer;
+        typedef typename allocator_type::const_pointer const_node_pointer;
 
         typedef detail::value_extractor<value_type, internal_type, super_t> value_extractor;
 
         typedef boost::array<node_pointer, 2> child_list_type;
         typedef typename child_list_type::iterator child_list_iterator;
 
-        typedef typename boost::conditional<false,
+        typedef typename boost::mpl::if_c<false,
                                         detail::recursive_tree_iterator<node,
                                                                         child_list_iterator,
                                                                         const value_type,
@@ -363,7 +359,7 @@ public:
     static const bool has_reserve = false;
     static const bool is_mutable = detail::extract_mutable<bound_args>::value;
 
-    typedef typename boost::conditional<is_mutable, typename implementation_defined::handle_type, void*>::type handle_type;
+    typedef typename mpl::if_c<is_mutable, typename implementation_defined::handle_type, void*>::type handle_type;
 
     /// \copydoc boost::heap::priority_queue::priority_queue(value_compare const &)
     explicit skew_heap(value_compare const & cmp = value_compare()):
@@ -392,7 +388,7 @@ public:
         return *this;
     }
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifdef BOOST_HAS_RVALUE_REFS
     /// \copydoc boost::heap::priority_queue::priority_queue(priority_queue &&)
     skew_heap(skew_heap && rhs):
         super_t(std::move(rhs)), root(rhs.root)
@@ -421,13 +417,13 @@ public:
      * \b Complexity: Logarithmic (amortized).
      *
      * */
-    typename boost::conditional<is_mutable, handle_type, void>::type push(value_type const & v)
+    typename mpl::if_c<is_mutable, handle_type, void>::type push(value_type const & v)
     {
-        typedef typename boost::conditional<is_mutable, push_handle, push_void>::type push_helper;
+        typedef typename mpl::if_c<is_mutable, push_handle, push_void>::type push_helper;
         return push_helper::push(this, v);
     }
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+#if defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_VARIADIC_TEMPLATES)
     /**
      * \b Effects: Adds a new element to the priority queue. The element is directly constructed in-place.
      *
@@ -435,9 +431,9 @@ public:
      *
      * */
     template <typename... Args>
-    typename boost::conditional<is_mutable, handle_type, void>::type emplace(Args&&... args)
+    typename mpl::if_c<is_mutable, handle_type, void>::type emplace(Args&&... args)
     {
-        typedef typename boost::conditional<is_mutable, push_handle, push_void>::type push_helper;
+        typedef typename mpl::if_c<is_mutable, push_handle, push_void>::type push_helper;
         return push_helper::emplace(this, std::forward<Args>(args)...);
     }
 #endif
@@ -463,8 +459,7 @@ public:
     /// \copydoc boost::heap::priority_queue::max_size
     size_type max_size(void) const
     {
-        const allocator_type& alloc = *this;
-        return boost::allocator_max_size(alloc);
+        return allocator_type::max_size();
     }
 
     /// \copydoc boost::heap::priority_queue::clear
@@ -475,8 +470,8 @@ public:
 
         root->template clear_subtree<allocator_type>(*this);
         root->~node();
-        allocator_type& alloc = *this;
-        alloc.deallocate(root, 1);
+        allocator_type::deallocate(root, 1);
+
         root = NULL;
         size_holder::set_size(0);
     }
@@ -523,8 +518,7 @@ public:
             BOOST_HEAP_ASSERT(size_holder::get_size() == 0);
 
         top->~node();
-        allocator_type& alloc = *this;
-        alloc.deallocate(top, 1);
+        allocator_type::deallocate(top, 1);
         sanity_check();
     }
 
@@ -570,7 +564,7 @@ public:
         rhs.root = NULL;
         sanity_check();
 
-        super_t::set_stability_count((std::max)(super_t::get_stability_count(),
+        super_t::set_stability_count(std::max(super_t::get_stability_count(),
                                      rhs.get_stability_count()));
         rhs.set_stability_count(0);
     }
@@ -646,8 +640,7 @@ public:
 
         sanity_check();
         this_node->~node();
-        allocator_type& alloc = *this;
-        alloc.deallocate(this_node, 1);
+        allocator_type::deallocate(this_node, 1);
     }
 
     /**
@@ -769,7 +762,7 @@ private:
             self->push_internal(v);
         }
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+#if defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_VARIADIC_TEMPLATES)
         template <class... Args>
         static void emplace(skew_heap * self, Args&&... args)
         {
@@ -785,7 +778,7 @@ private:
             return handle_type(self->push_internal(v));
         }
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+#if defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_VARIADIC_TEMPLATES)
         template <class... Args>
         static handle_type emplace(skew_heap * self, Args&&... args)
         {
@@ -798,22 +791,22 @@ private:
     {
         size_holder::increment();
 
-        allocator_type& alloc = *this;
-        node_pointer n = alloc.allocate(1);
+        node_pointer n = super_t::allocate(1);
         new(n) node(super_t::make_node(v));
+
         merge_node(n);
         return n;
     }
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+#if defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_VARIADIC_TEMPLATES)
     template <class... Args>
     node_pointer emplace_internal(Args&&... args)
     {
         size_holder::increment();
 
-        allocator_type& alloc = *this;
-        node_pointer n = alloc.allocate(1);
+        node_pointer n = super_t::allocate(1);
         new(n) node(super_t::make_node(std::forward<Args>(args)...));
+
         merge_node(n);
         return n;
     }
@@ -840,9 +833,9 @@ private:
         if (rhs.empty())
             return;
 
-        allocator_type& alloc = *this;
-        root = alloc.allocate(1);
-        new(root) node(*rhs.root, alloc, NULL);
+        root = allocator_type::allocate(1);
+
+        new(root) node(*rhs.root, static_cast<allocator_type&>(*this), NULL);
     }
 
     void merge_node(node_pointer other)

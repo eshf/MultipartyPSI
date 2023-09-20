@@ -63,11 +63,6 @@ namespace boost
 
       typedef non_central_f_distribution<double> non_central_f; // Reserved name of type double.
 
-      #ifdef __cpp_deduction_guides
-      template <class RealType>
-      non_central_f_distribution(RealType,RealType,RealType)->non_central_f_distribution<typename boost::math::tools::promote_args<RealType>::type>;
-      #endif
-
       // Non-member functions to give properties of the distribution.
 
       template <class RealType, class Policy>
@@ -106,7 +101,7 @@ namespace boost
                l,
                &r,
                Policy()))
-                  return r;
+               return r;
          if(v2 <= 2)
             return policies::raise_domain_error(
                function,
@@ -137,11 +132,10 @@ namespace boost
                l,
                &r,
                Policy()))
-                  return r;
-         RealType guess = m > 2 ? RealType(m * (n + l) / (n * (m - 2))) : RealType(1);
+               return r;
          return detail::generic_find_mode(
             dist,
-            guess,
+            m * (n + l) / (n * (m - 2)),
             function);
       }
 
@@ -166,7 +160,7 @@ namespace boost
                l,
                &r,
                Policy()))
-                  return r;
+               return r;
          if(m <= 4)
             return policies::raise_domain_error(
                function,
@@ -203,7 +197,7 @@ namespace boost
                l,
                &r,
                Policy()))
-                  return r;
+               return r;
          if(m <= 6)
             return policies::raise_domain_error(
                function,
@@ -240,7 +234,7 @@ namespace boost
                l,
                &r,
                Policy()))
-                  return r;
+               return r;
          if(m <= 8)
             return policies::raise_domain_error(
                function,
@@ -309,7 +303,7 @@ namespace boost
                dist.non_centrality(),
                &r,
                Policy()))
-                  return r;
+               return r;
 
          if((x < 0) || !(boost::math::isfinite)(x))
          {
@@ -350,7 +344,7 @@ namespace boost
                c.dist.non_centrality(),
                &r,
                Policy()))
-                  return r;
+               return r;
 
          if((c.param < 0) || !(boost::math::isfinite)(c.param))
          {

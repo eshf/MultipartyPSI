@@ -1,27 +1,23 @@
-// Boost.Polygon library segment_concept.hpp header file
+/*
+  Copyright 2008 Intel Corporation
 
-// Copyright (c) Intel Corporation 2008.
-// Copyright (c) 2008-2012 Simonson Lucanus.
-// Copyright (c) 2012-2012 Andrii Sydorchuk.
-
-// See http://www.boost.org for updates, documentation, and revision history.
-// Use, modification and distribution is subject to the Boost Software License,
-// Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
+  Use, modification and distribution are subject to the Boost Software License,
+  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+*/
 #ifndef BOOST_POLYGON_SEGMENT_CONCEPT_HPP
 #define BOOST_POLYGON_SEGMENT_CONCEPT_HPP
 
 #include "isotropy.hpp"
+#include "segment_data.hpp"
 #include "segment_traits.hpp"
 #include "rectangle_concept.hpp"
 
 namespace boost {
 namespace polygon {
-
 struct segment_concept {};
 
-template <typename ConceptType>
+template <typename Segment>
 struct is_segment_concept {
   typedef gtl_no type;
 };
@@ -31,7 +27,7 @@ struct is_segment_concept<segment_concept> {
   typedef gtl_yes type;
 };
 
-template <typename ConceptType>
+template <typename Segment>
 struct is_mutable_segment_concept {
   typedef gtl_no type;
 };
@@ -41,64 +37,64 @@ struct is_mutable_segment_concept<segment_concept> {
   typedef gtl_yes type;
 };
 
-template <typename GeometryType, typename BoolType>
+template <typename Segment, typename CT>
 struct segment_distance_type_by_concept {
   typedef void type;
 };
 
-template <typename GeometryType>
-struct segment_distance_type_by_concept<GeometryType, gtl_yes> {
+template <typename Segment>
+struct segment_distance_type_by_concept<Segment, gtl_yes> {
   typedef typename coordinate_traits<
-    typename segment_traits<GeometryType>::coordinate_type
+    typename segment_traits<Segment>::coordinate_type
   >::coordinate_distance type;
 };
 
-template <typename GeometryType>
+template <typename Segment>
 struct segment_distance_type {
   typedef typename segment_distance_type_by_concept<
-    GeometryType,
+    Segment,
     typename is_segment_concept<
-      typename geometry_concept<GeometryType>::type
+      typename geometry_concept<Segment>::type
     >::type
   >::type type;
 };
 
-template <typename GeometryType, typename BoolType>
+template <typename Segment, typename CT>
 struct segment_point_type_by_concept {
   typedef void type;
 };
 
-template <typename GeometryType>
-struct segment_point_type_by_concept<GeometryType, gtl_yes> {
-  typedef typename segment_traits<GeometryType>::point_type type;
+template <typename Segment>
+struct segment_point_type_by_concept<Segment, gtl_yes> {
+  typedef typename segment_traits<Segment>::point_type type;
 };
 
-template <typename GeometryType>
+template <typename Segment>
 struct segment_point_type {
   typedef typename segment_point_type_by_concept<
-    GeometryType,
+    Segment,
     typename is_segment_concept<
-      typename geometry_concept<GeometryType>::type
+      typename geometry_concept<Segment>::type
     >::type
   >::type type;
 };
 
-template <typename GeometryType, typename BoolType>
+template <typename Segment, typename CT>
 struct segment_coordinate_type_by_concept {
   typedef void type;
 };
 
-template <typename GeometryType>
-struct segment_coordinate_type_by_concept<GeometryType, gtl_yes> {
-  typedef typename segment_traits<GeometryType>::coordinate_type type;
+template <typename Segment>
+struct segment_coordinate_type_by_concept<Segment, gtl_yes> {
+  typedef typename segment_traits<Segment>::coordinate_type type;
 };
 
-template <typename GeometryType>
+template <typename Segment>
 struct segment_coordinate_type {
   typedef typename segment_coordinate_type_by_concept<
-    GeometryType,
+    Segment,
     typename is_segment_concept<
-      typename geometry_concept<GeometryType>::type
+      typename geometry_concept<Segment>::type
     >::type
   >::type type;
 };
@@ -113,7 +109,8 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-typename segment_point_type<Segment>::type>::type
+  typename segment_point_type<Segment>::type
+>::type
 get(const Segment& segment, direction_1d dir) {
   return segment_traits<Segment>::get(segment, dir);
 }
@@ -131,7 +128,9 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-void>::type set(Segment& segment, direction_1d dir, const Point& point) {
+  void
+>::type
+set(Segment& segment, direction_1d dir, const Point& point) {
   segment_mutable_traits<Segment>::set(segment, dir, point);
 }
 
@@ -151,7 +150,9 @@ typename enable_if<
       typename geometry_concept<Point2>::type
     >::type
   >::type,
-Segment>::type construct(const Point1& low, const Point2& high) {
+  Segment
+>::type
+construct(const Point1& low, const Point2& high) {
   return segment_mutable_traits<Segment>::construct(low, high);
 }
 
@@ -168,7 +169,9 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-Segment1>::type copy_construct(const Segment2& segment) {
+  Segment1
+>::type
+copy_construct(const Segment2& segment) {
   return construct<Segment1>(get(segment, LOW), get(segment, HIGH));
 }
 
@@ -185,7 +188,9 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-Segment1>::type& assign(Segment1& segment1, const Segment2& segment2) {
+  Segment1
+>::type &
+assign(Segment1& segment1, const Segment2& segment2) {
   return segment1 = copy_construct<Segment1>(segment2);
 }
 
@@ -202,7 +207,9 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-bool>::type equivalence(const Segment1& segment1, const Segment2& segment2) {
+  bool
+>::type
+equivalence(const Segment1& segment1, const Segment2& segment2) {
   return get(segment1, LOW) == get(segment2, LOW) &&
          get(segment1, HIGH) == get(segment2, HIGH);
 }
@@ -217,7 +224,9 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-typename segment_point_type<Segment>::type>::type low(const Segment& segment) {
+  typename segment_point_type<Segment>::type
+>::type
+low(const Segment& segment) {
   return get(segment, LOW);
 }
 
@@ -231,7 +240,9 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-typename segment_point_type<Segment>::type>::type high(const Segment& segment) {
+  typename segment_point_type<Segment>::type
+>::type
+high(const Segment& segment) {
   return get(segment, HIGH);
 }
 
@@ -245,7 +256,8 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-typename segment_point_type<Segment>::type>::type
+  typename segment_point_type<Segment>::type
+>::type
 center(const Segment& segment) {
   return construct<typename segment_point_type<Segment>::type>(
       (x(high(segment)) + x(low(segment)))/2,
@@ -265,7 +277,9 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-void>::type low(Segment& segment, const Point& point) {
+  void
+>::type
+low(Segment& segment, const Point& point) {
   set(segment, LOW, point);
 }
 
@@ -282,7 +296,9 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-void>::type high(Segment& segment, const Point& point) {
+  void
+>::type
+high(Segment& segment, const Point& point) {
   set(segment, HIGH, point);
 }
 
@@ -300,7 +316,9 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-int>::type orientation(const Segment1& segment1, const Segment2& segment2) {
+  int
+>::type
+orientation(const Segment1& segment1, const Segment2& segment2) {
   typedef typename coordinate_traits<
     typename segment_traits<Segment1>::coordinate_type
   >::manhattan_area_type int_x2;
@@ -342,7 +360,9 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-int>::type orientation(const Segment& segment, const Point& point) {
+  int
+>::type
+orientation(const Segment& segment, const Point& point) {
   Segment segment2 = construct<Segment>(high(segment), point);
   return orientation(segment, segment2);
 }
@@ -360,8 +380,11 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-bool>::type contains(const Segment& segment,
-    const Point& point, bool consider_touch = true ) {
+  bool
+>::type
+contains(const Segment& segment,
+         const Point& point,
+         bool consider_touch = true ) {
   if (orientation(segment, point))
     return false;
   rectangle_data<typename segment_coordinate_type<Segment>::type> rect;
@@ -388,8 +411,11 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-bool>::type contains(const Segment1& segment1,
-    const Segment2& segment2, bool consider_touch = true) {
+  bool
+>::type
+contains(const Segment1& segment1,
+         const Segment2& segment2,
+         bool consider_touch = true) {
   return contains(segment1, get(segment2, LOW), consider_touch) &&
          contains(segment1, get(segment2, HIGH), consider_touch);
 }
@@ -404,7 +430,8 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-typename segment_distance_type<Segment>::type>::type
+  typename segment_distance_type<Segment>::type
+>::type
 length(const Segment& segment) {
   return euclidean_distance(low(segment), high(segment));
 }
@@ -419,10 +446,12 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-Segment>::type& scale_up(Segment& segment,
-    typename coordinate_traits<
-      typename segment_coordinate_type<Segment>::type
-    >::unsigned_area_type factor) {
+  Segment
+>::type &
+scale_up(Segment& segment,
+         typename coordinate_traits<
+           typename segment_coordinate_type<Segment>::type
+         >::unsigned_area_type factor) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, scale_up(l, factor));
@@ -440,10 +469,12 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-Segment>::type& scale_down(Segment& segment,
-    typename coordinate_traits<
-      typename segment_coordinate_type<Segment>::type
-    >::unsigned_area_type factor) {
+  Segment
+>::type &
+scale_down(Segment& segment,
+           typename coordinate_traits<
+             typename segment_coordinate_type<Segment>::type
+           >::unsigned_area_type factor) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, scale_down(l, factor));
@@ -461,7 +492,9 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-Segment>::type& scale(Segment& segment, const Scale& sc) {
+  Segment
+>::type &
+scale(Segment& segment, const Scale& sc) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, scale(l, sc));
@@ -479,7 +512,9 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-Segment>::type& transform(Segment& segment, const Transform& tr) {
+  Segment
+>::type &
+transform(Segment& segment, const Transform& tr) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, transform(l, tr));
@@ -497,8 +532,10 @@ typename enable_if<
       typename geometry_concept<Segment>::type
     >::type
   >::type,
-Segment>::type& move(Segment& segment, orientation_2d orient,
-    typename segment_coordinate_type<Segment>::type displacement) {
+  Segment
+>::type &
+move(Segment& segment, orientation_2d orient,
+     typename segment_coordinate_type<Segment>::type displacement) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, move(l, orient, displacement));
@@ -519,7 +556,9 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-Segment>::type& convolve(Segment& segment, const Point& point) {
+  Segment
+>::type &
+convolve(Segment& segment, const Point& point) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, convolve(l, point));
@@ -540,7 +579,9 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-Segment>::type& deconvolve(Segment& segment, const Point& point) {
+  Segment
+>::type &
+deconvolve(Segment& segment, const Point& point) {
   typename segment_point_type<Segment>::type l = low(segment);
   typename segment_point_type<Segment>::type h = high(segment);
   low(segment, deconvolve(l, point));
@@ -561,8 +602,9 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-bool>::type abuts(const Segment1& segment1,
-    const Segment2& segment2, direction_1d dir) {
+  bool
+>::type
+abuts(const Segment1& segment1, const Segment2& segment2, direction_1d dir) {
   return dir.to_int() ? equivalence(low(segment2) , high(segment1)) :
                         equivalence(low(segment1) , high(segment2));
 }
@@ -580,7 +622,9 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-bool>::type abuts(const Segment1& segment1, const Segment2& segment2) {
+  bool
+>::type
+abuts(const Segment1& segment1, const Segment2& segment2) {
   return abuts(segment1, segment2, HIGH) || abuts(segment1, segment2, LOW);
 }
 
@@ -597,9 +641,10 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-bool
->::type intersects(const Segment1& segment1, const Segment2& segment2,
-    bool consider_touch = true) {
+  bool
+>::type
+intersects(const Segment1& segment1, const Segment2& segment2,
+           bool consider_touch = true) {
   rectangle_data<typename segment_coordinate_type<Segment1>::type> rect1, rect2;
   set_points(rect1, low(segment1), high(segment1));
   set_points(rect2, low(segment2), high(segment2));
@@ -635,7 +680,8 @@ typename enable_if<
       typename geometry_concept<Point>::type
     >::type
   >::type,
-typename segment_distance_type<Segment>::type>::type
+  typename segment_distance_type<Segment>::type
+>::type
 euclidean_distance(const Segment& segment, const Point& point) {
   typedef typename segment_distance_type<Segment>::type Unit;
   Unit x1 = x(low(segment));
@@ -675,7 +721,8 @@ typename enable_if<
       typename geometry_concept<Segment2>::type
     >::type
   >::type,
-typename segment_distance_type<Segment1>::type>::type
+  typename segment_distance_type<Segment1>::type
+>::type
 euclidean_distance(const Segment1& segment1, const Segment2& segment2) {
   if (intersects(segment1, segment2))
     return 0.0;
@@ -690,7 +737,18 @@ euclidean_distance(const Segment1& segment1, const Segment2& segment2) {
     result3 = result4;
   return (result1 < result3) ? result1 : result3;
 }
-}  // polygon
-}  // boost
 
-#endif  // BOOST_POLYGON_SEGMENT_CONCEPT_HPP
+template <class T>
+template <class Segment>
+segment_data<T>& segment_data<T>::operator=(const Segment& rvalue) {
+  assign(*this, rvalue);
+  return *this;
+}
+
+template <typename T>
+struct geometry_concept<segment_data<T> > {
+  typedef segment_concept type;
+};
+}
+}
+#endif

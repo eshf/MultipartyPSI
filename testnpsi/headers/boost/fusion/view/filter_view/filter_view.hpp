@@ -7,7 +7,6 @@
 #if !defined(FUSION_SEQUENCE_FILTER_VIEW_HPP)
 #define FUSION_SEQUENCE_FILTER_VIEW_HPP
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/detail/access.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/is_view.hpp>
@@ -21,11 +20,6 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/identity.hpp>
-
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable: 4512) // assignment operator could not be generated.
-#endif
 
 namespace boost { namespace fusion
 {
@@ -51,22 +45,19 @@ namespace boost { namespace fusion
         typedef typename result_of::end<Sequence>::type last_type;
         typedef Pred pred_type;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
         filter_view(Sequence& in_seq)
             : seq(in_seq)
         {}
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
         first_type first() const { return fusion::begin(seq); }
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
         last_type last() const { return fusion::end(seq); }
         typename mpl::if_<traits::is_view<Sequence>, Sequence, Sequence&>::type seq;
+
+    private:
+        // silence MSVC warning C4512: assignment operator could not be generated
+        filter_view& operator= (filter_view const&);
     };
 }}
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
 
 #endif
 

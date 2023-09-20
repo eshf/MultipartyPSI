@@ -150,11 +150,8 @@ namespace boost { namespace polygon{
     //       return o;
     //     }
 
-    class lessScan45ElementRise {
+    class lessScan45ElementRise : public std::binary_function<Scan45Element, Scan45Element, bool> {
     public:
-      typedef Scan45Element first_argument_type;
-      typedef Scan45Element second_argument_type;
-      typedef bool result_type;
       inline lessScan45ElementRise() {} //default constructor is only constructor
       inline bool operator () (Scan45Element elm1, Scan45Element elm2) const {
         return elm1.rise < elm2.rise;
@@ -275,9 +272,13 @@ namespace boost { namespace polygon{
       inline Vertex45T(const Vertex45T& vertex) : pt(vertex.pt), rise(vertex.rise), count(vertex.count) {}
       inline Vertex45T& operator=(const Vertex45T& vertex){
         pt = vertex.pt; rise = vertex.rise; count = vertex.count; return *this; }
+      inline Vertex45T(const std::pair<Point, Point>& vertex) : pt(), rise(), count() {}
+      inline Vertex45T& operator=(const std::pair<Point, Point>& vertex){ return *this; }
       inline bool operator==(const Vertex45T& vertex) const {
         return pt == vertex.pt && rise == vertex.rise && count == vertex.count; }
       inline bool operator!=(const Vertex45T& vertex) const { return !((*this) == vertex); }
+      inline bool operator==(const std::pair<Point, Point>& vertex) const { return false; }
+      inline bool operator!=(const std::pair<Point, Point>& vertex) const { return !((*this) == vertex); }
       inline bool operator<(const Vertex45T& vertex) const {
         if(pt.x() < vertex.pt.x()) return true;
         if(pt.x() == vertex.pt.x()) {
@@ -369,7 +370,6 @@ namespace boost { namespace polygon{
     template <int op>
     static bool applyLogic(Count2 count) {
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (push)
 #pragma warning (disable: 4127)
 #endif
       if(op == 0) { //apply or
@@ -383,7 +383,7 @@ namespace boost { namespace polygon{
       } else
         return false;
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (pop)
+#pragma warning (default: 4127)
 #endif
     }
 
@@ -395,9 +395,9 @@ namespace boost { namespace polygon{
         int edgeType = applyLogic<op>(count1, count2);
         if(edgeType) {
           int multiplier = end == LOW ? -1 : 1;
-          //std::cout << "cross logic: " << edgeType << "\n";
+          //std::cout << "cross logic: " << edgeType << std::endl;
           output.insert(output.end(), Vertex45(pt, rise, edgeType * multiplier));
-          //std::cout << "write out: " << crossPoint << " " << Point(eraseItrs[i]->x, eraseItrs[i]->y) << "\n";
+          //std::cout << "write out: " << crossPoint << " " << Point(eraseItrs[i]->x, eraseItrs[i]->y) << std::endl;
         }
       }
     };
@@ -405,7 +405,6 @@ namespace boost { namespace polygon{
     template <int op>
     static bool applyLogic(Count1 count) {
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (push)
 #pragma warning (disable: 4127)
 #endif
       if(op == 0) { //apply or
@@ -417,7 +416,7 @@ namespace boost { namespace polygon{
       } else
         return false;
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (pop)
+#pragma warning (default: 4127)
 #endif
     }
 
@@ -429,9 +428,9 @@ namespace boost { namespace polygon{
         int edgeType = applyLogic<op>(count1, count2);
         if(edgeType) {
           int multiplier = end == LOW ? -1 : 1;
-          //std::cout << "cross logic: " << edgeType << "\n";
+          //std::cout << "cross logic: " << edgeType << std::endl;
           output.insert(output.end(), Vertex45(pt, rise, edgeType * multiplier));
-          //std::cout << "write out: " << crossPoint << " " << Point(eraseItrs[i]->x, eraseItrs[i]->y) << "\n";
+          //std::cout << "write out: " << crossPoint << " " << Point(eraseItrs[i]->x, eraseItrs[i]->y) << std::endl;
         }
       }
     };
@@ -460,11 +459,8 @@ namespace boost { namespace polygon{
         return Scan45Element(vertex.first.x(), vertex.first.y(), index - 1, vertex.second[index]);
       }
 
-      class lessScan45Point {
+      class lessScan45Point : public std::binary_function<Point, Point, bool> {
       public:
-      typedef Point first_argument_type;
-      typedef Point second_argument_type;
-      typedef bool result_type;
         inline lessScan45Point() {} //default constructor is only constructor
         inline bool operator () (const Point& v1, const Point& v2) const {
           return (v1.x() < v2.x()) || (v1.x() == v2.x() && v1.y() < v2.y());
@@ -514,18 +510,18 @@ namespace boost { namespace polygon{
         //std::cout << "1\n";
         while(inputBegin != inputEnd) {
           //std::cout << "2\n";
-          //std::cout << "x_ = " << x_ << "\n";
-          //std::cout << "scan line size: " << scanData_.size() << "\n";
+          //std::cout << "x_ = " << x_ << std::endl;
+          //std::cout << "scan line size: " << scanData_.size() << std::endl;
           //for(iterator iter = scanData_.begin();
           //     iter != scanData_.end(); ++iter) {
           //   std::cout << "scan element\n";
-          //   std::cout << *iter << " " << iter->evalAtX(x_) << "\n";
+          //   std::cout << *iter << " " << iter->evalAtX(x_) << std::endl;
           // }
-          // std::cout << "cross queue size: " << crossQueue_.size() << "\n";
-          // std::cout << "cross vector size: " << crossVector_.size() << "\n";
+          // std::cout << "cross queue size: " << crossQueue_.size() << std::endl;
+          // std::cout << "cross vector size: " << crossVector_.size() << std::endl;
           //for(CrossQueue::iterator cqitr = crossQueue_.begin(); cqitr != crossQueue_.end(); ++cqitr) {
           //   std::cout << *cqitr << " ";
-          //} std::cout << "\n";
+          //} std::cout << std::endl;
           Unit nextX = (*inputBegin).first.x();
           if(!crossVector_.empty() && crossVector_[0].first.x() < nextX) nextX = crossVector_[0].first.x();
           if(nextX != x_) {
@@ -571,18 +567,18 @@ namespace boost { namespace polygon{
           //std::cout << "loop\n";
           //pop point off the cross queue
           Point crossPoint = *(crossQueue_.begin());
-          //std::cout << crossPoint << "\n";
+          //std::cout << crossPoint << std::endl;
           //for(iterator iter = scanData_.begin();
           //    iter != scanData_.end(); ++iter) {
           //  std::cout << "scan element\n";
-          //  std::cout << *iter << " " << iter->evalAtX(x_) << "\n";
+          //  std::cout << *iter << " " << iter->evalAtX(x_) << std::endl;
           //}
           crossQueue_.erase(crossQueue_.begin());
           Scan45Vertex vertex(crossPoint, Scan45Count());
           iterator lowIter = lookUp_(vertex.first.y());
-          //std::cout << "searching at: " << vertex.first.y() << "\n";
+          //std::cout << "searching at: " << vertex.first.y() << std::endl;
           //if(lowIter == scanData_.end()) std::cout << "could not find\n";
-          //else std::cout << "found: " << *lowIter << "\n";
+          //else std::cout << "found: " << *lowIter << std::endl;
           if(lowIter == scanData_.end() ||
              lowIter->evalAtX(x_) != vertex.first.y()) {
             //   std::cout << "skipping\n";
@@ -597,7 +593,7 @@ namespace boost { namespace polygon{
             --searchDownItr;
             countBelow = searchDownItr->count;
           }
-          //std::cout << "Below Count: " << countBelow << "\n";
+          //std::cout << "Below Count: " << countBelow << std::endl;
           Scan45Count count(countBelow);
           std::size_t numEdges = 0;
           iterator eraseItrs[3];
@@ -605,7 +601,7 @@ namespace boost { namespace polygon{
                 lowIter->evalAtX(x_) == vertex.first.y()) {
             for(int index = lowIter->rise +1; index >= 0; --index)
               count[index] = lowIter->count;
-            //std::cout << count << "\n";
+            //std::cout << count << std::endl;
             eraseItrs[numEdges] = lowIter;
             ++numEdges;
             ++lowIter;
@@ -634,8 +630,8 @@ namespace boost { namespace polygon{
           vertex.second[0] = count[0] - count[1];
           //add the point, deriviative pair into the cross vector
           //std::cout << "LOOK HERE!\n";
-          //std::cout << count << "\n";
-          //std::cout << vertex << "\n";
+          //std::cout << count << std::endl;
+          //std::cout << vertex << std::endl;
           crossVector_.push_back(vertex);
         }
         //erase crossing elements
@@ -690,10 +686,10 @@ namespace boost { namespace polygon{
         iterator prevIter = scanData_.end();
         while(inputBegin != inputEnd &&
               (*inputBegin).first.x() == x_) {
-          //std::cout << (*inputBegin) << "\n";
+          //std::cout << (*inputBegin) << std::endl;
           //std::cout << "loop\n";
           Scan45Vertex vertex = *inputBegin;
-          //std::cout << vertex.first << "\n";
+          //std::cout << vertex.first << std::endl;
           //if vertical count propigating up fake a null event at the next element
           if(verticalCount != CountType() && (prevIter != scanData_.end() &&
                                               prevIter->evalAtX(x_) < vertex.first.y())) {
@@ -711,13 +707,13 @@ namespace boost { namespace polygon{
               ++inputBegin;
             }
           }
-          //std::cout << vertex.second << "\n";
+          //std::cout << vertex.second << std::endl;
           //integrate vertex
           CountType currentCount = verticalCount;// + vertex.second[0];
           for(unsigned int i = 0; i < 3; ++i) {
             vertex.second[i] = currentCount += vertex.second[i];
           }
-          //std::cout << vertex.second << "\n";
+          //std::cout << vertex.second << std::endl;
           //vertex represents the change in state at this point
 
           //get counts at current vertex
@@ -729,8 +725,8 @@ namespace boost { namespace polygon{
             countBelow = lowIter->count;
             ++lowIter;
           }
-          //std::cout << "Count Below: " << countBelow[0] << " " << countBelow[1] << "\n";
-          //std::cout << "vertical count: " << verticalCount[0] << " " << verticalCount[1] << "\n";
+          //std::cout << "Count Below: " << countBelow[0] << " " << countBelow[1] << std::endl;
+          //std::cout << "vertical count: " << verticalCount[0] << " " << verticalCount[1] << std::endl;
           Scan45Count countAt(countBelow - verticalCount);
           //check if the vertical edge should be written out
           if(verticalCount != CountType()) {
@@ -760,20 +756,20 @@ namespace boost { namespace polygon{
           }
           verticalCount += vertex.second[3];
           prevPoint = vertex.first;
-          //std::cout << "new vertical count: " << verticalCount[0] << " " << verticalCount[1] << "\n";
+          //std::cout << "new vertical count: " << verticalCount[0] << " " << verticalCount[1] << std::endl;
           prevIter = lowIter;
           //count represents the current state at this point
-          //std::cout << vertex.second << "\n";
-          //std::cout << countAt << "\n";
+          //std::cout << vertex.second << std::endl;
+          //std::cout << countAt << std::endl;
           //std::cout << "ADD\n";
           vertex.second += countAt;
-          //std::cout << vertex.second << "\n";
+          //std::cout << vertex.second << std::endl;
 
           //add elements to the scanline
           for(int i = 0; i < 3; ++i) {
             if(vertex.second[i] != countBelow) {
               //std::cout << "insert: " << vertex.first.x() << " " << vertex.first.y() << " " << i-1 <<
-              //  " " << vertex.second[i][0] << " " << vertex.second[i][1] << "\n";
+              //  " " << vertex.second[i][0] << " " << vertex.second[i][1] << std::endl;
               iterator insertIter = scanData_.insert(scanData_.end(),
                                                      Scan45ElementT<CountType>(vertex.first.x(),
                                                                                vertex.first.y(),
@@ -868,7 +864,7 @@ namespace boost { namespace polygon{
             }
           }
         }
-        //std::cout << "\n";
+        //std::cout << std::endl;
       }
 
       inline iterator lookUp_(Unit y){
@@ -882,7 +878,7 @@ namespace boost { namespace polygon{
     //                               lessScan45Element<CountType> >& data) {
     //  typename std::set<Scan45ElementT<CountType>, lessScan45Element<CountType> >::const_iterator iter;
     //  for(iter = data.begin(); iter != data.end(); ++iter) {
-    //    std::cout << iter->x << " " << iter->y << " " << iter->rise << "\n";
+    //    std::cout << iter->x << " " << iter->y << " " << iter->rise << std::endl;
     //  }
     //}
 
@@ -961,13 +957,13 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(10, 10), 2, 1));
       reference.push_back(Vertex45(Point(10, 10), 0, 1));
       if(result != reference) {
-        stdcout << "result size == " << result.size() << "\n";
+        stdcout << "result size == " << result.size() << std::endl;
         for(std::size_t i = 0; i < result.size(); ++i) {
-          //std::cout << "result == " << result[i]<< "\n";
+          //std::cout << "result == " << result[i]<< std::endl;
         }
-        stdcout << "reference size == " << reference.size() << "\n";
+        stdcout << "reference size == " << reference.size() << std::endl;
         for(std::size_t i = 0; i < reference.size(); ++i) {
-          //std::cout << "reference == " << reference[i]<< "\n";
+          //std::cout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
@@ -1011,13 +1007,13 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(10, 20), 2, 1));
       reference.push_back(Vertex45(Point(10, 20), 1, 1));
       if(result != reference) {
-        stdcout << "result size == " << result.size() << "\n";
+        stdcout << "result size == " << result.size() << std::endl;
         for(std::size_t i = 0; i < result.size(); ++i) {
-          //std::cout << "result == " << result[i]<< "\n";
+          //std::cout << "result == " << result[i]<< std::endl;
         }
-        stdcout << "reference size == " << reference.size() << "\n";
+        stdcout << "reference size == " << reference.size() << std::endl;
         for(std::size_t i = 0; i < reference.size(); ++i) {
-          //std::cout << "reference == " << reference[i]<< "\n";
+          //std::cout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
@@ -1061,13 +1057,13 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(20, 10), 1, -1));
       reference.push_back(Vertex45(Point(20, 10), 0, 1));
       if(result != reference) {
-        stdcout << "result size == " << result.size() << "\n";
+        stdcout << "result size == " << result.size() << std::endl;
         for(std::size_t i = 0; i < result.size(); ++i) {
-          //stdcout << "result == " << result[i]<< "\n";
+          //stdcout << "result == " << result[i]<< std::endl;
         }
-        stdcout << "reference size == " << reference.size() << "\n";
+        stdcout << "reference size == " << reference.size() << std::endl;
         for(std::size_t i = 0; i < reference.size(); ++i) {
-          //stdcout << "reference == " << reference[i]<< "\n";
+          //stdcout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
@@ -1118,13 +1114,13 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(10, 10), 2, 1));
       reference.push_back(Vertex45(Point(10, 10), 0, 1));
       if(result != reference) {
-        stdcout << "result size == " << result.size() << "\n";
+        stdcout << "result size == " << result.size() << std::endl;
         for(std::size_t i = 0; i < result.size(); ++i) {
-          //stdcout << "result == " << result[i]<< "\n";
+          //stdcout << "result == " << result[i]<< std::endl;
         }
-        stdcout << "reference size == " << reference.size() << "\n";
+        stdcout << "reference size == " << reference.size() << std::endl;
         for(std::size_t i = 0; i < reference.size(); ++i) {
-          //stdcout << "reference == " << reference[i]<< "\n";
+          //stdcout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
@@ -1180,8 +1176,8 @@ namespace boost { namespace polygon{
       // result == 12 8 1 -1
       // result == 12 8 -1 1
       if(result.size() != 24) {
-        //stdcout << "result size == " << result.size() << "\n";
-        //stdcout << "reference size == " << 24 << "\n";
+        //stdcout << "result size == " << result.size() << std::endl;
+        //stdcout << "reference size == " << 24 << std::endl;
         return false;
       }
       stdcout << "done testing Scan45Star1\n";
@@ -1236,8 +1232,8 @@ namespace boost { namespace polygon{
       // result == 16 8 1 -1
       // result == 16 8 0 1
       if(result.size() != 24) {
-        //std::cout << "result size == " << result.size() << "\n";
-        //std::cout << "reference size == " << 24 << "\n";
+        //std::cout << "result size == " << result.size() << std::endl;
+        //std::cout << "reference size == " << 24 << std::endl;
         return false;
       }
       stdcout << "done testing Scan45Star2\n";
@@ -1301,8 +1297,8 @@ namespace boost { namespace polygon{
       // result == 12 14 2 1
       // result == 12 14 0 1
       if(result.size() != 28) {
-        //std::cout << "result size == " << result.size() << "\n";
-        //std::cout << "reference size == " << 28 << "\n";
+        //std::cout << "result size == " << result.size() << std::endl;
+        //std::cout << "reference size == " << 28 << std::endl;
         return false;
       }
 
@@ -1368,8 +1364,8 @@ namespace boost { namespace polygon{
       // result == 16 12 2 1
       // result == 16 12 0 1
       if(result.size() != 28) {
-        //stdcout << "result size == " << result.size() << "\n";
-        //stdcout << "reference size == " << 28 << "\n";
+        //stdcout << "result size == " << result.size() << std::endl;
+        //stdcout << "reference size == " << 28 << std::endl;
         return false;
       }
 

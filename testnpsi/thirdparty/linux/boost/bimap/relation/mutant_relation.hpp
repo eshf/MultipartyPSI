@@ -23,7 +23,7 @@
 #include <boost/call_traits.hpp>
 
 #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
-  #include <boost/core/serialization.hpp>
+  #include <boost/serialization/nvp.hpp>
 #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 
 #include <boost/functional/hash/hash.hpp>

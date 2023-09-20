@@ -4,7 +4,6 @@
 #include <set>
 #include <list>
 #include <vector>
-#include <string>
 
 class CommandLineParserError : public std::exception
 {

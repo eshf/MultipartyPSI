@@ -11,11 +11,7 @@
 #ifndef BOOST_INTERPROCESS_BASIC_GLOBAL_MEMORY_HPP
 #define BOOST_INTERPROCESS_BASIC_GLOBAL_MEMORY_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)&&(_MSC_VER>=1200)
 #pragma once
 #endif
 
@@ -27,7 +23,7 @@
 #include <boost/interprocess/sync/spin/recursive_mutex.hpp>
 #include <boost/interprocess/detail/managed_memory_impl.hpp>
 #include <boost/interprocess/detail/managed_open_or_create_impl.hpp>
-#include <boost/interprocess/mem_algo/rbtree_best_fit.hpp>
+#include <boost/interprocess/mem_algo/rbtree_best_fit.hpp> 
 #include <boost/interprocess/indexes/iset_index.hpp>
 #include <boost/interprocess/creation_tags.hpp>
 #include <boost/interprocess/permissions.hpp>
@@ -51,7 +47,7 @@ struct intermodule_types
    struct open_or_create
    {
       typedef managed_open_or_create_impl
-            <Device, mem_algo::Alignment, FileBased, false> type;
+            <Device, mem_algo::Alignment, FileBased> type;
    };
 };
 
@@ -66,7 +62,7 @@ class basic_managed_global_memory
       >
    , private intermodule_types::open_or_create<Device, FileBased>::type
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+   /// @cond
    typedef typename intermodule_types::template open_or_create<Device, FileBased>::type base2_t;
 
    typedef basic_managed_memory_impl
@@ -87,23 +83,23 @@ class basic_managed_global_memory
    private:
    typedef typename base_t::char_ptr_holder_t   char_ptr_holder_t;
    BOOST_MOVABLE_BUT_NOT_COPYABLE(basic_managed_global_memory)
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+   /// @endcond
 
    public: //functions
 
-   basic_managed_global_memory (open_or_create_t,
+   basic_managed_global_memory (open_or_create_t open_or_create,
                               const char *name, size_type size,
                               const void *addr = 0, const permissions& perm = permissions())
       : base_t()
-      , base2_t(open_or_create_t(), name, size, read_write, addr,
+      , base2_t(open_or_create, name, size, read_write, addr,
                 create_open_func_t(get_this_pointer(),
                 DoOpenOrCreate), perm)
    {}
 
-   basic_managed_global_memory (open_only_t , const char* name,
+   basic_managed_global_memory (open_only_t open_only, const char* name,
                                 const void *addr = 0)
       : base_t()
-      , base2_t(open_only_t(), name, read_write, addr,
+      , base2_t(open_only, name, read_write, addr,
                 create_open_func_t(get_this_pointer(),
                 DoOpen))
    {}

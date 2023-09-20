@@ -29,15 +29,16 @@
 #include <boost/container/detail/allocation_type.hpp>       //allocation_type
 #include <boost/container/detail/mpl.hpp>                   //integral_constant
 #include <boost/intrusive/pointer_traits.hpp>               //pointer_traits
+#include <boost/core/no_exceptions_support.hpp>             //BOOST_TRY
 
 namespace boost {
 namespace container {
-namespace dtl {
+namespace container_detail {
 
-template<class Allocator, unsigned Version = boost::container::dtl::version<Allocator>::value>
+template<class Allocator, unsigned Version = boost::container::container_detail::version<Allocator>::value>
 struct allocator_version_traits
 {
-   typedef ::boost::container::dtl::integral_constant
+   typedef ::boost::container::container_detail::integral_constant
       <unsigned, Version> alloc_version;
 
    typedef typename Allocator::multiallocation_chain multiallocation_chain;
@@ -46,19 +47,19 @@ struct allocator_version_traits
    typedef typename boost::container::allocator_traits<Allocator>::size_type  size_type;
 
    //Node allocation interface
-   BOOST_CONTAINER_FORCEINLINE static pointer allocate_one(Allocator &a)
+   static pointer allocate_one(Allocator &a)
    {  return a.allocate_one();   }
 
-   BOOST_CONTAINER_FORCEINLINE static void deallocate_one(Allocator &a, const pointer &p)
+   static void deallocate_one(Allocator &a, const pointer &p)
    {  a.deallocate_one(p);   }
 
-   BOOST_CONTAINER_FORCEINLINE static void allocate_individual(Allocator &a, size_type n, multiallocation_chain &m)
+   static void allocate_individual(Allocator &a, size_type n, multiallocation_chain &m)
    {  return a.allocate_individual(n, m);   }
 
-   BOOST_CONTAINER_FORCEINLINE static void deallocate_individual(Allocator &a, multiallocation_chain &holder)
+   static void deallocate_individual(Allocator &a, multiallocation_chain &holder)
    {  a.deallocate_individual(holder);   }
 
-   BOOST_CONTAINER_FORCEINLINE static pointer allocation_command(Allocator &a, allocation_type command,
+   static pointer allocation_command(Allocator &a, allocation_type command,
                          size_type limit_size, size_type &prefer_in_recvd_out_size, pointer &reuse)
    {  return a.allocation_command(command, limit_size, prefer_in_recvd_out_size, reuse);  }
 };
@@ -66,7 +67,7 @@ struct allocator_version_traits
 template<class Allocator>
 struct allocator_version_traits<Allocator, 1>
 {
-   typedef ::boost::container::dtl::integral_constant
+   typedef ::boost::container::container_detail::integral_constant
       <unsigned, 1> alloc_version;
 
    typedef typename boost::container::allocator_traits<Allocator>::pointer    pointer;
@@ -75,25 +76,24 @@ struct allocator_version_traits<Allocator, 1>
 
    typedef typename boost::intrusive::pointer_traits<pointer>::
          template rebind_pointer<void>::type                void_ptr;
-   typedef dtl::basic_multiallocation_chain
+   typedef container_detail::basic_multiallocation_chain
       <void_ptr>                                            multialloc_cached_counted;
-   typedef boost::container::dtl::
+   typedef boost::container::container_detail::
       transform_multiallocation_chain
          < multialloc_cached_counted, value_type>           multiallocation_chain;
 
    //Node allocation interface
-   BOOST_CONTAINER_FORCEINLINE static pointer allocate_one(Allocator &a)
+   static pointer allocate_one(Allocator &a)
    {  return a.allocate(1);   }
 
-   BOOST_CONTAINER_FORCEINLINE static void deallocate_one(Allocator &a, const pointer &p)
+   static void deallocate_one(Allocator &a, const pointer &p)
    {  a.deallocate(p, 1);   }
 
    static void deallocate_individual(Allocator &a, multiallocation_chain &holder)
    {
       size_type n = holder.size();
       typename multiallocation_chain::iterator it = holder.begin();
-      while(n){
-         --n;
+      while(n--){
          pointer p = boost::intrusive::pointer_traits<pointer>::pointer_to(*it);
          ++it;
          a.deallocate(p, 1);
@@ -102,17 +102,17 @@ struct allocator_version_traits<Allocator, 1>
 
    struct allocate_individual_rollback
    {
-      BOOST_CONTAINER_FORCEINLINE allocate_individual_rollback(Allocator &a, multiallocation_chain &chain)
+      allocate_individual_rollback(Allocator &a, multiallocation_chain &chain)
          : mr_a(a), mp_chain(&chain)
       {}
 
-      BOOST_CONTAINER_FORCEINLINE ~allocate_individual_rollback()
+      ~allocate_individual_rollback()
       {
          if(mp_chain)
             allocator_version_traits::deallocate_individual(mr_a, *mp_chain);
       }
 
-      BOOST_CONTAINER_FORCEINLINE void release()
+      void release()
       {
          mp_chain = 0;
       }
@@ -138,22 +138,22 @@ struct allocator_version_traits<Allocator, 1>
          throw_logic_error("version 1 allocator without allocate_new flag");
       }
       else{
-         BOOST_CONTAINER_TRY{
+         BOOST_TRY{
             ret = a.allocate(prefer_in_recvd_out_size);
          }
-         BOOST_CONTAINER_CATCH(...){
+         BOOST_CATCH(...){
             if(!(command & nothrow_allocation)){
-               BOOST_CONTAINER_RETHROW
+               BOOST_RETHROW
             }
          }
-         BOOST_CONTAINER_CATCH_END
+         BOOST_CATCH_END
          reuse = pointer();
       }
       return ret;
    }
 };
 
-}  //namespace dtl {
+}  //namespace container_detail {
 }  //namespace container {
 }  //namespace boost {
 

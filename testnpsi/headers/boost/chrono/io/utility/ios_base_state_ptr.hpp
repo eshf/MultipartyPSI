@@ -53,10 +53,12 @@ namespace boost
     {
       xalloc_key_initializer()
       {
+        std::cout << __FILE__ << ":" << __LINE__ << std::endl;
         if (!detail::xalloc_key_holder<T>::initialized)
         {
           detail::xalloc_key_holder<T>::value = std::ios_base::xalloc();
           detail::xalloc_key_holder<T>::initialized = true;
+          std::cout << __FILE__ << ":" << __LINE__ << " " << detail::xalloc_key_holder<T>::value <<std::endl;
         }
       }
     };
@@ -66,8 +68,6 @@ namespace boost
     template <typename Final, typename T>
     class ios_state_ptr
     {
-      ios_state_ptr& operator=(ios_state_ptr const& rhs) ;
-
     public:
       /**
        * The pointee type
@@ -81,6 +81,7 @@ namespace boost
       explicit ios_state_ptr(std::ios_base& ios) :
         ios_(ios)
       {
+        std::cout << __FILE__ << ":" << __LINE__ << std::endl;
 
       }
       /**
@@ -116,9 +117,9 @@ namespace boost
       {
         register_once(index(), ios_);
         void* &pw = ios_.pword(index());
-        if (pw == BOOST_NULLPTR)
+        if (pw == 0)
         {
-          return BOOST_NULLPTR;
+          return 0;
         }
         return static_cast<T*> (pw);
       }
@@ -164,10 +165,9 @@ namespace boost
        */
       T * release() BOOST_NOEXCEPT
       {
-        void*& pw = ios_.pword(index());
-        T* ptr = static_cast<T*> (pw);
-        pw = 0;
-        return ptr;
+        T const* f = get();
+        reset();
+        return f;
       }
 
       /**
@@ -243,18 +243,18 @@ namespace boost
         case std::ios_base::erase_event:
         {
           void*& pw = ios.pword(index);
-          if (pw != BOOST_NULLPTR)
+          if (pw != 0)
           {
             T* ptr = static_cast<T*> (pw);
             delete ptr;
-            pw = BOOST_NULLPTR;
+            pw = 0;
           }
           break;
         }
         case std::ios_base::copyfmt_event:
         {
           void*& pw = ios.pword(index);
-          if (pw != BOOST_NULLPTR)
+          if (pw != 0)
           {
             pw = new T(*static_cast<T*> (pw));
           }
@@ -280,7 +280,6 @@ namespace boost
         }
       }
 
-
     protected:
       std::ios_base& ios_;
       //static detail::xalloc_key_initializer<Final> xalloc_key_initializer_;
@@ -303,7 +302,7 @@ namespace boost
       explicit ios_state_not_null_ptr(std::ios_base& ios) :
       base_type(ios)
       {
-        if (this->get() == BOOST_NULLPTR)
+        if (this->get() == 0)
         {
           this->base_type::reset(new T());
         }
@@ -314,7 +313,7 @@ namespace boost
 
       void reset(T* new_value) BOOST_NOEXCEPT
       {
-        BOOST_ASSERT(new_value!=BOOST_NULLPTR);
+        BOOST_ASSERT(new_value!=0);
         this->base_type::reset(new_value);
       }
 
@@ -339,6 +338,7 @@ namespace boost
       ~ios_flags()
       {
       }
+
       /**
        * @Returns The format control information.
        */
@@ -422,7 +422,6 @@ namespace boost
       {
         return detail::xalloc_key_holder<Final>::value;
       }
-      ios_flags& operator=(ios_flags const& rhs) ;
 
       std::ios_base& ios_;
       //static detail::xalloc_key_initializer<Final> xalloc_key_initializer_;

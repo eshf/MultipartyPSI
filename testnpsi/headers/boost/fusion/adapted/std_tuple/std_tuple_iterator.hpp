@@ -7,7 +7,6 @@
 #if !defined(FUSION_STD_TUPLE_ITERATOR_09112011_1905)
 #define FUSION_STD_TUPLE_ITERATOR_09112011_1905
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -16,11 +15,6 @@
 #include <boost/mpl/if.hpp>
 #include <tuple>
 #include <utility>
-
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable: 4512) // assignment operator could not be generated.
-#endif
 
 namespace boost { namespace fusion
 {
@@ -41,7 +35,6 @@ namespace boost { namespace fusion
             typename add_const<Tuple>::type, Index>
         identity;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
         explicit std_tuple_iterator(Tuple& tuple)
           : tuple(tuple) {}
 
@@ -64,7 +57,6 @@ namespace boost { namespace fusion
                 >::type
             type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& iter)
             {
@@ -79,7 +71,6 @@ namespace boost { namespace fusion
             typedef typename Iterator::tuple_type tuple_type;
             typedef std_tuple_iterator<tuple_type, index+N::value> type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& i)
             {
@@ -102,7 +93,6 @@ namespace boost { namespace fusion
         {
             typedef mpl::int_<Last::index-First::index> type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
             static type
             call(First const&, Last const&)
             {
@@ -111,19 +101,6 @@ namespace boost { namespace fusion
         };
     };
 }}
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
-
-#ifdef BOOST_FUSION_WORKAROUND_FOR_LWG_2408
-namespace std
-{
-    template <typename Tuple, int Index>
-    struct iterator_traits< ::boost::fusion::std_tuple_iterator<Tuple, Index> >
-    { };
-}
-#endif
 
 #endif
 

@@ -1,17 +1,14 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use.
 
 #include <cinttypes>
 #include <iomanip>
 #include <vector>
-#include <immintrin.h>
+#include <emmintrin.h>
 #include <smmintrin.h>
 #include <sstream>
 #include <iostream>
-#include <boost/lexical_cast.hpp>
+#include "boost/lexical_cast.hpp"
 #include <memory>
 #include "Common/Timer.h"
 
@@ -213,11 +210,6 @@ inline bool operator<(const osuCrypto::block& lhs, const osuCrypto::block& rhs)
 }
 
 
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif
 //typedef struct largeBlock {
 //

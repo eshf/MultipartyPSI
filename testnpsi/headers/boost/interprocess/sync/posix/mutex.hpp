@@ -27,11 +27,7 @@
 #ifndef BOOST_INTERPROCESS_DETAIL_POSIX_MUTEX_HPP
 #define BOOST_INTERPROCESS_DETAIL_POSIX_MUTEX_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
 #endif
 
@@ -41,15 +37,13 @@
 #include <pthread.h>
 #include <errno.h>
 #include <boost/interprocess/exceptions.hpp>
-#include <boost/interprocess/sync/posix/timepoint_to_timespec.hpp>
+#include <boost/interprocess/sync/posix/ptime_to_timespec.hpp>
+#include <boost/interprocess/detail/posix_time_types_wrk.hpp>
 #include <boost/interprocess/exceptions.hpp>
 #include <boost/interprocess/sync/posix/pthread_helpers.hpp>
-#include <boost/interprocess/detail/timed_utils.hpp>
-
 
 #ifndef BOOST_INTERPROCESS_POSIX_TIMEOUTS
 #  include <boost/interprocess/detail/os_thread_functions.hpp>
-#  include <boost/interprocess/sync/detail/common_algorithms.hpp>
 #endif
 #include <boost/assert.hpp>
 
@@ -70,14 +64,7 @@ class posix_mutex
 
    void lock();
    bool try_lock();
-   template<class TimePoint> bool timed_lock(const TimePoint &abs_time);
-
-   template<class TimePoint> bool try_lock_until(const TimePoint &abs_time)
-   {  return this->timed_lock(abs_time);  }
-
-   template<class Duration>  bool try_lock_for(const Duration &dur)
-   {  return this->timed_lock(duration_to_ustime(dur)); }
-
+   bool timed_lock(const boost::posix_time::ptime &abs_time);
    void unlock();
 
    friend class posix_condition;
@@ -101,80 +88,58 @@ inline posix_mutex::~posix_mutex()
 
 inline void posix_mutex::lock()
 {
-   int res = pthread_mutex_lock(&m_mut);
-   #ifdef BOOST_INTERPROCESS_POSIX_ROBUST_MUTEXES
-   if (res == EOWNERDEAD)
-   {
-      //We can't inform the application and data might
-      //corrupted, so be safe and mark the mutex as not recoverable
-      //so applications can act accordingly.
-      pthread_mutex_unlock(&m_mut);
-      throw lock_exception(not_recoverable);
-   }
-   else if (res == ENOTRECOVERABLE)
-      throw lock_exception(not_recoverable);
-   #endif
-   if (res != 0)
+   if (pthread_mutex_lock(&m_mut) != 0)
       throw lock_exception();
 }
 
 inline bool posix_mutex::try_lock()
 {
    int res = pthread_mutex_trylock(&m_mut);
-   #ifdef BOOST_INTERPROCESS_POSIX_ROBUST_MUTEXES
-   if (res == EOWNERDEAD)
-   {
-      //We can't inform the application and data might
-      //corrupted, so be safe and mark the mutex as not recoverable
-      //so applications can act accordingly.
-      pthread_mutex_unlock(&m_mut);
-      throw lock_exception(not_recoverable);
-   }
-   else if (res == ENOTRECOVERABLE)
-      throw lock_exception(not_recoverable);
-   #endif
    if (!(res == 0 || res == EBUSY))
       throw lock_exception();
    return res == 0;
 }
 
-template<class TimePoint>
-inline bool posix_mutex::timed_lock(const TimePoint &abs_time)
+inline bool posix_mutex::timed_lock(const boost::posix_time::ptime &abs_time)
 {
-   #ifdef BOOST_INTERPROCESS_POSIX_TIMEOUTS
-   //Posix does not support infinity absolute time so handle it here
-   if(ipcdetail::is_pos_infinity(abs_time)){
+   if(abs_time == boost::posix_time::pos_infin){
       this->lock();
       return true;
    }
-   timespec ts = timepoint_to_timespec(abs_time);
+   #ifdef BOOST_INTERPROCESS_POSIX_TIMEOUTS
+
+   timespec ts = ptime_to_timespec(abs_time);
    int res = pthread_mutex_timedlock(&m_mut, &ts);
-   #ifdef BOOST_INTERPROCESS_POSIX_ROBUST_MUTEXES
-   if (res == EOWNERDEAD)
-   {
-      //We can't inform the application and data might
-      //corrupted, so be safe and mark the mutex as not recoverable
-      //so applications can act accordingly.
-      pthread_mutex_unlock(&m_mut);
-      throw lock_exception(not_recoverable);
-   }
-   else if (res == ENOTRECOVERABLE)
-      throw lock_exception(not_recoverable);
-   #endif
    if (res != 0 && res != ETIMEDOUT)
       throw lock_exception();
    return res == 0;
 
    #else //BOOST_INTERPROCESS_POSIX_TIMEOUTS
 
-   return ipcdetail::try_based_timed_lock(*this, abs_time);
+   //Obtain current count and target time
+   boost::posix_time::ptime now = microsec_clock::universal_time();
+
+   do{
+      if(this->try_lock()){
+         break;
+      }
+      now = microsec_clock::universal_time();
+
+      if(now >= abs_time){
+         return false;
+      }
+      // relinquish current time slice
+     thread_yield();
+   }while (true);
+   return true;
 
    #endif   //BOOST_INTERPROCESS_POSIX_TIMEOUTS
 }
 
 inline void posix_mutex::unlock()
 {
-   int res = pthread_mutex_unlock(&m_mut);
+   int res = 0;
+   res = pthread_mutex_unlock(&m_mut);
    (void)res;
    BOOST_ASSERT(res == 0);
 }

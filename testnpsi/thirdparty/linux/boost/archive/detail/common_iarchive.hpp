@@ -9,7 +9,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // common_iarchive.hpp
 
-// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -35,29 +35,28 @@ class extended_type_info;
 
 // note: referred to as Curiously Recurring Template Patter (CRTP)
 template<class Archive>
-class BOOST_SYMBOL_VISIBLE common_iarchive :
+class BOOST_SYMBOL_VISIBLE common_iarchive : 
     public basic_iarchive,
     public interface_iarchive<Archive>
 {
     friend class interface_iarchive<Archive>;
-    friend class basic_iarchive;
 private:
-    void vload(version_type & t) BOOST_OVERRIDE {
+    virtual void vload(version_type & t){
+        * this->This() >> t; 
+    }
+    virtual void vload(object_id_type & t){
         * this->This() >> t;
     }
-    void vload(object_id_type & t) BOOST_OVERRIDE {
+    virtual void vload(class_id_type & t){
         * this->This() >> t;
     }
-    void vload(class_id_type & t) BOOST_OVERRIDE {
+    virtual void vload(class_id_optional_type & t){
         * this->This() >> t;
     }
-    void vload(class_id_optional_type & t) BOOST_OVERRIDE {
+    virtual void vload(tracking_type & t){
         * this->This() >> t;
     }
-    void vload(tracking_type & t) BOOST_OVERRIDE {
-        * this->This() >> t;
-    }
-    void vload(class_name_type &s) BOOST_OVERRIDE {
+    virtual void vload(class_name_type &s){
         * this->This() >> s;
     }
 protected:
@@ -71,7 +70,7 @@ protected:
     void load_start(const char * /*name*/){}
     void load_end(const char * /*name*/){}
     // default archive initialization
-    common_iarchive(unsigned int flags = 0) :
+    common_iarchive(unsigned int flags = 0) : 
         basic_iarchive(flags),
         interface_iarchive<Archive>()
     {}
@@ -86,3 +85,4 @@ protected:
 #endif
 
 #endif // BOOST_ARCHIVE_DETAIL_COMMON_IARCHIVE_HPP
+

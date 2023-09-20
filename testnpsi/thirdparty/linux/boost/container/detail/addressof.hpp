@@ -18,15 +18,23 @@
 #  pragma once
 #endif
 
-#include <boost/move/detail/addressof.hpp>
+#include <cstddef>
 
 namespace boost {
 namespace container {
-namespace dtl {
+namespace container_detail {
 
-using boost::move_detail::addressof;
+template <typename T>
+BOOST_CONTAINER_FORCEINLINE T* addressof(T& obj)
+{
+   return static_cast<T*>(
+      static_cast<void*>(
+         const_cast<char*>(
+            &reinterpret_cast<const volatile char&>(obj)
+   )));
+}
 
-}  //namespace dtl {
+}  //namespace container_detail {
 }  //namespace container {
 }  //namespace boost {
 

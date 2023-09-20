@@ -2,7 +2,7 @@
 // read_at.hpp
 // ~~~~~~~~~~~
 //
-// Copyright (c) 2003-2023 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2012 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,33 +17,20 @@
 
 #include <boost/asio/detail/config.hpp>
 #include <cstddef>
-#include <boost/asio/async_result.hpp>
-#include <boost/asio/completion_condition.hpp>
-#include <boost/asio/detail/cstdint.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/asio/basic_streambuf_fwd.hpp>
 #include <boost/asio/error.hpp>
-
-#if !defined(BOOST_ASIO_NO_EXTENSIONS)
-# include <boost/asio/basic_streambuf_fwd.hpp>
-#endif // !defined(BOOST_ASIO_NO_EXTENSIONS)
 
 #include <boost/asio/detail/push_options.hpp>
 
 namespace boost {
 namespace asio {
-namespace detail {
-
-template <typename> class initiate_async_read_at;
-#if !defined(BOOST_ASIO_NO_IOSTREAM)
-template <typename> class initiate_async_read_at_streambuf;
-#endif // !defined(BOOST_ASIO_NO_IOSTREAM)
-
-} // namespace detail
 
 /**
  * @defgroup read_at boost::asio::read_at
  *
- * @brief The @c read_at function is a composed operation that reads a certain
- * amount of data at the specified offset before returning.
+ * @brief Attempt to read a certain amount of data at the specified offset
+ * before returning.
  */
 /*@{*/
 
@@ -89,7 +76,7 @@ template <typename> class initiate_async_read_at_streambuf;
  */
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers);
+    boost::uint64_t offset, const MutableBufferSequence& buffers);
 
 /// Attempt to read a certain amount of data at the specified offset before
 /// returning.
@@ -134,7 +121,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
  */
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    boost::uint64_t offset, const MutableBufferSequence& buffers,
     boost::system::error_code& ec);
 
 /// Attempt to read a certain amount of data at the specified offset before
@@ -190,7 +177,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence,
     typename CompletionCondition>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    boost::uint64_t offset, const MutableBufferSequence& buffers,
     CompletionCondition completion_condition);
 
 /// Attempt to read a certain amount of data at the specified offset before
@@ -239,11 +226,10 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence,
     typename CompletionCondition>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    boost::uint64_t offset, const MutableBufferSequence& buffers,
     CompletionCondition completion_condition, boost::system::error_code& ec);
 
-#if !defined(BOOST_ASIO_NO_EXTENSIONS)
-#if !defined(BOOST_ASIO_NO_IOSTREAM)
+#if !defined(BOOST_NO_IOSTREAM)
 
 /// Attempt to read a certain amount of data at the specified offset before
 /// returning.
@@ -275,7 +261,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
  */
 template <typename SyncRandomAccessReadDevice, typename Allocator>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, basic_streambuf<Allocator>& b);
+    boost::uint64_t offset, basic_streambuf<Allocator>& b);
 
 /// Attempt to read a certain amount of data at the specified offset before
 /// returning.
@@ -307,7 +293,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
  */
 template <typename SyncRandomAccessReadDevice, typename Allocator>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, basic_streambuf<Allocator>& b,
+    boost::uint64_t offset, basic_streambuf<Allocator>& b,
     boost::system::error_code& ec);
 
 /// Attempt to read a certain amount of data at the specified offset before
@@ -350,7 +336,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename Allocator,
     typename CompletionCondition>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, basic_streambuf<Allocator>& b,
+    boost::uint64_t offset, basic_streambuf<Allocator>& b,
     CompletionCondition completion_condition);
 
 /// Attempt to read a certain amount of data at the specified offset before
@@ -394,18 +380,17 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename Allocator,
     typename CompletionCondition>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, basic_streambuf<Allocator>& b,
+    boost::uint64_t offset, basic_streambuf<Allocator>& b,
     CompletionCondition completion_condition, boost::system::error_code& ec);
 
-#endif // !defined(BOOST_ASIO_NO_IOSTREAM)
-#endif // !defined(BOOST_ASIO_NO_EXTENSIONS)
+#endif // !defined(BOOST_NO_IOSTREAM)
 
 /*@}*/
 /**
  * @defgroup async_read_at boost::asio::async_read_at
  *
- * @brief The @c async_read_at function is a composed asynchronous operation
- * that reads a certain amount of data at the specified offset.
+ * @brief Start an asynchronous operation to read a certain amount of data at
+ * the specified offset.
  */
 /*@{*/
 
@@ -413,10 +398,9 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 /// specified offset.
 /**
  * This function is used to asynchronously read a certain number of bytes of
- * data from a random access device at the specified offset. It is an
- * initiating function for an @ref asynchronous_operation, and always returns
- * immediately. The asynchronous operation will continue until one of the
- * following conditions is true:
+ * data from a random access device at the specified offset. The function call
+ * always returns immediately. The asynchronous operation will continue until
+ * one of the following conditions is true:
  *
  * @li The supplied buffers are full. That is, the bytes transferred is equal to
  * the sum of the buffer sizes.
@@ -435,13 +419,11 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
  * of the buffer sizes indicates the maximum number of bytes to read from the
  * device. Although the buffers object may be copied as necessary, ownership of
  * the underlying memory blocks is retained by the caller, which must guarantee
- * that they remain valid until the completion handler is called.
+ * that they remain valid until the handler is called.
  *
- * @param token The @ref completion_token that will be used to produce a
- * completion handler, which will be called when the read completes.
- * Potential completion tokens include @ref use_future, @ref use_awaitable,
- * @ref yield_context, or a function object with the correct completion
- * signature. The function signature of the completion handler must be:
+ * @param handler The handler to be called when the read operation completes.
+ * Copies will be made of the handler as required. The function signature of the
+ * handler must be:
  * @code void handler(
  *   // Result of operation.
  *   const boost::system::error_code& error,
@@ -452,12 +434,9 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
  *   std::size_t bytes_transferred
  * ); @endcode
  * Regardless of whether the asynchronous operation completes immediately or
- * not, the completion handler will not be invoked from within this function.
- * On immediate completion, invocation of the handler will be performed in a
- * manner equivalent to using boost::asio::post().
- *
- * @par Completion Signature
- * @code void(boost::system::error_code, std::size_t) @endcode
+ * not, the handler will not be invoked from within this function. Invocation of
+ * the handler will be performed in a manner equivalent to using
+ * boost::asio::io_service::post().
  *
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
@@ -473,44 +452,20 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
  *     d, 42, buffers,
  *     boost::asio::transfer_all(),
  *     handler); @endcode
- *
- * @par Per-Operation Cancellation
- * This asynchronous operation supports cancellation for the following
- * boost::asio::cancellation_type values:
- *
- * @li @c cancellation_type::terminal
- *
- * @li @c cancellation_type::partial
- *
- * if they are also supported by the @c AsyncRandomAccessReadDevice type's
- * async_read_some_at operation.
  */
 template <typename AsyncRandomAccessReadDevice, typename MutableBufferSequence,
-    BOOST_ASIO_COMPLETION_TOKEN_FOR(void (boost::system::error_code,
-      std::size_t)) ReadToken
-        BOOST_ASIO_DEFAULT_COMPLETION_TOKEN_TYPE(
-          typename AsyncRandomAccessReadDevice::executor_type)>
-BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
-    void (boost::system::error_code, std::size_t))
-async_read_at(AsyncRandomAccessReadDevice& d, uint64_t offset,
+    typename ReadHandler>
+void async_read_at(AsyncRandomAccessReadDevice& d, boost::uint64_t offset,
     const MutableBufferSequence& buffers,
-    BOOST_ASIO_MOVE_ARG(ReadToken) token
-      BOOST_ASIO_DEFAULT_COMPLETION_TOKEN(
-        typename AsyncRandomAccessReadDevice::executor_type))
-  BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
-    async_initiate<ReadToken,
-      void (boost::system::error_code, std::size_t)>(
-        declval<detail::initiate_async_read_at<AsyncRandomAccessReadDevice> >(),
-        token, offset, buffers, transfer_all())));
+    BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
 
 /// Start an asynchronous operation to read a certain amount of data at the
 /// specified offset.
 /**
  * This function is used to asynchronously read a certain number of bytes of
- * data from a random access device at the specified offset. It is an
- * initiating function for an @ref asynchronous_operation, and always returns
- * immediately. The asynchronous operation will continue until one of the
- * following conditions is true:
+ * data from a random access device at the specified offset. The function call
+ * always returns immediately. The asynchronous operation will continue until
+ * one of the following conditions is true:
  *
  * @li The supplied buffers are full. That is, the bytes transferred is equal to
  * the sum of the buffer sizes.
@@ -526,7 +481,7 @@ async_read_at(AsyncRandomAccessReadDevice& d, uint64_t offset,
  * of the buffer sizes indicates the maximum number of bytes to read from the
  * device. Although the buffers object may be copied as necessary, ownership of
  * the underlying memory blocks is retained by the caller, which must guarantee
- * that they remain valid until the completion handler is called.
+ * that they remain valid until the handler is called.
  *
  * @param completion_condition The function object to be called to determine
  * whether the read operation is complete. The signature of the function object
@@ -542,11 +497,9 @@ async_read_at(AsyncRandomAccessReadDevice& d, uint64_t offset,
  * return value indicates the maximum number of bytes to be read on the next
  * call to the device's async_read_some_at function.
  *
- * @param token The @ref completion_token that will be used to produce a
- * completion handler, which will be called when the read completes.
- * Potential completion tokens include @ref use_future, @ref use_awaitable,
- * @ref yield_context, or a function object with the correct completion
- * signature. The function signature of the completion handler must be:
+ * @param handler The handler to be called when the read operation completes.
+ * Copies will be made of the handler as required. The function signature of the
+ * handler must be:
  * @code void handler(
  *   // Result of operation.
  *   const boost::system::error_code& error,
@@ -557,12 +510,9 @@ async_read_at(AsyncRandomAccessReadDevice& d, uint64_t offset,
  *   std::size_t bytes_transferred
  * ); @endcode
  * Regardless of whether the asynchronous operation completes immediately or
- * not, the completion handler will not be invoked from within this function.
- * On immediate completion, invocation of the handler will be performed in a
- * manner equivalent to using boost::asio::post().
- *
- * @par Completion Signature
- * @code void(boost::system::error_code, std::size_t) @endcode
+ * not, the handler will not be invoked from within this function. Invocation of
+ * the handler will be performed in a manner equivalent to using
+ * boost::asio::io_service::post().
  *
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
@@ -573,50 +523,23 @@ async_read_at(AsyncRandomAccessReadDevice& d, uint64_t offset,
  * See the @ref buffer documentation for information on reading into multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
- *
- * @par Per-Operation Cancellation
- * This asynchronous operation supports cancellation for the following
- * boost::asio::cancellation_type values:
- *
- * @li @c cancellation_type::terminal
- *
- * @li @c cancellation_type::partial
- *
- * if they are also supported by the @c AsyncRandomAccessReadDevice type's
- * async_read_some_at operation.
  */
-template <typename AsyncRandomAccessReadDevice,
-    typename MutableBufferSequence, typename CompletionCondition,
-    BOOST_ASIO_COMPLETION_TOKEN_FOR(void (boost::system::error_code,
-      std::size_t)) ReadToken
-        BOOST_ASIO_DEFAULT_COMPLETION_TOKEN_TYPE(
-          typename AsyncRandomAccessReadDevice::executor_type)>
-BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
-    void (boost::system::error_code, std::size_t))
-async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+template <typename AsyncRandomAccessReadDevice, typename MutableBufferSequence,
+    typename CompletionCondition, typename ReadHandler>
+void async_read_at(AsyncRandomAccessReadDevice& d,
+    boost::uint64_t offset, const MutableBufferSequence& buffers,
     CompletionCondition completion_condition,
-    BOOST_ASIO_MOVE_ARG(ReadToken) token
-      BOOST_ASIO_DEFAULT_COMPLETION_TOKEN(
-        typename AsyncRandomAccessReadDevice::executor_type))
-  BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
-    async_initiate<ReadToken,
-      void (boost::system::error_code, std::size_t)>(
-        declval<detail::initiate_async_read_at<AsyncRandomAccessReadDevice> >(),
-        token, offset, buffers,
-        BOOST_ASIO_MOVE_CAST(CompletionCondition)(completion_condition))));
+    BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
 
-#if !defined(BOOST_ASIO_NO_EXTENSIONS)
-#if !defined(BOOST_ASIO_NO_IOSTREAM)
+#if !defined(BOOST_NO_IOSTREAM)
 
 /// Start an asynchronous operation to read a certain amount of data at the
 /// specified offset.
 /**
  * This function is used to asynchronously read a certain number of bytes of
- * data from a random access device at the specified offset. It is an
- * initiating function for an @ref asynchronous_operation, and always returns
- * immediately. The asynchronous operation will continue until one of the
- * following conditions is true:
+ * data from a random access device at the specified offset. The function call
+ * always returns immediately. The asynchronous operation will continue until
+ * one of the following conditions is true:
  *
  * @li An error occurred.
  *
@@ -630,13 +553,11 @@ async_read_at(AsyncRandomAccessReadDevice& d,
  *
  * @param b A basic_streambuf object into which the data will be read. Ownership
  * of the streambuf is retained by the caller, which must guarantee that it
- * remains valid until the completion handler is called.
+ * remains valid until the handler is called.
  *
- * @param token The @ref completion_token that will be used to produce a
- * completion handler, which will be called when the read completes.
- * Potential completion tokens include @ref use_future, @ref use_awaitable,
- * @ref yield_context, or a function object with the correct completion
- * signature. The function signature of the completion handler must be:
+ * @param handler The handler to be called when the read operation completes.
+ * Copies will be made of the handler as required. The function signature of the
+ * handler must be:
  * @code void handler(
  *   // Result of operation.
  *   const boost::system::error_code& error,
@@ -647,57 +568,28 @@ async_read_at(AsyncRandomAccessReadDevice& d,
  *   std::size_t bytes_transferred
  * ); @endcode
  * Regardless of whether the asynchronous operation completes immediately or
- * not, the completion handler will not be invoked from within this function.
- * On immediate completion, invocation of the handler will be performed in a
- * manner equivalent to using boost::asio::post().
- *
- * @par Completion Signature
- * @code void(boost::system::error_code, std::size_t) @endcode
+ * not, the handler will not be invoked from within this function. Invocation of
+ * the handler will be performed in a manner equivalent to using
+ * boost::asio::io_service::post().
  *
  * @note This overload is equivalent to calling:
  * @code boost::asio::async_read_at(
  *     d, 42, b,
  *     boost::asio::transfer_all(),
  *     handler); @endcode
- *
- * @par Per-Operation Cancellation
- * This asynchronous operation supports cancellation for the following
- * boost::asio::cancellation_type values:
- *
- * @li @c cancellation_type::terminal
- *
- * @li @c cancellation_type::partial
- *
- * if they are also supported by the @c AsyncRandomAccessReadDevice type's
- * async_read_some_at operation.
  */
 template <typename AsyncRandomAccessReadDevice, typename Allocator,
-    BOOST_ASIO_COMPLETION_TOKEN_FOR(void (boost::system::error_code,
-      std::size_t)) ReadToken
-        BOOST_ASIO_DEFAULT_COMPLETION_TOKEN_TYPE(
-          typename AsyncRandomAccessReadDevice::executor_type)>
-BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
-    void (boost::system::error_code, std::size_t))
-async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, basic_streambuf<Allocator>& b,
-    BOOST_ASIO_MOVE_ARG(ReadToken) token
-      BOOST_ASIO_DEFAULT_COMPLETION_TOKEN(
-        typename AsyncRandomAccessReadDevice::executor_type))
-  BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
-    async_initiate<ReadToken,
-      void (boost::system::error_code, std::size_t)>(
-        declval<detail::initiate_async_read_at_streambuf<
-          AsyncRandomAccessReadDevice> >(),
-        token, offset, &b, transfer_all())));
+    typename ReadHandler>
+void async_read_at(AsyncRandomAccessReadDevice& d, boost::uint64_t offset,
+    basic_streambuf<Allocator>& b, BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
 
 /// Start an asynchronous operation to read a certain amount of data at the
 /// specified offset.
 /**
  * This function is used to asynchronously read a certain number of bytes of
- * data from a random access device at the specified offset. It is an
- * initiating function for an @ref asynchronous_operation, and always returns
- * immediately. The asynchronous operation will continue until one of the
- * following conditions is true:
+ * data from a random access device at the specified offset. The function call
+ * always returns immediately. The asynchronous operation will continue until
+ * one of the following conditions is true:
  *
  * @li The completion_condition function object returns 0.
  *
@@ -711,7 +603,7 @@ async_read_at(AsyncRandomAccessReadDevice& d,
  *
  * @param b A basic_streambuf object into which the data will be read. Ownership
  * of the streambuf is retained by the caller, which must guarantee that it
- * remains valid until the completion handler is called.
+ * remains valid until the handler is called.
  *
  * @param completion_condition The function object to be called to determine
  * whether the read operation is complete. The signature of the function object
@@ -727,11 +619,9 @@ async_read_at(AsyncRandomAccessReadDevice& d,
  * return value indicates the maximum number of bytes to be read on the next
  * call to the device's async_read_some_at function.
  *
- * @param token The @ref completion_token that will be used to produce a
- * completion handler, which will be called when the read completes.
- * Potential completion tokens include @ref use_future, @ref use_awaitable,
- * @ref yield_context, or a function object with the correct completion
- * signature. The function signature of the completion handler must be:
+ * @param handler The handler to be called when the read operation completes.
+ * Copies will be made of the handler as required. The function signature of the
+ * handler must be:
  * @code void handler(
  *   // Result of operation.
  *   const boost::system::error_code& error,
@@ -742,48 +632,18 @@ async_read_at(AsyncRandomAccessReadDevice& d,
  *   std::size_t bytes_transferred
  * ); @endcode
  * Regardless of whether the asynchronous operation completes immediately or
- * not, the completion handler will not be invoked from within this function.
- * On immediate completion, invocation of the handler will be performed in a
- * manner equivalent to using boost::asio::post().
- *
- * @par Completion Signature
- * @code void(boost::system::error_code, std::size_t) @endcode
- *
- * @par Per-Operation Cancellation
- * This asynchronous operation supports cancellation for the following
- * boost::asio::cancellation_type values:
- *
- * @li @c cancellation_type::terminal
- *
- * @li @c cancellation_type::partial
- *
- * if they are also supported by the @c AsyncRandomAccessReadDevice type's
- * async_read_some_at operation.
+ * not, the handler will not be invoked from within this function. Invocation of
+ * the handler will be performed in a manner equivalent to using
+ * boost::asio::io_service::post().
  */
-template <typename AsyncRandomAccessReadDevice,
-    typename Allocator, typename CompletionCondition,
-    BOOST_ASIO_COMPLETION_TOKEN_FOR(void (boost::system::error_code,
-      std::size_t)) ReadToken
-        BOOST_ASIO_DEFAULT_COMPLETION_TOKEN_TYPE(
-          typename AsyncRandomAccessReadDevice::executor_type)>
-BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
-    void (boost::system::error_code, std::size_t))
-async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, basic_streambuf<Allocator>& b,
+template <typename AsyncRandomAccessReadDevice, typename Allocator,
+    typename CompletionCondition, typename ReadHandler>
+void async_read_at(AsyncRandomAccessReadDevice& d,
+    boost::uint64_t offset, basic_streambuf<Allocator>& b,
     CompletionCondition completion_condition,
-    BOOST_ASIO_MOVE_ARG(ReadToken) token
-      BOOST_ASIO_DEFAULT_COMPLETION_TOKEN(
-        typename AsyncRandomAccessReadDevice::executor_type))
-  BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
-    async_initiate<ReadToken,
-      void (boost::system::error_code, std::size_t)>(
-        declval<detail::initiate_async_read_at_streambuf<
-          AsyncRandomAccessReadDevice> >(),
-        token, offset, &b,
-        BOOST_ASIO_MOVE_CAST(CompletionCondition)(completion_condition))));
+    BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
 
-#endif // !defined(BOOST_ASIO_NO_IOSTREAM)
-#endif // !defined(BOOST_ASIO_NO_EXTENSIONS)
+#endif // !defined(BOOST_NO_IOSTREAM)
 
 /*@}*/
 

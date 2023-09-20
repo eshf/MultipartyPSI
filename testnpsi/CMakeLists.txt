@@ -28,9 +28,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/testnpsi")
 
 if(JS_ONLY)
 	message(STATUS "Setting compilation target to native JavaScript")
-	set_target_properties(testnpsi PROPERTIES LINK_FLAGS "-s WASM=0 -s EXPORTED_FUNCTIONS='[_party3]'")
-
-else(JS_ONLY)
 	message(STATUS "Setting compilation target to WASM")
 	set(CMAKE_EXECUTABLE_SUFFIX ".wasm.js")
 	set_target_properties(testnpsi PROPERTIES LINK_FLAGS "-s WASM=1 -s EXPORTED_FUNCTIONS='[_party3]'")

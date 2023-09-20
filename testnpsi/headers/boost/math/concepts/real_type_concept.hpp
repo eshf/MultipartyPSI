@@ -6,14 +6,15 @@
 #ifndef BOOST_MATH_REAL_TYPE_CONCEPT_HPP
 #define BOOST_MATH_REAL_TYPE_CONCEPT_HPP
 
-#include <cmath>
-#ifdef _MSC_VER
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4510)
 #pragma warning(disable: 4610)
 #endif
-#ifdef _MSC_VER
+#include <boost/concept_check.hpp>
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 #include <boost/math/tools/config.hpp>
@@ -26,7 +27,7 @@ template <class RealType>
 struct RealTypeConcept
 {
    template <class Other>
-   void check_binary_ops(Other o) const
+   void check_binary_ops(Other o)
    {
       RealType r(o);
       r = o;
@@ -82,7 +83,9 @@ struct RealTypeConcept
       //check_binary_ops(1u);
       check_binary_ops(1L);
       //check_binary_ops(1uL);
+#ifndef BOOST_HAS_LONG_LONG
       check_binary_ops(1LL);
+#endif
       RealType r2 = +r;
       r2 = -r;
 
@@ -100,7 +103,7 @@ struct RealTypeConcept
       r2 = asin(r);
       r2 = acos(r);
       r2 = atan(r);
-      int i {};
+      int i;
       r2 = ldexp(r, i);
       r2 = frexp(r, &i);
       i = boost::math::tools::digits<RealType>();

@@ -2,7 +2,7 @@
 // detail/impl/win_object_handle_service.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2023 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2011 Boris Schaeling (boris@highscore.de)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -28,16 +28,16 @@ namespace boost {
 namespace asio {
 namespace detail {
 
-win_object_handle_service::win_object_handle_service(execution_context& context)
-  : execution_context_service_base<win_object_handle_service>(context),
-    scheduler_(boost::asio::use_service<scheduler_impl>(context)),
+win_object_handle_service::win_object_handle_service(
+    boost::asio::io_service& io_service)
+  : io_service_(boost::asio::use_service<io_service_impl>(io_service)),
     mutex_(),
     impl_list_(0),
     shutdown_(false)
 {
 }
 
-void win_object_handle_service::shutdown()
+void win_object_handle_service::shutdown_service()
 {
   mutex::scoped_lock lock(mutex_);
 
@@ -52,7 +52,7 @@ void win_object_handle_service::shutdown()
 
   lock.unlock();
 
-  scheduler_.abandon_operations(ops);
+  io_service_.abandon_operations(ops);
 }
 
 void win_object_handle_service::construct(
@@ -178,8 +178,7 @@ void win_object_handle_service::destroy(
 
   if (is_open(impl))
   {
-    BOOST_ASIO_HANDLER_OPERATION((scheduler_.context(), "object_handle",
-          &impl, reinterpret_cast<uintmax_t>(impl.wait_handle_), "close"));
+    BOOST_ASIO_HANDLER_OPERATION(("object_handle", &impl, "close"));
 
     HANDLE wait_handle = impl.wait_handle_;
     impl.wait_handle_ = INVALID_HANDLE_VALUE;
@@ -203,7 +202,7 @@ void win_object_handle_service::destroy(
     ::CloseHandle(impl.handle_);
     impl.handle_ = INVALID_HANDLE_VALUE;
 
-    scheduler_.post_deferred_completions(ops);
+    io_service_.post_deferred_completions(ops);
   }
 }
 
@@ -214,7 +213,6 @@ boost::system::error_code win_object_handle_service::assign(
   if (is_open(impl))
   {
     ec = boost::asio::error::already_open;
-    BOOST_ASIO_ERROR_LOCATION(ec);
     return ec;
   }
 
@@ -229,8 +227,7 @@ boost::system::error_code win_object_handle_service::close(
 {
   if (is_open(impl))
   {
-    BOOST_ASIO_HANDLER_OPERATION((scheduler_.context(), "object_handle",
-          &impl, reinterpret_cast<uintmax_t>(impl.wait_handle_), "close"));
+    BOOST_ASIO_HANDLER_OPERATION(("object_handle", &impl, "close"));
 
     mutex::scoped_lock lock(mutex_);
 
@@ -265,14 +262,13 @@ boost::system::error_code win_object_handle_service::close(
           boost::asio::error::get_system_category());
     }
 
-    scheduler_.post_deferred_completions(completed_ops);
+    io_service_.post_deferred_completions(completed_ops);
   }
   else
   {
     ec = boost::system::error_code();
   }
 
-  BOOST_ASIO_ERROR_LOCATION(ec);
   return ec;
 }
 
@@ -282,8 +278,7 @@ boost::system::error_code win_object_handle_service::cancel(
 {
   if (is_open(impl))
   {
-    BOOST_ASIO_HANDLER_OPERATION((scheduler_.context(), "object_handle",
-          &impl, reinterpret_cast<uintmax_t>(impl.wait_handle_), "cancel"));
+    BOOST_ASIO_HANDLER_OPERATION(("object_handle", &impl, "cancel"));
 
     mutex::scoped_lock lock(mutex_);
 
@@ -308,14 +303,13 @@ boost::system::error_code win_object_handle_service::cancel(
 
     ec = boost::system::error_code();
 
-    scheduler_.post_deferred_completions(completed_ops);
+    io_service_.post_deferred_completions(completed_ops);
   }
   else
   {
     ec = boost::asio::error::bad_descriptor;
   }
 
-  BOOST_ASIO_ERROR_LOCATION(ec);
   return ec;
 }
 
@@ -330,7 +324,6 @@ void win_object_handle_service::wait(
       DWORD last_error = ::GetLastError();
       ec = boost::system::error_code(last_error,
           boost::asio::error::get_system_category());
-      BOOST_ASIO_ERROR_LOCATION(ec);
       break;
     }
   case WAIT_OBJECT_0:
@@ -344,7 +337,7 @@ void win_object_handle_service::wait(
 void win_object_handle_service::start_wait_op(
     win_object_handle_service::implementation_type& impl, wait_op* op)
 {
-  scheduler_.work_started();
+  io_service_.work_started();
 
   if (is_open(impl))
   {
@@ -362,13 +355,13 @@ void win_object_handle_service::start_wait_op(
     else
     {
       lock.unlock();
-      scheduler_.post_deferred_completion(op);
+      io_service_.post_deferred_completion(op);
     }
   }
   else
   {
     op->ec_ = boost::asio::error::bad_descriptor;
-    scheduler_.post_deferred_completion(op);
+    io_service_.post_deferred_completion(op);
   }
 }
 
@@ -395,7 +388,7 @@ void win_object_handle_service::register_wait_callback(
     }
 
     lock.unlock();
-    scheduler_.post_deferred_completions(completed_ops);
+    io_service_.post_deferred_completions(completed_ops);
   }
 }
 
@@ -437,9 +430,9 @@ void win_object_handle_service::wait_callback(PVOID param, BOOLEAN)
       }
     }
 
-    scheduler_impl& sched = impl->owner_->scheduler_;
+    io_service_impl& ios = impl->owner_->io_service_;
     lock.unlock();
-    sched.post_deferred_completions(completed_ops);
+    ios.post_deferred_completions(completed_ops);
   }
 }
 

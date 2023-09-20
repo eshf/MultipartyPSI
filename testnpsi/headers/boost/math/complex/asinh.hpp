@@ -16,7 +16,7 @@
 namespace boost{ namespace math{
 
 template<class T> 
-[[deprecated("Replaced by C++11")]] inline std::complex<T> asinh(const std::complex<T>& x)
+inline std::complex<T> asinh(const std::complex<T>& x)
 {
    //
    // We use asinh(z) = i asin(-i z);

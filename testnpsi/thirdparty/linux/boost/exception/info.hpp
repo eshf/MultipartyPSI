@@ -3,27 +3,21 @@
 //Distributed under the Boost Software License, Version 1.0. (See accompanying
 //file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_EXCEPTION_8D22C4CA9CC811DCAA9133D256D89593
-#define BOOST_EXCEPTION_8D22C4CA9CC811DCAA9133D256D89593
+#ifndef UUID_8D22C4CA9CC811DCAA9133D256D89593
+#define UUID_8D22C4CA9CC811DCAA9133D256D89593
+#if (__GNUC__*100+__GNUC_MINOR__>301) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
+#pragma GCC system_header
+#endif
+#if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
+#pragma warning(push,1)
+#endif
 
-#include <boost/config.hpp>
 #include <boost/exception/exception.hpp>
 #include <boost/exception/to_string_stub.hpp>
 #include <boost/exception/detail/error_info_impl.hpp>
 #include <boost/exception/detail/shared_ptr.hpp>
+#include <boost/config.hpp>
 #include <map>
-
-#ifndef BOOST_EXCEPTION_ENABLE_WARNINGS
-#if __GNUC__*100+__GNUC_MINOR__>301
-#pragma GCC system_header
-#endif
-#ifdef __clang__
-#pragma clang system_header
-#endif
-#ifdef _MSC_VER
-#pragma warning(push,1)
-#endif
-#endif
 
 namespace
 boost
@@ -31,7 +25,7 @@ boost
     template <class Tag,class T>
     inline
     std::string
-    error_info_name( error_info<Tag,T> const & )
+    error_info_name( error_info<Tag,T> const & x )
         {
         return tag_type_name<Tag>();
         }
@@ -42,6 +36,45 @@ boost
     to_string( error_info<Tag,T> const & x )
         {
         return '[' + error_info_name(x) + "] = " + to_string_stub(x.value()) + '\n';
+        }
+
+    template <class Tag,class T>
+    inline
+    error_info<Tag,T>::
+    error_info( value_type const & value ):
+        value_(value)
+        {
+        }
+
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    template <class Tag,class T>
+    inline
+    error_info<Tag,T>::
+    error_info( error_info const & x ):
+        value_(x.value_)
+        {
+        }
+    template <class Tag,class T>
+    inline
+    error_info<Tag,T>::
+    error_info( value_type && value ) BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(value_type(std::move(value)))):
+        value_(std::move(value))
+        {
+        }
+    template <class Tag,class T>
+    inline
+    error_info<Tag,T>::
+    error_info( error_info && x ) BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(value_type(std::move(x.value_)))):
+        value_(std::move(x.value_))
+        {
+        }
+#endif
+
+    template <class Tag,class T>
+    inline
+    error_info<Tag,T>::
+    ~error_info() throw()
+        {
         }
 
     template <class Tag,class T>
@@ -57,7 +90,7 @@ boost
     exception_detail
         {
         class
-        error_info_container_impl BOOST_FINAL:
+        error_info_container_impl:
             public error_info_container
             {
             public:
@@ -67,7 +100,7 @@ boost
                 {
                 }
 
-            ~error_info_container_impl() BOOST_NOEXCEPT_OR_NOTHROW
+            ~error_info_container_impl() throw()
                 {
                 }
 
@@ -86,6 +119,9 @@ boost
                 if( info_.end()!=i )
                     {
                     shared_ptr<error_info_base> const & p = i->second;
+#ifndef BOOST_NO_RTTI
+                    BOOST_ASSERT( *BOOST_EXCEPTION_DYNAMIC_TYPEID(*p).type_==*ti.type_ );
+#endif
                     return p;
                     }
                 return shared_ptr<error_info_base>();
@@ -144,11 +180,7 @@ boost
                 refcount_ptr<error_info_container> p;
                 error_info_container_impl * c=new error_info_container_impl;
                 p.adopt(c);
-                for( error_info_map::const_iterator i=info_.begin(),e=info_.end(); i!=e; ++i )
-                    {
-                    shared_ptr<error_info_base> cp(i->second->clone());
-                    c->info_.insert(std::make_pair(i->first,cp));
-                    }
+                c->info_ = info_;
                 return p;
                 }
             };

@@ -11,11 +11,7 @@
 #ifndef BOOST_INTERPROCESS_DETAIL_ADAPTIVE_NODE_POOL_HPP
 #define BOOST_INTERPROCESS_DETAIL_ADAPTIVE_NODE_POOL_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
 #endif
 
@@ -48,17 +44,11 @@ template< class SegmentManager
         , unsigned char OverheadPercent
         >
 class private_adaptive_node_pool
-   :  public boost::container::dtl::private_adaptive_node_pool_impl_rt
-         < typename SegmentManager::segment_manager_base_type
-         , ::boost::container::adaptive_pool_flag::size_ordered |
-           ::boost::container::adaptive_pool_flag::address_ordered
-         >
+   :  public boost::container::container_detail::private_adaptive_node_pool_impl
+         <typename SegmentManager::segment_manager_base_type>
 {
-   typedef boost::container::dtl::private_adaptive_node_pool_impl_rt
-      < typename SegmentManager::segment_manager_base_type
-      , ::boost::container::adaptive_pool_flag::size_ordered |
-        ::boost::container::adaptive_pool_flag::address_ordered
-      > base_t;
+   typedef boost::container::container_detail::private_adaptive_node_pool_impl
+      <typename SegmentManager::segment_manager_base_type> base_t;
    //Non-copyable
    private_adaptive_node_pool();
    private_adaptive_node_pool(const private_adaptive_node_pool &);
@@ -69,6 +59,9 @@ class private_adaptive_node_pool
    typedef typename base_t::size_type  size_type;
 
    static const size_type nodes_per_block = NodesPerBlock;
+
+   //Deprecated, use node_per_block
+   static const size_type nodes_per_chunk = NodesPerBlock;
 
    //!Constructor from a segment manager. Never throws
    private_adaptive_node_pool(segment_manager *segment_mngr)

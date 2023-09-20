@@ -10,7 +10,6 @@
 #define BOOST_HEAP_PAIRING_HEAP_HPP
 
 #include <algorithm>
-#include <utility>
 #include <vector>
 
 #include <boost/assert.hpp>
@@ -20,12 +19,6 @@
 #include <boost/heap/policies.hpp>
 #include <boost/heap/detail/stable_heap.hpp>
 #include <boost/heap/detail/tree_iterator.hpp>
-#include <boost/type_traits/integral_constant.hpp>
-
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
-#endif
-
 
 #ifndef BOOST_DOXYGEN_INVOKED
 #ifdef BOOST_HEAP_SANITYCHECKS
@@ -51,7 +44,7 @@ struct make_pairing_heap_base
 {
     static const bool constant_time_size = parameter::binding<Parspec,
                                                               tag::constant_time_size,
-                                                              boost::true_type
+                                                              boost::mpl::true_
                                                              >::type::value;
     typedef typename detail::make_heap_base<T, Parspec, constant_time_size>::type base_type;
     typedef typename detail::make_heap_base<T, Parspec, constant_time_size>::allocator_argument allocator_argument;
@@ -59,7 +52,7 @@ struct make_pairing_heap_base
 
     typedef heap_node<typename base_type::internal_type, false> node_type;
 
-    typedef typename boost::allocator_rebind<allocator_argument, node_type>::type allocator_type;
+    typedef typename allocator_argument::template rebind<node_type>::other allocator_type;
 
     struct type:
         base_type,
@@ -69,7 +62,7 @@ struct make_pairing_heap_base
             base_type(arg)
         {}
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifdef BOOST_HAS_RVALUE_REFS
         type(type const & rhs):
             base_type(rhs), allocator_type(rhs)
         {}
@@ -106,7 +99,7 @@ struct make_pairing_heap_base
  * the complexity analysis is yet unsolved. For details, consult:
  *
  * Pettie, Seth (2005), "Towards a final analysis of pairing heaps",
- * Proc. 46th Annual IEEE Symposium on Foundations of Computer Science, pp. 174-183
+ * Proc. 46th Annual IEEE Symposium on Foundations of Computer Science, pp. 174–183
  *
  * The template parameter T is the type to be managed by the container.
  * The user can specify additional options and if no options are provided default options are used.
@@ -159,8 +152,8 @@ private:
         typedef typename base_maker::compare_argument value_compare;
         typedef typename base_maker::allocator_type allocator_type;
 
-        typedef typename boost::allocator_pointer<allocator_type>::type node_pointer;
-        typedef typename boost::allocator_const_pointer<allocator_type>::type const_node_pointer;
+        typedef typename allocator_type::pointer node_pointer;
+        typedef typename allocator_type::const_pointer const_node_pointer;
 
         typedef detail::heap_node_list node_list_type;
         typedef typename node_list_type::iterator node_list_iterator;
@@ -247,7 +240,7 @@ public:
         size_holder::set_size(rhs.get_size());
     }
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifdef BOOST_HAS_RVALUE_REFS
     /// \copydoc boost::heap::priority_queue::priority_queue(priority_queue &&)
     pairing_heap(pairing_heap && rhs):
         super_t(std::move(rhs)), root(rhs.root)
@@ -303,8 +296,7 @@ public:
     /// \copydoc boost::heap::priority_queue::max_size
     size_type max_size(void) const
     {
-        const allocator_type& alloc = *this;
-        return boost::allocator_max_size(alloc);
+        return allocator_type::max_size();
     }
 
     /// \copydoc boost::heap::priority_queue::clear
@@ -315,8 +307,7 @@ public:
 
         root->template clear_subtree<allocator_type>(*this);
         root->~node();
-        allocator_type& alloc = *this;
-        alloc.deallocate(root, 1);
+        allocator_type::deallocate(root, 1);
         root = NULL;
         size_holder::set_size(0);
     }
@@ -357,14 +348,15 @@ public:
     {
         size_holder::increment();
 
-        allocator_type& alloc = *this;
-        node_pointer n = alloc.allocate(1);
+        node_pointer n = allocator_type::allocate(1);
+
         new(n) node(super_t::make_node(v));
+
         merge_node(n);
         return handle_type(n);
     }
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+#if defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_VARIADIC_TEMPLATES)
     /**
      * \b Effects: Adds a new element to the priority queue. The element is directly constructed in-place. Returns handle to element.
      *
@@ -380,9 +372,10 @@ public:
     {
         size_holder::increment();
 
-        allocator_type& alloc = *this;
-        node_pointer n = alloc.allocate(1);
-        new(n) node(super_t::make_node(std::forward<Args>(args)...));
+        node_pointer n = allocator_type::allocate(1);
+
+        new(n) node(super_t::make_node(std::forward<T>(args)...));
+
         merge_node(n);
         return handle_type(n);
     }
@@ -529,8 +522,7 @@ public:
 
         size_holder::decrement();
         n->~node();
-        allocator_type& alloc = *this;
-        alloc.deallocate(n, 1);
+        allocator_type::deallocate(n, 1);
     }
 
     /// \copydoc boost::heap::priority_queue::begin
@@ -542,7 +534,7 @@ public:
     /// \copydoc boost::heap::priority_queue::end
     iterator end(void) const
     {
-        return iterator(super_t::value_comp());
+        return iterator();
     }
 
     /// \copydoc boost::heap::fibonacci_heap::ordered_begin
@@ -586,7 +578,7 @@ public:
         rhs.set_size(0);
         rhs.root = NULL;
 
-        super_t::set_stability_count((std::max)(super_t::get_stability_count(),
+        super_t::set_stability_count(std::max(super_t::get_stability_count(),
                                      rhs.get_stability_count()));
         rhs.set_stability_count(0);
     }
@@ -663,7 +655,7 @@ private:
 
     node_pointer merge_node_list(node_child_list & children)
     {
-        BOOST_HEAP_ASSERT(!children.empty());
+        assert(!children.empty());
         node_pointer merged = merge_first_pair(children);
         if (children.empty())
             return merged;
@@ -681,7 +673,7 @@ private:
 
     node_pointer merge_first_pair(node_child_list & children)
     {
-        BOOST_HEAP_ASSERT(!children.empty());
+        assert(!children.empty());
         node_pointer first_child = static_cast<node_pointer>(&children.front());
         children.pop_front();
         if (children.empty())

@@ -11,7 +11,7 @@
 #ifndef BOOST_MATH_LOG1P_INCLUDED
 #  include <boost/math/special_functions/log1p.hpp>
 #endif
-#include <boost/math/tools/assert.hpp>
+#include <boost/assert.hpp>
 
 #ifdef BOOST_NO_STDC_NAMESPACE
 namespace std{ using ::sqrt; using ::fabs; using ::acos; using ::asin; using ::atan; using ::atan2; }
@@ -20,7 +20,7 @@ namespace std{ using ::sqrt; using ::fabs; using ::acos; using ::asin; using ::a
 namespace boost{ namespace math{
 
 template<class T> 
-[[deprecated("Replaced by C++11")]] std::complex<T> acos(const std::complex<T>& z)
+std::complex<T> acos(const std::complex<T>& z)
 {
    //
    // This implementation is a transcription of the pseudo-code in:
@@ -31,20 +31,19 @@ template<class T>
    //
 
    //
-   // These static constants should really be in a maths constants library,
-   // note that we have tweaked a_crossover as per: https://svn.boost.org/trac/boost/ticket/7290
+   // These static constants should really be in a maths constants library:
    //
    static const T one = static_cast<T>(1);
    //static const T two = static_cast<T>(2);
    static const T half = static_cast<T>(0.5L);
-   static const T a_crossover = static_cast<T>(10);
+   static const T a_crossover = static_cast<T>(1.5L);
    static const T b_crossover = static_cast<T>(0.6417L);
    static const T s_pi = boost::math::constants::pi<T>();
    static const T half_pi = s_pi / 2;
    static const T log_two = boost::math::constants::ln_two<T>();
    static const T quarter_pi = s_pi / 4;
    
-#ifdef _MSC_VER
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4127)
 #endif
@@ -173,16 +172,14 @@ template<class T>
             }
             else
             {
-               // This deviates from Hull et al's paper as per https://svn.boost.org/trac/boost/ticket/7290
+               real = 0;
                if(((std::numeric_limits<T>::max)() / xp1) > xm1)
                {
                   // xp1 * xm1 won't overflow:
-                  real = y / std::sqrt(xm1*xp1);
                   imag = boost::math::log1p(xm1 + std::sqrt(xp1*xm1));
                }
                else
                {
-                  real = y / x;
                   imag = log_two + std::log(x);
                }
             }
@@ -202,7 +199,7 @@ template<class T>
             // but we have no way to test that here, so for now just assert
             // on the assumption:
             //
-            BOOST_MATH_ASSERT(x == 1);
+            BOOST_ASSERT(x == 1);
             real = std::sqrt(y);
             imag = std::sqrt(y);
          }
@@ -235,7 +232,7 @@ template<class T>
       imag = (boost::math::changesign)(imag);
 
    return std::complex<T>(real, imag);
-#ifdef _MSC_VER
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 }

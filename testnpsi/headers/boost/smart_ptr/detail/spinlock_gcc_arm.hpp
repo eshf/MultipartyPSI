@@ -11,22 +11,13 @@
 
 #include <boost/smart_ptr/detail/yield_k.hpp>
 
-#if defined(BOOST_SP_REPORT_IMPLEMENTATION)
-
-#include <boost/config/pragma_message.hpp>
-BOOST_PRAGMA_MESSAGE("Using g++/ARM spinlock")
-
-#endif
-
-#if defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_7S__)
+#if defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
 
 # define BOOST_SP_ARM_BARRIER "dmb"
-# define BOOST_SP_ARM_HAS_LDREX
 
 #elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__)
 
 # define BOOST_SP_ARM_BARRIER "mcr p15, 0, r0, c7, c10, 5"
-# define BOOST_SP_ARM_HAS_LDREX
 
 #else
 
@@ -52,7 +43,17 @@ public:
     {
         int r;
 
-#ifdef BOOST_SP_ARM_HAS_LDREX
+#if defined(__ARM_ARCH_6__) \
+    || defined(__ARM_ARCH_6J__) \
+    || defined(__ARM_ARCH_6K__) \
+    || defined(__ARM_ARCH_6Z__) \
+    || defined(__ARM_ARCH_6ZK__) \
+    || defined(__ARM_ARCH_6T2__) \
+    || defined(__ARM_ARCH_7__) \
+    || defined(__ARM_ARCH_7A__) \
+    || defined(__ARM_ARCH_7R__) \
+    || defined(__ARM_ARCH_7M__) \
+    || defined(__ARM_ARCH_7EM__)
 
         __asm__ __volatile__(
             "ldrex %0, [%2]; \n"
@@ -89,7 +90,6 @@ public:
     {
         __asm__ __volatile__( BOOST_SP_ARM_BARRIER ::: "memory" );
         *const_cast< int volatile* >( &v_ ) = 0;
-        __asm__ __volatile__( BOOST_SP_ARM_BARRIER ::: "memory" );
     }
 
 public:
@@ -123,6 +123,5 @@ public:
 #define BOOST_DETAIL_SPINLOCK_INIT {0}
 
 #undef BOOST_SP_ARM_BARRIER
-#undef BOOST_SP_ARM_HAS_LDREX
 
 #endif // #ifndef BOOST_SMART_PTR_DETAIL_SPINLOCK_GCC_ARM_HPP_INCLUDED

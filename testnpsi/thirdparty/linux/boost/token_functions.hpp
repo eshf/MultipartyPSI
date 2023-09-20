@@ -38,9 +38,8 @@
 #include <algorithm> // for find_if
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
-#include <boost/type_traits/conditional.hpp>
-#include <boost/type_traits/is_pointer.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/throw_exception.hpp>
 #if !defined(BOOST_NO_CWCTYPE)
 #include <cwctype>
@@ -324,7 +323,7 @@ namespace boost{
   // This portably gets the iterator_tag without partial template specialization
   template<class Iterator>
     struct get_iterator_category{
-    typedef typename conditional<is_pointer<Iterator>::value,
+    typedef typename mpl::if_<is_pointer<Iterator>,
       pointer_iterator_category<Iterator>,
       class_iterator_category<Iterator>
     >::type cat;
@@ -451,8 +450,7 @@ namespace boost{
     char_separator()
       : m_use_ispunct(true),
         m_use_isspace(true),
-        m_empty_tokens(drop_empty_tokens),
-        m_output_done(false) { }
+        m_empty_tokens(drop_empty_tokens) { }
 
     void reset() { }
 

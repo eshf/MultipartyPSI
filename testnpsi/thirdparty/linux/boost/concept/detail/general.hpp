@@ -10,7 +10,7 @@
 
 # ifdef BOOST_OLD_CONCEPT_SUPPORT
 #  include <boost/concept/detail/has_constraints.hpp>
-#  include <boost/type_traits/conditional.hpp>
+#  include <boost/mpl/if.hpp>
 # endif
 
 // This implementation works on Comeau and GCC, all the way back to
@@ -28,14 +28,7 @@ namespace detail
 template <class Model>
 struct requirement
 {
-#   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
-#   endif
     static void failed() { ((Model*)0)->~Model(); }
-#   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
-#   pragma GCC diagnostic pop
-#   endif
 };
 
 struct failed {};
@@ -43,14 +36,7 @@ struct failed {};
 template <class Model>
 struct requirement<failed ************ Model::************>
 {
-#   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
-#   endif
     static void failed() { ((Model*)0)->~Model(); }
-#   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
-#   pragma GCC diagnostic pop
-#   endif
 };
 
 # ifdef BOOST_OLD_CONCEPT_SUPPORT
@@ -58,20 +44,13 @@ struct requirement<failed ************ Model::************>
 template <class Model>
 struct constraint
 {
-#   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
-#   endif
     static void failed() { ((Model*)0)->constraints(); }
-#   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
-#   pragma GCC diagnostic pop
-#   endif
 };
   
 template <class Model>
 struct requirement_<void(*)(Model)>
-  : boost::conditional<
-        concepts::not_satisfied<Model>::value
+  : mpl::if_<
+        concepts::not_satisfied<Model>
       , constraint<Model>
       , requirement<failed ************ Model::************>
     >::type

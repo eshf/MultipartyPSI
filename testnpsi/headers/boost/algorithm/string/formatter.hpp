@@ -11,8 +11,9 @@
 #ifndef BOOST_STRING_FORMATTER_HPP
 #define BOOST_STRING_FORMATTER_HPP
 
+#include <boost/detail/iterator.hpp>
 #include <boost/range/value_type.hpp>
-#include <boost/range/iterator_range_core.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <boost/range/as_literal.hpp>
 
 #include <boost/algorithm/string/detail/formatter.hpp>
@@ -38,7 +39,7 @@ namespace boost {
             Constructs a \c const_formatter. Const formatter always returns
             the same value, regardless of the parameter.
 
-            \param Format A predefined value used as a result for formatting
+            \param Format A predefined value used as a result for formating
             \return An instance of the \c const_formatter object.
         */
         template<typename RangeT>
@@ -94,7 +95,7 @@ namespace boost {
             to extract a portion of the formatted sequence. The first finder's match is returned 
             as a result
 
-            \param Finder a finder used to select a portion of the formatted sequence
+            \param Finder a finder used to select a portion of the formated sequence
             \return An instance of the \c dissect_formatter object.
         */
         template<typename FinderT>

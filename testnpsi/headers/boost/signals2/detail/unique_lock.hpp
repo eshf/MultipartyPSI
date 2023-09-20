@@ -12,7 +12,7 @@
 #ifndef BOOST_SIGNALS2_UNIQUE_LOCK_HPP
 #define BOOST_SIGNALS2_UNIQUE_LOCK_HPP
 
-#include <boost/core/noncopyable.hpp>
+#include <boost/noncopyable.hpp>
 
 namespace boost
 {

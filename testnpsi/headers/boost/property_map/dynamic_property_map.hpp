@@ -1,5 +1,5 @@
-#ifndef BOOST_PROPERTY_MAP_DYNAMIC_PROPERTY_MAP_HPP
-#define BOOST_PROPERTY_MAP_DYNAMIC_PROPERTY_MAP_HPP
+#ifndef DYNAMIC_PROPERTY_MAP_RG09302004_HPP
+#define DYNAMIC_PROPERTY_MAP_RG09302004_HPP
 
 // Copyright 2004-5 The Trustees of Indiana University.
 
@@ -24,16 +24,13 @@
 #include <boost/any.hpp>
 #include <boost/function/function3.hpp>
 #include <boost/type_traits/is_convertible.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/type.hpp>
-#include <boost/type_index.hpp>
-#include <boost/smart_ptr.hpp>
-#include <exception>
-#include <map>
-#include <sstream>
-#include <stdexcept>
-#include <string>
 #include <typeinfo>
+#include <boost/mpl/bool.hpp>
+#include <stdexcept>
+#include <sstream>
+#include <map>
+#include <boost/type.hpp>
+#include <boost/smart_ptr.hpp>
 
 namespace boost {
 
@@ -73,17 +70,17 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 struct dynamic_property_exception : public std::exception {
-  ~dynamic_property_exception() throw() BOOST_OVERRIDE {}
-  const char* what() const throw() BOOST_OVERRIDE = 0;
+  virtual ~dynamic_property_exception() throw() {}
+  virtual const char* what() const throw() = 0;
 };
 
 struct property_not_found : public dynamic_property_exception {
   std::string property;
   mutable std::string statement;
   property_not_found(const std::string& property) : property(property) {}
-  ~property_not_found() throw() BOOST_OVERRIDE {}
+  virtual ~property_not_found() throw() {}
 
-  const char* what() const throw() BOOST_OVERRIDE {
+  const char* what() const throw() {
     if(statement.empty())
       statement =
         std::string("Property not found: ") + property + ".";
@@ -96,13 +93,13 @@ struct dynamic_get_failure : public dynamic_property_exception {
   std::string property;
   mutable std::string statement;
   dynamic_get_failure(const std::string& property) : property(property) {}
-  ~dynamic_get_failure() throw() BOOST_OVERRIDE {}
+  virtual ~dynamic_get_failure() throw() {}
 
-  const char* what() const throw() BOOST_OVERRIDE {
+  const char* what() const throw() {
     if(statement.empty())
       statement =
         std::string(
-         "dynamic property get cannot retrieve value for property: ")
+         "dynamic property get cannot retrieve value for  property: ")
         + property + ".";
 
     return statement.c_str();
@@ -110,9 +107,9 @@ struct dynamic_get_failure : public dynamic_property_exception {
 };
 
 struct dynamic_const_put_error  : public dynamic_property_exception {
-  ~dynamic_const_put_error() throw() BOOST_OVERRIDE {}
+  virtual ~dynamic_const_put_error() throw() {}
 
-  const char* what() const throw() BOOST_OVERRIDE {
+  const char* what() const throw() {
     return "Attempt to put a value into a const property map: ";
   }
 };
@@ -149,16 +146,16 @@ class dynamic_property_map_adaptor : public dynamic_property_map
   {
     using boost::put;
 
-    key_type key_ = any_cast<key_type>(in_key);
-    if (in_value.type() == boost::typeindex::type_id<value_type>()) {
-      put(property_map_, key_, any_cast<value_type>(in_value));
+    key_type key = any_cast<key_type>(in_key);
+    if (in_value.type() == typeid(value_type)) {
+      put(property_map_, key, any_cast<value_type>(in_value));
     } else {
       //  if in_value is an empty string, put a default constructed value_type.
       std::string v = any_cast<std::string>(in_value);
       if (v.empty()) {
-        put(property_map_, key_, value_type());
+        put(property_map_, key, value_type());
       } else {
-        put(property_map_, key_, detail::read_value<value_type>(v));
+        put(property_map_, key, detail::read_value<value_type>(v));
       }
     }
   }
@@ -172,27 +169,27 @@ public:
   explicit dynamic_property_map_adaptor(const PropertyMap& property_map_)
     : property_map_(property_map_) { }
 
-  boost::any get(const any& key_) BOOST_OVERRIDE
+  virtual boost::any get(const any& key)
   {
-    return get_wrapper_xxx(property_map_, any_cast<typename boost::property_traits<PropertyMap>::key_type>(key_));
+    return get_wrapper_xxx(property_map_, any_cast<typename boost::property_traits<PropertyMap>::key_type>(key));
   }
 
-  std::string get_string(const any& key_) BOOST_OVERRIDE
+  virtual std::string get_string(const any& key)
   {
     std::ostringstream out;
-    out << get_wrapper_xxx(property_map_, any_cast<typename boost::property_traits<PropertyMap>::key_type>(key_));
+    out << get_wrapper_xxx(property_map_, any_cast<typename boost::property_traits<PropertyMap>::key_type>(key));
     return out.str();
   }
 
-  void put(const any& in_key, const any& in_value) BOOST_OVERRIDE
+  virtual void put(const any& in_key, const any& in_value)
   {
     do_put(in_key, in_value,
            mpl::bool_<(is_convertible<category*,
                                       writable_property_map_tag*>::value)>());
   }
 
-  const std::type_info& key()   const BOOST_OVERRIDE { return typeid(key_type); }
-  const std::type_info& value() const BOOST_OVERRIDE { return typeid(value_type); }
+  virtual const std::type_info& key()   const { return typeid(key_type); }
+  virtual const std::type_info& value() const { return typeid(value_type); }
 
   PropertyMap&       base()       { return property_map_; }
   const PropertyMap& base() const { return property_map_; }
@@ -235,15 +232,6 @@ public:
     property_maps.insert(property_maps_type::value_type(name, pm));
 
     return *this;
-  }
-
-  template<typename PropertyMap>
-  dynamic_properties
-  property(const std::string& name, PropertyMap property_map_) const
-  {
-    dynamic_properties result = *this;
-    result.property(name, property_map_);
-    return result;
   }
 
   iterator       begin()       { return property_maps.begin(); }
@@ -302,6 +290,7 @@ put(const std::string& name, dynamic_properties& dp, const Key& key,
   }
 }
 
+#ifndef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS 
 template<typename Value, typename Key>
 Value
 get(const std::string& name, const dynamic_properties& dp, const Key& key)
@@ -314,6 +303,7 @@ get(const std::string& name, const dynamic_properties& dp, const Key& key)
 
   BOOST_THROW_EXCEPTION(dynamic_get_failure(name));
 }
+#endif
 
 template<typename Value, typename Key>
 Value
@@ -343,7 +333,7 @@ get(const std::string& name, const dynamic_properties& dp, const Key& key)
 
 // The easy way to ignore properties.
 inline
-boost::shared_ptr<boost::dynamic_property_map>
+boost::shared_ptr<boost::dynamic_property_map> 
 ignore_other_properties(const std::string&,
                         const boost::any&,
                         const boost::any&) {
@@ -352,4 +342,4 @@ ignore_other_properties(const std::string&,
 
 } // namespace boost
 
-#endif // BOOST_PROPERTY_MAP_DYNAMIC_PROPERTY_MAP_HPP
+#endif // DYNAMIC_PROPERTY_MAP_RG09302004_HPP

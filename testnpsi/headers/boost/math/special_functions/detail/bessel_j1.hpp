@@ -13,17 +13,7 @@
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/rational.hpp>
 #include <boost/math/tools/big_constant.hpp>
-#include <boost/math/tools/assert.hpp>
-
-#if defined(__GNUC__) && defined(BOOST_MATH_USE_FLOAT128)
-//
-// This is the only way we can avoid
-// warning: non-standard suffix on floating constant [-Wpedantic]
-// when building with -Wall -pedantic.  Neither __extension__
-// nor #pragma diagnostic ignored work :(
-//
-#pragma GCC system_header
-#endif
+#include <boost/assert.hpp>
 
 // Bessel function of the first kind of order one
 // x <= 8, minimax rational approximations on root-bracketing intervals
@@ -159,7 +149,7 @@ T bessel_j1(T x)
     if (w <= 4)                       // w in (0, 4]
     {
         T y = x * x;
-        BOOST_MATH_ASSERT(sizeof(P1) == sizeof(Q1));
+        BOOST_ASSERT(sizeof(P1) == sizeof(Q1));
         r = evaluate_rational(P1, Q1, y);
         factor = w * (w + x1) * ((w - x11/256) - x12);
         value = factor * r;
@@ -167,7 +157,7 @@ T bessel_j1(T x)
     else if (w <= 8)                  // w in (4, 8]
     {
         T y = x * x;
-        BOOST_MATH_ASSERT(sizeof(P2) == sizeof(Q2));
+        BOOST_ASSERT(sizeof(P2) == sizeof(Q2));
         r = evaluate_rational(P2, Q2, y);
         factor = w * (w + x2) * ((w - x21/256) - x22);
         value = factor * r;
@@ -176,24 +166,13 @@ T bessel_j1(T x)
     {
         T y = 8 / w;
         T y2 = y * y;
-        BOOST_MATH_ASSERT(sizeof(PC) == sizeof(QC));
-        BOOST_MATH_ASSERT(sizeof(PS) == sizeof(QS));
+        T z = w - 0.75f * pi<T>();
+        BOOST_ASSERT(sizeof(PC) == sizeof(QC));
+        BOOST_ASSERT(sizeof(PS) == sizeof(QS));
         rc = evaluate_rational(PC, QC, y2);
         rs = evaluate_rational(PS, QS, y2);
-        factor = 1 / (sqrt(w) * constants::root_pi<T>());
-        //
-        // What follows is really just:
-        //
-        // T z = w - 0.75f * pi<T>();
-        // value = factor * (rc * cos(z) - y * rs * sin(z));
-        //
-        // but using the sin/cos addition rules plus constants
-        // for the values of sin/cos of 3PI/4 which then cancel
-        // out with corresponding terms in "factor".
-        //
-        T sx = sin(x);
-        T cx = cos(x);
-        value = factor * (rc * (sx - cx) + y * rs * (sx + cx));
+        factor = sqrt(2 / (w * pi<T>()));
+        value = factor * (rc * cos(z) - y * rs * sin(z));
     }
 
     if (x < 0)

@@ -1,6 +1,6 @@
 /// @file
 // Boost.Convert
-// Copyright (c) 2009-2020 Vladimir Batov.
+// Copyright (c) 2009-2016 Vladimir Batov.
 //
 // Many thanks to Julian Gonggrijp, Rob Stewart, Andrzej Krzemienski, Matus Chochlik, Jeroen Habraken,
 // Hartmut Kaiser, Joel De Guzman, Thijs (M.A.) van den Berg, Roland Bock, Gavin Lambert, Paul Bristow,
@@ -18,7 +18,7 @@
 //    as they should;
 // 5. Paul Bristow for helping great deal with the documentation;
 // 6. Kevlin Henney and Dave Abrahams for their lexical_cast-related insights and explanations.
-//
+// 
 // Use, modification and distribution are subject to the Boost Software License,
 // Version 1.0. See http://www.boost.org/LICENSE_1_0.txt.
 
@@ -26,14 +26,15 @@
 #define BOOST_CONVERT_HPP
 
 #include <boost/convert/detail/is_fun.hpp>
-#include <boost/core/ref.hpp>
+#include <boost/ref.hpp>
 
 namespace boost
 {
     namespace detail { enum throw_on_failure {}; }
 
-    /// @details boost::throw_on_failure is the 'tag' object
-    /// to request the exception-throwing behavior.
+    /// @details The boost::throw_on_failure is the name of an object of the
+    /// boost::detail::throw_on_failure type that is used to indicate
+    /// desired exception-throwing behavior.
     detail::throw_on_failure const throw_on_failure = detail::throw_on_failure(0);
 
     namespace cnv
@@ -43,7 +44,7 @@ namespace boost
     }
 
     /// @brief Boost.Convert main deployment interface
-    /// @param[in] value_in   Value of the TypeIn type to be converted to the TypeOut type
+    /// @param[in] value_in   Value of the TypeIn type to be converted to the TyeOut type
     /// @param[in] converter  Converter to be used for conversion
     /// @return boost::optional<TypeOut> result of conversion together with the indication of
     ///         success or failure of the conversion request.
@@ -59,7 +60,7 @@ namespace boost
     boost::optional<TypeOut>
     convert(TypeIn const& value_in, Converter const& converter)
     {
-        auto result = optional<TypeOut>();
+        optional<TypeOut> result;
         boost::unwrap_ref(converter)(value_in, result);
         return result;
     }
@@ -78,7 +79,7 @@ namespace boost
     /// @brief Boost.Convert deployment interface with the default converter
     /// @details For example,
     /// @code
-    ///    struct boost::cnv::by_default : boost::cnv::cstream {};
+    ///    struct boost::cnv::by_default : public boost::cnv::cstream {};
     ///
     ///    // boost::cnv::cstream (through boost::cnv::by_default) is deployed
     ///    // as the default converter when no converter is provided explicitly.
@@ -106,14 +107,14 @@ namespace boost
     }
 
     template<typename TypeOut, typename TypeIn, typename Converter, typename Fallback>
-    typename std::enable_if<is_convertible<Fallback, TypeOut>::value, TypeOut>::type
+    typename enable_if<is_convertible<Fallback, TypeOut>, TypeOut>::type
     convert(TypeIn const& value_in, Converter const& converter, Fallback const& fallback)
     {
         return convert<TypeOut>(value_in, converter).value_or(fallback);
     }
 
     template<typename TypeOut, typename TypeIn, typename Converter, typename Fallback>
-    typename std::enable_if<cnv::is_fun<Fallback, TypeOut>::value, TypeOut>::type
+    typename enable_if<cnv::is_fun<Fallback, TypeOut>, TypeOut>::type
     convert(TypeIn const& value_in, Converter const& converter, Fallback fallback)
     {
         return convert<TypeOut>(value_in, converter).value_or_eval(fallback);
@@ -125,10 +126,13 @@ namespace boost { namespace cnv
     template<typename Converter, typename TypeOut, typename TypeIn>
     struct reference
     {
-        using this_type = reference;
+        typedef reference this_type;
 
-        reference (Converter const& cnv) : converter_(cnv) {}
-        reference (Converter&& cnv) : converter_(std::move(cnv)) {}
+        reference(Converter const& cnv) : converter_(cnv) {}
+
+#ifdef BOOST_CONVERT_CXX11
+        reference(Converter&& cnv) : converter_(std::move(cnv)) {}
+#endif
 
         this_type&
         value_or(TypeOut const& fallback)
@@ -137,9 +141,9 @@ namespace boost { namespace cnv
         }
 
         TypeOut
-        operator()(TypeIn const& value_in) const
+        operator()(TypeIn const& value_in)
         {
-            auto result = convert<TypeOut>(value_in, converter_);
+            optional<TypeOut> result = convert<TypeOut>(value_in, converter_);
             return result ? result.get() : fallback_.value();
         }
 
@@ -151,10 +155,13 @@ namespace boost { namespace cnv
     template<typename Converter, typename TypeOut>
     struct reference<Converter, TypeOut, void>
     {
-        using this_type = reference;
+        typedef reference this_type;
 
-        reference (Converter const& cnv) : converter_(cnv) {}
-        reference (Converter&& cnv) : converter_(std::move(cnv)) {}
+        reference(Converter const& cnv) : converter_(cnv) {}
+
+#ifdef BOOST_CONVERT_CXX11
+        reference(Converter&& cnv) : converter_(std::move(cnv)) {}
+#endif
 
         this_type&
         value_or(TypeOut const& fallback)
@@ -164,9 +171,9 @@ namespace boost { namespace cnv
 
         template<typename TypeIn>
         TypeOut
-        operator()(TypeIn const& value_in) const
+        operator()(TypeIn const& value_in)
         {
-            auto result = convert<TypeOut>(value_in, converter_);
+            optional<TypeOut> result = convert<TypeOut>(value_in, converter_);
             return result ? result.get() : fallback_.value();
         }
 
@@ -179,9 +186,9 @@ namespace boost { namespace cnv
     /// @brief Boost.Convert deployment interface with algorithms
     /// @details For example,
     /// @code
-    ///    std::array<char const*, 3> strs = {{ " 5", "0XF", "not an int" }};
-    ///    std::vector<int>           ints;
-    ///    boost::cnv::cstream         cnv;
+    ///    boost::array<char const*, 3> strs = {{ " 5", "0XF", "not an int" }};
+    ///    std::vector<int>             ints;
+    ///    boost::cnv::cstream           cnv;
     ///
     ///    cnv(std::hex)(std::skipws);
     ///
@@ -189,7 +196,7 @@ namespace boost { namespace cnv
     ///        strs.begin(),
     ///        strs.end(),
     ///        std::back_inserter(ints),
-    ///        boost::cnv::apply<int>(std::cref(cnv)).value_or(-1));
+    ///        boost::cnv::apply<int>(boost::cref(cnv)).value_or(-1));
     /// @endcode
 
     template<typename TypeOut, typename TypeIn, typename Converter>

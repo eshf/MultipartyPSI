@@ -5,9 +5,7 @@
 #ifndef BOOST_ITERATOR_HPP
 #define BOOST_ITERATOR_HPP
 
-#include <boost/config/header_deprecated.hpp>
-
-BOOST_HEADER_DEPRECATED("<iterator>")
+// This header is obsolete and will be deprecated.
 
 #include <iterator>
 #include <cstddef>           // std::ptrdiff_t

@@ -2,7 +2,7 @@
 // detail/impl/throw_error.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2023 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2012 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,6 +16,7 @@
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <boost/asio/detail/config.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/asio/detail/throw_error.hpp>
 #include <boost/system/system_error.hpp>
 
@@ -25,21 +26,16 @@ namespace boost {
 namespace asio {
 namespace detail {
 
-void do_throw_error(
-    const boost::system::error_code& err
-    BOOST_ASIO_SOURCE_LOCATION_PARAM)
+void do_throw_error(const boost::system::error_code& err)
 {
   boost::system::system_error e(err);
-  boost::asio::detail::throw_exception(e BOOST_ASIO_SOURCE_LOCATION_ARG);
+  boost::throw_exception(e);
 }
 
-void do_throw_error(
-    const boost::system::error_code& err,
-    const char* location
-    BOOST_ASIO_SOURCE_LOCATION_PARAM)
+void do_throw_error(const boost::system::error_code& err, const char* location)
 {
   boost::system::system_error e(err, location);
-  boost::asio::detail::throw_exception(e BOOST_ASIO_SOURCE_LOCATION_ARG);
+  boost::throw_exception(e);
 }
 
 } // namespace detail

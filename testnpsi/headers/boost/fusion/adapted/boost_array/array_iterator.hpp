@@ -8,7 +8,6 @@
 #if !defined(BOOST_FUSION_ARRAY_ITERATOR_26122005_2250)
 #define BOOST_FUSION_ARRAY_ITERATOR_26122005_2250
 
-#include <boost/fusion/support/config.hpp>
 #include <cstddef>
 #include <boost/config.hpp>
 #include <boost/mpl/int.hpp>
@@ -17,11 +16,6 @@
 #include <boost/mpl/minus.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
-
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable: 4512) // assignment operator could not be generated.
-#endif
 
 namespace boost { namespace fusion
 {
@@ -37,7 +31,6 @@ namespace boost { namespace fusion
         typedef mpl::int_<Pos> index;
         typedef Array array_type;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
         array_iterator(Array& a)
             : array(a) {}
 
@@ -62,7 +55,6 @@ namespace boost { namespace fusion
                 >::type 
             type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const & it)
             {
@@ -77,7 +69,6 @@ namespace boost { namespace fusion
             typedef typename Iterator::array_type array_type;
             typedef array_iterator<array_type, index::value + N::value> type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& i)
             {
@@ -100,27 +91,17 @@ namespace boost { namespace fusion
                 >::type 
             type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
             static type
             call(I1 const&, I2 const&)
             {
                 return type();
             }
         };
+
+    private:
+
+        array_iterator<Array, Pos>& operator=(array_iterator<Array, Pos> const&);
     };
 }}
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
-
-#ifdef BOOST_FUSION_WORKAROUND_FOR_LWG_2408
-namespace std
-{
-    template <typename Array, int Pos>
-    struct iterator_traits< ::boost::fusion::array_iterator<Array, Pos> >
-    { };
-}
-#endif
 
 #endif

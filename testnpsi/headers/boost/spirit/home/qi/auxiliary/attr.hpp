@@ -59,9 +59,9 @@ namespace boost { namespace spirit { namespace qi
           , typename Skipper, typename Attribute>
         bool parse(Iterator& /*first*/, Iterator const& /*last*/
           , Context& /*context*/, Skipper const& /*skipper*/
-          , Attribute& attr_) const
+          , Attribute& attr) const
         {
-            spirit::traits::assign_to(value_, attr_);
+            spirit::traits::assign_to(value_, attr);
             return true;        // never consume any input, succeed always
         }
 
@@ -72,6 +72,10 @@ namespace boost { namespace spirit { namespace qi
         }
 
         Value value_;
+
+    private:
+        // silence MSVC warning C4512: assignment operator could not be generated
+        attr_parser& operator= (attr_parser const&);
     };
 
     ///////////////////////////////////////////////////////////////////////////

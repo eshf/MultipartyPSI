@@ -12,7 +12,7 @@
 #ifndef BOOST_BIMAP_DETAIL_SET_VIEW_BASE_HPP
 #define BOOST_BIMAP_DETAIL_SET_VIEW_BASE_HPP
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
 #pragma once
 #endif
 
@@ -199,7 +199,7 @@ class set_view_base
     {
         return derived().base().replace(
             derived().template functor<iterator_to_base_>()(position),
-            ::boost::bimaps::relation::detail::copy_with_left_replaced(*position,l)
+            value_type_(l,position->right)
         );
     }
 
@@ -209,7 +209,7 @@ class set_view_base
     {
         return derived().base().replace(
             derived().template functor<iterator_to_base_>()(position),
-            ::boost::bimaps::relation::detail::copy_with_right_replaced(*position,r)
+            value_type_(position->left,r)
         );
     }
 

@@ -2,7 +2,7 @@
 // detail/impl/select_reactor.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2023 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,16 +23,11 @@
       && !defined(BOOST_ASIO_HAS_KQUEUE) \
       && !defined(BOOST_ASIO_WINDOWS_RUNTIME))
 
+#include <boost/asio/detail/bind_handler.hpp>
 #include <boost/asio/detail/fd_set_adapter.hpp>
 #include <boost/asio/detail/select_reactor.hpp>
 #include <boost/asio/detail/signal_blocker.hpp>
 #include <boost/asio/detail/socket_ops.hpp>
-
-#if defined(BOOST_ASIO_HAS_IOCP)
-# include <boost/asio/detail/win_iocp_io_context.hpp>
-#else // defined(BOOST_ASIO_HAS_IOCP)
-# include <boost/asio/detail/scheduler.hpp>
-#endif // defined(BOOST_ASIO_HAS_IOCP)
 
 #include <boost/asio/detail/push_options.hpp>
 
@@ -40,62 +35,42 @@ namespace boost {
 namespace asio {
 namespace detail {
 
-#if defined(BOOST_ASIO_HAS_IOCP)
-class select_reactor::thread_function
-{
-public:
-  explicit thread_function(select_reactor* r)
-    : this_(r)
-  {
-  }
-
-  void operator()()
-  {
-    this_->run_thread();
-  }
-
-private:
-  select_reactor* this_;
-};
-#endif // defined(BOOST_ASIO_HAS_IOCP)
-
-select_reactor::select_reactor(boost::asio::execution_context& ctx)
-  : execution_context_service_base<select_reactor>(ctx),
-    scheduler_(use_service<scheduler_type>(ctx)),
+select_reactor::select_reactor(boost::asio::io_service& io_service)
+  : boost::asio::detail::service_base<select_reactor>(io_service),
+    io_service_(use_service<io_service_impl>(io_service)),
     mutex_(),
     interrupter_(),
 #if defined(BOOST_ASIO_HAS_IOCP)
     stop_thread_(false),
     thread_(0),
-    restart_reactor_(this),
 #endif // defined(BOOST_ASIO_HAS_IOCP)
     shutdown_(false)
 {
 #if defined(BOOST_ASIO_HAS_IOCP)
   boost::asio::detail::signal_blocker sb;
-  thread_ = new boost::asio::detail::thread(thread_function(this));
+  thread_ = new boost::asio::detail::thread(
+      bind_handler(&select_reactor::call_run_thread, this));
 #endif // defined(BOOST_ASIO_HAS_IOCP)
 }
 
 select_reactor::~select_reactor()
 {
-  shutdown();
+  shutdown_service();
 }
 
-void select_reactor::shutdown()
+void select_reactor::shutdown_service()
 {
   boost::asio::detail::mutex::scoped_lock lock(mutex_);
   shutdown_ = true;
 #if defined(BOOST_ASIO_HAS_IOCP)
   stop_thread_ = true;
-  if (thread_)
-    interrupter_.interrupt();
 #endif // defined(BOOST_ASIO_HAS_IOCP)
   lock.unlock();
 
 #if defined(BOOST_ASIO_HAS_IOCP)
   if (thread_)
   {
+    interrupter_.interrupt();
     thread_->join();
     delete thread_;
     thread_ = 0;
@@ -109,23 +84,18 @@ void select_reactor::shutdown()
 
   timer_queues_.get_all_timers(ops);
 
-  scheduler_.abandon_operations(ops);
+  io_service_.abandon_operations(ops);
 }
 
-void select_reactor::notify_fork(
-    boost::asio::execution_context::fork_event fork_ev)
+void select_reactor::fork_service(boost::asio::io_service::fork_event fork_ev)
 {
-#if defined(BOOST_ASIO_HAS_IOCP)
-  (void)fork_ev;
-#else // defined(BOOST_ASIO_HAS_IOCP)
-  if (fork_ev == boost::asio::execution_context::fork_child)
+  if (fork_ev == boost::asio::io_service::fork_child)
     interrupter_.recreate();
-#endif // defined(BOOST_ASIO_HAS_IOCP)
 }
 
 void select_reactor::init_task()
 {
-  scheduler_.init_task();
+  io_service_.init_task();
 }
 
 int select_reactor::register_descriptor(socket_type,
@@ -152,28 +122,20 @@ void select_reactor::move_descriptor(socket_type,
 {
 }
 
-void select_reactor::call_post_immediate_completion(
-    operation* op, bool is_continuation, const void* self)
-{
-  static_cast<const select_reactor*>(self)->post_immediate_completion(
-      op, is_continuation);
-}
-
 void select_reactor::start_op(int op_type, socket_type descriptor,
-    select_reactor::per_descriptor_data&, reactor_op* op, bool is_continuation,
-    bool, void (*on_immediate)(operation*, bool, const void*),
-    const void* immediate_arg)
+    select_reactor::per_descriptor_data&, reactor_op* op,
+    bool is_continuation, bool)
 {
   boost::asio::detail::mutex::scoped_lock lock(mutex_);
 
   if (shutdown_)
   {
-    on_immediate(op, is_continuation, immediate_arg);
+    post_immediate_completion(op, is_continuation);
     return;
   }
 
   bool first = op_queue_[op_type].enqueue_operation(descriptor, op);
-  scheduler_.work_started();
+  io_service_.work_started();
   if (first)
     interrupter_.interrupt();
 }
@@ -183,19 +145,6 @@ void select_reactor::cancel_ops(socket_type descriptor,
 {
   boost::asio::detail::mutex::scoped_lock lock(mutex_);
   cancel_ops_unlocked(descriptor, boost::asio::error::operation_aborted);
-}
-
-void select_reactor::cancel_ops_by_key(socket_type descriptor,
-    select_reactor::per_descriptor_data&,
-    int op_type, void* cancellation_key)
-{
-  boost::asio::detail::mutex::scoped_lock lock(mutex_);
-  op_queue<operation> ops;
-  bool need_interrupt = op_queue_[op_type].cancel_operations_by_key(
-      descriptor, ops, cancellation_key, boost::asio::error::operation_aborted);
-  scheduler_.post_deferred_completions(ops);
-  if (need_interrupt)
-    interrupter_.interrupt();
 }
 
 void select_reactor::deregister_descriptor(socket_type descriptor,
@@ -214,12 +163,7 @@ void select_reactor::deregister_internal_descriptor(
     op_queue_[i].cancel_operations(descriptor, ops);
 }
 
-void select_reactor::cleanup_descriptor_data(
-    select_reactor::per_descriptor_data&)
-{
-}
-
-void select_reactor::run(long usec, op_queue<operation>& ops)
+void select_reactor::run(bool block, op_queue<operation>& ops)
 {
   boost::asio::detail::mutex::scoped_lock lock(mutex_);
 
@@ -256,12 +200,12 @@ void select_reactor::run(long usec, op_queue<operation>& ops)
 
   // We can return immediately if there's no work to do and the reactor is
   // not supposed to block.
-  if (!usec && !have_work_to_do)
+  if (!block && !have_work_to_do)
     return;
 
   // Determine how long to block while waiting for events.
   timeval tv_buf = { 0, 0 };
-  timeval* tv = usec ? get_timeout(usec, tv_buf) : &tv_buf;
+  timeval* tv = block ? get_timeout(tv_buf) : &tv_buf;
 
   lock.unlock();
 
@@ -273,16 +217,7 @@ void select_reactor::run(long usec, op_queue<operation>& ops)
   // Reset the interrupter.
   if (retval > 0 && fd_sets_[read_op].is_set(interrupter_.read_descriptor()))
   {
-    if (!interrupter_.reset())
-    {
-      lock.lock();
-#if defined(BOOST_ASIO_HAS_IOCP)
-      stop_thread_ = true;
-      scheduler_.post_immediate_completion(&restart_reactor_, false);
-#else // defined(BOOST_ASIO_HAS_IOCP)
-      interrupter_.recreate();
-#endif // defined(BOOST_ASIO_HAS_IOCP)
-    }
+    interrupter_.reset();
     --retval;
   }
 
@@ -318,35 +253,15 @@ void select_reactor::run_thread()
   {
     lock.unlock();
     op_queue<operation> ops;
-    run(-1, ops);
-    scheduler_.post_deferred_completions(ops);
+    run(true, ops);
+    io_service_.post_deferred_completions(ops);
     lock.lock();
   }
 }
 
-void select_reactor::restart_reactor::do_complete(void* owner, operation* base,
-    const boost::system::error_code& /*ec*/, std::size_t /*bytes_transferred*/)
+void select_reactor::call_run_thread(select_reactor* reactor)
 {
-  if (owner)
-  {
-    select_reactor* reactor = static_cast<restart_reactor*>(base)->reactor_;
-
-    if (reactor->thread_)
-    {
-      reactor->thread_->join();
-      delete reactor->thread_;
-      reactor->thread_ = 0;
-    }
-
-    boost::asio::detail::mutex::scoped_lock lock(reactor->mutex_);
-    reactor->interrupter_.recreate();
-    reactor->stop_thread_ = false;
-    lock.unlock();
-
-    boost::asio::detail::signal_blocker sb;
-    reactor->thread_ =
-      new boost::asio::detail::thread(thread_function(reactor));
-  }
+  reactor->run_thread();
 }
 #endif // defined(BOOST_ASIO_HAS_IOCP)
 
@@ -362,13 +277,11 @@ void select_reactor::do_remove_timer_queue(timer_queue_base& queue)
   timer_queues_.erase(&queue);
 }
 
-timeval* select_reactor::get_timeout(long usec, timeval& tv)
+timeval* select_reactor::get_timeout(timeval& tv)
 {
   // By default we will wait no longer than 5 minutes. This will ensure that
   // any changes to the system clock are detected after no longer than this.
-  const long max_usec = 5 * 60 * 1000 * 1000;
-  usec = timer_queues_.wait_duration_usec(
-      (usec < 0 || max_usec < usec) ? max_usec : usec);
+  long usec = timer_queues_.wait_duration_usec(5 * 60 * 1000 * 1000);
   tv.tv_sec = usec / 1000000;
   tv.tv_usec = usec % 1000000;
   return &tv;
@@ -382,7 +295,7 @@ void select_reactor::cancel_ops_unlocked(socket_type descriptor,
   for (int i = 0; i < max_ops; ++i)
     need_interrupt = op_queue_[i].cancel_operations(
         descriptor, ops, ec) || need_interrupt;
-  scheduler_.post_deferred_completions(ops);
+  io_service_.post_deferred_completions(ops);
   if (need_interrupt)
     interrupter_.interrupt();
 }

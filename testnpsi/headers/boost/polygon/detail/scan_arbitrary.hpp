@@ -171,9 +171,8 @@ namespace boost { namespace polygon{
         pts.push_back(he1.second);
         std::set<Point>& segmentpts = intersection_points[(*outer).second];
         for(typename std::set<Point>::iterator itr = segmentpts.begin(); itr != segmentpts.end(); ++itr) {
-          if ((*itr).y() >= min_y) {
+          if((*itr).y() > min_y - 1)
             pts.push_back(*itr);
-          }
         }
         bool have_first_y = he1.first.y() >= min_y && he1.second.y() >= min_y;
         for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
@@ -207,7 +206,7 @@ namespace boost { namespace polygon{
           outer != data.end(); ++outer) {
         const half_edge& he1 = (*outer).first;
         segment_id id1 = (*outer).second;
-        //typedef rectangle_data<Unit> Rectangle;
+        typedef rectangle_data<Unit> Rectangle;
         //Rectangle rect1;
         //set_points(rect1, he1.first, he1.second);
         //typename std::vector<Point>::iterator itr = lower_bound(pts.begin(), newend, (std::min)(he1.first, he1.second));
@@ -270,11 +269,11 @@ namespace boost { namespace polygon{
 //         for(typename std::set<Point>::iterator itr = intersection_points[offenders.first].begin();
 //             itr != intersection_points[offenders.first].end(); ++itr) {
 //           std::cout << (*itr).x() << " " << (*itr).y() << " ";
-//         } std::cout << "\n";
+//         } std::cout << std::endl;
 //         for(typename std::set<Point>::iterator itr = intersection_points[offenders.second].begin();
 //             itr != intersection_points[offenders.second].end(); ++itr) {
 //           std::cout << (*itr).x() << " " << (*itr).y() << " ";
-//         } std::cout << "\n";
+//         } std::cout << std::endl;
 //         exit(1);
 //       }
     }
@@ -308,7 +307,7 @@ namespace boost { namespace polygon{
           if(scanline_base<Unit>::intersects(he1, he2)) {
             offenders.first = id1;
             offenders.second = id2;
-            //std::cout << he1.first.x() << " " << he1.first.y() << " " << he1.second.x() << " " << he1.second.y() << " " << he2.first.x() << " " << he2.first.y() << " " << he2.second.x() << " " << he2.second.y() << "\n";
+            //std::cout << he1.first.x() << " " << he1.first.y() << " " << he1.second.x() << " " << he1.second.y() << " " << he2.first.x() << " " << he2.first.y() << " " << he2.second.x() << " " << he2.second.y() << std::endl;
             return false;
           }
         }
@@ -316,11 +315,8 @@ namespace boost { namespace polygon{
       return true;
     }
 
-    class less_point_down_slope {
+    class less_point_down_slope : public std::binary_function<Point, Point, bool> {
     public:
-      typedef Point first_argument_type;
-      typedef Point second_argument_type;
-      typedef bool result_type;
       inline less_point_down_slope() {}
       inline bool operator () (const Point& pt1, const Point& pt2) const {
         if(pt1.get(HORIZONTAL) < pt2.get(HORIZONTAL)) return true;
@@ -697,7 +693,7 @@ namespace boost { namespace polygon{
       }
       edges.clear();
       validate_scan(edges, input.begin(), input.end());
-      stdcout << edges.size() << "\n";
+      stdcout << edges.size() << std::endl;
       if(!verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "s fail5 3 " << result.first << " " << result.second << "\n";
         return false;
@@ -880,7 +876,7 @@ namespace boost { namespace polygon{
       for(std::size_t i = 0; i < vec.size(); ++ i) {
       //  print(vec[i]);
       }
-      //std::cout << "\n";
+      //std::cout << std::endl;
     }
 
     template <typename stream_type>
@@ -1016,7 +1012,7 @@ namespace boost { namespace polygon{
     void write_out(result_type& result, result_functor rf, const half_edge& he,
                    const property_map& pm_left, const property_map& pm_right) {
       //std::cout << "write out ";
-      //std::cout << he.first << ", " << he.second << "\n";
+      //std::cout << he.first << ", " << he.second << std::endl;
       property_set ps_left, ps_right;
       set_unique_property(ps_left, pm_left);
       set_unique_property(ps_right, pm_right);
@@ -1028,7 +1024,7 @@ namespace boost { namespace polygon{
 
     template <typename result_type, typename result_functor, typename iT>
     iT handle_input_events(result_type& result, result_functor rf, iT begin, iT end) {
-      //typedef typename high_precision_type<Unit>::type high_precision;
+      typedef typename high_precision_type<Unit>::type high_precision;
       //for each event
       property_map vertical_properties_above;
       property_map vertical_properties_below;
@@ -1042,8 +1038,7 @@ namespace boost { namespace polygon{
       bool first_iteration = true;
       //we want to return from inside the loop when we hit end or new x
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (push)
-#pragma warning (disable: 4127)
+#pragma warning( disable: 4127 )
 #endif
       while(true) {
         if(begin == end || (!first_iteration && ((*begin).first.first.get(VERTICAL) != y ||
@@ -1151,7 +1146,7 @@ namespace boost { namespace polygon{
         }
       }
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (pop)
+#pragma warning( default: 4127 )
 #endif
 
     }
@@ -1235,7 +1230,7 @@ namespace boost { namespace polygon{
     //    for(std::size_t i = 0; i < mp.size(); ++i) {
     //      std::cout << mp[i].first << ":" << mp[i].second << " ";
     //    } std::cout << ") ";
-    //  } std::cout << "\n";
+    //  } std::cout << std::endl;
     //}
 
     static inline void merge_property_maps(property_map& mp, const property_map& mp2) {
@@ -1343,7 +1338,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(-1, -1), Point(10, 0)), std::make_pair(0, 1)));
@@ -1355,7 +1350,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(0, 0), Point(0, 10)), std::make_pair(0, 1)));
@@ -1371,7 +1366,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(0, 0), Point(0, 10)), std::make_pair(0, 1)));
@@ -1387,7 +1382,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(0, 0), Point(10, 0)), std::make_pair(0, 1)));
@@ -1403,7 +1398,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(0, 0), Point(10, 0)), std::make_pair(0, 1)));
@@ -1419,7 +1414,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(0, 0), Point(10, 0)), std::make_pair(0, 1)));
@@ -1443,7 +1438,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       input.clear();
       result.clear();
       input.push_back(std::make_pair(half_edge(Point(-1, -1), Point(10, 0)), std::make_pair(0, 1))); //a
@@ -1463,7 +1458,7 @@ namespace boost { namespace polygon{
       stdcout << "scanned\n";
       for(std::size_t i = 0; i < result.size(); ++i) {
         stdcout << result[i].first.first << ", " << result[i].first.second << "; ";
-      } stdcout << "\n";
+      } stdcout << std::endl;
       return true;
     }
 
@@ -1573,7 +1568,7 @@ namespace boost { namespace polygon{
       }
       if(!line_intersection<Unit>::verify_scan(offenders, lines.begin(), lines.end())) {
         //stdcout << "Intersection failed!\n";
-        //stdcout << offenders.first << " " << offenders.second << "\n";
+        //stdcout << offenders.first << " " << offenders.second << std::endl;
         return false;
       }
       std::vector<Point> pts;
@@ -1644,7 +1639,7 @@ namespace boost { namespace polygon{
 
     template <typename polygon_with_holes_type>
     void insert(const polygon_with_holes_type& polygon_with_holes_object, const property_type& property_value, bool is_hole,
-                polygon_with_holes_concept) {
+                polygon_with_holes_concept tag) {
       insert(polygon_with_holes_object, property_value, is_hole, polygon_concept());
       for(typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type itr =
             begin_holes(polygon_with_holes_object);
@@ -1795,7 +1790,7 @@ namespace boost { namespace polygon{
       yh(rect, 11);
 
       si.insert(rect, 333);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
 
       Point pts[4] = {Point(0, 0), Point(10,-3), Point(13, 8), Point(0, 0) };
       polygon_data<Unit> poly;
@@ -1803,25 +1798,25 @@ namespace boost { namespace polygon{
       poly.set(pts, pts+3);
       si2.insert(poly, 444);
       si2.sort_property_merge_data();
-      print(stdcout, si2.pmd) << "\n";
+      print(stdcout, si2.pmd) << std::endl;
       property_merge si3;
       poly.set(pts, pts+4);
       si3.insert(poly, 444);
       si3.sort_property_merge_data();
-      stdcout << (si2.pmd == si3.pmd) << "\n";
+      stdcout << (si2.pmd == si3.pmd) << std::endl;
       std::reverse(pts, pts+4);
       property_merge si4;
       poly.set(pts, pts+4);
       si4.insert(poly, 444);
       si4.sort_property_merge_data();
-      print(stdcout, si4.pmd) << "\n";
-      stdcout << (si2.pmd == si4.pmd) << "\n";
+      print(stdcout, si4.pmd) << std::endl;
+      stdcout << (si2.pmd == si4.pmd) << std::endl;
       std::reverse(pts, pts+3);
       property_merge si5;
       poly.set(pts, pts+4);
       si5.insert(poly, 444);
       si5.sort_property_merge_data();
-      stdcout << (si2.pmd == si5.pmd) << "\n";
+      stdcout << (si2.pmd == si5.pmd) << std::endl;
 
       return true;
     }
@@ -1838,7 +1833,7 @@ namespace boost { namespace polygon{
       si.insert(rect, 333);
       std::map<std::set<property_type>, polygon_set_data<Unit> > result;
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       polygon_set_data<Unit> psd = (*(result.begin())).second;
       std::vector<polygon_data<Unit> > polys;
       psd.get(polys);
@@ -1846,7 +1841,7 @@ namespace boost { namespace polygon{
         stdcout << "fail merge 1\n";
         return false;
       }
-      stdcout << (polys[0]) << "\n";
+      stdcout << (polys[0]) << std::endl;
       si.clear();
       std::vector<Point> pts;
       pts.push_back(Point(0, 0));
@@ -1863,9 +1858,9 @@ namespace boost { namespace polygon{
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       psd = (*(result.begin())).second;
-      stdcout << psd << "\n";
+      stdcout << psd << std::endl;
       polys.clear();
       psd.get(polys);
       if(polys.size() != 1) {
@@ -1889,9 +1884,9 @@ namespace boost { namespace polygon{
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       psd = (*(result.begin())).second;
-      stdcout << psd << "\n";
+      stdcout << psd << std::endl;
       polys.clear();
       psd.get(polys);
       if(polys.size() != 1) {
@@ -1915,16 +1910,16 @@ namespace boost { namespace polygon{
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       psd = (*(result.begin())).second;
-      stdcout << psd << "\n";
+      stdcout << psd << std::endl;
       polys.clear();
       psd.get(polys);
       if(polys.size() != 1) {
         stdcout << "fail merge 4\n";
         return false;
       }
-      stdcout << (polys[0]) << "\n";
+      stdcout << (polys[0]) << std::endl;
       stdcout << "Polygon { -4 0, -2 -3, 3 -4 } \n";
       stdcout << "Polygon { -1 1, 1 -2, -4 -3 } \n";
       si.clear();
@@ -1942,9 +1937,9 @@ namespace boost { namespace polygon{
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       psd = (*(result.begin())).second;
-      stdcout << psd << "\n";
+      stdcout << psd << std::endl;
       polys.clear();
       psd.get(polys);
       if(polys.size() != 1) {
@@ -1968,17 +1963,17 @@ namespace boost { namespace polygon{
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       if(!result.empty()) {
         psd = (*(result.begin())).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         polys.clear();
         psd.get(polys);
         if(polys.size() != 1) {
           stdcout << "fail merge 6\n";
           return false;
         }
-        stdcout << (polys[0]) << "\n";
+        stdcout << (polys[0]) << std::endl;
       }
       stdcout << "Polygon { 0 2, 3 -1, 4 1 }  \n";
       stdcout << "Polygon { -4 3, 3 3, 4 2 }  \n";
@@ -1997,17 +1992,17 @@ namespace boost { namespace polygon{
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       if(!result.empty()) {
         psd = (*(result.begin())).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         polys.clear();
         psd.get(polys);
         if(polys.size() == 0) {
           stdcout << "fail merge 7\n";
           return false;
         }
-        stdcout << (polys[0]) << "\n";
+        stdcout << (polys[0]) << std::endl;
       }
 stdcout << "Polygon { 1 -2, -1 4, 3 -2 }   \n";
 stdcout << "Polygon { 0 -3, 3 1, -3 -4 }   \n";
@@ -2026,17 +2021,17 @@ stdcout << "Polygon { 0 -3, 3 1, -3 -4 }   \n";
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       if(!result.empty()) {
         psd = (*(result.begin())).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         polys.clear();
         psd.get(polys);
         if(polys.size() == 0) {
           stdcout << "fail merge 8\n";
           return false;
         }
-        stdcout << (polys[0]) << "\n";
+        stdcout << (polys[0]) << std::endl;
       }
 stdcout << "Polygon { 2 2, 3 0, -3 4 }  \n";
 stdcout << "Polygon { -2 -2, 0 0, -1 -1 }  \n";
@@ -2055,17 +2050,17 @@ stdcout << "Polygon { -2 -2, 0 0, -1 -1 }  \n";
       si.insert(poly, 444);
       result.clear();
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       if(!result.empty()) {
         psd = (*(result.begin())).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         polys.clear();
         psd.get(polys);
         if(polys.size() == 0) {
           stdcout << "fail merge 9\n";
           return false;
         }
-        stdcout << (polys[0]) << "\n";
+        stdcout << (polys[0]) << std::endl;
       }
       si.clear();
       pts.clear();
@@ -2163,10 +2158,10 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       result.clear();
       si.merge(result);
       si.verify1();
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       if(!result.empty()) {
         psd = (*(result.begin())).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         std::vector<Point> outpts;
         for(typename polygon_set_data<Unit>::iterator_type itr = psd.begin();
             itr != psd.end(); ++itr) {
@@ -2177,8 +2172,8 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         for(std::size_t i = 0; i < outpts.size(); i+=2) {
           if(outpts[i] != outpts[i+1]) {
             stdcout << "Polygon set not a closed figure\n";
-            stdcout << i << "\n";
-            stdcout << outpts[i] << " " << outpts[i+1] << "\n";
+            stdcout << i << std::endl;
+            stdcout << outpts[i] << " " << outpts[i+1] << std::endl;
             return 0;
           }
         }
@@ -2188,10 +2183,10 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           stdcout << "fail merge 10\n";
           return false;
         }
-        stdcout << (polys[0]) << "\n";
+        stdcout << (polys[0]) << std::endl;
       }
       for(unsigned int i = 0; i < 10; ++i) {
-        stdcout << "random case # " << i << "\n";
+        stdcout << "random case # " << i << std::endl;
         si.clear();
         pts.clear();
         pts.push_back(Point(rand()%9-4, rand()%9-4));
@@ -2199,7 +2194,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         pts.push_back(Point(rand()%9-4, rand()%9-4));
         polygon_data<Unit> poly1;
         poly1.set(pts.begin(), pts.end());
-        stdcout << poly1 << "\n";
+        stdcout << poly1 << std::endl;
         si.insert(poly1, 444);
         pts.clear();
         pts.push_back(Point(rand()%9-4, rand()%9-4));
@@ -2207,14 +2202,14 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         pts.push_back(Point(rand()%9-4, rand()%9-4));
         polygon_data<Unit> poly2;
         poly2.set(pts.begin(), pts.end());
-        stdcout << poly2 << "\n";
+        stdcout << poly2 << std::endl;
         si.insert(poly2, 444);
         result.clear();
         si.merge(result);
-        print(stdcout, si.pmd) << "\n";
+        print(stdcout, si.pmd) << std::endl;
         if(!result.empty()) {
           psd = (*(result.begin())).second;
-          stdcout << psd << "\n";
+          stdcout << psd << std::endl;
           polys.clear();
           psd.get(polys);
           if(polys.size() == 0) {
@@ -2233,13 +2228,13 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
             std::vector<polygon_data<Unit> > polys2;
             psd.get(polys2);
             if(!polys1.empty() || !polys2.empty()) {
-              stdcout << "fail random merge " << i << "\n";
+              stdcout << "fail random merge " << i << std::endl;
               return false;
             }
           }
         }
         if(!polys.empty())
-          stdcout << polys.size() << ": " << (polys[0]) << "\n";
+          stdcout << polys.size() << ": " << (polys[0]) << std::endl;
       }
       return true;
     }
@@ -2254,13 +2249,13 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         std::vector<polygon_data<Unit> > polys90;
         si.insert(rect1, 111);
         si90.insert(rect1, 111);
-        stdcout << rect1 << "\n";
+        stdcout << rect1 << std::endl;
         si.insert(rect2, 222);
         si90.insert(rect2, 222);
-        stdcout << rect2 << "\n";
+        stdcout << rect2 << std::endl;
         si.insert(rect3, 333);
         si90.insert(rect3, 333);
-        stdcout << rect3 << "\n";
+        stdcout << rect3 << std::endl;
         si.merge(result);
         si90.merge(result90);
         if(result.size() != result90.size()) {
@@ -2282,27 +2277,26 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           psd90.get(polys90);
           if(polys.size() != polys90.size()) {
             stdcout << "merge failed with polygon count mismatch\n";
-            stdcout << psd << "\n";
+            stdcout << psd << std::endl;
             for(std::size_t j = 0; j < polys.size(); ++j) {
-              stdcout << polys[j] << "\n";
+              stdcout << polys[j] << std::endl;
             }
             stdcout << "reference\n";
             for(std::size_t j = 0; j < polys90.size(); ++j) {
-              stdcout << polys90[j] << "\n";
+              stdcout << polys90[j] << std::endl;
             }
             return 0;
           }
           bool failed = false;
           for(std::size_t j = 0; j < polys.size(); ++j) {
-            stdcout << polys[j] << "\n";
-            stdcout << polys90[j] << "\n";
+            stdcout << polys[j] << std::endl;
+            stdcout << polys90[j] << std::endl;
 #ifdef BOOST_POLYGON_ICC
-#pragma warning (push)
 #pragma warning (disable:1572)
 #endif
             if(area(polys[j]) != area(polys90[j])) {
 #ifdef BOOST_POLYGON_ICC
-#pragma warning (pop)
+#pragma warning (default:1572)
 #endif
               stdcout << "merge failed with area mismatch\n";
               failed = true;
@@ -2330,7 +2324,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         property_merge_90<property_type, Unit> si90;
         std::map<std::set<property_type>, polygon_90_set_data<Unit> > result90;
         std::vector<polygon_data<Unit> > polys90;
-        stdcout << "random case # " << i << "\n";
+        stdcout << "random case # " << i << std::endl;
         set_points(rect1, (Point(rand()%9-4, rand()%9-4)), (Point(rand()%9-4, rand()%9-4)));
         set_points(rect2, (Point(rand()%9-4, rand()%9-4)), (Point(rand()%9-4, rand()%9-4)));
         set_points(rect3, (Point(rand()%9-4, rand()%9-4)), (Point(rand()%9-4, rand()%9-4)));
@@ -2362,7 +2356,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       si.insert(rect, 555);
       std::map<std::set<property_type>, polygon_set_data<Unit> > result;
       si.merge(result);
-      print(stdcout, si.pmd) << "\n";
+      print(stdcout, si.pmd) << std::endl;
       for(typename std::map<std::set<property_type>, polygon_set_data<Unit> >::iterator itr = result.begin();
           itr != result.end(); ++itr) {
         stdcout << "( ";
@@ -2371,18 +2365,18 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           stdcout << (*set_itr) << " ";
         } stdcout << ") \n";
         polygon_set_data<Unit> psd = (*itr).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         std::vector<polygon_data<Unit> > polys;
         psd.get(polys);
         for(std::size_t i = 0; i < polys.size(); ++i) {
-          stdcout << polys[i] << "\n";
+          stdcout << polys[i] << std::endl;
         }
       }
       std::vector<Point> pts;
       std::vector<polygon_data<Unit> > polys;
       for(unsigned int i = 0; i < 10; ++i) {
         property_merge si2;
-        stdcout << "random case # " << i << "\n";
+        stdcout << "random case # " << i << std::endl;
         si.clear();
         pts.clear();
         pts.push_back(Point(rand()%9-4, rand()%9-4));
@@ -2390,7 +2384,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         pts.push_back(Point(rand()%9-4, rand()%9-4));
         polygon_data<Unit> poly1;
         poly1.set(pts.begin(), pts.end());
-        stdcout << poly1 << "\n";
+        stdcout << poly1 << std::endl;
         si.insert(poly1, 444);
         si2.insert(poly1, 333);
         pts.clear();
@@ -2399,7 +2393,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         pts.push_back(Point(rand()%9-4, rand()%9-4));
         polygon_data<Unit> poly2;
         poly2.set(pts.begin(), pts.end());
-        stdcout << poly2 << "\n";
+        stdcout << poly2 << std::endl;
         si.insert(poly2, 444);
         si2.insert(poly2, 444);
         pts.clear();
@@ -2408,7 +2402,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         pts.push_back(Point(rand()%9-4, rand()%9-4));
         polygon_data<Unit> poly3;
         poly3.set(pts.begin(), pts.end());
-        stdcout << poly3 << "\n";
+        stdcout << poly3 << std::endl;
         si.insert(poly3, 444);
         si2.insert(poly3, 555);
         result.clear();
@@ -2424,15 +2418,15 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           stdcout << (*set_itr) << " ";
         } stdcout << ") \n";
         polygon_set_data<Unit> psd = (*itr).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         std::vector<polygon_data<Unit> > polys2;
         psd.get(polys2);
         for(std::size_t ii = 0; ii < polys2.size(); ++ii) {
-          stdcout << polys2[ii] << "\n";
+          stdcout << polys2[ii] << std::endl;
         }
       }
       stdcout << "intersected pmd\n";
-      print(stdcout, si2.pmd) << "\n";
+      print(stdcout, si2.pmd) << std::endl;
       stdcout << "intersected result\n";
       for(typename std::map<std::set<property_type>, polygon_set_data<Unit> >::iterator itr = result2.begin();
           itr != result2.end(); ++itr) {
@@ -2442,11 +2436,11 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           stdcout << (*set_itr) << " ";
         } stdcout << ") \n";
         polygon_set_data<Unit> psd = (*itr).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         std::vector<polygon_data<Unit> > polys2;
         psd.get(polys2);
         for(std::size_t ii = 0; ii < polys2.size(); ++ii) {
-          stdcout << polys2[ii] << "\n";
+          stdcout << polys2[ii] << std::endl;
         }
       }
         si.clear();
@@ -2469,11 +2463,11 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           stdcout << (*set_itr) << " ";
         } stdcout << ") \n";
         polygon_set_data<Unit> psd = (*itr).second;
-        stdcout << psd << "\n";
+        stdcout << psd << std::endl;
         std::vector<polygon_data<Unit> > polys2;
         psd.get(polys2);
         for(std::size_t ii = 0; ii < polys2.size(); ++ii) {
-          stdcout << polys2[ii] << "\n";
+          stdcout << polys2[ii] << std::endl;
         }
       }
       std::vector<polygon_data<Unit> > polys2;
@@ -2481,7 +2475,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       (*(result.begin())).second.get(polys);
       (*(result2.begin())).second.get(polys2);
       if(!(polys == polys2)) {
-          stdcout << "failed intersection check # " << i << "\n";
+          stdcout << "failed intersection check # " << i << std::endl;
           return false;
         }
       }
@@ -2545,7 +2539,6 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         if(edge.second < edge.first) elem.second *= -1;
         if(scanline_base<Unit>::is_vertical(edge)) elem.second *= -1;
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (push)
 #pragma warning (disable: 4127)
 #endif
         if(op_type == 0) { //OR
@@ -2576,7 +2569,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
             }
           }
 #ifdef BOOST_POLYGON_MSVC
-#pragma warning (pop)
+#pragma warning (default: 4127)
 #endif
           if(right.size() == 1) {
             if((*(right.begin())) == 0) {
@@ -2667,7 +2660,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     abo.execute(psd3, psd.begin(), psd.end(), psd2.begin(), psd2.end(), arbitrary_boolean_op<Unit>::BOOLEAN_OR);
     psd3.get(pv);
     for(std::size_t i = 0; i < pv.size(); ++i) {
-      stdcout << pv[i] << "\n";
+      stdcout << pv[i] << std::endl;
     }
     pv.clear();
     abo.clear();
@@ -2675,7 +2668,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     abo.execute(psd3, psd.begin(), psd.end(), psd2.begin(), psd2.end(), arbitrary_boolean_op<Unit>::BOOLEAN_AND);
     psd3.get(pv);
     for(std::size_t i = 0; i < pv.size(); ++i) {
-      stdcout << pv[i] << "\n";
+      stdcout << pv[i] << std::endl;
     }
     pv.clear();
     abo.clear();
@@ -2683,7 +2676,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     abo.execute(psd3, psd.begin(), psd.end(), psd2.begin(), psd2.end(), arbitrary_boolean_op<Unit>::BOOLEAN_XOR);
     psd3.get(pv);
     for(std::size_t i = 0; i < pv.size(); ++i) {
-      stdcout << pv[i] << "\n";
+      stdcout << pv[i] << std::endl;
     }
     pv.clear();
     abo.clear();
@@ -2691,7 +2684,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     abo.execute(psd3, psd.begin(), psd.end(), psd2.begin(), psd2.end(), arbitrary_boolean_op<Unit>::BOOLEAN_NOT);
     psd3.get(pv);
     for(std::size_t i = 0; i < pv.size(); ++i) {
-      stdcout << pv[i] << "\n";
+      stdcout << pv[i] << std::endl;
     }
     return true;
   }

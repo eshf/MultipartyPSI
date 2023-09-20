@@ -13,17 +13,14 @@
 #ifndef BOOST_INTERPROCESS_UPGRADABLE_MUTEX_HPP
 #define BOOST_INTERPROCESS_UPGRADABLE_MUTEX_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
 #endif
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
+#include <boost/interprocess/detail/posix_time_types_wrk.hpp>
 #include <boost/interprocess/sync/interprocess_mutex.hpp>
 #include <boost/interprocess/sync/interprocess_condition.hpp>
 #include <climits>
@@ -56,56 +53,26 @@ class interprocess_upgradable_mutex
 
    //Exclusive locking
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to obtain exclusive ownership of the mutex,
    //!   and if another thread has exclusive, sharable or upgradable ownership of
    //!   the mutex, it waits until it can obtain the ownership.
    //!Throws: interprocess_exception on error.
-   //! 
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
    void lock();
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to acquire exclusive ownership of the mutex
    //!   without waiting. If no other thread has exclusive, sharable or upgradable
    //!   ownership of the mutex this succeeds.
    //!Returns: If it can acquire exclusive ownership immediately returns true.
    //!   If it has to wait, returns false.
    //!Throws: interprocess_exception on error.
-   //! 
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
    bool try_lock();
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to acquire exclusive ownership of the mutex
    //!   waiting if necessary until no other thread has exclusive, sharable or
    //!   upgradable ownership of the mutex or abs_time is reached.
    //!Returns: If acquires exclusive ownership, returns true. Otherwise returns false.
    //!Throws: interprocess_exception on error.
-   //! 
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
-   template<class TimePoint>
-   bool timed_lock(const TimePoint &abs_time);
-
-   //!Same as `timed_lock`, but this function is modeled after the
-   //!standard library interface.
-   template<class TimePoint> bool try_lock_until(const TimePoint &abs_time)
-   {  return this->timed_lock(abs_time);  }
-
-   //!Same as `timed_lock`, but this function is modeled after the
-   //!standard library interface.
-   template<class Duration>  bool try_lock_for(const Duration &dur)
-   {  return this->timed_lock(ipcdetail::duration_to_ustime(dur)); }
-
+   bool timed_lock(const boost::posix_time::ptime &abs_time);
 
    //!Precondition: The thread must have exclusive ownership of the mutex.
    //!Effects: The calling thread releases the exclusive ownership of the mutex.
@@ -114,117 +81,54 @@ class interprocess_upgradable_mutex
 
    //Sharable locking
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to obtain sharable ownership of the mutex,
    //!   and if another thread has exclusive ownership of the mutex,
    //!   waits until it can obtain the ownership.
    //!Throws: interprocess_exception on error.
-   //! 
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
    void lock_sharable();
 
-   //!Same as `lock_sharable` but with a std-compatible interface
-   //! 
-   void lock_shared()
-   {  this->lock_sharable();  }
-
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to acquire sharable ownership of the mutex
    //!   without waiting. If no other thread has exclusive ownership
    //!   of the mutex this succeeds.
    //!Returns: If it can acquire sharable ownership immediately returns true. If it
    //!   has to wait, returns false.
    //!Throws: interprocess_exception on error.
-   //! 
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
    bool try_lock_sharable();
 
-   //!Same as `try_lock_sharable` but with a std-compatible interface
-   //! 
-   bool try_lock_shared()
-   {  return this->try_lock_sharable();  }
-
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to acquire sharable ownership of the mutex
    //!   waiting if necessary until no other thread has exclusive
    //!   ownership of the mutex or abs_time is reached.
    //!Returns: If acquires sharable ownership, returns true. Otherwise returns false.
    //!Throws: interprocess_exception on error.
-   //! 
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
-   template<class TimePoint>
-   bool timed_lock_sharable(const TimePoint &abs_time);
-
-   //!Same as `timed_lock_sharable`, but this function is modeled after the
-   //!standard library interface.
-   template<class TimePoint> bool try_lock_shared_until(const TimePoint &abs_time)
-   {  return this->timed_lock_sharable(abs_time);  }
-
-   //!Same as `timed_lock_sharable`, but this function is modeled after the
-   //!standard library interface.
-   template<class Duration>  bool try_lock_shared_for(const Duration &dur)
-   {  return this->timed_lock_sharable(ipcdetail::duration_to_ustime(dur)); }
+   bool timed_lock_sharable(const boost::posix_time::ptime &abs_time);
 
    //!Precondition: The thread must have sharable ownership of the mutex.
    //!Effects: The calling thread releases the sharable ownership of the mutex.
    //!Throws: An exception derived from interprocess_exception on error.
    void unlock_sharable();
 
-   //!Same as `unlock_sharable` but with a std-compatible interface
-   //! 
-   void unlock_shared()
-   {  this->unlock_sharable();  }
-
    //Upgradable locking
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to obtain upgradable ownership of the mutex,
    //!   and if another thread has exclusive or upgradable ownership of the mutex,
    //!   waits until it can obtain the ownership.
    //!Throws: interprocess_exception on error.
-   //!
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
    void lock_upgradable();
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to acquire upgradable ownership of the mutex
    //!   without waiting. If no other thread has exclusive or upgradable ownership
    //!   of the mutex this succeeds.
    //!Returns: If it can acquire upgradable ownership immediately returns true.
    //!   If it has to wait, returns false.
    //!Throws: interprocess_exception on error.
-   //!
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
    bool try_lock_upgradable();
 
-   //!Requires: The calling thread does not own the mutex.
-   //!
    //!Effects: The calling thread tries to acquire upgradable ownership of the mutex
    //!   waiting if necessary until no other thread has exclusive or upgradable
    //!   ownership of the mutex or abs_time is reached.
    //!Returns: If acquires upgradable ownership, returns true. Otherwise returns false.
    //!Throws: interprocess_exception on error.
-   //!
-   //!Note: A program may deadlock if the thread that has ownership calls 
-   //!   this function. If the implementation can detect the deadlock,
-   //!   an exception could be thrown.
-   template<class TimePoint>
-   bool timed_lock_upgradable(const TimePoint &abs_time);
+   bool timed_lock_upgradable(const boost::posix_time::ptime &abs_time);
 
    //!Precondition: The thread must have upgradable ownership of the mutex.
    //!Effects: The calling thread releases the upgradable ownership of the mutex.
@@ -275,8 +179,7 @@ class interprocess_upgradable_mutex
    //!   will maintain upgradable ownership.
    //!Returns: If acquires exclusive ownership, returns true. Otherwise returns false.
    //!Throws: An exception derived from interprocess_exception on error. */
-   template<class TimePoint>
-   bool timed_unlock_upgradable_and_lock(const TimePoint &abs_time);
+   bool timed_unlock_upgradable_and_lock(const boost::posix_time::ptime &abs_time);
 
    //!Precondition: The thread must have sharable ownership of the mutex.
    //!Effects: The thread atomically releases sharable ownership and tries to acquire
@@ -294,7 +197,7 @@ class interprocess_upgradable_mutex
    //!Throws: An exception derived from interprocess_exception on error.
    bool try_unlock_sharable_and_lock_upgradable();
 
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+   /// @cond
    private:
    typedef scoped_lock<interprocess_mutex> scoped_lock_t;
 
@@ -363,10 +266,10 @@ class interprocess_upgradable_mutex
          = ~(unsigned(3) << (sizeof(unsigned)*CHAR_BIT-2));
    };
    typedef base_constants_t<0> constants;
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+   /// @endcond
 };
 
-#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+/// @cond
 
 template <int Dummy>
 const unsigned interprocess_upgradable_mutex::base_constants_t<Dummy>::max_readers;
@@ -383,12 +286,12 @@ inline interprocess_upgradable_mutex::~interprocess_upgradable_mutex()
 
 inline void interprocess_upgradable_mutex::lock()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
 
    //The exclusive lock must block in the first gate
    //if an exclusive or upgradable lock has been acquired
    while (this->m_ctrl.exclusive_in || this->m_ctrl.upgradable_in){
-      this->m_first_gate.wait(lck);
+      this->m_first_gate.wait(lock);
    }
 
    //Mark that exclusive lock has been acquired
@@ -399,18 +302,18 @@ inline void interprocess_upgradable_mutex::lock()
 
    //Now wait until all readers are gone
    while (this->m_ctrl.num_upr_shar){
-      this->m_second_gate.wait(lck);
+      this->m_second_gate.wait(lock);
    }
    rollback.release();
 }
 
 inline bool interprocess_upgradable_mutex::try_lock()
 {
-   scoped_lock_t lck(m_mut, try_to_lock);
+   scoped_lock_t lock(m_mut, try_to_lock);
 
    //If we can't lock or any has there is any exclusive, upgradable
    //or sharable mark return false;
-   if(!lck.owns()
+   if(!lock.owns()
       || this->m_ctrl.exclusive_in
       || this->m_ctrl.num_upr_shar){
       return false;
@@ -419,18 +322,20 @@ inline bool interprocess_upgradable_mutex::try_lock()
    return true;
 }
 
-template<class TimePoint>
-bool interprocess_upgradable_mutex::timed_lock(const TimePoint &abs_time)
+inline bool interprocess_upgradable_mutex::timed_lock
+   (const boost::posix_time::ptime &abs_time)
 {
-   //Mutexes and condvars handle just fine infinite abs_times
-   //so avoid checking it here
-   scoped_lock_t lck(m_mut, abs_time);
-   if(!lck.owns())   return false;
+   if(abs_time == boost::posix_time::pos_infin){
+      this->lock();
+      return true;
+   }
+   scoped_lock_t lock(m_mut, abs_time);
+   if(!lock.owns())   return false;
 
    //The exclusive lock must block in the first gate
    //if an exclusive or upgradable lock has been acquired
    while (this->m_ctrl.exclusive_in || this->m_ctrl.upgradable_in){
-      if(!this->m_first_gate.timed_wait(lck, abs_time)){
+      if(!this->m_first_gate.timed_wait(lock, abs_time)){
          if(this->m_ctrl.exclusive_in || this->m_ctrl.upgradable_in){
             return false;
          }
@@ -446,7 +351,7 @@ bool interprocess_upgradable_mutex::timed_lock(const TimePoint &abs_time)
 
    //Now wait until all readers are gone
    while (this->m_ctrl.num_upr_shar){
-      if(!this->m_second_gate.timed_wait(lck, abs_time)){
+      if(!this->m_second_gate.timed_wait(lock, abs_time)){
          if(this->m_ctrl.num_upr_shar){
             return false;
          }
@@ -459,7 +364,7 @@ bool interprocess_upgradable_mutex::timed_lock(const TimePoint &abs_time)
 
 inline void interprocess_upgradable_mutex::unlock()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    this->m_ctrl.exclusive_in = 0;
    this->m_first_gate.notify_all();
 }
@@ -468,14 +373,14 @@ inline void interprocess_upgradable_mutex::unlock()
 
 inline void interprocess_upgradable_mutex::lock_upgradable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
 
    //The upgradable lock must block in the first gate
    //if an exclusive or upgradable lock has been acquired
    //or there are too many sharable locks
    while(this->m_ctrl.exclusive_in || this->m_ctrl.upgradable_in
          || this->m_ctrl.num_upr_shar == constants::max_readers){
-      this->m_first_gate.wait(lck);
+      this->m_first_gate.wait(lock);
    }
 
    //Mark that upgradable lock has been acquired
@@ -486,12 +391,12 @@ inline void interprocess_upgradable_mutex::lock_upgradable()
 
 inline bool interprocess_upgradable_mutex::try_lock_upgradable()
 {
-   scoped_lock_t lck(m_mut, try_to_lock);
+   scoped_lock_t lock(m_mut, try_to_lock);
 
    //The upgradable lock must fail
    //if an exclusive or upgradable lock has been acquired
    //or there are too many sharable locks
-   if(!lck.owns()
+   if(!lock.owns()
       || this->m_ctrl.exclusive_in
       || this->m_ctrl.upgradable_in
       || this->m_ctrl.num_upr_shar == constants::max_readers){
@@ -505,13 +410,15 @@ inline bool interprocess_upgradable_mutex::try_lock_upgradable()
    return true;
 }
 
-template<class TimePoint>
-bool interprocess_upgradable_mutex::timed_lock_upgradable(const TimePoint &abs_time)
+inline bool interprocess_upgradable_mutex::timed_lock_upgradable
+   (const boost::posix_time::ptime &abs_time)
 {
-   //Mutexes and condvars handle just fine infinite abs_times
-   //so avoid checking it here
-   scoped_lock_t lck(m_mut, abs_time);
-   if(!lck.owns())   return false;
+   if(abs_time == boost::posix_time::pos_infin){
+      this->lock_upgradable();
+      return true;
+   }
+   scoped_lock_t lock(m_mut, abs_time);
+   if(!lock.owns())   return false;
 
    //The upgradable lock must block in the first gate
    //if an exclusive or upgradable lock has been acquired
@@ -519,7 +426,7 @@ bool interprocess_upgradable_mutex::timed_lock_upgradable(const TimePoint &abs_t
    while(this->m_ctrl.exclusive_in
          || this->m_ctrl.upgradable_in
          || this->m_ctrl.num_upr_shar == constants::max_readers){
-      if(!this->m_first_gate.timed_wait(lck, abs_time)){
+      if(!this->m_first_gate.timed_wait(lock, abs_time)){
          if((this->m_ctrl.exclusive_in
              || this->m_ctrl.upgradable_in
              || this->m_ctrl.num_upr_shar == constants::max_readers)){
@@ -538,7 +445,7 @@ bool interprocess_upgradable_mutex::timed_lock_upgradable(const TimePoint &abs_t
 
 inline void interprocess_upgradable_mutex::unlock_upgradable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    //Mark that upgradable lock has been acquired
    //And add upgradable to the sharable count
    this->m_ctrl.upgradable_in = 0;
@@ -550,14 +457,14 @@ inline void interprocess_upgradable_mutex::unlock_upgradable()
 
 inline void interprocess_upgradable_mutex::lock_sharable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
 
    //The sharable lock must block in the first gate
    //if an exclusive lock has been acquired
    //or there are too many sharable locks
    while(this->m_ctrl.exclusive_in
         || this->m_ctrl.num_upr_shar == constants::max_readers){
-      this->m_first_gate.wait(lck);
+      this->m_first_gate.wait(lock);
    }
 
    //Increment sharable count
@@ -566,12 +473,12 @@ inline void interprocess_upgradable_mutex::lock_sharable()
 
 inline bool interprocess_upgradable_mutex::try_lock_sharable()
 {
-   scoped_lock_t lck(m_mut, try_to_lock);
+   scoped_lock_t lock(m_mut, try_to_lock);
 
    //The sharable lock must fail
    //if an exclusive lock has been acquired
    //or there are too many sharable locks
-   if(!lck.owns()
+   if(!lock.owns()
       || this->m_ctrl.exclusive_in
       || this->m_ctrl.num_upr_shar == constants::max_readers){
       return false;
@@ -582,20 +489,22 @@ inline bool interprocess_upgradable_mutex::try_lock_sharable()
    return true;
 }
 
-template<class TimePoint>
-inline bool interprocess_upgradable_mutex::timed_lock_sharable(const TimePoint &abs_time)
+inline bool interprocess_upgradable_mutex::timed_lock_sharable
+   (const boost::posix_time::ptime &abs_time)
 {
-   //Mutexes and condvars handle just fine infinite abs_times
-   //so avoid checking it here
-   scoped_lock_t lck(m_mut, abs_time);
-   if(!lck.owns())   return false;
+   if(abs_time == boost::posix_time::pos_infin){
+      this->lock_sharable();
+      return true;
+   }
+   scoped_lock_t lock(m_mut, abs_time);
+   if(!lock.owns())   return false;
 
    //The sharable lock must block in the first gate
    //if an exclusive lock has been acquired
    //or there are too many sharable locks
    while (this->m_ctrl.exclusive_in
          || this->m_ctrl.num_upr_shar == constants::max_readers){
-      if(!this->m_first_gate.timed_wait(lck, abs_time)){
+      if(!this->m_first_gate.timed_wait(lock, abs_time)){   
          if(this->m_ctrl.exclusive_in
             || this->m_ctrl.num_upr_shar == constants::max_readers){
             return false;
@@ -611,7 +520,7 @@ inline bool interprocess_upgradable_mutex::timed_lock_sharable(const TimePoint &
 
 inline void interprocess_upgradable_mutex::unlock_sharable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    //Decrement sharable count
    --this->m_ctrl.num_upr_shar;
    if (this->m_ctrl.num_upr_shar == 0){
@@ -628,7 +537,7 @@ inline void interprocess_upgradable_mutex::unlock_sharable()
 
 inline void interprocess_upgradable_mutex::unlock_and_lock_upgradable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    //Unmark it as exclusive
    this->m_ctrl.exclusive_in     = 0;
    //Mark it as upgradable
@@ -641,7 +550,7 @@ inline void interprocess_upgradable_mutex::unlock_and_lock_upgradable()
 
 inline void interprocess_upgradable_mutex::unlock_and_lock_sharable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    //Unmark it as exclusive
    this->m_ctrl.exclusive_in   = 0;
    //The sharable count should be 0 so increment it
@@ -652,7 +561,7 @@ inline void interprocess_upgradable_mutex::unlock_and_lock_sharable()
 
 inline void interprocess_upgradable_mutex::unlock_upgradable_and_lock_sharable()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    //Unmark it as upgradable (we don't have to decrement count)
    this->m_ctrl.upgradable_in    = 0;
    //Notify readers/upgradable that they can enter
@@ -663,7 +572,7 @@ inline void interprocess_upgradable_mutex::unlock_upgradable_and_lock_sharable()
 
 inline void interprocess_upgradable_mutex::unlock_upgradable_and_lock()
 {
-   scoped_lock_t lck(m_mut);
+   scoped_lock_t lock(m_mut);
    //Simulate unlock_upgradable() without
    //notifying sharables.
    this->m_ctrl.upgradable_in = 0;
@@ -675,16 +584,16 @@ inline void interprocess_upgradable_mutex::unlock_upgradable_and_lock()
    upgradable_to_exclusive_rollback rollback(m_ctrl);
 
    while (this->m_ctrl.num_upr_shar){
-      this->m_second_gate.wait(lck);
+      this->m_second_gate.wait(lock);
    }
    rollback.release();
 }
 
 inline bool interprocess_upgradable_mutex::try_unlock_upgradable_and_lock()
 {
-   scoped_lock_t lck(m_mut, try_to_lock);
+   scoped_lock_t lock(m_mut, try_to_lock);
    //Check if there are no readers
-   if(!lck.owns()
+   if(!lock.owns()
       || this->m_ctrl.num_upr_shar != 1){
       return false;
    }
@@ -695,13 +604,15 @@ inline bool interprocess_upgradable_mutex::try_unlock_upgradable_and_lock()
    return true;
 }
 
-template<class TimePoint>
-bool interprocess_upgradable_mutex::timed_unlock_upgradable_and_lock(const TimePoint &abs_time)
+inline bool interprocess_upgradable_mutex::timed_unlock_upgradable_and_lock
+   (const boost::posix_time::ptime &abs_time)
 {
-   //Mutexes and condvars handle just fine infinite abs_times
-   //so avoid checking it here
-   scoped_lock_t lck(m_mut, abs_time);
-   if(!lck.owns())   return false;
+   if(abs_time == boost::posix_time::pos_infin){
+      this->unlock_upgradable_and_lock();
+      return true;
+   }
+   scoped_lock_t lock(m_mut, abs_time);
+   if(!lock.owns())   return false;
 
    //Simulate unlock_upgradable() without
    //notifying sharables.
@@ -714,7 +625,7 @@ bool interprocess_upgradable_mutex::timed_unlock_upgradable_and_lock(const TimeP
    upgradable_to_exclusive_rollback rollback(m_ctrl);
 
    while (this->m_ctrl.num_upr_shar){
-      if(!this->m_second_gate.timed_wait(lck, abs_time)){
+      if(!this->m_second_gate.timed_wait(lock, abs_time)){
          if(this->m_ctrl.num_upr_shar){
             return false;
          }
@@ -727,11 +638,11 @@ bool interprocess_upgradable_mutex::timed_unlock_upgradable_and_lock(const TimeP
 
 inline bool interprocess_upgradable_mutex::try_unlock_sharable_and_lock()
 {
-   scoped_lock_t lck(m_mut, try_to_lock);
+   scoped_lock_t lock(m_mut, try_to_lock);
 
    //If we can't lock or any has there is any exclusive, upgradable
    //or sharable mark return false;
-   if(!lck.owns()
+   if(!lock.owns()
       || this->m_ctrl.exclusive_in
       || this->m_ctrl.upgradable_in
       || this->m_ctrl.num_upr_shar != 1){
@@ -744,11 +655,11 @@ inline bool interprocess_upgradable_mutex::try_unlock_sharable_and_lock()
 
 inline bool interprocess_upgradable_mutex::try_unlock_sharable_and_lock_upgradable()
 {
-   scoped_lock_t lck(m_mut, try_to_lock);
+   scoped_lock_t lock(m_mut, try_to_lock);
 
    //The upgradable lock must fail
    //if an exclusive or upgradable lock has been acquired
-   if(!lck.owns()
+   if(!lock.owns()
       || this->m_ctrl.exclusive_in
       || this->m_ctrl.upgradable_in){
       return false;
@@ -759,7 +670,7 @@ inline bool interprocess_upgradable_mutex::try_unlock_sharable_and_lock_upgradab
    return true;
 }
 
-#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+/// @endcond
 
 }  //namespace interprocess {
 }  //namespace boost {

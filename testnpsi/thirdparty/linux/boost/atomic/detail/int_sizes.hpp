@@ -39,7 +39,7 @@
 #if defined(__SIZEOF_POINTER__)
 #define BOOST_ATOMIC_DETAIL_SIZEOF_POINTER __SIZEOF_POINTER__
 #elif defined(_MSC_VER)
-#if defined(_M_AMD64) || defined(_M_ARM64) || defined(_M_IA64)
+#if defined(_M_AMD64) || defined(_M_IA64)
 #define BOOST_ATOMIC_DETAIL_SIZEOF_POINTER 8
 #else
 #define BOOST_ATOMIC_DETAIL_SIZEOF_POINTER 4
@@ -47,19 +47,12 @@
 #endif
 
 #if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_SHORT) || !defined(BOOST_ATOMIC_DETAIL_SIZEOF_INT) ||\
-    !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LONG) || !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LLONG) ||\
-    !defined(BOOST_ATOMIC_DETAIL_SIZEOF_POINTER)
+    !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LONG) || !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LLONG)
 
 // Try to deduce sizes from limits
 #include <limits.h>
-#if defined(__has_include)
-#if __has_include(<stdint.h>)
-#include <stdint.h>
-#endif
-#endif
 #include <boost/cstdint.hpp>
 
-#if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_SHORT)
 #if (USHRT_MAX + 0) == 0xff
 #define BOOST_ATOMIC_DETAIL_SIZEOF_SHORT 1
 #elif (USHRT_MAX + 0) == 0xffff
@@ -69,9 +62,7 @@
 #elif (USHRT_MAX + 0) == UINT64_C(0xffffffffffffffff)
 #define BOOST_ATOMIC_DETAIL_SIZEOF_SHORT 8
 #endif
-#endif // !defined(BOOST_ATOMIC_DETAIL_SIZEOF_SHORT)
 
-#if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_INT)
 #if (UINT_MAX + 0) == 0xff
 #define BOOST_ATOMIC_DETAIL_SIZEOF_INT 1
 #elif (UINT_MAX + 0) == 0xffff
@@ -81,9 +72,7 @@
 #elif (UINT_MAX + 0) == UINT64_C(0xffffffffffffffff)
 #define BOOST_ATOMIC_DETAIL_SIZEOF_INT 8
 #endif
-#endif // !defined(BOOST_ATOMIC_DETAIL_SIZEOF_INT)
 
-#if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LONG)
 #if (ULONG_MAX + 0) == 0xff
 #define BOOST_ATOMIC_DETAIL_SIZEOF_LONG 1
 #elif (ULONG_MAX + 0) == 0xffff
@@ -93,9 +82,7 @@
 #elif (ULONG_MAX + 0) == UINT64_C(0xffffffffffffffff)
 #define BOOST_ATOMIC_DETAIL_SIZEOF_LONG 8
 #endif
-#endif // !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LONG)
 
-#if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LLONG)
 #if defined(__hpux) // HP-UX's value of ULONG_LONG_MAX is unusable in preprocessor expressions
 #define BOOST_ATOMIC_DETAIL_SIZEOF_LLONG 8
 #else
@@ -122,17 +109,6 @@
 #endif
 
 #endif // defined(__hpux)
-#endif // !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LLONG)
-
-#if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_POINTER) && defined(UINTPTR_MAX)
-#if (UINTPTR_MAX + 0) == 0xffff
-#define BOOST_ATOMIC_DETAIL_SIZEOF_POINTER 2
-#elif (UINTPTR_MAX + 0) == 0xffffffff
-#define BOOST_ATOMIC_DETAIL_SIZEOF_POINTER 4
-#elif (UINTPTR_MAX + 0) == UINT64_C(0xffffffffffffffff)
-#define BOOST_ATOMIC_DETAIL_SIZEOF_POINTER 8
-#endif
-#endif // !defined(BOOST_ATOMIC_DETAIL_SIZEOF_POINTER) && defined(UINTPTR_MAX)
 
 #endif
 
@@ -141,7 +117,7 @@
 #include <wchar.h>
 #include <boost/cstdint.hpp>
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1310 || defined(UNDER_CE) && _MSC_VER <= 1500)
+ #if defined(_MSC_VER) && ( _MSC_VER <= 1310 || defined(UNDER_CE) && _MSC_VER <= 1500 )
 // MSVC 7.1 and MSVC 8 (arm) define WCHAR_MAX to a value not suitable for constant expressions
 #define BOOST_ATOMIC_DETAIL_SIZEOF_WCHAR_T 2
 #elif (WCHAR_MAX + 0) == 0xff || (WCHAR_MAX + 0) == 0x7f
@@ -158,7 +134,7 @@
 #if !defined(BOOST_ATOMIC_DETAIL_SIZEOF_SHORT) || !defined(BOOST_ATOMIC_DETAIL_SIZEOF_INT) ||\
     !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LONG) || !defined(BOOST_ATOMIC_DETAIL_SIZEOF_LLONG) ||\
     !defined(BOOST_ATOMIC_DETAIL_SIZEOF_WCHAR_T)
-#error Boost.Atomic: Failed to determine builtin integer sizes, the target platform is not supported. Please, report to the developers (patches are welcome).
+#error Boost.Atomic: Failed to determine builtin integer sizes, the target platform is not supported. Please, report to the developers.
 #endif
 
 #endif // BOOST_ATOMIC_DETAIL_INT_SIZES_HPP_INCLUDED_

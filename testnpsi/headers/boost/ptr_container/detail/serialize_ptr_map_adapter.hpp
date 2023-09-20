@@ -8,7 +8,8 @@
 
 #include <boost/ptr_container/ptr_map_adapter.hpp>
 #include <boost/ptr_container/detail/serialize_xml_names.hpp>
-#include <boost/core/serialization.hpp>
+#include <boost/serialization/split_free.hpp>
+#include <boost/serialization/nvp.hpp> 
 
 namespace boost 
 {

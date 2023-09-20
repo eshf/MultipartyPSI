@@ -4,10 +4,6 @@
 // Copyright (c) 2008-2012 Bruno Lalande, Paris, France.
 // Copyright (c) 2009-2012 Mateusz Loskot, London, UK.
 
-// This file was modified by Oracle on 2020-2021.
-// Modifications copyright (c) 2020-2021 Oracle and/or its affiliates.
-// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
-
 // Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
 // (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
 
@@ -19,16 +15,14 @@
 #define BOOST_GEOMETRY_CORE_POINT_TYPE_HPP
 
 
-#include <boost/range/value_type.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/range.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
-#include <boost/geometry/core/geometry_types.hpp>
 #include <boost/geometry/core/ring_type.hpp>
-#include <boost/geometry/core/static_assert.hpp>
 #include <boost/geometry/core/tag.hpp>
 #include <boost/geometry/core/tags.hpp>
-#include <boost/geometry/util/sequence.hpp>
-#include <boost/geometry/util/type_traits_std.hpp>
-
+#include <boost/geometry/util/bare_type.hpp>
 
 namespace boost { namespace geometry
 {
@@ -48,9 +42,10 @@ namespace traits
 template <typename Geometry>
 struct point_type
 {
-    BOOST_GEOMETRY_STATIC_ASSERT_FALSE(
-        "Not implemented for this Geometry type.",
-        Geometry);
+    BOOST_MPL_ASSERT_MSG
+        (
+            false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Geometry>)
+        );
 };
 
 
@@ -65,7 +60,7 @@ template <typename Tag, typename Geometry>
 struct point_type
 {
     // Default: call traits to get point type
-    typedef typename std::remove_const
+    typedef typename boost::remove_const
         <
             typename traits::point_type<Geometry>::type
         >::type type;
@@ -107,75 +102,13 @@ struct point_type<polygon_tag, Polygon>
 };
 
 
-template <typename MultiPoint>
-struct point_type<multi_point_tag, MultiPoint>
-{
-    typedef typename boost::range_value
-        <
-            MultiPoint
-        >::type type;
-};
-
-
-template <typename MultiLinestring>
-struct point_type<multi_linestring_tag, MultiLinestring>
-{
-    typedef typename point_type
-        <
-            linestring_tag,
-            typename boost::range_value<MultiLinestring>::type
-        >::type type;
-};
-
-
-template <typename MultiPolygon>
-struct point_type<multi_polygon_tag, MultiPolygon>
-{
-    typedef typename point_type
-        <
-            polygon_tag,
-            typename boost::range_value<MultiPolygon>::type
-        >::type type;
-};
-
-
-template <typename DynamicGeometry>
-struct point_type<dynamic_geometry_tag, DynamicGeometry>
-{
-    using geometry_t = typename util::sequence_front
-        <
-            typename traits::geometry_types<DynamicGeometry>::type
-        >::type;
-    using type = typename point_type
-        <
-            typename tag<geometry_t>::type,
-            typename util::remove_cptrref<geometry_t>::type
-        >::type;
-};
-
-
-template <typename GeometryCollection>
-struct point_type<geometry_collection_tag, GeometryCollection>
-{
-    using geometry_t = typename util::sequence_front
-        <
-            typename traits::geometry_types<GeometryCollection>::type
-        >::type;
-    using type = typename point_type
-        <
-            typename tag<geometry_t>::type,
-            typename util::remove_cptrref<geometry_t>::type
-        >::type;
-};
-
-
 } // namespace core_dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
 /*!
 \brief \brief_meta{type, point_type, \meta_geometry_type}
-\tparam Geometry \tparam_geometry
+\tparam Geometry \tparam_geometry 
 \ingroup core
 
 \qbk{[include reference/core/point_type.qbk]}
@@ -186,7 +119,7 @@ struct point_type
     typedef typename core_dispatch::point_type
         <
             typename tag<Geometry>::type,
-            typename util::remove_cptrref<Geometry>::type
+            typename boost::geometry::util::bare_type<Geometry>::type
         >::type type;
 };
 

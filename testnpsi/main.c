@@ -1,79 +1,146 @@
-#include <stdio.h>
-#include <emscripten/emscripten.h>
+
 #include <iostream>
-#include "Network/BtChannel.h"
-#include "Network/BtEndpoint.h"
 
 
-#include "Common/Defines.h"
 
-
-#include "OtBinMain.h"
-#include "bitPosition.h"
+#include "headers/OtBinMain.h"
+#include "headers/bitPosition.h"
 
 #include <numeric>
-#include "Common/Log.h"
+//int miraclTestMain();
 
-#include <stdio.h>
-#include <stdint.h>
+extern "C"{
+void usage(const char* argv0)
+{
+	std::cout << "Error! Please use:" << std::endl;
+	std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
+	std::cout << "\t 2. For simulation (5 parties <=> 5 terminals): " << std::endl;;
+	std::cout << "\t\t each terminal: " << argv0 << " -n 5 -t 2 -m 12 -p [pIdx]" << std::endl;
 
+}
 int main(int argc, char** argv)
 {
 
-    osuCrypto::u64 trials = 1;
-	osuCrypto::u64 pSetSize = 5, psiSecParam = 40, bitSize = 128;
+	//myCuckooTest_stash();
+	//Table_Based_Random_Test();
+	//OPPRF2_EmptrySet_Test_Main();
+	//OPPRFn_EmptrySet_Test_Main();
+	//Transpose_Test();
+	//OPPRF3_EmptrySet_Test_Main();
+	//OPPRFnt_EmptrySet_Test_Main();
+	//OPPRFnt_EmptrySet_Test_Main();
+	//OPPRFn_Aug_EmptrySet_Test_Impl();
+	//OPPRFnt_EmptrySet_Test_Main();
+	//OPPRF2_EmptrySet_Test_Main();
+	//return 0;
 
-	osuCrypto::u64 nParties, setSize;
+	u64 trials = 1;
+	u64 pSetSize = 5, psiSecParam = 40, bitSize = 128;
 
-	char delimiterN;
+	u64 nParties, tParties, opt_basedOPPRF, setSize, isAug;
 
-	char delimiterM;
+	u64 roundOPPRF;
 
-	char delimiterP;
-    
-    while (argc)
-    {
-        if (argv[0][0] == "-" && argv[0][1] == "n")
 
-        {
-			
-			delimiterN= atoi(argv[0]);
-			nParties = atoi(argv[1]);
-		if(argv[0][2] == "-" && argv[0][3] == "m") 
-		{	
-			delimiterM= atoi(argv[2]);
-			setSize = 1 << atoi(argv[3]);
+	switch (argc) {
+	case 2: //unit test
+		if (argv[1][0] == '-' && argv[1][1] == 'u')
+			OPPRFnt_EmptrySet_Test_Main();
+		break;
 
-		
-		if (argv[0][4] == "-" && argv[0][5] == "p")
+	case 7: //2PSI 
+		if (argv[1][0] == '-' && argv[1][1] == 'n')
+			nParties = atoi(argv[2]);
+		else
 		{
+			usage(argv[0]);
+			return 0;
+		}
 
-			delimiterP= atoi(argv[2]);
-            uint64_t pIdx = atoi(argv[5]);
-			
-        	if (nParties == 2)
+		if (argv[3][0] == '-' && argv[3][1] == 'm')
+			setSize = 1 << atoi(argv[4]);
+		else
+		{
+			usage(argv[0]);
+			return 0;
+		}
+
+		if (argv[5][0] == '-' && argv[5][1] == 'p') {
+			u64 pIdx = atoi(argv[6]);
+			if (nParties == 2)
+				party2(pIdx, setSize);
+			else
 			{
-				return OtBinMain.party2(pIdx, setSize);
-            }
-        	
-			}
+				usage(argv[0]);
+				return 0;
 			}
 		}
-        else
+		else
 		{
+			usage(argv[0]);
 			return 0;
-        }
+		}
+		break;
+	case 9: //nPSI or optimized 3PSI
+		cout << "9\n";
+		if (argv[1][0] == '-' && argv[1][1] == 'n')
+			nParties = atoi(argv[2]);
+		else
+		{
+			usage(argv[0]);
+			return 0;
+		}
+		if (argv[3][0] == '-' && argv[3][1] == 'r' && nParties == 3)
+		{
+			roundOPPRF = atoi(argv[4]);
+			tParties = 2;
+		}
+		else if (argv[3][0] == '-' && argv[3][1] == 't')
+			tParties = atoi(argv[4]);
+
+		else if (argv[3][0] == '-' && argv[3][1] == 'a')
+			opt_basedOPPRF = atoi(argv[4]);
+
+		else
+		{
+			usage(argv[0]);
+			return 0;
+		}
+
+		if (argv[5][0] == '-' && argv[5][1] == 'm')
+			setSize = 1 << atoi(argv[6]);
+		else
+		{
+			usage(argv[0]);
+			return 0;
+		}
+
+		if (argv[7][0] == '-' && argv[7][1] == 'p') {
+			u64 pIdx = atoi(argv[8]);
+			if (roundOPPRF == 1 && nParties == 3)
+			{
+				//cout << nParties  << " " << roundOPPRF << " " << setSize << " " << pIdx << "\n";
+				party3(pIdx, setSize, trials);
+
+			}
+			else if (argv[3][1] == 't')
+			{
+				//cout << nParties << " " << tParties << " " << setSize << " " << pIdx << "\n";
+				tparty(pIdx, nParties, tParties, setSize, trials);
+			}
+			else if (argv[3][1] == 'a')
+			{
+				aug_party(pIdx, nParties, setSize, opt_basedOPPRF, trials);
+			}
+		}
+		else
+		{
+			usage(argv[0]);
+			return 0;
+		}
+		break;
 	}
+
+	return 0;
 }
-
-
-
-#ifdef __cplusplus
-#define EXTERN extern "C"
-#else
-#define EXTERN
-#endif
-
-EXTERN EMSCRIPTEN_KEEPALIVE void party2(int argc, char ** argv) {
-    
 }

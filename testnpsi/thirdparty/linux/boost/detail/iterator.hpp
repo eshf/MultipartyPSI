@@ -6,11 +6,7 @@
 #ifndef ITERATOR_DWA122600_HPP_
 #define ITERATOR_DWA122600_HPP_
 
-// This header is obsolete and deprecated.
-
-#include <boost/config/header_deprecated.hpp>
-
-BOOST_HEADER_DEPRECATED("<iterator>")
+// This header is obsolete and will be deprecated.
 
 #include <iterator>
 #if defined(__SUNPRO_CC) && (defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION))

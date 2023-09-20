@@ -1,5 +1,4 @@
-// Copyright 2015-2018 Klemens D. Morgenstern
-// Copyright Antony Polukhin, 2019-2023
+// Copyright 2015-2016 Klemens D. Morgenstern
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -8,17 +7,9 @@
 #ifndef BOOST_DLL_IMPORT_CLASS_HPP_
 #define BOOST_DLL_IMPORT_CLASS_HPP_
 
-/// \file boost/dll/import_class.hpp
-/// \warning Extremely experimental! Requires C++11! Will change in next version of Boost! boost/dll/import_class.hpp is not included in boost/dll.hpp
-/// \brief Contains the boost::dll::experimental::import_class function for importing classes.
-
 #include <boost/dll/smart_library.hpp>
 #include <boost/dll/import_mangled.hpp>
 #include <memory>
-
-#if (__cplusplus < 201103L) && (!defined(_MSVC_LANG) || _MSVC_LANG < 201103L)
-#  error This file requires C++11 at least!
-#endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -259,15 +250,16 @@ inline std::unique_ptr<T, detail::deleter<T>> imported_class<T>::make_data(const
 
     if (!ctor.has_allocating() || !dtor.has_deleting())
     {
-        boost::dll::fs::error_code ec;
+        boost::system::error_code ec;
 
-        ec = boost::dll::fs::make_error_code(
-            boost::dll::fs::errc::bad_file_descriptor
+        ec = boost::system::error_code(
+            boost::system::errc::bad_file_descriptor,
+            boost::system::generic_category()
         );
 
         // report_error() calls dlsym, do not use it here!
         boost::throw_exception(
-            boost::dll::fs::system_error(
+            boost::system::system_error(
                 ec, "boost::dll::detail::make_data() failed: no allocating ctor or dtor was found"
             )
         );
@@ -288,15 +280,16 @@ inline std::unique_ptr<T, detail::deleter<T>> imported_class<T>::make_data(const
 
     if (!ctor.has_standard() || !dtor.has_standard())
     {
-        boost::dll::fs::error_code ec;
+        boost::system::error_code ec;
 
-        ec = boost::dll::fs::make_error_code(
-            boost::dll::fs::errc::bad_file_descriptor
+        ec = boost::system::error_code(
+            boost::system::errc::bad_file_descriptor,
+            boost::system::generic_category()
         );
 
         // report_error() calls dlsym, do not use it here!
         boost::throw_exception(
-            boost::dll::fs::system_error(
+            boost::system::system_error(
                 ec, "boost::dll::detail::make_data() failed: no regular ctor or dtor was found"
             )
         );
@@ -419,7 +412,7 @@ inline void boost::dll::experimental::imported_class<T>::move_assign(imported_cl
 *
 * \return class object.
 *
-* \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
+* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template<typename T, typename ... Args> imported_class<T>

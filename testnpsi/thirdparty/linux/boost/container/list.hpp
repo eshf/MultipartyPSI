@@ -33,7 +33,6 @@
 #include <boost/container/detail/mpl.hpp>
 #include <boost/container/detail/node_alloc_holder.hpp>
 #include <boost/container/detail/version_type.hpp>
-#include <boost/container/detail/value_functors.hpp>
 // move
 #include <boost/move/utility_core.hpp>
 #include <boost/move/iterator.hpp>
@@ -43,7 +42,6 @@
 #  include <boost/move/detail/fwd_macros.hpp>
 #endif
 #include <boost/move/detail/move_helpers.hpp>
-#include <boost/move/detail/force_ptr.hpp>
 
 // intrusive
 #include <boost/intrusive/pointer_traits.hpp>
@@ -59,18 +57,37 @@ namespace boost {
 namespace container {
 
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
-namespace dtl {
+namespace container_detail {
 
 template<class VoidPointer>
 struct list_hook
 {
-   typedef typename dtl::bi::make_list_base_hook
-      <dtl::bi::void_pointer<VoidPointer>, dtl::bi::link_mode<dtl::bi::normal_link> >::type type;
+   typedef typename container_detail::bi::make_list_base_hook
+      <container_detail::bi::void_pointer<VoidPointer>, container_detail::bi::link_mode<container_detail::bi::normal_link> >::type type;
 };
 
 template <class T, class VoidPointer>
-struct iiterator_node_value_type< base_node<T, list_hook<VoidPointer> > >
+struct list_node
+   :  public list_hook<VoidPointer>::type
 {
+   private:
+   list_node();
+
+   public:
+   typedef T value_type;
+   typedef typename list_hook<VoidPointer>::type hook_type;
+
+   T m_data;
+
+   T &get_data()
+   {  return this->m_data;   }
+
+   const T &get_data() const
+   {  return this->m_data;   }
+};
+
+template <class T, class VoidPointer>
+struct iiterator_node_value_type< list_node<T,VoidPointer> > {
   typedef T type;
 };
 
@@ -83,18 +100,19 @@ struct intrusive_list_type
       <typename allocator_traits_type::pointer>::template
          rebind_pointer<void>::type
             void_pointer;
-   typedef base_node<value_type, list_hook<void_pointer> > node_type;
-   typedef typename dtl::bi::make_list
+   typedef typename container_detail::list_node
+         <value_type, void_pointer>             node_type;
+   typedef typename container_detail::bi::make_list
       < node_type
-      , dtl::bi::base_hook<typename list_hook<void_pointer>::type>
-      , dtl::bi::constant_time_size<true>
-      , dtl::bi::size_type
+      , container_detail::bi::base_hook<typename list_hook<void_pointer>::type>
+      , container_detail::bi::constant_time_size<true>
+      , container_detail::bi::size_type
          <typename allocator_traits_type::size_type>
       >::type                                   container_type;
    typedef container_type                       type ;
 };
 
-}  //namespace dtl {
+}  //namespace container_detail {
 #endif   //#ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
 //! A list is a doubly linked list. That is, it is a Sequence that supports both
@@ -109,37 +127,33 @@ struct intrusive_list_type
 //! or mutation is explicit.
 //!
 //! \tparam T The type of object that is stored in the list
-//! \tparam Allocator The allocator used for all internal memory management, use void
-//!   for the default allocator
+//! \tparam Allocator The allocator used for all internal memory management
 #ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
-template <class T, class Allocator = void >
+template <class T, class Allocator = new_allocator<T> >
 #else
 template <class T, class Allocator>
 #endif
 class list
-   : protected dtl::node_alloc_holder
-      < typename real_allocator<T, Allocator>::type
-      , typename dtl::intrusive_list_type<typename real_allocator<T, Allocator>::type>::type>
+   : protected container_detail::node_alloc_holder
+      <Allocator, typename container_detail::intrusive_list_type<Allocator>::type>
 {
    #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
-   typedef typename real_allocator<T, Allocator>::type            ValueAllocator;
    typedef typename
-      dtl::intrusive_list_type<ValueAllocator>::type Icont;
-   typedef dtl::node_alloc_holder<ValueAllocator, Icont>          AllocHolder;
+      container_detail::intrusive_list_type<Allocator>::type Icont;
+   typedef container_detail::node_alloc_holder<Allocator, Icont>  AllocHolder;
    typedef typename AllocHolder::NodePtr                          NodePtr;
    typedef typename AllocHolder::NodeAlloc                        NodeAlloc;
    typedef typename AllocHolder::ValAlloc                         ValAlloc;
    typedef typename AllocHolder::Node                             Node;
-   typedef dtl::allocator_node_destroyer<NodeAlloc>                    Destroyer;
+   typedef container_detail::allocator_destroyer<NodeAlloc>       Destroyer;
    typedef typename AllocHolder::alloc_version                    alloc_version;
-   typedef boost::container::allocator_traits<ValueAllocator>     allocator_traits_type;
-   typedef boost::container::equal_to_value
-      <typename allocator_traits_type::value_type>                equal_to_value_type;
+   typedef boost::container::allocator_traits<Allocator>          allocator_traits_type;
+   typedef boost::container::equal_to_value<Allocator>            equal_to_value_type;
 
    BOOST_COPYABLE_AND_MOVABLE(list)
 
-   typedef dtl::iterator_from_iiterator<typename Icont::iterator, false>  iterator_impl;
-   typedef dtl::iterator_from_iiterator<typename Icont::iterator, true>   const_iterator_impl;
+   typedef container_detail::iterator_from_iiterator<typename Icont::iterator, false>  iterator_impl;
+   typedef container_detail::iterator_from_iiterator<typename Icont::iterator, true>   const_iterator_impl;
    #endif   //#ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
    public:
@@ -149,19 +163,19 @@ class list
    //
    //////////////////////////////////////////////
 
-   typedef T                                                                              value_type;
-   typedef typename ::boost::container::allocator_traits<ValueAllocator>::pointer         pointer;
-   typedef typename ::boost::container::allocator_traits<ValueAllocator>::const_pointer   const_pointer;
-   typedef typename ::boost::container::allocator_traits<ValueAllocator>::reference       reference;
-   typedef typename ::boost::container::allocator_traits<ValueAllocator>::const_reference const_reference;
-   typedef typename ::boost::container::allocator_traits<ValueAllocator>::size_type       size_type;
-   typedef typename ::boost::container::allocator_traits<ValueAllocator>::difference_type difference_type;
-   typedef ValueAllocator                                                                 allocator_type;
-   typedef BOOST_CONTAINER_IMPDEF(NodeAlloc)                                              stored_allocator_type;
-   typedef BOOST_CONTAINER_IMPDEF(iterator_impl)                                          iterator;
-   typedef BOOST_CONTAINER_IMPDEF(const_iterator_impl)                                    const_iterator;
-   typedef BOOST_CONTAINER_IMPDEF(boost::container::reverse_iterator<iterator>)           reverse_iterator;
-   typedef BOOST_CONTAINER_IMPDEF(boost::container::reverse_iterator<const_iterator>)     const_reverse_iterator;
+   typedef T                                                                           value_type;
+   typedef typename ::boost::container::allocator_traits<Allocator>::pointer           pointer;
+   typedef typename ::boost::container::allocator_traits<Allocator>::const_pointer     const_pointer;
+   typedef typename ::boost::container::allocator_traits<Allocator>::reference         reference;
+   typedef typename ::boost::container::allocator_traits<Allocator>::const_reference   const_reference;
+   typedef typename ::boost::container::allocator_traits<Allocator>::size_type         size_type;
+   typedef typename ::boost::container::allocator_traits<Allocator>::difference_type   difference_type;
+   typedef Allocator                                                                   allocator_type;
+   typedef BOOST_CONTAINER_IMPDEF(NodeAlloc)                                           stored_allocator_type;
+   typedef BOOST_CONTAINER_IMPDEF(iterator_impl)                                       iterator;
+   typedef BOOST_CONTAINER_IMPDEF(const_iterator_impl)                                 const_iterator;
+   typedef BOOST_CONTAINER_IMPDEF(boost::container::reverse_iterator<iterator>)        reverse_iterator;
+   typedef BOOST_CONTAINER_IMPDEF(boost::container::reverse_iterator<const_iterator>)  const_reverse_iterator;
 
    //////////////////////////////////////////////
    //
@@ -174,7 +188,7 @@ class list
    //! <b>Throws</b>: If allocator_type's default constructor throws.
    //!
    //! <b>Complexity</b>: Constant.
-   list() BOOST_NOEXCEPT_IF(dtl::is_nothrow_default_constructible<ValueAllocator>::value)
+   list() BOOST_NOEXCEPT_IF(container_detail::is_nothrow_default_constructible<Allocator>::value)
       : AllocHolder()
    {}
 
@@ -195,7 +209,7 @@ class list
    //!
    //! <b>Complexity</b>: Linear to n.
    explicit list(size_type n)
-      : AllocHolder(ValueAllocator())
+      : AllocHolder(Allocator())
    {  this->resize(n);  }
 
    //! <b>Effects</b>: Constructs a list that will use a copy of allocator a
@@ -216,7 +230,7 @@ class list
    //!   throws or T's default or copy constructor throws.
    //!
    //! <b>Complexity</b>: Linear to n.
-   list(size_type n, const T& value, const ValueAllocator& a = ValueAllocator())
+   list(size_type n, const T& value, const Allocator& a = Allocator())
       : AllocHolder(a)
    {  this->insert(this->cbegin(), n, value);  }
 
@@ -276,7 +290,7 @@ class list
    //!
    //! <b>Complexity</b>: Linear to the range [first, last).
    template <class InpIt>
-   list(InpIt first, InpIt last, const ValueAllocator &a = ValueAllocator())
+   list(InpIt first, InpIt last, const Allocator &a = Allocator())
       : AllocHolder(a)
    {  this->insert(this->cbegin(), first, last);  }
 
@@ -290,7 +304,7 @@ class list
    //!   std::initializer_list iterator throws.
    //!
    //! <b>Complexity</b>: Linear to the range [il.begin(), il.end()).
-   list(std::initializer_list<value_type> il, const ValueAllocator &a = ValueAllocator())
+   list(std::initializer_list<value_type> il, const Allocator &a = Allocator())
       : AllocHolder(a)
    {  this->insert(this->cbegin(), il.begin(), il.end()); }
 #endif
@@ -301,7 +315,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Linear to the number of elements.
-   BOOST_CONTAINER_FORCEINLINE ~list() BOOST_NOEXCEPT_OR_NOTHROW
+   ~list() BOOST_NOEXCEPT_OR_NOTHROW
    {} //AllocHolder clears the list
 
    //! <b>Effects</b>: Makes *this contain the same elements as x.
@@ -314,10 +328,10 @@ class list
    //! <b>Complexity</b>: Linear to the number of elements in x.
    list& operator=(BOOST_COPY_ASSIGN_REF(list) x)
    {
-      if (BOOST_LIKELY(this != &x)) {
+      if (&x != this){
          NodeAlloc &this_alloc     = this->node_alloc();
          const NodeAlloc &x_alloc  = x.node_alloc();
-         dtl::bool_<allocator_traits_type::
+         container_detail::bool_<allocator_traits_type::
             propagate_on_container_copy_assignment::value> flag;
          if(flag && this_alloc != x_alloc){
             this->clear();
@@ -343,27 +357,26 @@ class list
       BOOST_NOEXCEPT_IF(allocator_traits_type::propagate_on_container_move_assignment::value
                                   || allocator_traits_type::is_always_equal::value)
    {
-      if (BOOST_LIKELY(this != &x)) {
-         NodeAlloc &this_alloc = this->node_alloc();
-         NodeAlloc &x_alloc    = x.node_alloc();
-         const bool propagate_alloc = allocator_traits_type::
-               propagate_on_container_move_assignment::value;
-         const bool allocators_equal = this_alloc == x_alloc; (void)allocators_equal;
-         //Resources can be transferred if both allocators are
-         //going to be equal after this function (either propagated or already equal)
-         if(propagate_alloc || allocators_equal){
-            //Destroy
-            this->clear();
-            //Move allocator if needed
-            this->AllocHolder::move_assign_alloc(x);
-            //Obtain resources
-            this->icont() = boost::move(x.icont());
-         }
-         //Else do a one by one move
-         else{
-            this->assign( boost::make_move_iterator(x.begin())
-                        , boost::make_move_iterator(x.end()));
-         }
+      BOOST_ASSERT(this != &x);
+      NodeAlloc &this_alloc = this->node_alloc();
+      NodeAlloc &x_alloc    = x.node_alloc();
+      const bool propagate_alloc = allocator_traits_type::
+            propagate_on_container_move_assignment::value;
+      const bool allocators_equal = this_alloc == x_alloc; (void)allocators_equal;
+      //Resources can be transferred if both allocators are
+      //going to be equal after this function (either propagated or already equal)
+      if(propagate_alloc || allocators_equal){
+         //Destroy
+         this->clear();
+         //Move allocator if needed
+         this->AllocHolder::move_assign_alloc(x);
+         //Obtain resources
+         this->icont() = boost::move(x.icont());
+      }
+      //Else do a one by one move
+      else{
+         this->assign( boost::make_move_iterator(x.begin())
+                     , boost::make_move_iterator(x.end()));
       }
       return *this;
    }
@@ -377,9 +390,9 @@ class list
    //! <b>Throws</b>: If memory allocation throws or T's copy constructor throws.
    //!
    //! <b>Complexity</b>: Linear to the number of elements in x.
-   BOOST_CONTAINER_FORCEINLINE list& operator=(std::initializer_list<value_type> il)
+   list& operator=(std::initializer_list<value_type> il)
    {
-      this->assign(il.begin(), il.end());
+      assign(il.begin(), il.end());
       return *this;
    }
 #endif
@@ -389,9 +402,9 @@ class list
    //! <b>Throws</b>: If memory allocation throws or T's copy constructor throws.
    //!
    //! <b>Complexity</b>: Linear to n.
-   BOOST_CONTAINER_FORCEINLINE void assign(size_type n, const T& val)
+   void assign(size_type n, const T& val)
    {
-      typedef constant_iterator<value_type> cvalue_iterator;
+      typedef constant_iterator<value_type, difference_type> cvalue_iterator;
       return this->assign(cvalue_iterator(val, n), cvalue_iterator());
    }
 
@@ -404,7 +417,7 @@ class list
    template <class InpIt>
    void assign(InpIt first, InpIt last
       #if !defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
-      , typename dtl::disable_if_convertible<InpIt, size_type>::type * = 0
+      , typename container_detail::disable_if_convertible<InpIt, size_type>::type * = 0
       #endif
       )
    {
@@ -426,8 +439,8 @@ class list
    //!   T's constructor from dereferencing std::initializer_list iterator throws.
    //!
    //! <b>Complexity</b>: Linear to n.
-   BOOST_CONTAINER_FORCEINLINE void assign(std::initializer_list<value_type> il)
-   { this->assign(il.begin(), il.end()); }
+   void assign(std::initializer_list<value_type> il)
+   { assign(il.begin(), il.end()); }
 #endif
 
    //! <b>Effects</b>: Returns a copy of the internal allocator.
@@ -435,8 +448,7 @@ class list
    //! <b>Throws</b>: If allocator's copy constructor throws.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      allocator_type get_allocator() const BOOST_NOEXCEPT_OR_NOTHROW
+   allocator_type get_allocator() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return allocator_type(this->node_alloc()); }
 
    //! <b>Effects</b>: Returns a reference to the internal allocator.
@@ -446,8 +458,7 @@ class list
    //! <b>Complexity</b>: Constant.
    //!
    //! <b>Note</b>: Non-standard extension.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      stored_allocator_type &get_stored_allocator() BOOST_NOEXCEPT_OR_NOTHROW
+   stored_allocator_type &get_stored_allocator() BOOST_NOEXCEPT_OR_NOTHROW
    {  return this->node_alloc(); }
 
    //! <b>Effects</b>: Returns a reference to the internal allocator.
@@ -457,8 +468,7 @@ class list
    //! <b>Complexity</b>: Constant.
    //!
    //! <b>Note</b>: Non-standard extension.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const stored_allocator_type &get_stored_allocator() const BOOST_NOEXCEPT_OR_NOTHROW
+   const stored_allocator_type &get_stored_allocator() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return this->node_alloc(); }
 
    //////////////////////////////////////////////
@@ -472,8 +482,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      iterator begin() BOOST_NOEXCEPT_OR_NOTHROW
+   iterator begin() BOOST_NOEXCEPT_OR_NOTHROW
    { return iterator(this->icont().begin()); }
 
    //! <b>Effects</b>: Returns a const_iterator to the first element contained in the list.
@@ -481,8 +490,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_iterator begin() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_iterator begin() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return this->cbegin();   }
 
    //! <b>Effects</b>: Returns an iterator to the end of the list.
@@ -490,8 +498,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      iterator end() BOOST_NOEXCEPT_OR_NOTHROW
+   iterator end() BOOST_NOEXCEPT_OR_NOTHROW
    {  return iterator(this->icont().end());  }
 
    //! <b>Effects</b>: Returns a const_iterator to the end of the list.
@@ -499,8 +506,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_iterator end() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_iterator end() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return this->cend();  }
 
    //! <b>Effects</b>: Returns a reverse_iterator pointing to the beginning
@@ -509,8 +515,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      reverse_iterator rbegin() BOOST_NOEXCEPT_OR_NOTHROW
+   reverse_iterator rbegin() BOOST_NOEXCEPT_OR_NOTHROW
    {  return reverse_iterator(end());  }
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the beginning
@@ -519,8 +524,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_reverse_iterator rbegin() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_reverse_iterator rbegin() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return this->crbegin();  }
 
    //! <b>Effects</b>: Returns a reverse_iterator pointing to the end
@@ -529,8 +533,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      reverse_iterator rend() BOOST_NOEXCEPT_OR_NOTHROW
+   reverse_iterator rend() BOOST_NOEXCEPT_OR_NOTHROW
    {  return reverse_iterator(begin());   }
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the end
@@ -539,8 +542,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_reverse_iterator rend() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_reverse_iterator rend() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return this->crend();   }
 
    //! <b>Effects</b>: Returns a const_iterator to the first element contained in the list.
@@ -548,8 +550,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_iterator cbegin() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_iterator cbegin() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return const_iterator(this->non_const_icont().begin());   }
 
    //! <b>Effects</b>: Returns a const_iterator to the end of the list.
@@ -557,8 +558,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_iterator cend() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_iterator cend() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return const_iterator(this->non_const_icont().end());  }
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the beginning
@@ -567,8 +567,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_reverse_iterator crbegin() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_reverse_iterator crbegin() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return const_reverse_iterator(this->cend());  }
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the end
@@ -577,8 +576,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_reverse_iterator crend() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_reverse_iterator crend() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return const_reverse_iterator(this->cbegin());   }
 
    //////////////////////////////////////////////
@@ -592,8 +590,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      bool empty() const BOOST_NOEXCEPT_OR_NOTHROW
+   bool empty() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return !this->size();  }
 
    //! <b>Effects</b>: Returns the number of the elements contained in the list.
@@ -601,8 +598,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      size_type size() const BOOST_NOEXCEPT_OR_NOTHROW
+   size_type size() const BOOST_NOEXCEPT_OR_NOTHROW
    {   return this->icont().size();   }
 
    //! <b>Effects</b>: Returns the largest possible size of the list.
@@ -610,8 +606,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      size_type max_size() const BOOST_NOEXCEPT_OR_NOTHROW
+   size_type max_size() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return AllocHolder::max_size();  }
 
    //! <b>Effects</b>: Inserts or erases elements at the end such that
@@ -623,7 +618,7 @@ class list
    void resize(size_type new_size)
    {
       if(!priv_try_shrink(new_size)){
-         typedef value_init_construct_iterator<value_type> value_init_iterator;
+         typedef value_init_construct_iterator<value_type, difference_type> value_init_iterator;
          this->insert(this->cend(), value_init_iterator(new_size - this->size()), value_init_iterator());
       }
    }
@@ -655,8 +650,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      reference front() BOOST_NOEXCEPT_OR_NOTHROW
+   reference front() BOOST_NOEXCEPT_OR_NOTHROW
    {
       BOOST_ASSERT(!this->empty());
       return *this->begin();
@@ -670,8 +664,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_reference front() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_reference front() const BOOST_NOEXCEPT_OR_NOTHROW
    {
       BOOST_ASSERT(!this->empty());
       return *this->begin();
@@ -685,8 +678,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      reference back() BOOST_NOEXCEPT_OR_NOTHROW
+   reference back() BOOST_NOEXCEPT_OR_NOTHROW
    {
       BOOST_ASSERT(!this->empty());
       return *(--this->end());
@@ -700,8 +692,7 @@ class list
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      const_reference back() const BOOST_NOEXCEPT_OR_NOTHROW
+   const_reference back() const BOOST_NOEXCEPT_OR_NOTHROW
    {
       BOOST_ASSERT(!this->empty());
       return *(--this->end());
@@ -858,7 +849,7 @@ class list
    iterator insert(const_iterator position, size_type n, const T& x)
    {
       //range check is done by insert
-      typedef constant_iterator<value_type> cvalue_iterator;
+      typedef constant_iterator<value_type, difference_type> cvalue_iterator;
       return this->insert(position, cvalue_iterator(x, n), cvalue_iterator());
    }
 
@@ -875,10 +866,10 @@ class list
    template <class InpIt>
    iterator insert(const_iterator p, InpIt first, InpIt last
       #if !defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
-      , typename dtl::enable_if_c
-         < !dtl::is_convertible<InpIt, size_type>::value
-            && (dtl::is_input_iterator<InpIt>::value
-                || dtl::is_same<alloc_version, version_1>::value
+      , typename container_detail::enable_if_c
+         < !container_detail::is_convertible<InpIt, size_type>::value
+            && (container_detail::is_input_iterator<InpIt>::value
+                || container_detail::is_same<alloc_version, version_1>::value
                )
          >::type * = 0
       #endif
@@ -900,10 +891,10 @@ class list
    #if !defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
    template <class FwdIt>
    iterator insert(const_iterator position, FwdIt first, FwdIt last
-      , typename dtl::enable_if_c
-         < !dtl::is_convertible<FwdIt, size_type>::value
-            && !(dtl::is_input_iterator<FwdIt>::value
-                || dtl::is_same<alloc_version, version_1>::value
+      , typename container_detail::enable_if_c
+         < !container_detail::is_convertible<FwdIt, size_type>::value
+            && !(container_detail::is_input_iterator<FwdIt>::value
+                || container_detail::is_same<alloc_version, version_1>::value
                )
          >::type * = 0
       )
@@ -913,7 +904,7 @@ class list
       insertion_functor func(this->icont(), position.get());
       iterator before_p(position.get());
       --before_p;
-      this->allocate_many_and_construct(first, boost::container::iterator_udistance(first, last), func);
+      this->allocate_many_and_construct(first, boost::container::iterator_distance(first, last), func);
       return ++before_p;
    }
    #endif
@@ -1213,7 +1204,7 @@ class list
    //! <b>Note</b>: The relative order of elements that are not removed is unchanged,
    //!   and iterators to elements that are not removed remain valid.
    void unique()
-   {  this->unique(value_equal_t());  }
+   {  this->unique(value_equal());  }
 
    //! <b>Effects</b>: Removes adjacent duplicate elements or adjacent
    //!   elements that satisfy some binary predicate from the list.
@@ -1243,7 +1234,7 @@ class list
    //! <b>Complexity</b>: This function is linear time: it performs at most
    //!   size() + x.size() - 1 comparisons.
    void merge(list &x)
-   {  this->merge(x, value_less_t());  }
+   {  this->merge(x, value_less());  }
 
    //! <b>Requires</b>: The lists x and *this must be distinct.
    //!
@@ -1309,7 +1300,7 @@ class list
    //! <b>Complexity</b>: The number of comparisons is approximately N log N, where N
    //!   is the list's size.
    void sort()
-   {  this->sort(value_less_t());  }
+   {  this->sort(value_less());  }
 
    //! <b>Effects</b>: This function sorts the list *this according to std::less<value_type>.
    //!   The sort is stable, that is, the relative order of equivalent elements is preserved.
@@ -1343,50 +1334,43 @@ class list
    //! <b>Effects</b>: Returns true if x and y are equal
    //!
    //! <b>Complexity</b>: Linear to the number of elements in the container.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      friend bool operator==(const list& x, const list& y)
+   friend bool operator==(const list& x, const list& y)
    {  return x.size() == y.size() && ::boost::container::algo_equal(x.begin(), x.end(), y.begin());  }
 
    //! <b>Effects</b>: Returns true if x and y are unequal
    //!
    //! <b>Complexity</b>: Linear to the number of elements in the container.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      friend bool operator!=(const list& x, const list& y)
+   friend bool operator!=(const list& x, const list& y)
    {  return !(x == y); }
 
    //! <b>Effects</b>: Returns true if x is less than y
    //!
    //! <b>Complexity</b>: Linear to the number of elements in the container.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      friend bool operator<(const list& x, const list& y)
+   friend bool operator<(const list& x, const list& y)
    {  return boost::container::algo_lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());  }
 
    //! <b>Effects</b>: Returns true if x is greater than y
    //!
    //! <b>Complexity</b>: Linear to the number of elements in the container.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      friend bool operator>(const list& x, const list& y)
+   friend bool operator>(const list& x, const list& y)
    {  return y < x;  }
 
    //! <b>Effects</b>: Returns true if x is equal or less than y
    //!
    //! <b>Complexity</b>: Linear to the number of elements in the container.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      friend bool operator<=(const list& x, const list& y)
+   friend bool operator<=(const list& x, const list& y)
    {  return !(y < x);  }
 
    //! <b>Effects</b>: Returns true if x is equal or greater than y
    //!
    //! <b>Complexity</b>: Linear to the number of elements in the container.
-   BOOST_CONTAINER_ATTRIBUTE_NODISCARD BOOST_CONTAINER_FORCEINLINE
-      friend bool operator>=(const list& x, const list& y)
+   friend bool operator>=(const list& x, const list& y)
    {  return !(x < y);  }
 
    //! <b>Effects</b>: x.swap(y)
    //!
    //! <b>Complexity</b>: Constant.
-   BOOST_CONTAINER_FORCEINLINE friend void swap(list& x, list& y)
-       BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT(x.swap(y)))
+   friend void swap(list& x, list& y)
    {  x.swap(y);  }
 
    #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
@@ -1441,13 +1425,17 @@ class list
       return iterator(this->icont().insert(p.get(), *tmp));
    }
 
-   template<class U>
-   void priv_push_back(BOOST_FWD_REF(U) x)
-   {  this->icont().push_back(*this->create_node(::boost::forward<U>(x))); }
+   void priv_push_back (const T &x)
+   {  this->insert(this->cend(), x);    }
 
-   template<class U>
-   void priv_push_front(BOOST_FWD_REF(U) x)
-   {  this->icont().push_front(*this->create_node(::boost::forward<U>(x))); }
+   void priv_push_back (BOOST_RV_REF(T) x)
+   {  this->insert(this->cend(), boost::move(x));    }
+
+   void priv_push_front (const T &x)
+   {  this->insert(this->cbegin(), x);  }
+
+   void priv_push_front (BOOST_RV_REF(T) x)
+   {  this->insert(this->cbegin(), boost::move(x));  }
 
    class insertion_functor;
    friend class insertion_functor;
@@ -1469,21 +1457,21 @@ class list
       }
    };
 
-   typedef value_less<value_type>   value_less_t;
-   typedef value_equal<value_type>  value_equal_t;
+   //Functors for member algorithm defaults
+   struct value_less
+   {
+      bool operator()(const value_type &a, const value_type &b) const
+         {  return a < b;  }
+   };
+
+   struct value_equal
+   {
+      bool operator()(const value_type &a, const value_type &b) const
+         {  return a == b;  }
+   };
    #endif   //#ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
 };
-
-#ifndef BOOST_CONTAINER_NO_CXX17_CTAD
-template <typename InputIterator>
-list(InputIterator, InputIterator) ->
-   list<typename iterator_traits<InputIterator>::value_type>;
-
-template <typename InputIterator, typename ValueAllocator>
-list(InputIterator, InputIterator, ValueAllocator const&) ->
-   list<typename iterator_traits<InputIterator>::value_type, ValueAllocator>;
-#endif
 
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
@@ -1494,9 +1482,8 @@ list(InputIterator, InputIterator, ValueAllocator const&) ->
 template <class T, class Allocator>
 struct has_trivial_destructor_after_move<boost::container::list<T, Allocator> >
 {
-   typedef typename boost::container::list<T, Allocator>::allocator_type allocator_type;
-   typedef typename ::boost::container::allocator_traits<allocator_type>::pointer pointer;
-   static const bool value = ::boost::has_trivial_destructor_after_move<allocator_type>::value &&
+   typedef typename ::boost::container::allocator_traits<Allocator>::pointer pointer;
+   static const bool value = ::boost::has_trivial_destructor_after_move<Allocator>::value &&
                              ::boost::has_trivial_destructor_after_move<pointer>::value;
 };
 

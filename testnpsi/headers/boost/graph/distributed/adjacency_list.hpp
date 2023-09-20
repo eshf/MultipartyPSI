@@ -15,7 +15,6 @@
 #error "Parallel BGL files should not be included unless <boost/graph/use_mpi.hpp> has been included"
 #endif
 
-#include <boost/core/uncaught_exceptions.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/graph/graph_traits.hpp>
@@ -23,7 +22,6 @@
 #include <boost/graph/distributed/concepts.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/property_map/property_map.hpp>
-#include <boost/property_map/parallel/parallel_property_maps.hpp>
 #include <boost/graph/adjacency_iterator.hpp>
 #include <boost/property_map/parallel/distributed_property_map.hpp>
 #include <boost/property_map/parallel/local_property_map.hpp>
@@ -32,7 +30,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assert.hpp>
 #include <list>
-#include <iterator>
 #include <algorithm>
 #include <boost/limits.hpp>
 #include <boost/graph/parallel/properties.hpp>
@@ -40,7 +37,6 @@
 #include <boost/graph/parallel/algorithm.hpp>
 #include <boost/graph/distributed/selector.hpp>
 #include <boost/graph/parallel/process_group.hpp>
-#include <boost/pending/container_traits.hpp>
 
 // Callbacks
 #include <boost/function/function2.hpp>
@@ -1424,7 +1420,7 @@ namespace boost {
     /// Iterator over the neighbors of a vertex
     typedef boost::adjacency_iterator<
               adjacency_list, vertex_descriptor, out_edge_iterator,
-              typename std::iterator_traits<base_out_edge_iterator>
+              typename detail::iterator_traits<base_out_edge_iterator>
                          ::difference_type>
       adjacency_iterator;
 
@@ -1493,7 +1489,7 @@ namespace boost {
     adjacency_list(const ProcessGroup& pg = ProcessGroup())
       : named_graph_mixin(pg, default_distribution_type(pg, 0)),
         m_local_graph(GraphProperty()), 
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
     }
@@ -1502,7 +1498,7 @@ namespace boost {
                    const base_distribution_type& distribution)
       : named_graph_mixin(pg, distribution),
         m_local_graph(GraphProperty()), 
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
     }
@@ -1511,7 +1507,7 @@ namespace boost {
                    const ProcessGroup& pg = ProcessGroup())
       : named_graph_mixin(pg, default_distribution_type(pg, 0)),
         m_local_graph(g), 
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
     }
@@ -1522,7 +1518,7 @@ namespace boost {
                    const base_distribution_type& distribution)
       : named_graph_mixin(pg, distribution),
         m_local_graph(distribution.block_size(process_id(pg), n), p),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -1535,7 +1531,7 @@ namespace boost {
                    const base_distribution_type& distribution)
       : named_graph_mixin(pg, distribution),
         m_local_graph(distribution.block_size(process_id(pg), n), GraphProperty()),
-        process_group_(pg, boost::parallel::attach_distributed_object()) 
+        process_group_(pg, graph::parallel::attach_distributed_object()) 
     {
       setup_triggers();
 
@@ -1548,7 +1544,7 @@ namespace boost {
                    const ProcessGroup& pg = ProcessGroup())
       : named_graph_mixin(pg, default_distribution_type(pg, n)),
         m_local_graph(this->distribution().block_size(process_id(pg), n), p),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -1561,7 +1557,7 @@ namespace boost {
       : named_graph_mixin(pg, default_distribution_type(pg, n)),
         m_local_graph(this->distribution().block_size(process_id(pg), n), 
                       GraphProperty()),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -1582,7 +1578,7 @@ namespace boost {
                    const GraphProperty& p = GraphProperty())
       : named_graph_mixin(pg, default_distribution_type(pg, n)),
         m_local_graph(this->distribution().block_size(process_id(pg), n), p),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -1601,7 +1597,7 @@ namespace boost {
                    const GraphProperty& p = GraphProperty())
       : named_graph_mixin(pg, default_distribution_type(pg, n)),
         m_local_graph(this->distribution().block_size(process_id(pg), n), p),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -1621,7 +1617,7 @@ namespace boost {
                    const GraphProperty& p = GraphProperty())
       : named_graph_mixin(pg, distribution),
         m_local_graph(distribution.block_size(process_id(pg), n), p),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -1641,7 +1637,7 @@ namespace boost {
                    const GraphProperty& p = GraphProperty())
       : named_graph_mixin(pg, distribution),
         m_local_graph(this->distribution().block_size(process_id(pg), n), p),
-        process_group_(pg, boost::parallel::attach_distributed_object())
+        process_group_(pg, graph::parallel::attach_distributed_object())
     {
       setup_triggers();
 
@@ -2288,7 +2284,7 @@ namespace boost {
     /// If this vertex has already been created or will be created by
     /// someone else, or if someone threw an exception, we will not
     /// create the vertex now.
-    if (committed || boost::core::uncaught_exceptions() > 0)
+    if (committed || std::uncaught_exception())
       return;
 
     committed = true;
@@ -2401,7 +2397,7 @@ namespace boost {
     /// If this edge has already been created or will be created by
     /// someone else, or if someone threw an exception, we will not
     /// create the edge now.
-    if (committed || boost::core::uncaught_exceptions() > 0)
+    if (committed || std::uncaught_exception())
       return;
 
     committed = true;
@@ -2483,7 +2479,7 @@ namespace boost {
       else {
         // Edge is remote, so notify the target's owner that an edge
         // has been added.
-        if (self.process_group_.trigger_context() == boost::parallel::trc_out_of_band)
+        if (self.process_group_.trigger_context() == graph::parallel::trc_out_of_band)
           send_oob(self.process_group_, target.owner, msg_nonlocal_edge,
                    msg_nonlocal_edge_data(result.first.local, property));
         else
@@ -2504,6 +2500,9 @@ namespace boost {
     std::pair<edge_descriptor, bool> result
       = this->add_local_edge(property, directedS());
 
+    typedef detail::parallel::stored_in_edge<local_edge_descriptor>
+      stored_edge;
+
     if (result.second) {
       if (target.owner == self.processor()) {
         // Edge is local, so add the new edge to the list
@@ -2522,7 +2521,7 @@ namespace boost {
       else {
         // Edge is remote, so notify the target's owner that an edge
         // has been added.
-        if (self.process_group_.trigger_context() == boost::parallel::trc_out_of_band)
+        if (self.process_group_.trigger_context() == graph::parallel::trc_out_of_band)
           send_oob(self.process_group_, target.owner, msg_nonlocal_edge,
                    msg_nonlocal_edge_data(result.first.local, property));
         else
@@ -2586,7 +2585,7 @@ namespace boost {
     /// If this edge has already been created or will be created by
     /// someone else, or if someone threw an exception, we will not
     /// create the edge now.
-    if (this->committed || boost::core::uncaught_exceptions() > 0)
+    if (this->committed || std::uncaught_exception())
       return;
 
     this->committed = true;
@@ -3046,6 +3045,8 @@ namespace boost {
               PBGL_DISTRIB_ADJLIST_TYPE& g)
   {
     typedef typename PBGL_DISTRIB_ADJLIST_TYPE
+                       ::vertex_descriptor vertex_descriptor;
+    typedef typename PBGL_DISTRIB_ADJLIST_TYPE
                        ::edge_descriptor edge_descriptor;
     std::pair<edge_descriptor, bool> the_edge = edge(u, v, g);
     if (the_edge.second) remove_edge(the_edge.first, g);
@@ -3426,7 +3427,7 @@ namespace boost {
     typedef typename graph_type::named_graph_mixin named_graph_mixin;
     BOOST_ASSERT(u.owner == g.processor());
     static_cast<named_graph_mixin&>(static_cast<graph_type&>(g))
-      .removing_vertex(u, boost::graph_detail::iterator_stability(g.base().m_vertices));
+      .removing_vertex(u);
     g.distribution().clear();
     remove_vertex(u.local, g.base());
   }
@@ -3775,6 +3776,7 @@ namespace boost {
   template<PBGL_DISTRIB_ADJLIST_TEMPLATE_PARMS>
   void synchronize(const PBGL_DISTRIB_ADJLIST_TYPE& g)
   {
+    typedef PBGL_DISTRIB_ADJLIST_TYPE graph_type;
     synchronize(g.process_group());
   }
 

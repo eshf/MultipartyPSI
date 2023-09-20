@@ -11,31 +11,31 @@
 #ifndef BOOST_INTERPROCESS_CONDITION_ANY_HPP
 #define BOOST_INTERPROCESS_CONDITION_ANY_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
 #endif
 
-#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+/// @cond
 
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 
-#include <boost/interprocess/sync/cv_status.hpp>
+#include <boost/interprocess/detail/posix_time_types_wrk.hpp>
 #include <boost/interprocess/sync/interprocess_mutex.hpp>
 #include <boost/interprocess/sync/interprocess_condition.hpp>
 #include <boost/interprocess/exceptions.hpp>
 #include <boost/interprocess/sync/detail/condition_any_algorithm.hpp>
 
-#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+/// @endcond
 
 //!\file
 //!Describes process-shared variables interprocess_condition_any class
 
 namespace boost {
+
+namespace posix_time
+{  class ptime;   }
+
 namespace interprocess {
 
 //!This class is a condition variable that can be placed in shared memory or
@@ -48,10 +48,10 @@ namespace interprocess {
 //!
 //!Unlike std::condition_variable_any in C++11, it is NOT safe to invoke the destructor if all
 //!threads have been only notified. It is required that they have exited their respective wait
-//!functions.
+//!functions. 
 class interprocess_condition_any
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+   /// @cond
    //Non-copyable
    interprocess_condition_any(const interprocess_condition_any &);
    interprocess_condition_any &operator=(const interprocess_condition_any &);
@@ -61,7 +61,7 @@ class interprocess_condition_any
       public:
       typedef interprocess_condition   condvar_type;
       typedef interprocess_mutex       mutex_type;
-
+   
       condvar_type &get_condvar() {  return m_cond;  }
       mutex_type   &get_mutex()   {  return m_mut; }
 
@@ -72,7 +72,7 @@ class interprocess_condition_any
 
    ipcdetail::condition_any_wrapper<members>   m_cond;
 
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+   /// @endcond
    public:
    //!Constructs a interprocess_condition_any. On error throws interprocess_exception.
    interprocess_condition_any(){}
@@ -109,40 +109,16 @@ class interprocess_condition_any
    //!this->notify_one() or this->notify_all(), or until time abs_time is reached,
    //!and then reacquires the lock.
    //!Returns: false if time abs_time is reached, otherwise true.
-   template <typename L, class TimePoint>
-   bool timed_wait(L& lock, const TimePoint &abs_time)
+   template <typename L>
+   bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time)
    {  return m_cond.timed_wait(lock, abs_time);  }
 
    //!The same as:   while (!pred()) {
    //!                  if (!timed_wait(lock, abs_time)) return pred();
    //!               } return true;
-   template <typename L, class TimePoint, typename Pr>
-   bool timed_wait(L& lock, const TimePoint &abs_time, Pr pred)
+   template <typename L, typename Pr>
+   bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time, Pr pred)
    {  return m_cond.timed_wait(lock, abs_time, pred);  }
-
-   //!Same as `timed_wait`, but this function is modeled after the
-   //!standard library interface.
-   template <typename L, class TimePoint>
-   cv_status wait_until(L& lock, const TimePoint &abs_time)
-   {  return this->timed_wait(lock, abs_time) ? cv_status::no_timeout : cv_status::timeout; }
-
-   //!Same as `timed_wait`, but this function is modeled after the
-   //!standard library interface.
-   template <typename L, class TimePoint, typename Pr>
-   bool wait_until(L& lock, const TimePoint &abs_time, Pr pred)
-   {  return this->timed_wait(lock, abs_time, pred); }
-
-   //!Same as `timed_wait`, but this function is modeled after the
-   //!standard library interface and uses relative timeouts.
-   template <typename L, class Duration>
-   cv_status wait_for(L& lock, const Duration &dur)
-   {  return this->wait_until(lock, ipcdetail::duration_to_ustime(dur)); }
-
-   //!Same as `timed_wait`, but this function is modeled after the
-   //!standard library interface and uses relative timeouts
-   template <typename L, class Duration, typename Pr>
-   bool wait_for(L& lock, const Duration &dur, Pr pred)
-   {  return this->wait_until(lock, ipcdetail::duration_to_ustime(dur), pred); }
 };
 
 }  //namespace interprocess
