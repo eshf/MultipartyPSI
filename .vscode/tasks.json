@@ -2,16 +2,18 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build wasm",
             "type": "shell",
-            "label": "C/C++: g++ build active file",
-            "command": "/usr/bin/gcc",
+            "windows":{
+            "command": "emcc.bat",
             "args": [
-                "-g",
-                "${workspaceFolder}/*.cpp",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
                 "-I",
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/testnpsi/main.cpp",
+                "${workspaceFolder}/testnpsi/bitPosition.cpp",
+                "${workspaceFolder}/testnpsi/CLP.cpp",
+                "${workspaceFolder}/testnpsi/OtBinMain.cpp",
+                "${workspaceFolder}/testnpsi/miraclTest.cpp",
                 "${workspaceFolder}/testnpsi/headers/**",
                 "${workspaceFolder}/testnpsi/thirdparty/linux/miracl/**",
                 "${workspaceFolder}/testnpsi/thirdparty/linux/ntl/**",
@@ -41,6 +43,12 @@
                 "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/lib/node_modules/**",
                 "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/lib/node_modules/corepack/dist/**",
                 "${workspaceFolder}/testnpsi/emsdk/node/16.20.0_64bit/lib/node_modules/corepack/shims/nodewin/**",
+                "-o",
+                "${workspaceFolder}\\testnpsi\\main.wasm",
+                "-O3",
+                "-s",
+                "WASM=1",
+                "-v",
                 "-lsfml-audio",
                 "-lsfml-graphics",
                 "-lsfml-network",
@@ -48,35 +56,15 @@
                 "-lsfml-window",
                 "-lshlwapi"
             ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
+
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "compiler:/usr/bin/gcc"
+            "problemMatcher": [
+            ],
         },
-    {
-    "type": "shell",
-    "label": "cmake",
-    "command": "cmake",
-    "args": [
-        "-Bbuild",
-        "-DCMAKE_CXX_FLAGS=-g",
-        "-DCMAKE_BUILD_TYPE=release",
-    ],
-    "options": {
-        "cwd": "${workspaceFolder}"
-    },
-    "dependsOn": [
-        "clean"
-    ],
-    "problemMatcher": []
-}
+    }
 ]
 }
 
