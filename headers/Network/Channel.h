@@ -26,8 +26,8 @@ namespace osuCrypto {
         friend class BtChannel;
     protected:
         virtual u8* ChannelBufferData() const = 0;
-        virtual u64 ChannelBufferSize() const = 0;
-        virtual void ChannelBufferResize(u64 length) = 0;
+        virtual uint64_t ChannelBufferSize() const = 0;
+        virtual void ChannelBufferResize(uint64_t length) = 0;
     };
 
     /// <summary>Represents a named pipe that allows data to be send between two Endpoints</summary>
@@ -46,30 +46,30 @@ namespace osuCrypto {
 
         virtual void resetStats() {};
 
-        virtual u64 getTotalDataSent() const = 0;
-        virtual u64 getTotalDataRecv() const = 0;
+        virtual uint64_t getTotalDataSent() const = 0;
+        virtual uint64_t getTotalDataRecv() const = 0;
 
-        virtual u64 getMaxOutstandingSendData() const = 0;
+        virtual uint64_t getMaxOutstandingSendData() const = 0;
 
         /// <summary>Data will be sent over the network asynchronously. WARNING: data lifetime must be handled by caller.</summary>
-        virtual void asyncSend(const void * bufferPtr, u64 length) = 0;
+        virtual void asyncSend(const void * bufferPtr, uint64_t length) = 0;
 
         /// <summary>Buffer will be MOVED and then sent over the network asynchronously. </summary>
         virtual void asyncSend(std::unique_ptr<ChannelBuffer> mH) = 0;
 
         /// <summary>Synchronous call to send data over the network. </summary>
-        virtual void send(const void * bufferPtr, u64 length) = 0;
+        virtual void send(const void * bufferPtr, uint64_t length) = 0;
 
         /// <summary>A call to asynchronously receive data over this channel. Data will be saved at dest and is expected 
         ///          to be of size length. Will through otherwise</summary>
-        virtual std::future<void> asyncRecv(void* dest, u64 length) = 0;
+        virtual std::future<void> asyncRecv(void* dest, uint64_t length) = 0;
 
         /// <summary>A call to asynchronously receive data over this channel. Data will be saved at buff which will resized 
         /// (if allowed) to fit the data size.</summary>
         virtual std::future<void> asyncRecv(ChannelBuffer& mH) = 0;
 
         /// <summary>Synchronous call to receive data over the network. Assumes dest has byte size length. WARNING: will through if received message length does not match.</summary>
-        virtual void recv(void* dest, u64 length) = 0; 
+        virtual void recv(void* dest, uint64_t length) = 0; 
 
         /// <summary>Synchronous call to receive data over the network. Will *TRY* to resize buffer to be the appropriate size. A ChannelBuff may refuse to resize...</summary>
         virtual void recv(ChannelBuffer& mH) = 0;
@@ -94,7 +94,7 @@ namespace osuCrypto {
         void asyncSendCopy(const ChannelBuffer& buf);
 
         /// <summary>Performs a data copy and the returns. Data will be sent over the network asynchronously.</summary> 
-        void asyncSendCopy(const void * bufferPtr, u64 length);
+        void asyncSendCopy(const void * bufferPtr, uint64_t length);
 
     };
 

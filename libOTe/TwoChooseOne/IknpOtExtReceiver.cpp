@@ -16,7 +16,7 @@ namespace osuCrypto
         if (baseOTs.size() != gOtExtBaseOtCount)
             throw std::runtime_error(LOCATION);
 
-        for (u64 i = 0; i < gOtExtBaseOtCount; i++)
+        for (uint64_t i = 0; i < gOtExtBaseOtCount; i++)
         {
             mGens[i][0].SetSeed(baseOTs[i][0]);
             mGens[i][1].SetSeed(baseOTs[i][1]);
@@ -29,7 +29,7 @@ namespace osuCrypto
     {
         std::array<std::array<block, 2>, gOtExtBaseOtCount>baseRecvOts;
 
-        for (u64 i = 0; i < mGens.size(); ++i)
+        for (uint64_t i = 0; i < mGens.size(); ++i)
         {
             baseRecvOts[i][0] = mGens[i][0].get<block>();
             baseRecvOts[i][1] = mGens[i][1].get<block>();
@@ -54,9 +54,9 @@ namespace osuCrypto
             throw std::runtime_error("rt error at " LOCATION);
 
         // we are going to process OTs in blocks of 128 * superBlkSize messages.
-        u64 numOtExt = roundUpTo(choices.size(), 128);
-        u64 numSuperBlocks = (numOtExt / 128 + superBlkSize - 1) / superBlkSize;
-        u64 numBlocks = numSuperBlocks * superBlkSize;
+        uint64_t numOtExt = roundUpTo(choices.size(), 128);
+        uint64_t numSuperBlocks = (numOtExt / 128 + superBlkSize - 1) / superBlkSize;
+        uint64_t numBlocks = numSuperBlocks * superBlkSize;
 
         BitVector choices2(numBlocks * 128);
         choices2 = choices;
@@ -69,11 +69,11 @@ namespace osuCrypto
         std::array<std::array<block, superBlkSize>, 128> t0;
 
         // the index of the OT that has been completed.
-        //u64 doneIdx = 0;
+        //uint64_t doneIdx = 0;
 
         block* mIter = messages.data();
 
-        u64 step = std::min(numSuperBlocks, (u64)commStepSize);
+        uint64_t step = std::min(numSuperBlocks, (uint64_t)commStepSize);
         std::unique_ptr<ByteStream> uBuff(new ByteStream(step * 128 * superBlkSize * sizeof(block)));
 
         // get an array of blocks that we will fill. 
@@ -86,7 +86,7 @@ namespace osuCrypto
         //   performance reasons. The reason for 8 is that most CPUs have 8 AES vector  
         //   lanes, and so its more efficient to encrypt (aka prng) 8 blocks at a time.
         //   So that's what we do. 
-        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
 
             // this will store the next 128 rows of the matrix u
@@ -95,7 +95,7 @@ namespace osuCrypto
             block* cIter = choiceBlocks.data() + superBlkSize * superBlkIdx;
 
 
-            for (u64 colIdx = 0; colIdx < 128; ++colIdx)
+            for (uint64_t colIdx = 0; colIdx < 128; ++colIdx)
             {
                 // generate the column indexed by colIdx. This is done with
                 // AES in counter mode acting as a PRNG. We don'tIter use the normal
@@ -135,7 +135,7 @@ namespace osuCrypto
                 // send over u buffer
                 chl.asyncSend(std::move(uBuff));
 
-                u64 step = std::min(numSuperBlocks - superBlkIdx - 1, (u64)commStepSize);
+                uint64_t step = std::min(numSuperBlocks - superBlkIdx - 1, (uint64_t)commStepSize);
 
                 if (step)
                 {
@@ -172,7 +172,7 @@ namespace osuCrypto
             }
 
 #ifdef IKNP_DEBUG
-            u64 doneIdx = mStart - messages.data();
+            uint64_t doneIdx = mStart - messages.data();
             block* msgIter = messages.data() + doneIdx;
             chl.send(msgIter, sizeof(block) * 128 * superBlkSize);
             cIter = choiceBlocks.data() + superBlkSize * superBlkIdx;
@@ -189,15 +189,15 @@ namespace osuCrypto
         std::array<block, 8> aesHashTemp;
 #endif
 
-        u64 doneIdx = (0);
+        uint64_t doneIdx = (0);
 
-        u64 bb = (messages.size() + 127) / 128;
-        for (u64 blockIdx = 0; blockIdx < bb; ++blockIdx)
+        uint64_t bb = (messages.size() + 127) / 128;
+        for (uint64_t blockIdx = 0; blockIdx < bb; ++blockIdx)
         {
-            u64 stop = std::min(messages.size(), doneIdx + 128);
+            uint64_t stop = std::min(messages.size(), doneIdx + 128);
 
 #ifdef IKNP_SHA_HASH
-            for (u64 i = 0; doneIdx < stop; ++doneIdx, ++i)
+            for (uint64_t i = 0; doneIdx < stop; ++doneIdx, ++i)
             {
                 // hash it
                 sha.Reset();
@@ -209,7 +209,7 @@ namespace osuCrypto
             auto length = stop - doneIdx;
             auto steps = length / 8;
             block* mIter = messages.data() + doneIdx;
-            for (u64 i = 0; i < steps; ++i)
+            for (uint64_t i = 0; i < steps; ++i)
             {
                 mAesFixedKey.ecbEncBlocks(mIter, 8, aesHashTemp.data());
                 mIter[0] = mIter[0] ^ aesHashTemp[0];
@@ -226,7 +226,7 @@ namespace osuCrypto
 
             auto rem = length - steps * 8;
             mAesFixedKey.ecbEncBlocks(mIter, rem, aesHashTemp.data());
-            for (u64 i = 0; i < rem; ++i)
+            for (uint64_t i = 0; i < rem; ++i)
             {
                 mIter[i] = mIter[i] ^ aesHashTemp[i];
             }

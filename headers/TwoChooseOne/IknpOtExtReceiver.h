@@ -34,7 +34,7 @@ namespace osuCrypto
             ArrayView<block> messages,
             PRNG& prng,
             Channel& chl/*,
-            std::atomic<u64>& doneIdx*/)override;
+            std::atomic<uint64_t>& doneIdx*/)override;
 
     };
 

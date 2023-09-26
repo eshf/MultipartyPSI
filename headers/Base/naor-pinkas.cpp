@@ -1,18 +1,16 @@
 #include "naor-pinkas.h"
-#include "Common/Log.h"
+
 #include <memory>
 #include "Common/Timer.h"
-#include "Crypto/Curve.h"
+
 
 #define PARALLEL
 
-#include "Common/ByteStream.h"
 #include "Common/BitVector.h"
-#include "Crypto/sha1.h"
 
 namespace osuCrypto
 {
-    //static const  u64 minMsgPerThread(16);
+    //static const  uint64_t minMsgPerThread(16);
 
     NaorPinkas::NaorPinkas()
     {
@@ -31,7 +29,7 @@ namespace osuCrypto
         ArrayView<block> messages,
         PRNG& prng,
         Channel& socket,
-        u64 numThreads)
+        uint64_t numThreads)
     {
         // should generalize to 1 out of N by changing this. But isn't tested...
         auto nSndVals(2);
@@ -47,7 +45,7 @@ namespace osuCrypto
 
         //std::unique_ptr<pk_crypto> mainPkGen(new ecc_field(eccSecLevel, (u8*)&seed));
         //uint32_t fieldElementSize = mainPkGen->fe_byte_size();
-        u64 fieldElementSize = g.sizeBytes();
+        uint64_t fieldElementSize = g.sizeBytes();
 
         std::vector<std::thread> thrds(numThreads);
         std::unique_ptr<ByteStream> sendBuff(new ByteStream());
@@ -65,7 +63,7 @@ namespace osuCrypto
         auto cRecvFuture = socket.asyncRecv(cBuff.data(), cBuff.size()).share();
 
 
-        for (u64 t = 0; t < numThreads; ++t)
+        for (uint64_t t = 0; t < numThreads; ++t)
         {
             seed = prng.get<block>();
 
@@ -82,7 +80,7 @@ namespace osuCrypto
                 EllipticCurve curve(params, prng.get<block>());
 
                 auto& g = curve.getGenerator();
-                u64 fieldElementSize = g.sizeBytes();
+                uint64_t fieldElementSize = g.sizeBytes();
 
                 EccPoint PK0(curve);
                 EccBrick bg(g);
@@ -96,7 +94,7 @@ namespace osuCrypto
                 PK_sigma.reserve(mEnd - mStart);
                 pC.reserve(nSndVals);
 
-                for (u64 i = mStart, j = 0; i < mEnd; ++i, ++j)
+                for (uint64_t i = mStart, j = 0; i < mEnd; ++i, ++j)
                 {
                     // get a random value from Z_p
                     pK.emplace_back(curve);
@@ -132,7 +130,7 @@ namespace osuCrypto
                 auto iter = sendBuff->data() + mStart * fieldElementSize;
 
 
-                for (u64 i = mStart, j = 0; i < mEnd; ++i, ++j)
+                for (uint64_t i = mStart, j = 0; i < mEnd; ++i, ++j)
                 {
                     u8 choice = choices[i];
 
@@ -177,7 +175,7 @@ namespace osuCrypto
                 //std::unique_ptr<brickexp>bc(thrdPkGen->get_brick(pC[0]));
                 EccBrick bc(pC[0]);
 
-                for (u64 i = mStart, j = 0; i < mEnd; ++i, ++j)
+                for (uint64_t i = mStart, j = 0; i < mEnd; ++i, ++j)
                 {
                     // now compute g ^(a * k) = (g^a)^k 
 
@@ -221,10 +219,10 @@ namespace osuCrypto
         ArrayView<std::array<block, 2>> messages,
         PRNG & prng,
         Channel& socket,
-        u64 numThreads)
+        uint64_t numThreads)
     {
         // one out of nSndVals OT.
-        u64 nSndVals(2);
+        uint64_t nSndVals(2);
         auto& params = k233;
 
         //auto numThreads = (messages.size() + minMsgPerThread - 1) / minMsgPerThread;
@@ -249,7 +247,7 @@ namespace osuCrypto
 
         //std::cout << "send g " << g << std::endl;
 
-        u64 fieldElementSize = g.sizeBytes();// ->fe_byte_size();
+        uint64_t fieldElementSize = g.sizeBytes();// ->fe_byte_size();
 
 
         std::unique_ptr<ByteStream> sendBuff(new ByteStream());
@@ -266,7 +264,7 @@ namespace osuCrypto
 
         //std::cout << "send c[0] " << pC[0] << std::endl;
 
-        for (u64 u = 1; u < nSndVals; u++)
+        for (uint64_t u = 1; u < nSndVals; u++)
         {
             pC.emplace_back(curve);
             //pC[u] = mainPk->get_fe();
@@ -285,7 +283,7 @@ namespace osuCrypto
         socket.asyncSend(std::move(sendBuff));
 
 
-        for (u64 u = 1; u < nSndVals; u++)
+        for (uint64_t u = 1; u < nSndVals; u++)
             pC[u] = pC[u] * alpha;
 
 
@@ -293,7 +291,7 @@ namespace osuCrypto
         std::vector<u8> buff(fieldElementSize * messages.size());
         auto recvFuture = socket.asyncRecv(buff.data(), buff.size()).share();
 
-        for (u64 t = 0; t < numThreads; ++t)
+        for (uint64_t t = 0; t < numThreads; ++t)
         {
 
             thrds[t] = std::thread([
@@ -316,7 +314,7 @@ namespace osuCrypto
                 std::vector<EccPoint> c;
                 c.reserve(nSndVals);
 
-                for (u64 i = 0; i < nSndVals; ++i)
+                for (uint64_t i = 0; i < nSndVals; ++i)
                 {
                     c.emplace_back(curve, pC[i]);
                 }
@@ -331,7 +329,7 @@ namespace osuCrypto
 
                 recvFuture.get();
 
-                for (u64 i = 0; i < messages.size(); i++)
+                for (uint64_t i = 0; i < messages.size(); i++)
                 {
 
                     pPK0.fromBytes(buff.data() + i * fieldElementSize);
@@ -357,7 +355,7 @@ namespace osuCrypto
                     //    << "for msg " << i << ", 0  (sender)" << std::endl
                     //    << "  PK0^a:    " << PK0a << std::endl;
 
-                    for (u64 u = 1; u < nSndVals; u++)
+                    for (uint64_t u = 1; u < nSndVals; u++)
                     {
                         fetmp = c[u] - PK0a;// ->set_div(pC[u], PK0a.get());
                         fetmp.toBytes(hashInBuff.data());

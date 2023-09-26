@@ -37,10 +37,10 @@ namespace osuCrypto
 	}
 
 
-	u64 SimpleHasher1::maxRealBinSize() {
+	uint64_t SimpleHasher1::maxRealBinSize() {
 	
-		u64 rs=0;
-		for (u64 i = 0; i < mBins.size(); ++i)
+		uint64_t rs=0;
+		for (uint64_t i = 0; i < mBins.size(); ++i)
 		{
 			if (mBins[i].mIdx.size() > 0)
 			{
@@ -50,9 +50,9 @@ namespace osuCrypto
 		}
 		
 		realBinSizeCount1.resize(32);
-		for (u64 i = 0; i < mBinCount[0]; ++i)
+		for (uint64_t i = 0; i < mBinCount[0]; ++i)
 		{
-			for (u64 j = 0; j < realBinSizeCount1.size(); j++)
+			for (uint64_t j = 0; j < realBinSizeCount1.size(); j++)
 			{
 				if (mBins[i].mIdx.size() == j)
 					realBinSizeCount1[j]++;
@@ -61,9 +61,9 @@ namespace osuCrypto
 		}		
 
 		realBinSizeCount2.resize(64);
-		for (u64 i = mBinCount[0]; i < mBins.size(); ++i)
+		for (uint64_t i = mBinCount[0]; i < mBins.size(); ++i)
 		{
-			for (u64 j = 0; j < realBinSizeCount2.size(); j++)
+			for (uint64_t j = 0; j < realBinSizeCount2.size(); j++)
 			{
 				if (mBins[i].mIdx.size() == j)
 					realBinSizeCount2[j]++;
@@ -74,16 +74,16 @@ namespace osuCrypto
 		return rs;
 	}
 
-	void SimpleHasher1::print(u64 IdxP, bool isIdx, bool isOPRF, 
-		bool isMap, bool isPos, u64 opt) const
+	void SimpleHasher1::print(uint64_t IdxP, bool isIdx, bool isOPRF, 
+		bool isMap, bool isPos, uint64_t opt) const
 	{
 
 		std::cout << IoStream::lock;
 		int cnt = 0;
 		//std::cout << "SimpleHasher1  " << std::endl;
 		Log::out << "SimpleHasher1  " << Log::endl;
-		//for (u64 i = 0; i < 10; ++i)
-		for (u64 i = 0; i < mBins.size(); ++i)
+		//for (uint64_t i = 0; i < 10; ++i)
+		for (uint64_t i = 0; i < mBins.size(); ++i)
 		{
 			//std::cout << "Bin #" << i << std::endl;
 			Log::out << "Bin #" << i << ": " << Log::endl;
@@ -119,14 +119,14 @@ namespace osuCrypto
 				{
 					if (isPos) {
 						Log::out << "    c_Pos= ";
-						for (u64 j = 0; j < mBins[i].mBits[IdxP].mPos.size(); j++)
+						for (uint64_t j = 0; j < mBins[i].mBits[IdxP].mPos.size(); j++)
 						{
 							Log::out << static_cast<int16_t>(mBins[i].mBits[IdxP].mPos[j]) << " ";
 						}
 						Log::out << Log::endl;
 					}
 
-					for (u64 j = 0; j < mBins[i].mIdx.size(); ++j)
+					for (uint64_t j = 0; j < mBins[i].mIdx.size(); ++j)
 					{
 						if (isIdx)
 							
@@ -161,12 +161,12 @@ namespace osuCrypto
 		std::cout << IoStream::unlock;
 	}
 
-	double maxprob1(u64 balls, u64 bins, u64 k)
+	double maxprob1(uint64_t balls, uint64_t bins, uint64_t k)
 	{
 		return std::log(bins * std::pow(balls * exp(1) / (bins * k), k)) / std::log(2);
 	}
 
-	void SimpleHasher1::init(u64 n,u64 opt)
+	void SimpleHasher1::init(uint64_t n,uint64_t opt)
 	{	
 		mN = n;
 
@@ -212,10 +212,10 @@ namespace osuCrypto
 //		mInputBitSize = numBits;
 
 #if 0
-		for (u64 maxBin = 15; maxBin < 64; maxBin++)
+		for (uint64_t maxBin = 15; maxBin < 64; maxBin++)
 		{
-			u64 binsHigh = n * 2;
-			u64 binsLow = 1;
+			uint64_t binsHigh = n * 2;
+			uint64_t binsLow = 1;
 			// finds the min number of bins needed to get max occ. to be maxBin
 
 			if (-maxprob1(n, binsHigh, maxBin) < secParam)
@@ -239,9 +239,9 @@ namespace osuCrypto
 				}
 			}
 
-			u64 bins = binsHigh;
+			uint64_t bins = binsHigh;
 
-			u64 logBinCount = (u64)std::log2(bins);
+			uint64_t logBinCount = (uint64_t)std::log2(bins);
 
 			double total = bins*(double)maxBin * (double)maxBin * ((double)mInputBitSize - logBinCount);
 
@@ -261,13 +261,13 @@ namespace osuCrypto
 
 	}
 	
-	void SimpleHasher1::insertBatch(ArrayView<u64> inputIdxs, MatrixView<u64> hashs)
+	void SimpleHasher1::insertBatch(ArrayView<uint64_t> inputIdxs, MatrixView<uint64_t> hashs)
 	{
-		for (u64 j = 0; j < inputIdxs.size(); ++j)
+		for (uint64_t j = 0; j < inputIdxs.size(); ++j)
 		{
-			for (u64 k = 0; k < mNumHashes[0]; ++k)
+			for (uint64_t k = 0; k < mNumHashes[0]; ++k)
 			{
-				u64 addr = *(u64*)&hashs[j][k] % mBinCount[0];
+				uint64_t addr = *(uint64_t*)&hashs[j][k] % mBinCount[0];
 				//if(addr==0)
 				//	std::cout << "----"<<inputIdxs[j] <<"-" << addr << std::endl;
 
@@ -282,9 +282,9 @@ namespace osuCrypto
 				}
 			}
 
-			for (u64 k = 0; k < mNumHashes[1]; ++k)
+			for (uint64_t k = 0; k < mNumHashes[1]; ++k)
 			{
-				u64 addrStash = *(u64*)&hashs[j][k] % mBinCount[1] + mBinCount[0];
+				uint64_t addrStash = *(uint64_t*)&hashs[j][k] % mBinCount[1] + mBinCount[0];
 
 				std::lock_guard<std::mutex> lock(mMtx[addrStash]);
 				if (std::find(mBins[addrStash].mIdx.begin(), mBins[addrStash].mIdx.end(), inputIdxs[j])

@@ -33,7 +33,7 @@ namespace osuCrypto
         MatrixView<block> mT0;
         MatrixView<block> mT1;
         MatrixView<block> mW;
-        u64 mCorrectionIdx;
+        uint64_t mCorrectionIdx;
 
 #ifndef NDEBUG
         std::vector<u8> mEncodeFlags;
@@ -43,25 +43,25 @@ namespace osuCrypto
             ArrayView<std::array<block, 2>> baseRecvOts) override;
 
 
-        void init(u64 numOtExt) override;
+        void init(uint64_t numOtExt) override;
 
 
         std::unique_ptr<NcoOtExtReceiver> split() override;
 
         void encode(
-            u64 otIdx,
+            uint64_t otIdx,
             const ArrayView<block> inputword,
             block& val) override;
 
-        void zeroEncode(u64 otIdx) override;
+        void zeroEncode(uint64_t otIdx) override;
 
         void getParams(
             bool maliciousSecure,
-            u64 compSecParm, u64 statSecParam, u64 inputBitCount, u64 inputCount,
-            u64& inputBlkSize, u64& baseOtCount) override;
+            uint64_t compSecParm, uint64_t statSecParam, uint64_t inputBitCount, uint64_t inputCount,
+            uint64_t& inputBlkSize, uint64_t& baseOtCount) override;
 
 
-        void sendCorrection(Channel& chl, u64 sendCount) override;
+        void sendCorrection(Channel& chl, uint64_t sendCount) override;
 
         void check(Channel& chl) override;
     };

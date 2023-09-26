@@ -30,12 +30,12 @@ namespace osuCrypto
 		~BitPosition();
 
 
-		u64 mRealBitSize, mMaxBitSize, mNumTrial;
+		uint64_t mRealBitSize, mMaxBitSize, mNumTrial;
 		std::vector<u8> mPos; //key: bit location; value: index of 
 		std::vector<u8> mMaps;
 
 		void print() const;
-		void init(/*u64 numRealCodeWord,*/ u64 numMaxBitSize);
+		void init(/*uint64_t numRealCodeWord,*/ uint64_t numMaxBitSize);
 		bool getMasks(std::vector<block>& codeword);
 		void getMask(block& codeword, u8& mask);
 		void getPosHelper(std::vector<block>& codewords, int length);
@@ -61,9 +61,9 @@ namespace osuCrypto
 
 
 		NTL::GF2X mGf2x;
-		u64 mNumBytes;
+		uint64_t mNumBytes;
 
-		void poly_init(u64 numBytes);
+		void poly_init(uint64_t numBytes);
 
 		//void findPos(std::vector<block>& codewords);
 		//int isSet(block& codeword, int pos);
@@ -71,12 +71,12 @@ namespace osuCrypto
 		//bool TestBitN(__m128i value, int N);
 
 		//#################POLYNOMIAL
-		void GF2EFromBlock(NTL::GF2E &element, block& blk, u64 size);
-		void BlockFromGF2E(block& blk, NTL::GF2E & element, u64 size);
+		void GF2EFromBlock(NTL::GF2E &element, block& blk, uint64_t size);
+		void BlockFromGF2E(block& blk, NTL::GF2E & element, uint64_t size);
 		//computes coefficients (in blocks) of f such that f(x[i]) = y[i]
 		void getBlkCoefficients(NTL::vec_GF2E& setX, NTL::vec_GF2E& setY, std::vector<block>& coeffs);
 
-		void getBlkCoefficients(u64 degree, std::vector<block>& setX, std::vector<block>& setY, std::vector<block>& coeffs);
+		void getBlkCoefficients(uint64_t degree, std::vector<block>& setX, std::vector<block>& setY, std::vector<block>& coeffs);
 		//compute y=f(x) giving coefficients (in block)
 		void evalPolynomial(std::vector<block>& coeffs, block& x, block& y);
 		NTL::GF2EX buildPolynomial(std::vector<block>& coeffs);

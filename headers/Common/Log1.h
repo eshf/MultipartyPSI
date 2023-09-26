@@ -47,7 +47,7 @@ namespace osuCrypto
 
 	//class LoggerThreadInfo
 	//{
-	//	u64 mThreadID;
+	//	uint64_t mThreadID;
 	//	std::string mName;
 	//	std::list<std::pair<u32, std::stringstream>>* mBuffer;
 	//};

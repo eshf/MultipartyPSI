@@ -214,7 +214,7 @@ namespace osuCrypto {
         {
             std::stringstream out;
             out << "MAX_MOD_SZ too small for desired bit length of p, "
-                << "must be at least ceil(len(p)/len(u64))+1, "
+                << "must be at least ceil(len(p)/len(uint64_t))+1, "
                 << "in this case: " << len;
             return out.str().c_str();
         }

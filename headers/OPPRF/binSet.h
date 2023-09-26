@@ -12,12 +12,12 @@ namespace osuCrypto
 	//struct BFParam
 	//{
 	//	double mBinScaler[2]; //first index is for init step, 2nd index for stash step
-	//	u64 mNumHashes[2];
-	//	u64 mSenderBinSize[2];
+	//	uint64_t mNumHashes[2];
+	//	uint64_t mSenderBinSize[2];
 	//	/*
 	//	double mBinStashScaler;
-	//	u64 mNumStashHashes;
-	//	u64 mSenderBinStashSize;*/
+	//	uint64_t mNumStashHashes;
+	//	uint64_t mSenderBinStashSize;*/
 	//};
 
     class binSet
@@ -27,10 +27,10 @@ namespace osuCrypto
         ~binSet();
 		
 
-        u64 mN, mParties, mMyIdx, mStatSecParam, mNcoInputBlkSize;// , mOtMsgBlkSize;
+        uint64_t mN, mParties, mMyIdx, mStatSecParam, mNcoInputBlkSize;// , mOtMsgBlkSize;
         block mHashingSeed;
-		u64 mMaskSize;
-		u64 mOpt;
+		uint64_t mMaskSize;
+		uint64_t mOpt;
 
 		std::vector<std::vector<block>> mNcoInputBuff; //hash(x)
 
@@ -42,7 +42,7 @@ namespace osuCrypto
 		SimpleHasher1 mSimpleBins;
       
 
-		void init(u64 myIdx, u64 nParties, u64 setSize, u64 statSecParam, u64 opt);
+		void init(uint64_t myIdx, uint64_t nParties, uint64_t setSize, uint64_t statSecParam, uint64_t opt);
 
 		void hashing2Bins(std::vector<block>& inputs, int numThreads);
     };

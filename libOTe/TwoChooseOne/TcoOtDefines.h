@@ -6,6 +6,6 @@
 
 namespace osuCrypto
 { 
-    static const u64 commStepSize(512);
-    static const u64 superBlkSize(8);
+    static const uint64_t commStepSize(512);
+    static const uint64_t superBlkSize(8);
 }

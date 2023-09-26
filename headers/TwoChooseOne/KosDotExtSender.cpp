@@ -22,7 +22,7 @@ namespace osuCrypto
 
         std::vector<block> baseRecvOts(mGens.size());
 
-        for (u64 i = 0; i < mGens.size(); ++i)
+        for (uint64_t i = 0; i < mGens.size(); ++i)
         {
             baseRecvOts[i] = mGens[i].get<block>();
         }
@@ -44,13 +44,13 @@ namespace osuCrypto
 
         mBaseChoiceBits.resize(roundUpTo(mBaseChoiceBits.size(), 8));
 
-        for (u64 i = mBaseChoiceBits.size() - 1; i >= choices.size(); --i)
+        for (uint64_t i = mBaseChoiceBits.size() - 1; i >= choices.size(); --i)
         {
             mBaseChoiceBits[i] = 0;
         }
         mBaseChoiceBits.resize(choices.size());
 
-        for (u64 i = 0; i < mGens.size(); i++)
+        for (uint64_t i = 0; i < mGens.size(); i++)
         {
             mGens[i].SetSeed(baseRecvOts[i]);
         }
@@ -62,9 +62,9 @@ namespace osuCrypto
         Channel& chl)
     {
         // round up 
-        u64 numOtExt = roundUpTo(messages.size(), 128);
-        u64 numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
-        //u64 numBlocks = numSuperBlocks * superBlkSize;
+        uint64_t numOtExt = roundUpTo(messages.size(), 128);
+        uint64_t numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
+        //uint64_t numBlocks = numSuperBlocks * superBlkSize;
 
         // a temp that will be used to transpose the sender's matrix
         std::array<std::array<block, superBlkSize>, 128> t;
@@ -78,7 +78,7 @@ namespace osuCrypto
         
 
 
-        for (u64 i = 0; i < choiceMask.size(); ++i)
+        for (uint64_t i = 0; i < choiceMask.size(); ++i)
         {
             if (mBaseChoiceBits[i]) choiceMask[i] = AllOneBlock;
             else choiceMask[i] = ZeroBlock;
@@ -101,7 +101,7 @@ namespace osuCrypto
         block * uIter = (block*)u.data() + superBlkSize * mGens.size()  * commStepSize;
         block * uEnd = uIter;
 
-        u64 colStepCount = (mGens.size() + 127) / 128;
+        uint64_t colStepCount = (mGens.size() + 127) / 128;
 
         // we assume we have the number of columns of between 129 and 256...
         if (colStepCount > 2)
@@ -109,13 +109,13 @@ namespace osuCrypto
 
 
 
-        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
 
 
             if (uIter == uEnd)
             {
-                u64 step = std::min(numSuperBlocks - superBlkIdx,(u64) commStepSize);
+                uint64_t step = std::min(numSuperBlocks - superBlkIdx,(uint64_t) commStepSize);
                 chl.recv(u.data(), step * superBlkSize * mGens.size() * sizeof(block));
                 uIter = (block*)u.data();
             }
@@ -123,17 +123,17 @@ namespace osuCrypto
 
             block * cIter = choiceMask.data();
 
-            for (u64 colStepIdx = 0; colStepIdx < 2; ++colStepIdx)
+            for (uint64_t colStepIdx = 0; colStepIdx < 2; ++colStepIdx)
             {
                 block * tIter = (block*)t.data();
                 memset(t.data(), 0, superBlkSize * 128 * sizeof(block));
 
 
 
-                u64 colStop = std::min((colStepIdx + 1) * 128, mGens.size());
+                uint64_t colStop = std::min((colStepIdx + 1) * 128, mGens.size());
 
                 // transpose 128 columns at at time. Each column will be 128 * superBlkSize = 1024 bits long.
-                for (u64 colIdx = colStepIdx * 128; colIdx < colStop; ++colIdx)
+                for (uint64_t colIdx = colStepIdx * 128; colIdx < colStop; ++colIdx)
                 {
                     // generate the columns using AES-NI in counter mode.
                     mGens[colIdx].mAes.ecbEncCounterMode(mGens[colIdx].mBlockIdx, superBlkSize, tIter);
@@ -176,7 +176,7 @@ namespace osuCrypto
                 std::array<block, 2>* mEnd = std::min(mIter + 128 * superBlkSize, (std::array<block, 2>*)messages.end());
 
                 // compute how many rows are unused.
-                u64 unusedCount = (mIter + 128 * superBlkSize) - mEnd;
+                uint64_t unusedCount = (mIter + 128 * superBlkSize) - mEnd;
 
 
                 // compute the begin and end index of the extra rows that 
@@ -231,7 +231,7 @@ namespace osuCrypto
         choices.resize(128);
         chl.recv(choices);
 
-        for (u64 i = 0; i < 128; ++i)
+        for (uint64_t i = 0; i < 128; ++i)
         {
             if (neq(xtraBlk[i] , choices[i] ? extraBlocks[i] ^ delta : extraBlocks[i] ))
             {
@@ -261,7 +261,7 @@ namespace osuCrypto
         std::array<block ,2>q2{ZeroBlock,ZeroBlock};
         std::array<block, 2>q1{ZeroBlock,ZeroBlock};
 
-        u64 doneIdx = 0;
+        uint64_t doneIdx = 0;
 
         std::array<block, 128> challenges;
 
@@ -269,13 +269,13 @@ namespace osuCrypto
 
 
 
-        u64 bb = (messages.size() + 127) / 128;
-        for (u64 blockIdx = 0; blockIdx < bb; ++blockIdx)
+        uint64_t bb = (messages.size() + 127) / 128;
+        for (uint64_t blockIdx = 0; blockIdx < bb; ++blockIdx)
         {
             commonPrng.mAes.ecbEncCounterMode(doneIdx, 128, challenges.data());
-            u64 stop = std::min(messages.size(), doneIdx + 128);
+            uint64_t stop = std::min(messages.size(), doneIdx + 128);
 
-            for (u64 i = 0, dd = doneIdx; dd < stop; ++dd, ++i)
+            for (uint64_t i = 0, dd = doneIdx; dd < stop; ++dd, ++i)
             {
 
                 mul128(messages[dd][0], challenges[i], qi, qi2);

@@ -9,7 +9,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Acknowledgements: Thanks to Markus Schoepflin for helping to track down
-// a tricky formatting bug on HP Tru64, and to Steven Watanabe for suggesting
+// a tricky formatting bug on HP Truint64_t, and to Steven Watanabe for suggesting
 // the fix.
 
 #ifndef BOOST_XPRESSIVE_MATCH_RESULTS_HPP_EAN_10_04_2005

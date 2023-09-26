@@ -135,17 +135,17 @@ namespace osuCrypto {
         friend class PRNG;
 
     public: 
-        ByteStream(u64 size = 0);
+        ByteStream(uint64_t size = 0);
         ByteStream(const ByteStream& os);
-        ByteStream(const u8* data, u64 length);
+        ByteStream(const u8* data, uint64_t length);
 
         ~ByteStream() { delete[] mData; }
          
         /// <summary>The size of the unconsumed steam/data.</summary>
-        u64 size() const { return tellp() - tellg(); }
+        uint64_t size() const { return tellp() - tellg(); }
 
         /// <summary>The capacity of the container.</summary>
-        u64 capacity() const { return mCapacity; }
+        uint64_t capacity() const { return mCapacity; }
 
         /// <summary>The location of the data.</summary>
         u8* data() const { return mData; }
@@ -157,30 +157,30 @@ namespace osuCrypto {
         u8* end() const { return mData + tellp(); }
 
         /// <summary>Returns the offset of where data will be PUT in the stream.</summary>
-        u64 tellp() const;
+        uint64_t tellp() const;
 
         /// <summary>Sets the offset of where data will be PUT in the stream.</summary>
-        void setp(u64 loc);
+        void setp(uint64_t loc);
 
         /// <summary>Returns the offset of where data will be GET in the stream.</summary>
-        u64 tellg()const;
+        uint64_t tellg()const;
 
         /// <summary>Sets the offset of where data will be GET in the stream.</summary>
-        void setg(u64 loc);
+        void setg(uint64_t loc);
 
         /// <summary>Grows the size of the underlying container to fit length bytes</summary>
-        void reserve(u64 length);
+        void reserve(uint64_t length);
         
-        void resize(u64 size);
+        void resize(uint64_t size);
 
         /// <summary>Copies length bytes starting at data to the end of the container tellp().</summary>
-        void append(const u8* data, const u64 length);
+        void append(const u8* data, const uint64_t length);
 
         /// <summary>Copies the next length bytes starting at data() + tellg()  to dest</summary>
-        void consume(u8* dest, const u64 length);
+        void consume(u8* dest, const uint64_t length);
 
         void append(const block& b);
-        //void append(const blockRIOT& b, const u64 length);
+        //void append(const blockRIOT& b, const uint64_t length);
         void append(const Commit& b);
 
         ByteStream& operator=(const ByteStream& os);
@@ -198,19 +198,19 @@ namespace osuCrypto {
 
 
         template<class T>
-        MatrixView<T> getMatrixView(u64 columnSize) const;
+        MatrixView<T> getMatrixView(uint64_t columnSize) const;
 
 
         BitIterator bitIterBegin() const;
 
     protected:
         u8* ChannelBufferData() const override { return begin(); }
-        u64 ChannelBufferSize() const override { return size(); };
-        void ChannelBufferResize(u64 length) override;
+        uint64_t ChannelBufferSize() const override { return size(); };
+        void ChannelBufferResize(uint64_t length) override;
 
     private:
 
-        u64 mPutHead, mCapacity, mGetHead;
+        uint64_t mPutHead, mCapacity, mGetHead;
         u8 *mData;
     };
     typedef ByteStream Buff;
@@ -234,9 +234,9 @@ namespace osuCrypto {
         return ArrayView<T>((T*)mData, (T*)mData + (mPutHead / sizeof(T)), false);
     }
     template<class T>
-    inline MatrixView<T> ByteStream::getMatrixView(u64 columnSize) const
+    inline MatrixView<T> ByteStream::getMatrixView(uint64_t columnSize) const
     {
-        u64 numRows = mPutHead / (columnSize * sizeof(T));
+        uint64_t numRows = mPutHead / (columnSize * sizeof(T));
         return MatrixView<T>((T*)mData, numRows, columnSize, false);
     }
 }

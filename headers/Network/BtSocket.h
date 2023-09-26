@@ -76,7 +76,7 @@ namespace osuCrypto {
         std::deque<BoostIOOperation> mSendQueue, mRecvQueue;
         bool mStopped;
 
-        std::atomic<u64> mOutstandingSendData, mMaxOutstandingSendData, mTotalSentData, mTotalRecvData;
+        std::atomic<uint64_t> mOutstandingSendData, mMaxOutstandingSendData, mTotalSentData, mTotalRecvData;
     };
 
     inline BtSocket::BtSocket(BtIOService& ios) :

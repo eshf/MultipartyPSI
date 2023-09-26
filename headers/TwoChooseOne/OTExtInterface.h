@@ -15,7 +15,7 @@ namespace osuCrypto
 
     // The hard coded number of base OT that is expected by the OT Extension implementations.
     // This can be changed if the code is adequately adapted. 
-    const u64 gOtExtBaseOtCount(128);
+    const uint64_t gOtExtBaseOtCount(128);
     
     class OtReceiver
     {

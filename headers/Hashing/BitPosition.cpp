@@ -63,7 +63,7 @@ namespace osuCrypto
 		}
 
 	}
-	void BitPosition::init(/*u64 numRealCodeWord,*/ u64 numMaxBitSize)
+	void BitPosition::init(/*uint64_t numRealCodeWord,*/ uint64_t numMaxBitSize)
 	{
 		/*mRealBitSize= std::floor(std::log2(numRealCodeWord)) + 1;*/
 		mMaxBitSize = numMaxBitSize;
@@ -227,7 +227,7 @@ namespace osuCrypto
 			block diff = codewords[0] ^ codewords[1];
 			while (!isFind)
 			{
-				u64 rand = std::rand() % length;
+				uint64_t rand = std::rand() % length;
 				if (TestBitN(diff, rand))
 				{
 					mPos.push_back(rand);
@@ -241,7 +241,7 @@ namespace osuCrypto
 			block diff = codewords[0] ^ codewords[1];
 			while (!isFind)
 			{
-				u64 rand = std::rand() % length;
+				uint64_t rand = std::rand() % length;
 				if (TestBitN(diff, rand))
 				{
 					mPos.push_back(rand);
@@ -254,7 +254,7 @@ namespace osuCrypto
 
 			while (!isFind)
 			{
-				u64 rand = std::rand() % length;
+				uint64_t rand = std::rand() % length;
 				if (TestBitN(diff, rand) == false && TestBitN(diff2, rand) == true)
 				{
 					if (std::find(mPos.begin(), mPos.end(), rand) == mPos.end())
@@ -277,7 +277,7 @@ namespace osuCrypto
 			if (codewords.size() % 2 == 1)
 				diff.push_back(codewords[codewords.size() - 1]);
 
-			u64 sizeDiff = diff.size();
+			uint64_t sizeDiff = diff.size();
 
 			while (!isFind)
 			{
@@ -289,8 +289,8 @@ namespace osuCrypto
 					bool isRand = true;
 					while (isRand)
 					{
-						u64 rIdx = std::rand() % length;
-						u64 rDiffIdx = std::rand() % sizeDiff;
+						uint64_t rIdx = std::rand() % length;
+						uint64_t rDiffIdx = std::rand() % sizeDiff;
 						if (TestBitN(diff[rDiffIdx], rIdx))
 							if (std::find(mPos.begin(), mPos.end(), rIdx) == mPos.end())
 							{
@@ -330,7 +330,7 @@ namespace osuCrypto
 	{
 		while (mPos.size()<mMaxBitSize)
 		{
-			u64 rand = std::rand() % 128; //choose randome bit location
+			uint64_t rand = std::rand() % 128; //choose randome bit location
 			if (std::find(mPos.begin(), mPos.end(), rand) == mPos.end())
 			{
 				mPos.push_back(rand);
@@ -342,7 +342,7 @@ namespace osuCrypto
 
 	//#################POLYNOMIAL
 
-	void BaseOPPRF::poly_init(u64 numBytes) {
+	void BaseOPPRF::poly_init(uint64_t numBytes) {
 		mGf2x.~GF2X();
 		mNumBytes = numBytes;
 		NTL::BuildIrred(mGf2x, numBytes * 8);
@@ -354,7 +354,7 @@ namespace osuCrypto
 	mGf2x.~GF2X();
 	}*/
 
-	void BaseOPPRF::GF2EFromBlock(NTL::GF2E &element, block& blk, u64 size) {
+	void BaseOPPRF::GF2EFromBlock(NTL::GF2E &element, block& blk, uint64_t size) {
 
 		//NTL::GF2X x1;
 
@@ -369,7 +369,7 @@ namespace osuCrypto
 
 	}
 
-	void BaseOPPRF::BlockFromGF2E(block& blk, NTL::GF2E & element, u64 size) {
+	void BaseOPPRF::BlockFromGF2E(block& blk, NTL::GF2E & element, uint64_t size) {
 
 
 		//Get the bytes of the random element.
@@ -398,7 +398,7 @@ namespace osuCrypto
 	}
 
 
-	void BaseOPPRF::getBlkCoefficients(u64 degree, std::vector<block>& setX, std::vector<block>& setY, std::vector<block>& coeffs)
+	void BaseOPPRF::getBlkCoefficients(uint64_t degree, std::vector<block>& setX, std::vector<block>& setY, std::vector<block>& coeffs)
 	{
 		NTL::vec_GF2E x; NTL::vec_GF2E y;
 		NTL::GF2E e;
@@ -406,7 +406,7 @@ namespace osuCrypto
 		//Log::out << "-----Poly------" << Log::endl;
 
 
-		for (u64 i = 0; i < setX.size(); ++i)
+		for (uint64_t i = 0; i < setX.size(); ++i)
 		{
 			//	Log::out << "setX["<<i<<"]: " << setX[i] << Log::endl;
 			//	Log::out << "setY[" << i << "]: " << setX[i] << Log::endl;
@@ -435,7 +435,7 @@ namespace osuCrypto
 
 
 		NTL::GF2EX dummy_polynomial;
-		/*for (u64 i = setX.size(); i < degree-1; ++i)
+		/*for (uint64_t i = setX.size(); i < degree-1; ++i)
 		{
 		NTL::random(e);
 		x.append(e);
@@ -447,7 +447,7 @@ namespace osuCrypto
 
 		//NTL::BuildFromRoots(dummy_polynomial, x);
 
-		//for (u64 i = 0; i < setX.size(); ++i)
+		//for (uint64_t i = 0; i < setX.size(); ++i)
 		//{
 		//	NTL::GF2E e1 = NTL::eval(d_polynomial, x[i]); //get y=f(x) in GF2E
 		//	if (e1 != 0)
@@ -466,7 +466,7 @@ namespace osuCrypto
 		//	dummy_polynomial.~GF2EX();
 		//	root_polynomial.~GF2EX();
 
-		//for (u64 i = 0; i < setX.size(); ++i)
+		//for (uint64_t i = 0; i < setX.size(); ++i)
 		//{
 		// NTL::GF2E e1 = NTL::eval(polynomial, x[i]); //get y=f(x) in GF2E
 		// if (e1 != y[i])
@@ -493,7 +493,7 @@ namespace osuCrypto
 		NTL::GF2EX res_polynomial;
 		NTL::GF2E e;
 		//std::cout << coeffs.size() << std::endl;
-		for (u64 i = 0; i < coeffs.size(); ++i)
+		for (uint64_t i = 0; i < coeffs.size(); ++i)
 		{
 			GF2EFromBlock(e, coeffs[i], mNumBytes);
 			NTL::SetCoeff(res_polynomial, i, e); //build res_polynomial
@@ -509,7 +509,7 @@ namespace osuCrypto
 		NTL::GF2EX res_polynomial;
 		NTL::GF2E e;
 		//std::cout << coeffs.size() << std::endl;
-		for (u64 i = 0; i < coeffs.size(); ++i)
+		for (uint64_t i = 0; i < coeffs.size(); ++i)
 		{
 			GF2EFromBlock(e, coeffs[i], mNumBytes);
 			NTL::SetCoeff(res_polynomial, i, e); //build res_polynomial
@@ -531,7 +531,7 @@ namespace osuCrypto
 //		mMasks.clear();
 //		for (u8 i = 0; i < mSize; i++)
 //		{
-//			u64 rand = std::rand() % 128; //choose randome bit location
+//			uint64_t rand = std::rand() % 128; //choose randome bit location
 //			ret = mPos.insert(rand);
 //			if (ret.second == false) 
 //				it = ret.first;

@@ -569,7 +569,7 @@ private:
     return vaddvq_u16(x);
 #else
     uint64x2_t t64=vpaddlq_u32(vpaddlq_u16(x));
-    return int(vgetq_lane_u64(t64,0))+int(vgetq_lane_u64(t64,1));
+    return int(vgetq_lane_uint64_t(t64,0))+int(vgetq_lane_uint64_t(t64,1));
 #endif
   }
 

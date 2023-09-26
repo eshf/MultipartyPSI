@@ -99,7 +99,7 @@ namespace osuCrypto {
     {
 
         T* mData;
-        u64 mSize;
+        uint64_t mSize;
         bool mOwner;
     public:
 
@@ -128,13 +128,13 @@ namespace osuCrypto {
             av.mOwner = false;
         }
 
-        ArrayView(u64 size) :
+        ArrayView(uint64_t size) :
             mData(new T[size]),
             mSize(size),
             mOwner(true)
         { }
 
-        ArrayView(T* data, u64 size, bool owner = false) :
+        ArrayView(T* data, uint64_t size, bool owner = false) :
             mData(data),
             mSize(size),
             mOwner(owner)
@@ -203,7 +203,7 @@ namespace osuCrypto {
         }
 
 
-        u64 size() const { return mSize; }
+        uint64_t size() const { return mSize; }
 
         T* data() const { return mData; };
 
@@ -226,7 +226,7 @@ namespace osuCrypto {
 #endif
 
         //T& operator[](int idx) { if (idx >= mSize) throw std::runtime_error(LOCATION); return mData[idx]; }
-        inline T& operator[](u64 idx) const
+        inline T& operator[](uint64_t idx) const
         {
 #ifndef NDEBUG
             if (idx >= mSize) throw std::runtime_error(LOCATION);
@@ -237,7 +237,7 @@ namespace osuCrypto {
     };
 
     template<typename T>
-    ArrayView<T> makeArrayView(T* data, u64 size)
+    ArrayView<T> makeArrayView(T* data, uint64_t size)
     {
         return ArrayView<T>(data, size);
     }

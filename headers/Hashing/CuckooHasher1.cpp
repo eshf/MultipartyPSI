@@ -11,12 +11,12 @@ namespace osuCrypto
 
     // parameters for k=2 hash functions, 2^n items, and statistical security 40
 	//double mBinScaler;
-	//u64 mNumHashes;
-	//u64 mSenderBinSize;
+	//uint64_t mNumHashes;
+	//uint64_t mSenderBinSize;
 
 	//double mBinStashScaler;
-	//u64 mNumStashHashes;
-	//u64 mSenderBinStashSize;
+	//uint64_t mNumStashHashes;
+	//uint64_t mSenderBinStashSize;
 
     CuckooParam1 k2n24s40CuckooParam1
 	{ { 1.11,0.17 },{ 3,2 },{ 31,63 } };
@@ -55,7 +55,7 @@ namespace osuCrypto
 
 
 
-        for (u64 i = 0; i < mBins.size(); ++i)
+        for (uint64_t i = 0; i < mBins.size(); ++i)
         {
             if (mBins[i].mVal != cmp.mBins[i].mVal)
             {
@@ -63,7 +63,7 @@ namespace osuCrypto
             }
         }
 
-        for (u64 i = 0; i < mStashBins.size(); ++i)
+        for (uint64_t i = 0; i < mStashBins.size(); ++i)
         {
             if (mStashBins[i].mVal != cmp.mStashBins[i].mVal)
             {
@@ -79,14 +79,14 @@ namespace osuCrypto
         return !(*this == cmp);
     }
 
-    void CuckooHasher1::print(u64 IdxP, bool isIdx, bool isOPRF, bool isMap) const
+    void CuckooHasher1::print(uint64_t IdxP, bool isIdx, bool isOPRF, bool isMap) const
     {
 		std::cout << IoStream::lock;
 		//std::cout << "Cuckoo Hasher  " << std::endl;
 		Log::out << "Cuckoo Hasher  " << Log::endl;
 
-		// for (u64 i = 0; i < 10; ++i)
-        for (u64 i = 0; i < mBins.size(); ++i)
+		// for (uint64_t i = 0; i < 10; ++i)
+        for (uint64_t i = 0; i < mBins.size(); ++i)
         {
 			//Log::out << " contains 0 elements\n";
           //  std::cout << "Bin #" << i;
@@ -116,9 +116,9 @@ namespace osuCrypto
             }
 
         }
-	//	 for (u64 i = 0; i < 0 && mStash[i].isEmpty() == false; ++i)
-			 for (u64 i = 0; i < mStashBins.size() && mStashBins[i].isEmpty() == false; ++i)
-				 //for (u64 i = 0; i < mStashBins.size() ; ++i)
+	//	 for (uint64_t i = 0; i < 0 && mStash[i].isEmpty() == false; ++i)
+			 for (uint64_t i = 0; i < mStashBins.size() && mStashBins[i].isEmpty() == false; ++i)
+				 //for (uint64_t i = 0; i < mStashBins.size() ; ++i)
         {
             //std::cout << "Bin #" << i;
 			Log::out << "SBin #" << i;
@@ -144,7 +144,7 @@ namespace osuCrypto
 
     }
 
-    void CuckooHasher1::init(u64 n,u64 opt)
+    void CuckooHasher1::init(uint64_t n,uint64_t opt)
     {
 
        // if (statSecParam != 40) throw std::runtime_error("not implemented");
@@ -173,11 +173,11 @@ namespace osuCrypto
 				mParams.mSenderBinSize[1] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[1])));;
 			}
 
-        mHashes.resize(n * mParams.mNumHashes[0], u64(-1));
-        mHashesView = MatrixView<u64>(mHashes.begin(), mHashes.end(), mParams.mNumHashes[0]);
+        mHashes.resize(n * mParams.mNumHashes[0], uint64_t(-1));
+        mHashesView = MatrixView<uint64_t>(mHashes.begin(), mHashes.end(), mParams.mNumHashes[0]);
 
-		mStashHashes.resize(n * mParams.mNumHashes[1], u64(-1));
-		mStashHashesView = MatrixView<u64>(mStashHashes.begin(), mStashHashes.end(), mParams.mNumHashes[1]);
+		mStashHashes.resize(n * mParams.mNumHashes[1], uint64_t(-1));
+		mStashHashesView = MatrixView<uint64_t>(mStashHashes.begin(), mStashHashes.end(), mParams.mNumHashes[1]);
 
 		mBinCount[0] = (mParams.mBinScaler[0] ) * n;
 		mBinCount[1] = ( mParams.mBinScaler[1]) * n;
@@ -186,26 +186,26 @@ namespace osuCrypto
 			
     }
 
-    void CuckooHasher1::insert(u64 inputIdx, ArrayView<u64> hashs)
+    void CuckooHasher1::insert(uint64_t inputIdx, ArrayView<uint64_t> hashs)
     {
         if (mHashesView[inputIdx][0] != -1)
         {
             throw std::runtime_error("");
         }
 
-        memcpy(mHashesView[inputIdx].data(), hashs.data(), sizeof(u64) * mParams.mNumHashes[0]);
+        memcpy(mHashesView[inputIdx].data(), hashs.data(), sizeof(uint64_t) * mParams.mNumHashes[0]);
 
         insertHelper(inputIdx, 0, 0);
     }
 
     void CuckooHasher1::insertBatch(
-        ArrayView<u64> inputIdxs,
-        MatrixView<u64> hashs,
+        ArrayView<uint64_t> inputIdxs,
+        MatrixView<uint64_t> hashs,
         Workspace& w)
     {
-        u64 width = mHashesView.size()[1];
-        u64 remaining = inputIdxs.size();
-        u64 tryCount = 0;
+        uint64_t width = mHashesView.size()[1];
+        uint64_t remaining = inputIdxs.size();
+        uint64_t tryCount = 0;
 
 #ifndef  NDEBUG
         if (hashs.size()[1] != width)
@@ -213,9 +213,9 @@ namespace osuCrypto
 #endif // ! NDEBUG
 
 
-        for (u64 i = 0; i < inputIdxs.size(); ++i)
+        for (uint64_t i = 0; i < inputIdxs.size(); ++i)
         {
-            for (u64 j = 0; j < mParams.mNumHashes[0]; ++j)
+            for (uint64_t j = 0; j < mParams.mNumHashes[0]; ++j)
             {
                 //mHashesView[inputIdxs[i]][j] = hashs[i][j];
                 (mHashesView.data() + inputIdxs[i] * width)[j] = (hashs.data() + i * width)[j];
@@ -229,16 +229,16 @@ namespace osuCrypto
 
             // this data fetch can be slow (after the first loop). 
             // As such, lets do several fetches in parallel.
-            for (u64 i = 0; i < remaining; ++i)
+            for (uint64_t i = 0; i < remaining; ++i)
             {
                 //w.curAddrs[i] = mHashesView[inputIdxs[i]][w.curHashIdxs[i]] % mBins.size();
                 w.curAddrs[i] = (mHashesView.data() + inputIdxs[i] * width)[w.curHashIdxs[i]] % mBinCount[0];
             }
 
             // same thing here, this fetch is slow. Do them in parallel.
-            for (u64 i = 0; i < remaining; ++i)
+            for (uint64_t i = 0; i < remaining; ++i)
             {
-                u64 newVal = inputIdxs[i] | (w.curHashIdxs[i] << 56);
+                uint64_t newVal = inputIdxs[i] | (w.curHashIdxs[i] << 56);
 #ifdef THREAD_SAFE_CUCKOO
                 w.oldVals[i] = mBins[w.curAddrs[i]].mVal.exchange(newVal, std::memory_order_relaxed);
 #else
@@ -252,10 +252,10 @@ namespace osuCrypto
             //     |XW__Y____Z __|
             // For X and W, which failed to be placed, lets write over them
             // with the vaues that they evicted.
-            u64 putIdx = 0, getIdx = 0;
-            while (putIdx < remaining && w.oldVals[putIdx] != u64(-1))
+            uint64_t putIdx = 0, getIdx = 0;
+            while (putIdx < remaining && w.oldVals[putIdx] != uint64_t(-1))
             {
-                inputIdxs[putIdx] = w.oldVals[putIdx] & (u64(-1) >> 8);
+                inputIdxs[putIdx] = w.oldVals[putIdx] & (uint64_t(-1) >> 8);
                 w.curHashIdxs[putIdx] = (1 + (w.oldVals[putIdx] >> 56)) % mParams.mNumHashes[0];
                 ++putIdx;
             }
@@ -270,12 +270,12 @@ namespace osuCrypto
             while (getIdx < remaining)
             {
                 while (getIdx < remaining &&
-                    w.oldVals[getIdx] == u64(-1))
+                    w.oldVals[getIdx] == uint64_t(-1))
                     ++getIdx;
 
                 if (getIdx >= remaining) break;
 
-                inputIdxs[putIdx] = w.oldVals[getIdx] & (u64(-1) >> 8);
+                inputIdxs[putIdx] = w.oldVals[getIdx] & (uint64_t(-1) >> 8);
                 w.curHashIdxs[putIdx] = (1 + (w.oldVals[getIdx] >> 56)) % mParams.mNumHashes[0];
 
                 // not needed. debug only
@@ -289,24 +289,24 @@ namespace osuCrypto
         }
 
 		
-		/*	ArrayView<u64> stashIdxs(inputIdxs.begin(), inputIdxs.begin() + remaining, false);
-			MatrixView<u64> stashHashs(hashs.data(), remaining, mParams.mNumHashes, false);
+		/*	ArrayView<uint64_t> stashIdxs(inputIdxs.begin(), inputIdxs.begin() + remaining, false);
+			MatrixView<uint64_t> stashHashs(hashs.data(), remaining, mParams.mNumHashes, false);
 			CuckooHasher1::Workspace stashW(remaining);
 			std::vector<Bin> mStashBins;*/
 			//mStashBins.insertBatch(stashIdxs, stashHashs, stashW, false);
 		std::lock_guard<std::mutex> lock(mInsertBin);
-			for (u64 i = 0; i < remaining; ++i)
+			for (uint64_t i = 0; i < remaining; ++i)
 			{
 				mStashIdxs.push_back(inputIdxs[i]);
 			}
 		
 		
-	/*		for (u64 i = 0, j = 0; i < remaining; ++j)
+	/*		for (uint64_t i = 0, j = 0; i < remaining; ++j)
 			{
 				mStashBins[j].swap(inputIdxs[i], w.curHashIdxs[i]);
 
 
-				MatrixView<u64> hashs2;
+				MatrixView<uint64_t> hashs2;
 
 				if (inputIdxs[i] == -1)
 					++i;
@@ -316,17 +316,17 @@ namespace osuCrypto
     }
 
 	void CuckooHasher1::insertStashBatch(
-		ArrayView<u64> inputIdxs,
-		MatrixView<u64> hashs,
+		ArrayView<uint64_t> inputIdxs,
+		MatrixView<uint64_t> hashs,
 		Workspace& w)
 	{
 
-		u64 width = mStashHashesView.size()[1];
+		uint64_t width = mStashHashesView.size()[1];
 
-		u64 remaining = inputIdxs.size();
+		uint64_t remaining = inputIdxs.size();
 	//	std::cout << "inputStashIdxs.size(): " << inputIdxs.size() << std::endl;
 
-		u64 tryCount = 0;
+		uint64_t tryCount = 0;
 
 #ifndef  NDEBUG
 		if (hashs.size()[1] != width)
@@ -334,9 +334,9 @@ namespace osuCrypto
 #endif // ! NDEBUG
 
 
-		for (u64 i = 0; i < inputIdxs.size(); ++i)
+		for (uint64_t i = 0; i < inputIdxs.size(); ++i)
 		{
-			for (u64 j = 0; j < mParams.mNumHashes[1]; ++j)
+			for (uint64_t j = 0; j < mParams.mNumHashes[1]; ++j)
 			{
 				//mHashesView[inputIdxs[i]][j] = hashs[i][j];
 				(mStashHashesView.data() + inputIdxs[i] * width)[j] = (hashs.data() + i * width)[j];
@@ -350,16 +350,16 @@ namespace osuCrypto
 
 			// this data fetch can be slow (after the first loop). 
 			// As such, lets do several fetches in parallel.
-			for (u64 i = 0; i < remaining; ++i)
+			for (uint64_t i = 0; i < remaining; ++i)
 			{
 				//w.curAddrs[i] = mHashesView[inputIdxs[i]][w.curHashIdxs[i]] % mBins.size();
 				w.curAddrs[i] = (mStashHashesView.data() + inputIdxs[i] * width)[w.curHashIdxs[i]] % mBinCount[1] + mBinCount[0];
 			}
 
 			// same thing here, this fetch is slow. Do them in parallel.
-			for (u64 i = 0; i < remaining; ++i)
+			for (uint64_t i = 0; i < remaining; ++i)
 			{
-				u64 newVal = inputIdxs[i] | (w.curHashIdxs[i] << 56);
+				uint64_t newVal = inputIdxs[i] | (w.curHashIdxs[i] << 56);
 #ifdef THREAD_SAFE_CUCKOO
 				w.oldVals[i] = mBins[w.curAddrs[i]].mVal.exchange(newVal, std::memory_order_relaxed);
 #else
@@ -373,10 +373,10 @@ namespace osuCrypto
 			//     |XW__Y____Z __|
 			// For X and W, which failed to be placed, lets write over them
 			// with the vaues that they evicted.
-			u64 putIdx = 0, getIdx = 0;
-			while (putIdx < remaining && w.oldVals[putIdx] != u64(-1))
+			uint64_t putIdx = 0, getIdx = 0;
+			while (putIdx < remaining && w.oldVals[putIdx] != uint64_t(-1))
 			{
-				inputIdxs[putIdx] = w.oldVals[putIdx] & (u64(-1) >> 8);
+				inputIdxs[putIdx] = w.oldVals[putIdx] & (uint64_t(-1) >> 8);
 				w.curHashIdxs[putIdx] = (1 + (w.oldVals[putIdx] >> 56)) % mParams.mNumHashes[1];
 				++putIdx;
 			}
@@ -391,12 +391,12 @@ namespace osuCrypto
 			while (getIdx < remaining)
 			{
 				while (getIdx < remaining &&
-					w.oldVals[getIdx] == u64(-1))
+					w.oldVals[getIdx] == uint64_t(-1))
 					++getIdx;
 
 				if (getIdx >= remaining) break;
 
-				inputIdxs[putIdx] = w.oldVals[getIdx] & (u64(-1) >> 8);
+				inputIdxs[putIdx] = w.oldVals[getIdx] & (uint64_t(-1) >> 8);
 				w.curHashIdxs[putIdx] = (1 + (w.oldVals[getIdx] >> 56)) % mParams.mNumHashes[1];
 
 				// not needed. debug only
@@ -417,11 +417,11 @@ namespace osuCrypto
 	}
 
 
-    void CuckooHasher1::insertHelper(u64 inputIdx, u64 hashIdx, u64 numTries)
+    void CuckooHasher1::insertHelper(uint64_t inputIdx, uint64_t hashIdx, uint64_t numTries)
     {
         //++mTotalTries;
 
-        u64 xrHashVal = mHashesView[inputIdx][hashIdx];
+        uint64_t xrHashVal = mHashesView[inputIdx][hashIdx];
 
         auto addr = (xrHashVal) % mBins.size();
 
@@ -429,21 +429,21 @@ namespace osuCrypto
         //mBins[addr].swap(inputIdx, hashIdx);
         {
 
-            u64 newVal = inputIdx | (hashIdx << 56);
+            uint64_t newVal = inputIdx | (hashIdx << 56);
 #ifdef THREAD_SAFE_CUCKOO
-            u64 oldVal = mBins[addr].mVal.exchange(newVal, std::memory_order_relaxed);
+            uint64_t oldVal = mBins[addr].mVal.exchange(newVal, std::memory_order_relaxed);
 #else
-            u64 oldVal = mBins[addr].mVal;
+            uint64_t oldVal = mBins[addr].mVal;
             mBins[addr].mVal = newVal;
 #endif
 
-            if (oldVal == u64(-1))
+            if (oldVal == uint64_t(-1))
             {
-                inputIdx = u64(-1);
+                inputIdx = uint64_t(-1);
             }
             else
             {
-                inputIdx = oldVal & (u64(-1) >> 8);
+                inputIdx = oldVal & (uint64_t(-1) >> 8);
                 hashIdx = oldVal >> 56;
             }
         }
@@ -460,7 +460,7 @@ namespace osuCrypto
             else
             {
                 // put in stash
-                for (u64 i = 0; inputIdx != u64(-1); ++i)
+                for (uint64_t i = 0; inputIdx != uint64_t(-1); ++i)
                 {
                     mStashBins[i].swap(inputIdx, hashIdx);
                 }
@@ -470,11 +470,11 @@ namespace osuCrypto
 
     }
 
-	void CuckooHasher1::insertStashHelper(u64 inputIdx, u64 hashIdx, u64 numTries)
+	void CuckooHasher1::insertStashHelper(uint64_t inputIdx, uint64_t hashIdx, uint64_t numTries)
 	{
 		//++mTotalTries;
 
-		u64 xrHashVal = mHashesView[inputIdx][hashIdx];
+		uint64_t xrHashVal = mHashesView[inputIdx][hashIdx];
 
 		auto addr = (xrHashVal) % mStashBins.size();
 
@@ -482,21 +482,21 @@ namespace osuCrypto
 		//mBins[addr].swap(inputIdx, hashIdx);
 		{
 
-			u64 newVal = inputIdx | (hashIdx << 56);
+			uint64_t newVal = inputIdx | (hashIdx << 56);
 #ifdef THREAD_SAFE_CUCKOO
-			u64 oldVal = mBins[addr].mVal.exchange(newVal, std::memory_order_relaxed);
+			uint64_t oldVal = mBins[addr].mVal.exchange(newVal, std::memory_order_relaxed);
 #else
-			u64 oldVal = mStashBins[addr].mVal;
+			uint64_t oldVal = mStashBins[addr].mVal;
 			mStashBins[addr].mVal = newVal;
 #endif
 
-			if (oldVal == u64(-1))
+			if (oldVal == uint64_t(-1))
 			{
-				inputIdx = u64(-1);
+				inputIdx = uint64_t(-1);
 			}
 			else
 			{
-				inputIdx = oldVal & (u64(-1) >> 8);
+				inputIdx = oldVal & (uint64_t(-1) >> 8);
 				hashIdx = oldVal >> 56;
 			}
 		}
@@ -513,7 +513,7 @@ namespace osuCrypto
 			else
 			{
 				// put in stash
-				for (u64 i = 0; inputIdx != u64(-1); ++i)
+				for (uint64_t i = 0; inputIdx != uint64_t(-1); ++i)
 				{
 					mStashBins[i].swap(inputIdx, hashIdx);
 				}
@@ -526,27 +526,27 @@ namespace osuCrypto
 
 #if 0
 
-    u64 CuckooHasher1::find(ArrayView<u64> hashes)
+    uint64_t CuckooHasher1::find(ArrayView<uint64_t> hashes)
     {
         if (mParams.mNumHashes[0] == 2)
         {
-            std::array<u64, 2>  addr{
+            std::array<uint64_t, 2>  addr{
                 (hashes[0]) % mBins.size(),
                 (hashes[1]) % mBins.size() };
 
 #ifdef THREAD_SAFE_CUCKOO
-            std::array<u64, 2> val{
+            std::array<uint64_t, 2> val{
                 mBins[addr[0]].mVal.load(std::memory_order::memory_order_relaxed),
                 mBins[addr[1]].mVal.load(std::memory_order::memory_order_relaxed) };
 #else
-            std::array<u64, 2> val{
+            std::array<uint64_t, 2> val{
                 mBins[addr[0]].mVal,
                 mBins[addr[1]].mVal };
 #endif
 
             if (val[0] != -1)
             {
-                u64 itemIdx = val[0] & (u64(-1) >> 8);
+                uint64_t itemIdx = val[0] & (uint64_t(-1) >> 8);
 
                 bool match =
                     (mHashesView[itemIdx][0] == hashes[0]) &&
@@ -557,7 +557,7 @@ namespace osuCrypto
 
             if (val[1] != -1)
             {
-                u64 itemIdx = val[1] & (u64(-1) >> 8);
+                uint64_t itemIdx = val[1] & (uint64_t(-1) >> 8);
 
                 bool match =
                     (mHashesView[itemIdx][0] == hashes[0]) &&
@@ -573,13 +573,13 @@ namespace osuCrypto
             while (i < mStashBins.size() && mStashBins[i].isEmpty() == false)
             {
 #ifdef THREAD_SAFE_CUCKOO
-                u64 val = mStash[i].mVal.load(std::memory_order::memory_order_relaxed);
+                uint64_t val = mStash[i].mVal.load(std::memory_order::memory_order_relaxed);
 #else
-                u64 val = mStashBins[i].mVal;
+                uint64_t val = mStashBins[i].mVal;
 #endif
-                if (val != u64(-1))
+                if (val != uint64_t(-1))
                 {
-                    u64 itemIdx = val & (u64(-1) >> 8);
+                    uint64_t itemIdx = val & (uint64_t(-1) >> 8);
 
                     bool match =
                         (mHashesView[itemIdx][0] == hashes[0]) &&
@@ -598,24 +598,24 @@ namespace osuCrypto
         else
         {
 
-            for (u64 i = 0; i < mParams.mNumHashes[0]; ++i)
+            for (uint64_t i = 0; i < mParams.mNumHashes[0]; ++i)
             {
-                u64 xrHashVal = hashes[i];
+                uint64_t xrHashVal = hashes[i];
                 auto addr = (xrHashVal) % mBins.size();
 
 
 #ifdef THREAD_SAFE_CUCKOO
-                u64 val = mBins[addr].mVal.load(std::memory_order::memory_order_relaxed);
+                uint64_t val = mBins[addr].mVal.load(std::memory_order::memory_order_relaxed);
 #else
-                u64 val = mBins[addr].mVal;
+                uint64_t val = mBins[addr].mVal;
 #endif
 
-                if (val != u64(-1))
+                if (val != uint64_t(-1))
                 {
-                    u64 itemIdx = val & (u64(-1) >> 8);
+                    uint64_t itemIdx = val & (uint64_t(-1) >> 8);
 
                     bool match = true;
-                    for (u64 j = 0; j < mParams.mNumHashes; ++j)
+                    for (uint64_t j = 0; j < mParams.mNumHashes; ++j)
                     {
                         match &= (mHashesView[itemIdx][j] == hashes[j]);
                     }
@@ -631,17 +631,17 @@ namespace osuCrypto
             while (i < mStashBins.size() && mStashBins[i].isEmpty() == false)
             {
 #ifdef THREAD_SAFE_CUCKOO
-                u64 val = mStash[i].mVal.load(std::memory_order::memory_order_relaxed);
+                uint64_t val = mStash[i].mVal.load(std::memory_order::memory_order_relaxed);
 #else
-                u64 val = mStashBins[i].mVal;
+                uint64_t val = mStashBins[i].mVal;
 #endif
 
-                if (val != u64(-1))
+                if (val != uint64_t(-1))
                 {
-                    u64 itemIdx = val & (u64(-1) >> 8);
+                    uint64_t itemIdx = val & (uint64_t(-1) >> 8);
 
                     bool match = true;
-                    for (u64 j = 0; j < mParams.mNumHashes[0]; ++j)
+                    for (uint64_t j = 0; j < mParams.mNumHashes[0]; ++j)
                     {
                         match &= (mHashesView[itemIdx][j] == hashes[j]);
                     }
@@ -657,21 +657,21 @@ namespace osuCrypto
         }
         //}
 
-        return u64(-1);
+        return uint64_t(-1);
     }
 
 
-    u64 CuckooHasher1::findBatch(
-        MatrixView<u64> hashes,
-        ArrayView<u64> idxs,
+    uint64_t CuckooHasher1::findBatch(
+        MatrixView<uint64_t> hashes,
+        ArrayView<uint64_t> idxs,
         Workspace& w)
     {
 
         if (mParams.mNumHashes[0] == 2)
         {
-            std::array<u64, 2>  addr;
+            std::array<uint64_t, 2>  addr;
 
-            for (u64 i = 0; i < hashes.size()[0]; ++i)
+            for (uint64_t i = 0; i < hashes.size()[0]; ++i)
             {
                 idxs[i] = -1;
 
@@ -687,11 +687,11 @@ namespace osuCrypto
 #endif
             }
 
-            for (u64 i = 0; i < hashes.size()[0]; ++i)
+            for (uint64_t i = 0; i < hashes.size()[0]; ++i)
             {
                 if (w.findVal[i][0] != -1)
                 {
-                    u64 itemIdx = w.findVal[i][0] & (u64(-1) >> 8);
+                    uint64_t itemIdx = w.findVal[i][0] & (uint64_t(-1) >> 8);
 
                     bool match =
                         (mHashesView[itemIdx][0] == hashes[i][0]) &&
@@ -702,7 +702,7 @@ namespace osuCrypto
 
                 if (w.findVal[i][1] != -1)
                 {
-                    u64 itemIdx = w.findVal[i][1] & (u64(-1) >> 8);
+                    uint64_t itemIdx = w.findVal[i][1] & (uint64_t(-1) >> 8);
 
                     bool match =
                         (mHashesView[itemIdx][0] == hashes[i][0]) &&
@@ -718,15 +718,15 @@ namespace osuCrypto
             while (i < mStashBins.size() && mStashBins[i].isEmpty() == false)
             {
 #ifdef THREAD_SAFE_CUCKOO
-                u64 val = mStash[i].mVal.load(std::memory_order::memory_order_relaxed);
+                uint64_t val = mStash[i].mVal.load(std::memory_order::memory_order_relaxed);
 #else
-                u64 val = mStashBins[i].mVal;
+                uint64_t val = mStashBins[i].mVal;
 #endif
-                if (val != u64(-1))
+                if (val != uint64_t(-1))
                 {
-                    u64 itemIdx = val & (u64(-1) >> 8);
+                    uint64_t itemIdx = val & (uint64_t(-1) >> 8);
 
-                    for (u64 j = 0; j < hashes.size()[0]; ++j)
+                    for (uint64_t j = 0; j < hashes.size()[0]; ++j)
                     {
 
                         bool match =
@@ -748,7 +748,7 @@ namespace osuCrypto
         {
             throw std::runtime_error("not implemented");
         }
-        return u64(-1);
+        return uint64_t(-1);
     }
 
 #endif
@@ -756,35 +756,35 @@ namespace osuCrypto
 
     bool CuckooHasher1::Bin::isEmpty() const
     {
-        return mVal == u64(-1);
+        return mVal == uint64_t(-1);
     }
 
-    u64 CuckooHasher1::Bin::idx() const
+    uint64_t CuckooHasher1::Bin::idx() const
     {
-        return mVal  & (u64(-1) >> 8);
+        return mVal  & (uint64_t(-1) >> 8);
     }
 
-    u64 CuckooHasher1::Bin::hashIdx() const
+    uint64_t CuckooHasher1::Bin::hashIdx() const
     {
         return mVal >> 56;
     }
 
-    void CuckooHasher1::Bin::swap(u64 & idx, u64 & hashIdx)
+    void CuckooHasher1::Bin::swap(uint64_t & idx, uint64_t & hashIdx)
     {
-        u64 newVal = idx | (hashIdx << 56);
+        uint64_t newVal = idx | (hashIdx << 56);
 #ifdef THREAD_SAFE_CUCKOO
-        u64 oldVal = mVal.exchange(newVal, std::memory_order_relaxed);
+        uint64_t oldVal = mVal.exchange(newVal, std::memory_order_relaxed);
 #else
-        u64 oldVal = mVal;
+        uint64_t oldVal = mVal;
         mVal = newVal;
 #endif
-        if (oldVal == u64(-1))
+        if (oldVal == uint64_t(-1))
         {
-            idx = hashIdx = u64(-1);
+            idx = hashIdx = uint64_t(-1);
         }
         else
         {
-            idx = oldVal & (u64(-1) >> 8);
+            idx = oldVal & (uint64_t(-1) >> 8);
             hashIdx = oldVal >> 56;
         }
     }

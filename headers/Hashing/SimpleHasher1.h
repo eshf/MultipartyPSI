@@ -6,7 +6,7 @@
 namespace osuCrypto
 {
 	//// a list of {{set size, bit size}}
-	//std::vector<std::array<u64, 2>> binSizes
+	//std::vector<std::array<uint64_t, 2>> binSizes
 	//{
 	//    {1<<12, 18},
 	//    {1<<16, 19},
@@ -20,14 +20,14 @@ namespace osuCrypto
 	{
 
 		double mBinScaler[2];
-		u64 mNumHashes[2];
+		uint64_t mNumHashes[2];
 
-		u64 mMaxBinSize[2];
-		u64 mNumBits[2];
+		uint64_t mMaxBinSize[2];
+		uint64_t mNumBits[2];
 		/*
 		double mBinStashScaler;
-		u64 mNumStashHashes;
-		u64 mSenderBinStashSize;*/
+		uint64_t mNumStashHashes;
+		uint64_t mSenderBinStashSize;*/
 	};
 
 	class SimpleHasher1
@@ -37,42 +37,42 @@ namespace osuCrypto
 		~SimpleHasher1();
 
 		
-		//typedef std::vector<u64,block> MtBin;
-		//typedef std::vector<std::pair<u64, block>> MtBin;
+		//typedef std::vector<uint64_t,block> MtBin;
+		//typedef std::vector<std::pair<uint64_t, block>> MtBin;
 		struct Bin
 		{
-			std::vector<u64> mIdx; //have many items in the bin
+			std::vector<uint64_t> mIdx; //have many items in the bin
 								   //hash index used for mIdx. Only use when combined hints
 								   //one can think mIdx and hIdx as a pair <mIdx,hIdx>....
-			std::vector<u64> hIdx;
+			std::vector<uint64_t> hIdx;
 			std::vector<BitPosition> mBits;//mBits[IdxParty]
 			std::vector<std::vector<block>> mValOPRF; //mValOPRF[IdxParty][mIdx]
 		};
-		u64  mRepSize, mInputBitSize, mN;
-		u64 mBinCount[2], mMaxBinSize[2], mNumHashes[2], mNumBits[2];
+		uint64_t  mRepSize, mInputBitSize, mN;
+		uint64_t mBinCount[2], mMaxBinSize[2], mNumHashes[2], mNumBits[2];
 
 		//mOpprfs[IdxParty][inputIdx][hIdx]
 		std::vector<std::vector<std::vector<block>>> mOprfs;
-		u64 testMaxBinSize;
-		std::vector<u64> realBinSizeCount1;
-		std::vector<u64> realBinSizeCount2;
+		uint64_t testMaxBinSize;
+		std::vector<uint64_t> realBinSizeCount1;
+		std::vector<uint64_t> realBinSizeCount2;
 
 		std::unique_ptr<std::mutex[]> mMtx;
 		std::vector<Bin> mBins;
 		block mHashSeed;
 		SimpleParam1 mParams;
-		void print(u64 idxParty, bool isIdx, bool isOPRF, bool isMap, bool isPos, u64 opt = 0) const;
+		void print(uint64_t idxParty, bool isIdx, bool isOPRF, bool isMap, bool isPos, uint64_t opt = 0) const;
 
-		u64 maxRealBinSize();
+		uint64_t maxRealBinSize();
 
-		void init(u64 n, u64 opt);
+		void init(uint64_t n, uint64_t opt);
 
 		void insertBatch(
-			ArrayView<u64> inputIdxs,
-			MatrixView<u64> hashs);
+			ArrayView<uint64_t> inputIdxs,
+			MatrixView<uint64_t> hashs);
 
-		//void preHashedInsertItems(ArrayView<block> items, u64 itemIdx);
-		//void insertItemsWithPhasing(ArrayView<block> items, u64 itemIdx);
+		//void preHashedInsertItems(ArrayView<block> items, uint64_t itemIdx);
+		//void insertItemsWithPhasing(ArrayView<block> items, uint64_t itemIdx);
 	};
 
 }

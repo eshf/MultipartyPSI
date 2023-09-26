@@ -40,7 +40,7 @@ namespace osuCrypto {
     template<typename T> using uPtr = std::unique_ptr<T>;
     template<typename T> using sPtr = std::shared_ptr<T>;
 
-    typedef uint64_t u64;
+    typedef uint64_t uint64_t;
     typedef int64_t i64;
     typedef uint32_t u32;
     typedef int32_t i32;
@@ -65,10 +65,10 @@ namespace osuCrypto {
 
     typedef  __m128i block;
 
-    inline block toBlock(u8*data) { return _mm_set_epi64x(((u64*)data)[1], ((u64*)data)[0]);}
+    inline block toBlock(u8*data) { return _mm_set_epi64x(((uint64_t*)data)[1], ((uint64_t*)data)[0]);}
 
-    inline block toBlock(u64 x)        { return _mm_set_epi64x(0,x); }
-    inline block toBlock(u64 x, u64 y) { return _mm_set_epi64x(x,y); }
+    inline block toBlock(uint64_t x)        { return _mm_set_epi64x(0,x); }
+    inline block toBlock(uint64_t x, uint64_t y) { return _mm_set_epi64x(x,y); }
 
     template <size_t N>
     using  MultiBlock = std::array<block, N>;
@@ -104,7 +104,7 @@ namespace osuCrypto {
     {
         MultiBlock<N> rs;
 
-        for (u64 i = 0; i < N; ++i)
+        for (uint64_t i = 0; i < N; ++i)
         {
             rs[i] = lhs[i] ^ rhs[i];
         }
@@ -115,7 +115,7 @@ namespace osuCrypto {
     {
         MultiBlock<N> rs;
 
-        for (u64 i = 0; i < N; ++i)
+        for (uint64_t i = 0; i < N; ++i)
         {
             rs[i] = lhs[i] & rhs[i];
         }
@@ -127,7 +127,7 @@ namespace osuCrypto {
     extern const block AllOneBlock;
     extern const block CCBlock;
 
-    inline u64 roundUpTo(u64 val, u64 step)
+    inline uint64_t roundUpTo(uint64_t val, uint64_t step)
     {
         return ((val + step - 1) / step) * step;
     }
@@ -155,14 +155,14 @@ namespace osuCrypto {
     //std::ostream& operator<<(std::ostream& out, const BitVector& vec);
     //typedef block block;
 
-    block PRF(const block& b, u64 i);
+    block PRF(const block& b, uint64_t i);
 
     void split(const std::string &s, char delim, std::vector<std::string> &elems);
     std::vector<std::string> split(const std::string &s, char delim);
 
 
-    u64 log2ceil(u64);
-    u64 log2floor(u64);
+    uint64_t log2ceil(uint64_t);
+    uint64_t log2floor(uint64_t);
 
 }
 
@@ -186,7 +186,7 @@ inline bool neq(const osuCrypto::MultiBlock<N>& lhs, const osuCrypto::MultiBlock
     using namespace osuCrypto;
 
     int ret = 0;
-    for (u64 i = 0; i < N; ++i)
+    for (uint64_t i = 0; i < N; ++i)
     {
         ret |= _mm_test_all_zeros(neq[i], neq[i]);
     }
@@ -206,7 +206,7 @@ inline bool operator!=(const osuCrypto::block& lhs, const osuCrypto::block& rhs)
 }
 inline bool operator<(const osuCrypto::block& lhs, const osuCrypto::block& rhs)
 {
-    return lhs.m128i_u64[1] < rhs.m128i_u64[1] || (eq(lhs, rhs) && lhs.m128i_u64[0] < rhs.m128i_u64[0]);
+    return lhs.m128i_uint64_t[1] < rhs.m128i_uint64_t[1] || (eq(lhs, rhs) && lhs.m128i_uint64_t[0] < rhs.m128i_uint64_t[0]);
 }
 
 

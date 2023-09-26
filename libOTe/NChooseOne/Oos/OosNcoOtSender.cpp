@@ -24,13 +24,13 @@ namespace osuCrypto
         mBaseChoiceBits = choices;
         mGens.resize(choices.size());
 
-        for (u64 i = 0; i < baseRecvOts.size(); i++)
+        for (uint64_t i = 0; i < baseRecvOts.size(); i++)
         {
             mGens[i].SetSeed(baseRecvOts[i]);
         }
 
         mChoiceBlks.resize(choices.size() / (sizeof(block) * 8));
-        for (u64 i = 0; i < mChoiceBlks.size(); ++i)
+        for (uint64_t i = 0; i < mChoiceBlks.size(); ++i)
         {
             mChoiceBlks[i] = toBlock(mBaseChoiceBits.data() + (i * sizeof(block)));
         }
@@ -43,7 +43,7 @@ namespace osuCrypto
         std::vector<block> base(mGens.size());
 
         // use some of the OT extension PRNG to new base OTs
-        for (u64 i = 0; i < base.size(); ++i)
+        for (uint64_t i = 0; i < base.size(); ++i)
         {
             base[i] = mGens[i].get<block>();
         }
@@ -57,11 +57,11 @@ namespace osuCrypto
 
 
     void OosNcoOtSender::init(
-        u64 numOTExt)
+        uint64_t numOTExt)
     {
         const u8 superBlkSize(8);
 
-        u64 statSecParm = 40;
+        uint64_t statSecParm = 40;
 
         // round up
         numOTExt = ((numOTExt + 127 + statSecParm) / 128) * 128;
@@ -77,31 +77,31 @@ namespace osuCrypto
         mCorrectionIdx = 0;
 
         // we are going to process OTs in blocks of 128 * superblkSize messages.
-        u64 numSuperBlocks = (numOTExt / 128 + superBlkSize - 1) / superBlkSize;
+        uint64_t numSuperBlocks = (numOTExt / 128 + superBlkSize - 1) / superBlkSize;
 
         // the index of the last OT that we have completed.
-        u64 doneIdx = 0;
+        uint64_t doneIdx = 0;
 
         // a temp that will be used to transpose the sender's matrix
         std::array<std::array<block, superBlkSize>, 128> t;
 
-        u64 numCols = mGens.size();
+        uint64_t numCols = mGens.size();
 
 
-        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
             // compute at what row does the user want use to stop.
             // the code will still compute the transpose for these
             // extra rows, but it is thrown away.
-            u64 stopIdx
+            uint64_t stopIdx
                 = doneIdx
-                + std::min(u64(128) * superBlkSize, mT.size()[0] - doneIdx);
+                + std::min(uint64_t(128) * superBlkSize, mT.size()[0] - doneIdx);
 
-            for (u64 i = 0; i < numCols / 128; ++i)
+            for (uint64_t i = 0; i < numCols / 128; ++i)
             {
 
                 // transpose 128 columns at at time. Each column will be 128 * superBlkSize = 1024 bits long.
-                for (u64 tIdx = 0, colIdx = i * 128; tIdx < 128; ++tIdx, ++colIdx)
+                for (uint64_t tIdx = 0, colIdx = i * 128; tIdx < 128; ++tIdx, ++colIdx)
                 {
                     // generate the columns using AES-NI in counter mode.
                     mGens[colIdx].mAes.ecbEncCounterMode(mGens[colIdx].mBlockIdx, superBlkSize, ((block*)t.data() + superBlkSize * tIdx));
@@ -118,7 +118,7 @@ namespace osuCrypto
                 // is unique and it shouldn't worry about pointer aliasing. 
                 block* __restrict mTIter = mT.data() + doneIdx * mT.size()[1] + i;
 
-                for (u64 rowIdx = doneIdx, j = 0; rowIdx < stopIdx; ++j)
+                for (uint64_t rowIdx = doneIdx, j = 0; rowIdx < stopIdx; ++j)
                 {
                     // because we transposed 1024 rows, the indexing gets a bit weird. But this
                     // is the location of the next row that we want. Keep in mind that we had long
@@ -126,7 +126,7 @@ namespace osuCrypto
                     block* __restrict tIter = (((block*)t.data()) + j);
 
                     // do the copy!
-                    for (u64 k = 0; rowIdx < stopIdx && k < 128; ++rowIdx, ++k)
+                    for (uint64_t k = 0; rowIdx < stopIdx && k < 128; ++rowIdx, ++k)
                     {
                         *mTIter = *tIter;
 
@@ -143,7 +143,7 @@ namespace osuCrypto
 
 
     void OosNcoOtSender::encode(
-        u64 otIdx,
+        uint64_t otIdx,
         const ArrayView<block> plaintext,
         block& val)
     {
@@ -216,7 +216,7 @@ namespace osuCrypto
         else
         {
             // this is the general case. slightly slower...
-            for (u64 i = 0; i < mT.size()[1]; ++i)
+            for (uint64_t i = 0; i < mT.size()[1]; ++i)
             {
                 block t0 = corVal[i] ^ codeword[i];
                 block t1 = t0 & mChoiceBlks[i];
@@ -235,7 +235,7 @@ namespace osuCrypto
             mAesFixedKey.ecbEncBlocks(codeword.data(), mT.size()[1], aesBuff.data());
 
             val = ZeroBlock;
-            for (u64 i = 0; i < mT.size()[1]; ++i)
+            for (uint64_t i = 0; i < mT.size()[1]; ++i)
                 val = val ^ codeword[i] ^ aesBuff[i];
 
 
@@ -247,12 +247,12 @@ namespace osuCrypto
 
     void OosNcoOtSender::getParams(
         bool maliciousSecure,
-        u64 compSecParm,
-        u64 statSecParam,
-        u64 inputBitCount,
-        u64 inputCount,
-        u64 & inputBlkSize,
-        u64 & baseOtCount)
+        uint64_t compSecParm,
+        uint64_t statSecParam,
+        uint64_t inputBitCount,
+        uint64_t inputCount,
+        uint64_t & inputBlkSize,
+        uint64_t & baseOtCount)
     {
 
         inputBlkSize = mCode.plaintextBlkSize();
@@ -260,7 +260,7 @@ namespace osuCrypto
         baseOtCount = mCode.codewordBlkSize() * 128;
     }
 
-    void OosNcoOtSender::recvCorrection(Channel & chl, u64 recvCount)
+    void OosNcoOtSender::recvCorrection(Channel & chl, uint64_t recvCount)
     {
 
 #ifndef NDEBUG
@@ -284,7 +284,7 @@ namespace osuCrypto
     {
         TODO("Use read seed");
         block seed = ZeroBlock;
-        u64 statSecParam(40);
+        uint64_t statSecParam(40);
 
         if (statSecParam % 8) throw std::runtime_error("Must be a multiple of 8. " LOCATION);
 
@@ -299,19 +299,19 @@ namespace osuCrypto
         // This AES will work as a PRNG, using AES-NI in counter mode.
         AES aes(seed);
         // the index of the AES counter.
-        u64 aesIdx(0);
+        uint64_t aesIdx(0);
 
         // the index of the row that we are doing.
-        u64 k = 0;
+        uint64_t k = 0;
 
         // qSum will hold the summation over all the rows. We need 
         // statSecParam number of them. First initialize them, each 
         // with one of the dummy values that were just send. 
         std::vector<block> qSum(statSecParam * mT.size()[1]);
-        for (u64 i = 0; i < statSecParam; ++i)
+        for (uint64_t i = 0; i < statSecParam; ++i)
         {
             // The rows are most likely several blocks wide.
-            for (u64 j = 0; j < mT.size()[1]; ++j)
+            for (uint64_t j = 0; j < mT.size()[1]; ++j)
             {
                 qSum[i * mT.size()[1] + j]
                     = (mCorrectionVals[mCorrectionIdx - statSecParam + i][j]
@@ -331,7 +331,7 @@ namespace osuCrypto
         auto mW = mWBuff.getMatrixView<block>(mCode.plaintextBlkSize());
 #endif
 
-        u64 codeSize = mT.size()[1];
+        uint64_t codeSize = mT.size()[1];
 
         // This is an optimization trick. When iterating over the rows,
         // we want to multiply the x^(l)_i bit with the l'th row. To
@@ -365,8 +365,8 @@ namespace osuCrypto
         auto tIter = mT.data();
 
         // compute the index that we should stop at. We process 128 rows at a time.
-        u64 blkStopIdx = (mCorrectionIdx - statSecParam + 127) / 128;
-        for (u64 blkIdx = 0; blkIdx < blkStopIdx; ++blkIdx)
+        uint64_t blkStopIdx = (mCorrectionIdx - statSecParam + 127) / 128;
+        for (uint64_t blkIdx = 0; blkIdx < blkStopIdx; ++blkIdx)
         {
             // generate statSecParam * 128 bits using AES-NI in counter mode.
             aes.ecbEncCounterMode(aesIdx, statSecParam, challengeBuff.data());
@@ -375,7 +375,7 @@ namespace osuCrypto
             // now expand each of these bits into its own byte. This is done with the 
             // right shift instruction _mm_srai_epi16. and then we mask to get only
             // the bottom bit. Doing the 8 times gets us each bit in its own byte.
-            for (u64 i = 0; i < statSecParam; ++i)
+            for (uint64_t i = 0; i < statSecParam; ++i)
             {
                 expandedBuff[i * 8 + 0] = mask & _mm_srai_epi16(challengeBuff[i], 0);
                 expandedBuff[i * 8 + 1] = mask & _mm_srai_epi16(challengeBuff[i], 1);
@@ -388,7 +388,7 @@ namespace osuCrypto
             }
 
             // compute when we should stop of this set.
-            u64 stopIdx = std::min(mCorrectionIdx - statSecParam - k, u64(128));
+            uint64_t stopIdx = std::min(mCorrectionIdx - statSecParam - k, uint64_t(128));
             k += 128;
 
             // get an integrator to the challenge bit
@@ -398,7 +398,7 @@ namespace osuCrypto
             {
                 //  vvvvvvvvvvvv   OPTIMIZED for codeword size 4   vvvvvvvvvvvv
 
-                for (u64 i = 0; i < stopIdx; ++i, corIter += 4, tIter += 4)
+                for (uint64_t i = 0; i < stopIdx; ++i, corIter += 4, tIter += 4)
                 {
 
                     // compute q_i = (u_i & choice) ^ T_i
@@ -418,11 +418,11 @@ namespace osuCrypto
                     // the receiver will have sent it's T0 and W matrix.
                     // This will let us identify the row that things go wrong...
 #ifdef OOS_CHECK_DEBUG
-                    u64 kk = k - 128;
+                    uint64_t kk = k - 128;
                     std::vector<block> cw(mCode.codewordBlkSize());
                     mCode.encode(mW[kk], cw);
 
-                    for (u64 j = 0; j < 4; ++j)
+                    for (uint64_t j = 0; j < 4; ++j)
                     {
                         block tq = mT0[kk][j] ^ zeroAndQ[j][1];
                         block cb = cw[j] & mChoiceBlks[j];
@@ -439,7 +439,7 @@ namespace osuCrypto
 
                     // iterate over the statSecParam of challenges. Process
                     // two of the value per loop. 
-                    for (u64 j = 0; j < statSecParam / 2; ++j, qSumIter += 8)
+                    for (uint64_t j = 0; j < statSecParam / 2; ++j, qSumIter += 8)
                     {
                         u8 x0 = *xIter++;
                         u8 x1 = *xIter++;
@@ -470,9 +470,9 @@ namespace osuCrypto
             {
                 //  vvvvvvvvvvvv       general codeword size        vvvvvvvvvvvv
 
-                for (u64 i = 0; i < stopIdx; ++i, corIter += codeSize, tIter += codeSize)
+                for (uint64_t i = 0; i < stopIdx; ++i, corIter += codeSize, tIter += codeSize)
                 {
-                    for (u64 m = 0; m < codeSize; ++m)
+                    for (uint64_t m = 0; m < codeSize; ++m)
                     {
                         // compute q_i = (u_i & choice) ^ T_i
                         // place it in the one location of zeroAndQ. This will
@@ -484,11 +484,11 @@ namespace osuCrypto
                     // the receiver will have sent it's T0 and W matrix.
                     // This will let us identify the row that things go wrong...
 #ifdef OOS_CHECK_DEBUG
-                    u64 kk = k - 128;
+                    uint64_t kk = k - 128;
                     std::vector<block> cw(mCode.codewordBlkSize());
                     mCode.encode(mW[kk], cw);
 
-                    for (u64 j = 0; j < codeSize; ++j)
+                    for (uint64_t j = 0; j < codeSize; ++j)
                     {
                         block tq = mT0[kk][j] ^ zeroAndQ[j][1];
                         block cb = cw[j] & mChoiceBlks[j];
@@ -504,7 +504,7 @@ namespace osuCrypto
 
                     // iterate over the statSecParam of challenges. Process
                     // two of the value per loop. 
-                    for (u64 j = 0; j < statSecParam; ++j, qSumIter += codeSize)
+                    for (uint64_t j = 0; j < statSecParam; ++j, qSumIter += codeSize)
                     {
 
                         // This is where the bit multiplication of 
@@ -514,7 +514,7 @@ namespace osuCrypto
                         // the row q_i.
                         block* mask0 = zeroAndQ[*xIter++].data();
 
-                        for (u64 m = 0; m < codeSize; ++m)
+                        for (uint64_t m = 0; m < codeSize; ++m)
                         {
                             // Xor it in.
                             qSumIter[m] = qSumIter[m] ^ mask0[m];
@@ -537,7 +537,7 @@ namespace osuCrypto
         std::vector<block> cw(mCode.codewordBlkSize());
 
         // check each of the statSecParam number of challenges
-        for (u64 l = 0; l < statSecParam; ++l)
+        for (uint64_t l = 0; l < statSecParam; ++l)
         {
             
             ArrayView<block> word(
@@ -548,7 +548,7 @@ namespace osuCrypto
             mCode.encode(word, cw);
 
             // check that the linear relation holds.
-            for (u64 j = 0; j < cw.size(); ++j)
+            for (uint64_t j = 0; j < cw.size(); ++j)
             {
                 block tq = tSum[l * cw.size() + j] ^ qSum[l * cw.size() + j];
                 block cb = cw[j] & mChoiceBlks[j];

@@ -32,9 +32,9 @@ namespace osuCrypto
             auto iter = timer.mTimes.begin();
             out << iter->second;
 
-            u64 tabs = std::min<u64>((u64)4, (u64)4 - (iter->second.size() / 8));
+            uint64_t tabs = std::min<uint64_t>((uint64_t)4, (uint64_t)4 - (iter->second.size() / 8));
 
-            for (u64 i = 0; i < tabs; ++i)
+            for (uint64_t i = 0; i < tabs; ++i)
                 out << "\t";
             
             out << "  " << std::chrono::duration_cast<std::chrono::milliseconds>(iter->first - timer.mStart).count() << std::endl;
@@ -44,9 +44,9 @@ namespace osuCrypto
             {
                 out << iter->second;
                 
-                tabs = std::min<u64>((u64)4,  (u64)4 - (iter->second.size() / 8));
+                tabs = std::min<uint64_t>((uint64_t)4,  (uint64_t)4 - (iter->second.size() / 8));
 
-                for (u64 i = 0; i < tabs ; ++i)
+                for (uint64_t i = 0; i < tabs ; ++i)
                     out << "\t";
 
                 out << "  " << std::chrono::duration_cast<std::chrono::milliseconds>(iter->first - timer.mStart).count() <<

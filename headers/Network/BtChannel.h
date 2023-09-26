@@ -33,27 +33,27 @@ namespace osuCrypto {
 
         void resetStats() override;
 
-        u64 getTotalDataSent() const override;
-        u64 getTotalDataRecv() const override;
+        uint64_t getTotalDataSent() const override;
+        uint64_t getTotalDataRecv() const override;
 
-        u64 getMaxOutstandingSendData() const override;
+        uint64_t getMaxOutstandingSendData() const override;
         
         /// <summary>Data will be sent over the network asynchronously. WARNING: data lifetime must be handled by caller.</summary>
-        void asyncSend(const void * bufferPtr, u64 length) override;
+        void asyncSend(const void * bufferPtr, uint64_t length) override;
 
         /// <summary>Buffer will be MOVED and then sent over the network asynchronously. </summary>
         void asyncSend(std::unique_ptr<ChannelBuffer> mH) override;
 
         /// <summary>Synchronous call to send data over the network. </summary>
-        void send(const void * bufferPtr, u64 length) override;
+        void send(const void * bufferPtr, uint64_t length) override;
 
 
 
-        std::future<void> asyncRecv(void* dest, u64 length) override;
+        std::future<void> asyncRecv(void* dest, uint64_t length) override;
         std::future<void> asyncRecv(ChannelBuffer& mH) override;
 
         /// <summary>Synchronous call to receive data over the network. Assumes dest has byte size length. WARNING: will through if received message length does not match.</summary>
-        void recv(void* dest, u64 length) override;
+        void recv(void* dest, uint64_t length) override;
 
         /// <summary>Synchronous call to receive data over the network. Will resize buffer to be the appropriate size.</summary>
         void recv(ChannelBuffer& mH) override;

@@ -6,7 +6,7 @@
 
 namespace osuCrypto {
 
-    ByteStream::ByteStream(u64 maxlen)
+    ByteStream::ByteStream(uint64_t maxlen)
     {
         mCapacity = maxlen; mPutHead = maxlen; mGetHead = 0;
         mData = mCapacity ? new u8[mCapacity]() : nullptr;
@@ -22,7 +22,7 @@ namespace osuCrypto {
         mGetHead = os.mGetHead;
     }
 
-    ByteStream::ByteStream(const u8 * data, u64 length)
+    ByteStream::ByteStream(const u8 * data, uint64_t length)
         :mPutHead(0),
         mCapacity(0),
         mGetHead(0),
@@ -31,7 +31,7 @@ namespace osuCrypto {
         append(data, length);
     }
 
-    void ByteStream::reserve(u64 l)
+    void ByteStream::reserve(uint64_t l)
     {
         if (l > mCapacity) {
             u8* nd = new u8[l]();
@@ -45,30 +45,30 @@ namespace osuCrypto {
         }
     }
 
-    void ByteStream::resize(u64 size)
+    void ByteStream::resize(uint64_t size)
     {
         reserve(size);
         setp(size);
     }
 
-    void ByteStream::setg(u64 loc) {
+    void ByteStream::setg(uint64_t loc) {
         if (loc > mPutHead) throw std::runtime_error("rt error at " LOCATION);
         mGetHead = loc;
     }
 
-    void ByteStream::setp(u64 loc)
+    void ByteStream::setp(uint64_t loc)
     {
         if (loc > mCapacity) throw std::runtime_error("rt error at " LOCATION);
         mPutHead = loc;
-        mGetHead = std::min<u64>(mGetHead, mPutHead);
+        mGetHead = std::min<uint64_t>(mGetHead, mPutHead);
     }
 
-    u64 ByteStream::tellg()const
+    uint64_t ByteStream::tellg()const
     {
         return mGetHead;
     }
 
-    u64 ByteStream::tellp()const
+    uint64_t ByteStream::tellp()const
     {
         return mPutHead;
     }
@@ -91,7 +91,7 @@ namespace osuCrypto {
     bool ByteStream::operator==(const ByteStream& a) const
     {
         if (mPutHead != a.mPutHead) { return false; }
-        for (u64 i = 0; i < mPutHead; i++)
+        for (uint64_t i = 0; i < mPutHead; i++)
         {
             if (mData[i] != a.mData[i]) { return false; }
         }
@@ -104,7 +104,7 @@ namespace osuCrypto {
         return !(*this == a);
     }
 
-    void ByteStream::append(const u8* x, const u64 l)
+    void ByteStream::append(const u8* x, const uint64_t l)
     {
         if(tellp() + l > mCapacity)
         {
@@ -120,7 +120,7 @@ namespace osuCrypto {
         append((const u8*)(&b), sizeof(block));
     }    
     
-    //void ByteStream::append(const blockRIOT& b, u64 l)
+    //void ByteStream::append(const blockRIOT& b, uint64_t l)
     //{
     //    append((const u8*)(&b), l); 
     //}
@@ -130,7 +130,7 @@ namespace osuCrypto {
         append((const u8*)(&b), sizeof(Commit));
     }
 
-    void ByteStream::consume(u8* x, const u64 l)
+    void ByteStream::consume(u8* x, const uint64_t l)
     {
         if (mGetHead + l > mPutHead) throw std::runtime_error("rt error at " LOCATION);
         memcpy(x, mData + mGetHead, l*sizeof(u8));
@@ -142,7 +142,7 @@ namespace osuCrypto {
     {
         std::stringstream ss;
         ss << std::hex;
-        for (u64 i = 0; i < o.mPutHead; i++)
+        for (uint64_t i = 0; i < o.mPutHead; i++)
         {
             u32 t0 = o.mData[i] & 15;
             u32 t1 = o.mData[i] >> 4;
@@ -158,7 +158,7 @@ namespace osuCrypto {
         return BitIterator(mData,0);
     }
 
-    void ByteStream::ChannelBufferResize(u64 length)
+    void ByteStream::ChannelBufferResize(uint64_t length)
     {
         if (length > mCapacity)
         {

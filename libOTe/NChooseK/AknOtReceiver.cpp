@@ -17,7 +17,7 @@ namespace osuCrypto
     {
     }
 
-    void AknOtReceiver::init(u64 totalOTCount, u64 numberOfOnes, double p,
+    void AknOtReceiver::init(uint64_t totalOTCount, uint64_t numberOfOnes, double p,
         OtExtReceiver & ots, std::vector<Channel*>& chls, PRNG & prng)
     {
 
@@ -45,14 +45,14 @@ namespace osuCrypto
 
         std::mutex finalMtx;
         block totalSum(ZeroBlock);
-        std::vector<std::array<std::vector<u64>, 2>> threadsZeroOnesList(chls.size());
+        std::vector<std::array<std::vector<uint64_t>, 2>> threadsZeroOnesList(chls.size());
 
         //Timer timer;
-        auto routine = [&](u64 t, block extSeed, OtExtReceiver& otExt, Channel& chl)
+        auto routine = [&](uint64_t t, block extSeed, OtExtReceiver& otExt, Channel& chl)
         {
             // round up to the next 128 to make sure we aren't wasting OTs in the extension...
-            u64 start = std::min(roundUpTo(t *     mMessages.size() / chls.size(), 128), mMessages.size());
-            u64 end = std::min(roundUpTo((t + 1) * mMessages.size() / chls.size(), 128), mMessages.size());
+            uint64_t start = std::min(roundUpTo(t *     mMessages.size() / chls.size(), 128), mMessages.size());
+            uint64_t end = std::min(roundUpTo((t + 1) * mMessages.size() / chls.size(), 128), mMessages.size());
 
             ArrayView<block> range(
                 mMessages.begin() + start,
@@ -69,7 +69,7 @@ namespace osuCrypto
             otExt.receive(choices, range, prng, chl);
 
 
-            //for (u64 k = 0; k < range.size();++k)
+            //for (uint64_t k = 0; k < range.size();++k)
             //{
             //    std::cout << k << " * " << range[k] << std::endl;
             //}
@@ -102,22 +102,22 @@ namespace osuCrypto
             block partialSum(ZeroBlock);
 
             // a buffer of choice bits that were sampled. We aare going to seed these is groups of 4096 bits
-            std::unique_ptr<BitVector> choiceBuff(new BitVector(std::min(u64(4096), end - start)));
+            std::unique_ptr<BitVector> choiceBuff(new BitVector(std::min(uint64_t(4096), end - start)));
 
             // get some iters to make life easy.
             auto openChoiceIter = choiceBuff->begin();
             auto choiceIter = mChoices.begin() + start;
 
             // the index of the current openChoiceIter. 
-            u64 j = 0;
+            uint64_t j = 0;
 
             //create a local list of ones and zero indices.
-            std::array<std::vector<u64>,2> zeroOneLists;
+            std::array<std::vector<uint64_t>,2> zeroOneLists;
 
             // compute the expected size of these list plus a bit.
             double oneFrac(double(numberOfOnes) / mMessages.size());
-            u64 expectZerosCount((u64)(mMessages.size() *(1 - oneFrac) / chls.size() * 1.5));
-            u64 expectOnesCount((u64)(mMessages.size() * oneFrac / chls.size() * 1.5));
+            uint64_t expectZerosCount((uint64_t)(mMessages.size() *(1 - oneFrac) / chls.size() * 1.5));
+            uint64_t expectOnesCount((uint64_t)(mMessages.size() * oneFrac / chls.size() * 1.5));
 
             //std::cout << IoStream::lock << "recv " << end << "  " << px << std::endl;
 
@@ -125,7 +125,7 @@ namespace osuCrypto
             zeroOneLists[0].reserve(expectZerosCount);
             zeroOneLists[1].reserve(expectOnesCount);
             // now lets do the sampling.
-            for (u64 i = start; i < end; ++i)
+            for (uint64_t i = start; i < end; ++i)
             {
 
                 // this is the value of our choice bit at index i
@@ -146,7 +146,7 @@ namespace osuCrypto
                     if (j == choiceBuff->size())
                     {
                         chl.asyncSend(std::move(choiceBuff));
-                        choiceBuff.reset(new BitVector(std::min(u64(4096), end - i)));
+                        choiceBuff.reset(new BitVector(std::min(uint64_t(4096), end - i)));
                         openChoiceIter = choiceBuff->begin();
                         j = 0;
 
@@ -229,8 +229,8 @@ namespace osuCrypto
 
 
                 // now merge and shuffle all the indices for the one OT messages
-                u64 totalOnesCount(0);
-                for (u64 i = 0; i < threadsZeroOnesList.size(); ++i)
+                uint64_t totalOnesCount(0);
+                for (uint64_t i = 0; i < threadsZeroOnesList.size(); ++i)
                     totalOnesCount += threadsZeroOnesList[i][1].size();
 
 
@@ -239,10 +239,10 @@ namespace osuCrypto
                 mOnes.resize(totalOnesCount);
                 auto iter = mOnes.begin();
 
-                for (u64 i = 0; i < threadsZeroOnesList.size(); ++i)
+                for (uint64_t i = 0; i < threadsZeroOnesList.size(); ++i)
                 {
                     std::copy(threadsZeroOnesList[i][1].begin(), threadsZeroOnesList[i][1].end(), iter);
-                    //memcpy(iter, threadsZeroOnesList[i][1].data(), threadsZeroOnesList[i][1].size() * sizeof(u64));
+                    //memcpy(iter, threadsZeroOnesList[i][1].data(), threadsZeroOnesList[i][1].size() * sizeof(uint64_t));
                     iter += threadsZeroOnesList[i][1].size();
                 }
                 std::random_shuffle(mOnes.begin(), mOnes.begin(), prng);
@@ -258,17 +258,17 @@ namespace osuCrypto
                     doneFuture.get();
 
 
-                u64 totalZerosCount(0);
-                for (u64 i = 0; i < threadsZeroOnesList.size(); ++i)
+                uint64_t totalZerosCount(0);
+                for (uint64_t i = 0; i < threadsZeroOnesList.size(); ++i)
                     totalZerosCount += threadsZeroOnesList[i][0].size();
 
                 mZeros.resize(totalZerosCount);
                 auto iter = mZeros.begin();
 
-                for (u64 i = 0; i < threadsZeroOnesList.size(); ++i)
+                for (uint64_t i = 0; i < threadsZeroOnesList.size(); ++i)
                 {
                     std::copy(threadsZeroOnesList[i][0].begin(), threadsZeroOnesList[i][0].end(), iter);
-                    //memcpy(iter, threadsZeroOnesList[i][0].data(), threadsZeroOnesList[i][0].size() * sizeof(u64));
+                    //memcpy(iter, threadsZeroOnesList[i][0].data(), threadsZeroOnesList[i][0].size() * sizeof(uint64_t));
                     iter += threadsZeroOnesList[i][0].size();
                 }
 
@@ -282,7 +282,7 @@ namespace osuCrypto
         std::vector<std::thread> thrds(chls.size() - 1);
         std::vector<std::unique_ptr<OtExtReceiver>> parOts(chls.size() - 1);
 
-        for (u64 i = 0; i < thrds.size(); ++i)
+        for (uint64_t i = 0; i < thrds.size(); ++i)
         {
             // split the OT to that it can be multi threaded.
             parOts[i] = std::move(ots.split());
@@ -291,7 +291,7 @@ namespace osuCrypto
             block seed = prng.get<block>();
             
             //compute the thread idk t
-            u64 t = i + 1;
+            uint64_t t = i + 1;
 
             // go!
             thrds[i] = std::thread([&, i ,t , seed]() {routine(t, seed, *parOts[i], *chls[t]); });

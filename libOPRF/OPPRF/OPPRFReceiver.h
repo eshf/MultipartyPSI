@@ -16,13 +16,13 @@ namespace osuCrypto
         OPPRFReceiver();
         ~OPPRFReceiver();
         
-        //static const u64 CodeWordSize = 7;
-        //static const u64 hasherStepSize;
+        //static const uint64_t CodeWordSize = 7;
+        //static const uint64_t hasherStepSize;
 
 		
-        u64 mN, mParties, mStatSecParam, mNcoInputBlkSize;// , mOtMsgBlkSize;
+        uint64_t mN, mParties, mStatSecParam, mNcoInputBlkSize;// , mOtMsgBlkSize;
         block mHashingSeed;
-        std::vector<u64> mIntersection;
+        std::vector<uint64_t> mIntersection;
 
 		//std::vector<std::vector<block>> mNcoInputBuff;
 
@@ -32,44 +32,44 @@ namespace osuCrypto
 		//SimpleHasher1 mSimpleBins;
         PRNG mPrng;
 
-		u64 mNumBFhashs = 40;
-		u64 mBfSize;
+		uint64_t mNumBFhashs = 40;
+		uint64_t mBfSize;
 		std::vector<AES> mBFHasher;
 		
-		void init(u32 opt, u64 numParties, u64 n, u64 statSecParam, u64 inputBitSize, Channel& chl0, u64 otCounts, NcoOtExtReceiver& otRecv, NcoOtExtSender& otSend, block seed, bool isOtherDirection=true);
-		void init(u32 opt, u64 numParties, u64 n, u64 statSecParam, u64 inputBitSize, const std::vector<Channel*>& chls, u64 otCounts, NcoOtExtReceiver& ots, NcoOtExtSender& otSend, block seed, bool isOtherDirection=true);
+		void init(u32 opt, uint64_t numParties, uint64_t n, uint64_t statSecParam, uint64_t inputBitSize, Channel& chl0, uint64_t otCounts, NcoOtExtReceiver& otRecv, NcoOtExtSender& otSend, block seed, bool isOtherDirection=true);
+		void init(u32 opt, uint64_t numParties, uint64_t n, uint64_t statSecParam, uint64_t inputBitSize, const std::vector<Channel*>& chls, uint64_t otCounts, NcoOtExtReceiver& ots, NcoOtExtSender& otSend, block seed, bool isOtherDirection=true);
 
 	
 
 		//void copy2Bins(CuckooHasher1& cuckooBins);
 
-		void getOPRFkeys( u64 IdxTheirParty, binSet& bins, Channel& chl, bool isOtherDirectionGetOPRF=true);
-		void getOPRFkeys(u64 IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
+		void getOPRFkeys( uint64_t IdxTheirParty, binSet& bins, Channel& chl, bool isOtherDirectionGetOPRF=true);
+		void getOPRFkeys(uint64_t IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
 
-		void getOPRFkeysSeperatedandTable(u64 IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
+		void getOPRFkeysSeperatedandTable(uint64_t IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
 
-		void getOPRFkeysSeperated(u64 IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
+		void getOPRFkeysSeperated(uint64_t IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
 
-		void getOPRFkeysCombined(u64 IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
+		void getOPRFkeysCombined(uint64_t IdxTheirParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF = true);
 		
 
-		void recvSS(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, Channel& chl);
-		void sendSS(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, Channel& chl);
-		void sendSS(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void recvSS(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void recvSS(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, Channel& chl);
+		void sendSS(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, Channel& chl);
+		void sendSS(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void recvSS(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
 
 
-		void recvSSTableBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void recvSSPolyBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void recvFullPolyBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void recvBFBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void recvSSTableBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void recvSSPolyBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void recvFullPolyBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void recvBFBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
 
 
 
-		void sendSSTableBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void sendSSPolyBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void sendFullPolyBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
-		void sendBFBased(u64 IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void sendSSTableBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void sendSSPolyBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void sendFullPolyBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
+		void sendBFBased(uint64_t IdxTheirParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls);
 
 
 

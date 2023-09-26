@@ -23,7 +23,7 @@ namespace osuCrypto
     {
     }
 
-    void binSet::init( u64 myIdx, u64 nParties, u64 setSize, u64 statSecParam, u64 opt)
+    void binSet::init( uint64_t myIdx, uint64_t nParties, uint64_t setSize, uint64_t statSecParam, uint64_t opt)
     {
 		mMyIdx = myIdx;
 		mParties = nParties;
@@ -84,12 +84,12 @@ namespace osuCrypto
 	   
 	   mNcoInputBuff.resize(mNcoInputBlkSize);
 
-        for (u64 hashIdx = 0; hashIdx < mNcoInputBuff.size(); ++hashIdx)
+        for (uint64_t hashIdx = 0; hashIdx < mNcoInputBuff.size(); ++hashIdx)
 			mNcoInputBuff[hashIdx].resize(mN);
 
 
         // fr each thread, spawn it.
-        for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
+        for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
         {
 
             thrds[tIdx] = std::thread([&, tIdx]()
@@ -103,15 +103,15 @@ namespace osuCrypto
 #pragma region Hashing
 
                 std::vector<AES> ncoInputHasher(mNcoInputBlkSize);
-                for (u64 i = 0; i < ncoInputHasher.size(); ++i)
+                for (uint64_t i = 0; i < ncoInputHasher.size(); ++i)
                     ncoInputHasher[i].setKey(_mm_set1_epi64x(i) ^ mHashingSeed);
 
 
-                for (u64 i = startIdx; i < endIdx; i += 128)
+                for (uint64_t i = startIdx; i < endIdx; i += 128)
                 {
-                    auto currentStepSize = std::min(u64(128), endIdx - i);
+                    auto currentStepSize = std::min(uint64_t(128), endIdx - i);
 
-                    for (u64 hashIdx = 0; hashIdx < ncoInputHasher.size(); ++hashIdx)
+                    for (uint64_t hashIdx = 0; hashIdx < ncoInputHasher.size(); ++hashIdx)
                     {
                         ncoInputHasher[hashIdx].ecbEncBlocks(
 							inputs.data() + i,
@@ -120,16 +120,16 @@ namespace osuCrypto
                     }
 					
 					std::vector<block> tempMaskBuff(currentStepSize);
-					std::vector<u64> tempIdxBuff(currentStepSize); 
+					std::vector<uint64_t> tempIdxBuff(currentStepSize); 
 					CuckooHasher1::Workspace w(tempMaskBuff.size());
-					MatrixView<u64> hashes(currentStepSize,mCuckooBins.mParams.mNumHashes[0]);
+					MatrixView<uint64_t> hashes(currentStepSize,mCuckooBins.mParams.mNumHashes[0]);
 
-                    for (u64 j = 0; j < currentStepSize; ++j)
+                    for (uint64_t j = 0; j < currentStepSize; ++j)
                     {
 						tempIdxBuff[j] = i + j;
-						for (u64 k = 0; k <mCuckooBins.mParams.mNumHashes[0]; ++k)
+						for (uint64_t k = 0; k <mCuckooBins.mParams.mNumHashes[0]; ++k)
 						{
-							hashes[j][k] = *(u64*)&mNcoInputBuff[k][i + j];
+							hashes[j][k] = *(uint64_t*)&mNcoInputBuff[k][i + j];
 						}		                 					
 					}
 
@@ -146,13 +146,13 @@ namespace osuCrypto
 
 				if (tIdx == 0) {
 					CuckooHasher1::Workspace stashW(mCuckooBins.mStashIdxs.size());
-					MatrixView<u64> stashHashes(mCuckooBins.mStashIdxs.size(), mCuckooBins.mParams.mNumHashes[1]);
+					MatrixView<uint64_t> stashHashes(mCuckooBins.mStashIdxs.size(), mCuckooBins.mParams.mNumHashes[1]);
 
-					for (u64 j = 0; j < mCuckooBins.mStashIdxs.size(); ++j)
+					for (uint64_t j = 0; j < mCuckooBins.mStashIdxs.size(); ++j)
 					{
-						for (u64 k = 0; k < mCuckooBins.mParams.mNumHashes[1]; ++k)
+						for (uint64_t k = 0; k < mCuckooBins.mParams.mNumHashes[1]; ++k)
 						{
-							stashHashes[j][k] = *(u64*)&mNcoInputBuff[k][mCuckooBins.mStashIdxs[j]];
+							stashHashes[j][k] = *(uint64_t*)&mNcoInputBuff[k][mCuckooBins.mStashIdxs[j]];
 						}
 					}
 					mCuckooBins.insertStashBatch(mCuckooBins.mStashIdxs, stashHashes, stashW);
@@ -165,7 +165,7 @@ namespace osuCrypto
 
 
 
-				/*for (u64 i = 0; i < mBins.mBinCount; ++i)
+				/*for (uint64_t i = 0; i < mBins.mBinCount; ++i)
 				{
 					if (i < 3 || (i < mN && i > mN - 2)) {
 						
@@ -189,10 +189,10 @@ namespace osuCrypto
 				if (mOpt != 0)
 				{
 					mSimpleBins.mOprfs.resize(mParties);
-					for (u64 pIdx = 0; pIdx < mParties;pIdx++)
+					for (uint64_t pIdx = 0; pIdx < mParties;pIdx++)
 					{
 						mSimpleBins.mOprfs[pIdx].resize(mN);
-						for (u64 hIdx = 0; hIdx < mSimpleBins.mOprfs[pIdx].size(); hIdx++)
+						for (uint64_t hIdx = 0; hIdx < mSimpleBins.mOprfs[pIdx].size(); hIdx++)
 							mSimpleBins.mOprfs[pIdx][hIdx].resize(mSimpleBins.mNumHashes[0] + mSimpleBins.mNumHashes[1]);
 					}
 				}
@@ -202,18 +202,18 @@ namespace osuCrypto
 				auto binStart = tIdx       * binCount / thrds.size();
 				auto binEnd = (tIdx + 1) * binCount / thrds.size();
 
-				const u64 stepSize = 16;
+				const uint64_t stepSize = 16;
 
-				for (u64 bIdx = binStart; bIdx < binEnd;)
+				for (uint64_t bIdx = binStart; bIdx < binEnd;)
 				{
-					u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
+					uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
 
 					
 					std::mutex mPrintMtx;
 				//	if (bIdx == 23)
 //Log::out << "c" << bIdx << Log::endl;
 					std::lock_guard<std::mutex> lock(mPrintMtx);
-					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+					for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 					{
 						
 					//	if (bIdx == 13)
@@ -254,7 +254,7 @@ namespace osuCrypto
 
 
         // join the threads.
-        for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
+        for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
             thrds[tIdx].join();
 
         gTimer.setTimePoint("online.recv.exit");

@@ -23,7 +23,7 @@ namespace osuCrypto
 
         std::array<block, gOtExtBaseOtCount> baseRecvOts;
 
-        for (u64 i = 0; i < mGens.size(); ++i)
+        for (uint64_t i = 0; i < mGens.size(); ++i)
         {
             baseRecvOts[i] = mGens[i].get<block>();
         }
@@ -40,7 +40,7 @@ namespace osuCrypto
 
 
         mBaseChoiceBits = choices;
-        for (u64 i = 0; i < gOtExtBaseOtCount; i++)
+        for (uint64_t i = 0; i < gOtExtBaseOtCount; i++)
         {
             mGens[i].SetSeed(baseRecvOts[i]);
         }
@@ -52,9 +52,9 @@ namespace osuCrypto
         Channel& chl)
     {
         // round up 
-        u64 numOtExt = roundUpTo(messages.size(), 128);
-        u64 numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
-        //u64 numBlocks = numSuperBlocks * superBlkSize;
+        uint64_t numOtExt = roundUpTo(messages.size(), 128);
+        uint64_t numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
+        //uint64_t numBlocks = numSuperBlocks * superBlkSize;
 
         // a temp that will be used to transpose the sender's matrix
         std::array<std::array<block, superBlkSize>, 128> t;
@@ -63,7 +63,7 @@ namespace osuCrypto
         std::array<block, 128> choiceMask;
         block delta = *(block*)mBaseChoiceBits.data();
 
-        for (u64 i = 0; i < 128; ++i)
+        for (uint64_t i = 0; i < 128; ++i)
         {
             if (mBaseChoiceBits[i]) choiceMask[i] = AllOneBlock;
             else choiceMask[i] = ZeroBlock;
@@ -81,7 +81,7 @@ namespace osuCrypto
         block * uIter = (block*)u.data() + superBlkSize * 128 * commStepSize;
         block * uEnd = uIter;
 
-        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
 
             block * tIter = (block*)t.data();
@@ -89,14 +89,14 @@ namespace osuCrypto
 
             if (uIter == uEnd)
             {
-                u64 step = std::min(numSuperBlocks - superBlkIdx,(u64) commStepSize);
+                uint64_t step = std::min(numSuperBlocks - superBlkIdx,(uint64_t) commStepSize);
 
                 chl.recv(u.data(), step * superBlkSize * 128 * sizeof(block));
                 uIter = (block*)u.data();
             }
 
             // transpose 128 columns at at time. Each column will be 128 * superBlkSize = 1024 bits long.
-            for (u64 colIdx = 0; colIdx < 128; ++colIdx)
+            for (uint64_t colIdx = 0; colIdx < 128; ++colIdx)
             {
                 // generate the columns using AES-NI in counter mode.
                 mGens[colIdx].mAes.ecbEncCounterMode(mGens[colIdx].mBlockIdx, superBlkSize, tIter);
@@ -134,7 +134,7 @@ namespace osuCrypto
             std::array<block, 2>* mEnd = std::min(mIter + 128 * superBlkSize, (std::array<block, 2>*)messages.end());
 
             // compute how many rows are unused.
-            u64 unusedCount = (mIter + 128 * superBlkSize) - mEnd;
+            uint64_t unusedCount = (mIter + 128 * superBlkSize) - mEnd;
 
             // compute the begin and end index of the extra rows that 
             // we will compute in this iters. These are taken from the 
@@ -151,8 +151,8 @@ namespace osuCrypto
                     (*mIter)[0] = *tIter;
                     (*mIter)[1] = *tIter ^ delta;
 
-                    //u64 tV = tIter - (block*)t.data();
-                    //u64 tIdx = tV / 8 + (tV % 8) * 128;
+                    //uint64_t tV = tIter - (block*)t.data();
+                    //uint64_t tIdx = tV / 8 + (tV % 8) * 128;
                     //std::cout << "midx " << (mIter - messages.data()) << "   tIdx " << tIdx << std::endl;
 
                     tIter += superBlkSize;
@@ -174,8 +174,8 @@ namespace osuCrypto
                 {
                     *xIter = *tIter;
 
-                    //u64 tV = tIter - (block*)t.data();
-                    //u64 tIdx = tV / 8 + (tV % 8) * 128;
+                    //uint64_t tV = tIter - (block*)t.data();
+                    //uint64_t tIdx = tV / 8 + (tV % 8) * 128;
                     //std::cout << "xidx " << (xIter - extraBlocks.data()) << "   tIdx " << tIdx << std::endl;
 
                     tIter += superBlkSize;
@@ -192,9 +192,9 @@ namespace osuCrypto
             chl.recv(u.data(), superBlkSize * 128 * sizeof(block));
             chl.recv(choice.data(), sizeof(block) * superBlkSize);
 
-            u64 doneIdx = mStart - messages.data();
-            u64 xx = std::min(i64(128 * superBlkSize), (messages.data() + messages.size()) - mEnd);
-            for (u64 rowIdx = doneIdx,
+            uint64_t doneIdx = mStart - messages.data();
+            uint64_t xx = std::min(i64(128 * superBlkSize), (messages.data() + messages.size()) - mEnd);
+            for (uint64_t rowIdx = doneIdx,
                 j = 0; j < xx; ++rowIdx, ++j)
             {
                 if (neq(((block*)u.data())[j], messages[rowIdx][choice[j]]))
@@ -216,7 +216,7 @@ namespace osuCrypto
         choices.resize(128);
         chl.recv(choices);
 
-        for (u64 i = 0; i < 128; ++i)
+        for (uint64_t i = 0; i < 128; ++i)
         {
             if (neq(xtraBlk[i] , choices[i] ? extraBlocks[i] ^ delta : extraBlocks[i] ))
             {
@@ -252,18 +252,18 @@ namespace osuCrypto
 #else
         std::array<block, 8> aesHashTemp;
 #endif
-        u64 doneIdx = 0;
+        uint64_t doneIdx = 0;
         std::array<block, 128> challenges;
 
         gTimer.setTimePoint("send.checkStart");
 
-        u64 bb = (messages.size() + 127) / 128;
-        for (u64 blockIdx = 0; blockIdx < bb; ++blockIdx)
+        uint64_t bb = (messages.size() + 127) / 128;
+        for (uint64_t blockIdx = 0; blockIdx < bb; ++blockIdx)
         {
             commonPrng.mAes.ecbEncCounterMode(doneIdx, 128, challenges.data());
-            u64 stop = std::min(messages.size(), doneIdx + 128);
+            uint64_t stop = std::min(messages.size(), doneIdx + 128);
 
-            for (u64 i = 0, dd = doneIdx; dd < stop; ++dd, ++i)
+            for (uint64_t i = 0, dd = doneIdx; dd < stop; ++dd, ++i)
             {
                 //chii = commonPrng.get<block>();
                 //std::cout << "sendIdx' " << dd << "   " << messages[dd][0] << "   " << chii << std::endl;
@@ -289,7 +289,7 @@ namespace osuCrypto
             auto length = 2 *(stop - doneIdx);
             auto steps = length / 8;
             block* mIter = messages[doneIdx].data();
-            for (u64 i = 0; i < steps; ++i)
+            for (uint64_t i = 0; i < steps; ++i)
             {
                 mAesFixedKey.ecbEncBlocks(mIter, 8, aesHashTemp.data());
                 mIter[0] = mIter[0] ^ aesHashTemp[0];
@@ -306,7 +306,7 @@ namespace osuCrypto
 
             auto rem = length - steps * 8;
             mAesFixedKey.ecbEncBlocks(mIter, rem, aesHashTemp.data());
-            for (u64 i = 0; i < rem; ++i)
+            for (uint64_t i = 0; i < rem; ++i)
             {
                 mIter[i] = mIter[i] ^ aesHashTemp[i];
             }

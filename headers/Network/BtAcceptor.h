@@ -42,7 +42,7 @@ namespace osuCrypto {
 
         BtSocket* getSocket(BtChannel& chl);
 
-        u64 mPort;
+        uint64_t mPort;
         boost::asio::ip::tcp::endpoint mAddress;
 
         void bind(u32 port, std::string ip);

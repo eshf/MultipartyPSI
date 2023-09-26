@@ -25,7 +25,7 @@ namespace osuCrypto {
         rref.mNumBits = 0;
     }
 
-    BitVector::BitVector(u8 * data, u64 length)
+    BitVector::BitVector(u8 * data, uint64_t length)
         :
         mData(nullptr),
         mNumBits(0),
@@ -46,7 +46,7 @@ namespace osuCrypto {
         memcpy(mData, K.mData, sizeBytes());
     }
 
-    void BitVector::append(u8* data, u64 length, u64 offset)
+    void BitVector::append(u8* data, uint64_t length, uint64_t offset)
     {
 
         auto bitIdx = mNumBits;
@@ -65,7 +65,7 @@ namespace osuCrypto {
         {
 
             TODO("make this more efficient");
-            for (u64 i = 0; i < length; ++i, ++bitIdx, ++offset)
+            for (uint64_t i = 0; i < length; ++i, ++bitIdx, ++offset)
             {
                 u8 bit = data[offset / 8] & masks[offset % 8];
                 (*this)[bitIdx] = bit;
@@ -77,17 +77,17 @@ namespace osuCrypto {
         }
     }
 
-    void BitVector::reserve(u64 bits)
+    void BitVector::reserve(uint64_t bits)
     {
-        u64 curBits = mNumBits;
+        uint64_t curBits = mNumBits;
         resize(bits);
 
         mNumBits = curBits;
     }
 
-    void BitVector::resize(u64 newSize)
+    void BitVector::resize(uint64_t newSize)
     {
-        u64 new_nbytes = (newSize + 7) / 8;
+        uint64_t new_nbytes = (newSize + 7) / 8;
 
         if (mAllocBytes < new_nbytes)
         {
@@ -106,7 +106,7 @@ namespace osuCrypto {
 
     void BitVector::reset(size_t new_nbits)
     {
-        u64 newSize = (new_nbits + 7) / 8;
+        uint64_t newSize = (new_nbits + 7) / 8;
 
         if (newSize > mAllocBytes)
         {
@@ -124,7 +124,7 @@ namespace osuCrypto {
         mNumBits = new_nbits;
     }
 
-    void BitVector::copy(const BitVector& src, u64 idx, u64 length)
+    void BitVector::copy(const BitVector& src, uint64_t idx, uint64_t length)
     {
         resize(0);
         append(src.mData, length, idx);
@@ -138,7 +138,7 @@ namespace osuCrypto {
     }
 
 
-    BitReference BitVector::operator[](const u64 idx) const
+    BitReference BitVector::operator[](const uint64_t idx) const
     {
         if (idx >= mNumBits) throw std::runtime_error("rt error at " LOCATION);
         return BitReference(mData + (idx / 8), static_cast<u8>(idx % 8));
@@ -182,7 +182,7 @@ namespace osuCrypto {
     {
         BitVector ret(*this);
 
-        for (u64 i = 0; i < sizeBytes(); i++)
+        for (uint64_t i = 0; i < sizeBytes(); i++)
             ret.mData[i] = ~mData[i];
 
         return ret;
@@ -191,7 +191,7 @@ namespace osuCrypto {
 
     void BitVector::operator&=(const BitVector & A)
     {
-        for (u64 i = 0; i < sizeBytes(); i++)
+        for (uint64_t i = 0; i < sizeBytes(); i++)
         {
             mData[i] &= A.mData[i];
         }
@@ -199,7 +199,7 @@ namespace osuCrypto {
 
     void BitVector::operator|=(const BitVector & A)
     {
-        for (u64 i = 0; i < sizeBytes(); i++)
+        for (uint64_t i = 0; i < sizeBytes(); i++)
         {
             mData[i] |= A.mData[i];
         }
@@ -208,7 +208,7 @@ namespace osuCrypto {
     void BitVector::operator^=(const BitVector& A)
     {
         if (mNumBits != A.mNumBits) throw std::runtime_error("rt error at " LOCATION);
-        for (u64 i = 0; i < sizeBytes(); i++)
+        for (uint64_t i = 0; i < sizeBytes(); i++)
         {
             mData[i] ^= A.mData[i];
         }
@@ -217,7 +217,7 @@ namespace osuCrypto {
     {
         resize(data.size());
 
-        for (u64 i = 0; i < size(); ++i)
+        for (uint64_t i = 0; i < size(); ++i)
         {
 #ifndef NDEBUG 
             if (u8(data[i] - '0') > 1) throw std::runtime_error("");
@@ -235,8 +235,8 @@ namespace osuCrypto {
         if (mNumBits != rhs.mNumBits)
             return false;
 
-        u64 lastByte = sizeBytes() - 1;
-        for (u64 i = 0; i < lastByte; i++)
+        uint64_t lastByte = sizeBytes() - 1;
+        for (uint64_t i = 0; i < lastByte; i++)
         {
             if (mData[i] != rhs.mData[i]) { return false; }
         }
@@ -246,7 +246,7 @@ namespace osuCrypto {
         // 11111010
         //     ^^^^ compare these
 
-        u64 rem = mNumBits & 7;
+        uint64_t rem = mNumBits & 7;
         u8 mask = ((u8)-1) >> (8 - rem);
         if ((mData[lastByte] & mask) != (rhs.mData[lastByte] & mask))
             return false;
@@ -264,20 +264,20 @@ namespace osuCrypto {
         return BitIterator(mData + (mNumBits >> 3), mNumBits & 7);
     }
 
-    void BitVector::nChoosek(u64 n, u64 k, PRNG & prng)
+    void BitVector::nChoosek(uint64_t n, uint64_t k, PRNG & prng)
     {
         reset(n);
         // wiki: Reservoir sampling
 
 
         memset(data(), u8(-1), k / 8);
-        for (u64 i = k - 1; i >= (k & (~3)); --i)
+        for (uint64_t i = k - 1; i >= (k & (~3)); --i)
             (*this)[i] = 1;
 
 
-        for (u64 i = k; i < n; ++i)
+        for (uint64_t i = k; i < n; ++i)
         {
-            u64 j = prng.get<u64>() % i;
+            uint64_t j = prng.get<uint64_t>() % i;
 
             if (j < k)
             {
@@ -288,11 +288,11 @@ namespace osuCrypto {
         }
     }
 
-    u64 BitVector::hammingWeight() const
+    uint64_t BitVector::hammingWeight() const
     {
         TODO("make sure top bits are cleared");
-        u64 ham(0);
-        for (u64 i = 0; i < sizeBytes(); ++i)
+        uint64_t ham(0);
+        for (uint64_t i = 0; i < sizeBytes(); ++i)
         {
             u8 b = data()[i];
             while (b)
@@ -309,8 +309,8 @@ namespace osuCrypto {
     {
         u8 bit = 0;
 
-        u64 lastByte = mNumBits / 8;
-        for (u64 i = 0; i < lastByte; i++)
+        uint64_t lastByte = mNumBits / 8;
+        for (uint64_t i = 0; i < lastByte; i++)
         {
 
             bit ^= (mData[i] & 1); // bit 0
@@ -323,8 +323,8 @@ namespace osuCrypto {
             bit ^= ((mData[i] >> 7) & 1); // bit 7
         }
 
-        u64 lastBits = mNumBits - lastByte * 8;
-        for (u64 i = 0; i < lastBits; i++)
+        uint64_t lastBits = mNumBits - lastByte * 8;
+        for (uint64_t i = 0; i < lastBits; i++)
         {
             bit ^= (mData[lastByte] >> i) & 1;
         }
@@ -368,7 +368,7 @@ namespace osuCrypto {
         //}
 
         //return in;
-        for (u64 i = 0; i < vec.size(); ++i)
+        for (uint64_t i = 0; i < vec.size(); ++i)
         {
             out << char('0' + (u8)vec[i]);
         }

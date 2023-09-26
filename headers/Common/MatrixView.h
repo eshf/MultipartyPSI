@@ -16,7 +16,7 @@ namespace osuCrypto
         T* mData;
 
         // Matrix is index by [rowIdx][columnIdx]
-        std::array<u64, 2> mSize;
+        std::array<uint64_t, 2> mSize;
         bool mOwner;
 
     public:
@@ -47,20 +47,20 @@ namespace osuCrypto
         }
 
 
-        MatrixView(u64 rowSize, u64 columnSize) :
+        MatrixView(uint64_t rowSize, uint64_t columnSize) :
             mData(new T[rowSize * columnSize]()),
             mSize({ rowSize, columnSize }),
             mOwner(true)
         { }
 
 
-        MatrixView(T* data, u64 rowSize, u64 columnSize, bool owner) :
+        MatrixView(T* data, uint64_t rowSize, uint64_t columnSize, bool owner) :
             mData(data),
             mSize({ rowSize, columnSize }),
             mOwner(owner)
         {}
 
-        MatrixView(T* start, T* end, u64 numColumns) :
+        MatrixView(T* start, T* end, uint64_t numColumns) :
             mData(&*start),
             mSize({ (end - start) / numColumns, numColumns }),
             mOwner(false)
@@ -68,7 +68,7 @@ namespace osuCrypto
         }
 
         template <class Iter>
-        MatrixView(Iter start, Iter end, u64 numColumns, typename Iter::iterator_category *p = 0) :
+        MatrixView(Iter start, Iter end, uint64_t numColumns, typename Iter::iterator_category *p = 0) :
             mData(&*start),
             mSize({ (end - start) / numColumns, numColumns }),
             mOwner(false)
@@ -79,7 +79,7 @@ namespace osuCrypto
         }
 
         //template<class C>
-        //MatrixView(const C& cont, u64 numColumns, typename C::value_type* p = 0) :
+        //MatrixView(const C& cont, uint64_t numColumns, typename C::value_type* p = 0) :
         //    mData(&*((C&)cont).begin()),
         //    mSize({ (((C&)cont).end() - ((C&)cont).begin()) / numColumns, numColumns }),
         //    mOwner(false)
@@ -90,7 +90,7 @@ namespace osuCrypto
         //}
 
         template<template<typename, typename...> class C, typename... Args>
-        MatrixView(const C<T, Args...>& cont, u64 numColumns, typename C<T, Args...>::value_type* p = 0) :
+        MatrixView(const C<T, Args...>& cont, uint64_t numColumns, typename C<T, Args...>::value_type* p = 0) :
             mData(&*((C<T, Args...>&)cont).begin()),
             mSize({ (((C<T, Args...>&)cont).end() - ((C<T, Args...>&)cont).begin()) / numColumns, numColumns }),
             mOwner(false)
@@ -115,7 +115,7 @@ namespace osuCrypto
             mOwner = copy.mOwner;
 
             copy.mData = nullptr;
-            copy.mSize = std::array<u64, 2>{0, 0};
+            copy.mSize = std::array<uint64_t, 2>{0, 0};
             copy.mOwner = false;
 
             return copy;
@@ -131,7 +131,7 @@ namespace osuCrypto
             return copy;
         }
 
-        const std::array<u64, 2>& size() const { return mSize; }
+        const std::array<uint64_t, 2>& size() const { return mSize; }
 
 
 
@@ -154,7 +154,7 @@ namespace osuCrypto
         T* end() const { return mData + mSize[0] * mSize[1]; }
 #endif
 
-        ArrayView<T> operator[](u64 rowIdx) const
+        ArrayView<T> operator[](uint64_t rowIdx) const
         {
 #ifndef NDEBUG
             if (rowIdx >= mSize[0]) throw std::runtime_error(LOCATION);

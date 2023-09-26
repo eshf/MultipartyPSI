@@ -98,7 +98,7 @@ namespace osuCrypto {
                     //std::cout << option3.value() << std::endl;
 
                     newSocket->mHandle.async_receive(boost::asio::buffer(buff->data(), buff->size()), 
-                        [newSocket, buff, this](const boost::system::error_code& ec2, u64 bytesTransferred)
+                        [newSocket, buff, this](const boost::system::error_code& ec2, uint64_t bytesTransferred)
                     {
                         if(!ec2 || bytesTransferred != 4)
                         {
@@ -108,7 +108,7 @@ namespace osuCrypto {
                             buff->setp(size);
 
                             newSocket->mHandle.async_receive(boost::asio::buffer(buff->data(), buff->size()),
-                                [newSocket, buff, size, this](const boost::system::error_code& ec3, u64 bytesTransferred2)
+                                [newSocket, buff, size, this](const boost::system::error_code& ec3, uint64_t bytesTransferred2)
                             {
                                 if (!ec3 || bytesTransferred2 != size)
                                 {

@@ -14,11 +14,11 @@ namespace osuCrypto {
     class SHA1
     {
     public:
-        static const u64 HashSize = 20;
+        static const uint64_t HashSize = 20;
         SHA1();
 
         void Reset();
-        void Update(const u8* dataIn, u64 length);
+        void Update(const u8* dataIn, uint64_t length);
         void Update(const block& blk);
 
         void Final(u8* DataOut);
@@ -28,10 +28,10 @@ namespace osuCrypto {
         //CryptoPP::SHA1 mSha;
         std::array<uint32_t,5> state;
         std::array<uint8_t, 64> buffer;
-        u64 idx;
+        uint64_t idx;
     };
     
-    //u64    SHA1::HashSize(20);
+    //uint64_t    SHA1::HashSize(20);
 
     //void blk_SHA1_Init(blk_SHA_CTX *ctx);
     //void blk_SHA1_Update(blk_SHA_CTX *ctx, const void *dataIn, unsigned long len);
@@ -44,10 +44,10 @@ namespace osuCrypto {
     //class SHA2
     //{
     //public:
-    //    static const u64 HashSize = 512;
+    //    static const uint64_t HashSize = 512;
     //    SHA2() { Reset(); }
 
-    //    //u64 mSize;
+    //    //uint64_t mSize;
     //    //u32 mH[5];
     //    //u32 mW[16];
 
@@ -55,7 +55,7 @@ namespace osuCrypto {
     //    {
     //        mSha.Restart();
     //    }
-    //    inline void Update(const u8* dataIn, u64 length)
+    //    inline void Update(const u8* dataIn, uint64_t length)
     //    {
     //        mSha.Update(dataIn, length);
     //    }

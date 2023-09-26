@@ -19,7 +19,7 @@ namespace osuCrypto
     extern void split(const std::string &s, char delim, std::vector<std::string> &elems);
     extern std::vector<std::string> split(const std::string &s, char delim);
 
-    BtIOService::BtIOService(u64 numThreads)
+    BtIOService::BtIOService(uint64_t numThreads)
         :
         mIoService(),
         mWorker(new boost::asio::io_service::work(mIoService)),
@@ -34,7 +34,7 @@ namespace osuCrypto
         // if they provided 0, the use the number of processors worker threads
         numThreads = (numThreads) ? numThreads : std::thread::hardware_concurrency();
         mWorkerThrds.resize(numThreads);
-        u64 i = 0;
+        uint64_t i = 0;
         // Create worker threads based on the number of processors available on the
         // system. Create two worker threads for each processor
         for (auto& thrd : mWorkerThrds)
@@ -107,7 +107,7 @@ namespace osuCrypto
         {
             boost::asio::async_read(socket->mHandle,
                 std::array<boost::asio::mutable_buffer, 1>{ op.mBuffs[0] },
-                [&op, socket, this](const boost::system::error_code& ec, u64 bytesTransfered)
+                [&op, socket, this](const boost::system::error_code& ec, uint64_t bytesTransfered)
             {
                 //////////////////////////////////////////////////////////////////////////
                 //// This is *** NOT *** within the stand. Dont touch the recv queue! ////
@@ -159,7 +159,7 @@ namespace osuCrypto
 
                 boost::asio::async_read(socket->mHandle,
                     std::array<boost::asio::mutable_buffer, 1>{ op.mBuffs[1] },
-                    [&op, socket, this](const boost::system::error_code& ec, u64 bytesTransfered)
+                    [&op, socket, this](const boost::system::error_code& ec, uint64_t bytesTransfered)
                 {
                     //////////////////////////////////////////////////////////////////////////
                     //// This is *** NOT *** within the stand. Dont touch the recv queue! ////
@@ -222,7 +222,7 @@ namespace osuCrypto
         if (op.mType == BoostIOOperation::Type::SendData)
         {
 
-            boost::asio::async_write(socket->mHandle, op.mBuffs, [&op, socket, this](boost::system::error_code ec, u64 bytesTransferred)
+            boost::asio::async_write(socket->mHandle, op.mBuffs, [&op, socket, this](boost::system::error_code ec, uint64_t bytesTransferred)
             {
                 //////////////////////////////////////////////////////////////////////////
                 //// This is *** NOT *** within the stand. Dont touch the send queue! ////
@@ -351,7 +351,7 @@ namespace osuCrypto
 
                 socket->mTotalSentData += op.mSize;
                 socket->mOutstandingSendData += op.mSize;
-                socket->mMaxOutstandingSendData = std::max((u64)socket->mOutstandingSendData, (u64)socket->mMaxOutstandingSendData);
+                socket->mMaxOutstandingSendData = std::max((uint64_t)socket->mOutstandingSendData, (uint64_t)socket->mMaxOutstandingSendData);
 
                 // check to see if we should kick off a new set of send operations. If the size > 1, then there
                 // is already a set of send operations that will kick off the newly queued send when its turn comes around.

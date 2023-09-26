@@ -1,18 +1,21 @@
+#include <iostream>
+#include <stdio.h>
 #include "OtBinMain.h"
 #include "bitPosition.h"
-
 #include <numeric>
-//int miraclTestMain();
 #include <iostream>
 #include "emscripten/emscripten.h"
-#include <wasm_simd128.h>
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+using namespace std;
 
-EMSCRIPTEN_KEEPALIVE void usage(const char* argv0)
+void EMSCRIPTEN_KEEPALIVE OPPRFnt_EmptrySet_Test_Imp (int iVal) {
+  printf("TestFunction called...value passed in was: %i\n", iVal);
+}
+
+
+
+void usage(const char* argv0)
 {
 	std::cout << "Error! Please use:" << std::endl;
 	std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
@@ -22,26 +25,12 @@ EMSCRIPTEN_KEEPALIVE void usage(const char* argv0)
 }
 int main(int argc, char** argv)
 {
+	uint64_t trials = 1;
+	uint64_t pSetSize = 5, psiSecParam = 40, bitSize = 128;
 
-	//myCuckooTest_stash();
-	//Table_Based_Random_Test();
-	//OPPRF2_EmptrySet_Test_Main();
-	//OPPRFn_EmptrySet_Test_Main();
-	//Transpose_Test();
-	//OPPRF3_EmptrySet_Test_Main();
-	//OPPRFnt_EmptrySet_Test_Main();
-	//OPPRFnt_EmptrySet_Test_Main();
-	//OPPRFn_Aug_EmptrySet_Test_Impl();
-	//OPPRFnt_EmptrySet_Test_Main();
-	//OPPRF2_EmptrySet_Test_Main();
-	//return 0;
+	uint64_t nParties, tParties, opt_basedOPPRF, setSize, isAug;
 
-	u64 trials = 1;
-	u64 pSetSize = 5, psiSecParam = 40, bitSize = 128;
-
-	u64 nParties, tParties, opt_basedOPPRF, setSize, isAug;
-
-	u64 roundOPPRF;
+	uint64_t roundOPPRF;
 
 
 	switch (argc) {
@@ -68,7 +57,7 @@ int main(int argc, char** argv)
 		}
 
 		if (argv[5][0] == '-' && argv[5][1] == 'p') {
-			u64 pIdx = atoi(argv[6]);
+			uint64_t pIdx = atoi(argv[6]);
 			if (nParties == 2)
 				party2(pIdx, setSize);
 			else
@@ -118,7 +107,7 @@ int main(int argc, char** argv)
 		}
 
 		if (argv[7][0] == '-' && argv[7][1] == 'p') {
-			u64 pIdx = atoi(argv[8]);
+			uint64_t pIdx = atoi(argv[8]);
 			if (roundOPPRF == 1 && nParties == 3)
 			{
 				//cout << nParties  << " " << roundOPPRF << " " << setSize << " " << pIdx << "\n";
@@ -145,6 +134,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-#ifdef __cplusplus
-}
-#endif

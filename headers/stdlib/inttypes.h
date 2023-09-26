@@ -102,7 +102,7 @@ typedef wchar_t __gwchar_t;
 # define PRIu8		"u"
 # define PRIu16		"u"
 # define PRIu32		"u"
-# define PRIu64		__PRI64_PREFIX "u"
+# define PRIuint64_t		__PRI64_PREFIX "u"
 
 # define PRIuLEAST8	"u"
 # define PRIuLEAST16	"u"
@@ -203,7 +203,7 @@ typedef wchar_t __gwchar_t;
 # define SCNu8		"hhu"
 # define SCNu16		"hu"
 # define SCNu32		"u"
-# define SCNu64		__PRI64_PREFIX "u"
+# define SCNuint64_t		__PRI64_PREFIX "u"
 
 # define SCNuLEAST8	"hhu"
 # define SCNuLEAST16	"hu"

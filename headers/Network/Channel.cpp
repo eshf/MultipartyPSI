@@ -11,7 +11,7 @@ void osuCrypto::Channel::asyncSendCopy(const ChannelBuffer & buf)
     asyncSendCopy(buf.ChannelBufferData(), buf.ChannelBufferSize());
 }
 
-void osuCrypto::Channel::asyncSendCopy(const void * bufferPtr, u64 length)
+void osuCrypto::Channel::asyncSendCopy(const void * bufferPtr, uint64_t length)
 {
     std::unique_ptr<ByteStream> bs(new ByteStream((u8*)bufferPtr, length));
     asyncSend(std::move(bs));

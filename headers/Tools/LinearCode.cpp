@@ -41,7 +41,7 @@ namespace osuCrypto
 
     void LinearCode::loadTxtFile(std::istream & in)
     {
-        u64 numRows, numCols;
+        uint64_t numRows, numCols;
         in >> numRows >> numCols;
         mCodewordBitSize = numCols;
 
@@ -59,7 +59,7 @@ namespace osuCrypto
         std::string line;
         std::getline(in, line);
 
-        for (u64 i = 0; i < numRows; ++i)
+        for (uint64_t i = 0; i < numRows; ++i)
         {
             memset(buff.data(), 0, buff.sizeBytes());
             std::getline(in, line);
@@ -68,7 +68,7 @@ namespace osuCrypto
             if (line.size() != 2 * numCols - 1)
                 throw std::runtime_error("");
 #endif
-            for (u64 j = 0; j < numCols; ++j)
+            for (uint64_t j = 0; j < numCols; ++j)
             {
 
 #ifndef NDEBUG
@@ -79,7 +79,7 @@ namespace osuCrypto
             }
 
             block* blkView = (block*)buff.data();
-            for (u64 j = 0, k = 0; j < numCols; j += 128, ++k)
+            for (uint64_t j = 0, k = 0; j < numCols; j += 128, ++k)
             {
                 *iter++ = blkView[k];
             }
@@ -106,10 +106,10 @@ namespace osuCrypto
     void LinearCode::loadBinFile(std::istream & out)
     {
 
-        u64 size = 0;
+        uint64_t size = 0;
 
-        out.read((char *)&size, sizeof(u64));
-        out.read((char *)&mCodewordBitSize, sizeof(u64));
+        out.read((char *)&size, sizeof(uint64_t));
+        out.read((char *)&mCodewordBitSize, sizeof(uint64_t));
 
         if (mCodewordBitSize == 0)
         {
@@ -135,14 +135,14 @@ namespace osuCrypto
     }
     void LinearCode::writeBinFile(std::ostream & out)
     {
-        u64 size = mG.size();
-        out.write((const char *)&size, sizeof(u64));
-        out.write((const char *)&mCodewordBitSize, sizeof(u64));
+        uint64_t size = mG.size();
+        out.write((const char *)&size, sizeof(uint64_t));
+        out.write((const char *)&mCodewordBitSize, sizeof(uint64_t));
 
         out.write((const char *)mG.data(), mG.size() * sizeof(block));
     }
 
-    void LinearCode::random(PRNG & prng, u64 inputSize, u64 outputSize)
+    void LinearCode::random(PRNG & prng, uint64_t inputSize, uint64_t outputSize)
     {
         mCodewordBitSize = outputSize;
         mG.resize(inputSize * codewordBlkSize());
@@ -164,15 +164,15 @@ namespace osuCrypto
         MatrixView<block> g8(mG8.begin(), mG8.end(), codewordBlkSize() * 256);
 
 
-        for (u64 i = 0; i < g8.size()[0]; ++i)
+        for (uint64_t i = 0; i < g8.size()[0]; ++i)
         {
 
             MatrixView<block> g8Block(g8[i].begin(), g8[i].end(), codewordBlkSize());
 
-            for (u64 gRow = 0; gRow < 8; ++gRow)
+            for (uint64_t gRow = 0; gRow < 8; ++gRow)
             {
-                u64 g8Row = (u64(1) << gRow);
-                u64 stride = g8Row;
+                uint64_t g8Row = (uint64_t(1) << gRow);
+                uint64_t stride = g8Row;
 
                 while (g8Row < 256)
                 {
@@ -181,7 +181,7 @@ namespace osuCrypto
                         if (i * 8 + gRow < g.size()[0])
                         {
 
-                            for (u64 wordIdx = 0; wordIdx < codewordBlkSize(); ++wordIdx)
+                            for (uint64_t wordIdx = 0; wordIdx < codewordBlkSize(); ++wordIdx)
                             {
                                 g8Block[g8Row][wordIdx]
                                     = g8Block[g8Row][wordIdx]
@@ -198,22 +198,22 @@ namespace osuCrypto
         }
     }
 
-    u64 LinearCode::plaintextBlkSize() const
+    uint64_t LinearCode::plaintextBlkSize() const
     {
         return (plaintextBitSize() + 127) / 128;
     }
 
-    u64 LinearCode::plaintextBitSize() const
+    uint64_t LinearCode::plaintextBitSize() const
     {
         return mG.size() / codewordBlkSize();
     }
 
-    u64 LinearCode::codewordBlkSize() const
+    uint64_t LinearCode::codewordBlkSize() const
     {
         return (codewordBitSize() + 127) / 128;
     }
 
-    u64 LinearCode::codewordBitSize() const
+    uint64_t LinearCode::codewordBitSize() const
     {
         return mCodewordBitSize;
     }
@@ -240,19 +240,19 @@ namespace osuCrypto
         // each with input size 8. And these subcodes are precomputed
         // in a lookup table called mG8. Each sub-code takes up 256 * codeSize;
 
-        u64 codeSize = codewordBlkSize();
-        u64 rowSize = 256 * codeSize;
+        uint64_t codeSize = codewordBlkSize();
+        uint64_t rowSize = 256 * codeSize;
         u8* byteView = (u8*)plaintxt.data();
 
         if (codeSize == 4)
         {
-            u64 kStop = (mG8.size() / 8) * 8,
+            uint64_t kStop = (mG8.size() / 8) * 8,
                 k = 0,
                 i = 0;
 
             // this case has been optimized and we lookup two sub-codes at a time.
-            u64 byteStep = 2;
-            u64 kStep = rowSize * byteStep;
+            uint64_t byteStep = 2;
+            uint64_t kStep = rowSize * byteStep;
             for (; k < kStop; i += byteStep, k += kStep)
             {
                 block* g0 = mG8.data() + k + byteView[i] * codeSize;
@@ -279,15 +279,15 @@ namespace osuCrypto
         }
         else
         {
-            u64 rowCount = (plaintextBitSize() + 7) / 8;
-            u64 superRowCount = rowCount / 8;
+            uint64_t rowCount = (plaintextBitSize() + 7) / 8;
+            uint64_t superRowCount = rowCount / 8;
 
-            for (u64 j = 0; j < codeSize; ++j)
+            for (uint64_t j = 0; j < codeSize; ++j)
             {
-                for (u64 i = 0; i < 8; ++i)
+                for (uint64_t i = 0; i < 8; ++i)
                     c[i] = ZeroBlock;
 
-                for (u64 i = 0; i < superRowCount; ++i)
+                for (uint64_t i = 0; i < superRowCount; ++i)
                 {
 
                     block* g0 = mG8.data() + j + byteView[i + 0] * codeSize + rowSize * 0;
@@ -313,7 +313,7 @@ namespace osuCrypto
                 }     
 
                 codeword[j] = ZeroBlock;
-                for (u64 i = 0; i < 8; ++i)
+                for (uint64_t i = 0; i < 8; ++i)
                     codeword[j] = codeword[j] ^ c[i];
             }
       

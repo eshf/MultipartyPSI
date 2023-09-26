@@ -26,19 +26,19 @@ namespace osuCrypto
         void writeBinFile(const std::string& fileName);
         void writeBinFile(std::ostream& out);
 
-        void random(PRNG& prng, u64 inputSize, u64 outputSize);
+        void random(PRNG& prng, uint64_t inputSize, uint64_t outputSize);
 
         void generateMod8Table();
 
-        u64 mCodewordBitSize;
+        uint64_t mCodewordBitSize;
         std::vector<block> mG;
         std::vector<block> mG8;
 
-        u64 plaintextBlkSize()const;
-        u64 codewordBlkSize()const;
+        uint64_t plaintextBlkSize()const;
+        uint64_t codewordBlkSize()const;
 
-        u64 plaintextBitSize()const;
-        u64 codewordBitSize()const;
+        uint64_t plaintextBitSize()const;
+        uint64_t codewordBitSize()const;
 
 
         void encode(ArrayView<block> plaintext, ArrayView<block> codeword);

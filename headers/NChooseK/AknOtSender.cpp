@@ -17,7 +17,7 @@ namespace osuCrypto
     }
 
 
-    void AknOtSender::init(u64 totalOTCount, u64 cutAndChooseThreshold, double p, OtExtSender & ots, std::vector<Channel*> & chls, PRNG & prng)
+    void AknOtSender::init(uint64_t totalOTCount, uint64_t cutAndChooseThreshold, double p, OtExtSender & ots, std::vector<Channel*> & chls, PRNG & prng)
     {
 
 
@@ -80,14 +80,14 @@ namespace osuCrypto
         u32 px = (u32)(u32(-1) * p);
 
         std::mutex finalMtx;
-        u64 totalOnesCount(0);
+        uint64_t totalOnesCount(0);
         block totalSum(ZeroBlock);
 
-        auto routine = [&](u64 t, block extSeed, OtExtSender& otExt, Channel& chl)
+        auto routine = [&](uint64_t t, block extSeed, OtExtSender& otExt, Channel& chl)
         {
             // round up to the next 128 to make sure we aren't wasting OTs in the extension...
-            u64 start = std::min(roundUpTo(t *     mMessages.size() / chls.size(), 128), mMessages.size());
-            u64 end = std::min(roundUpTo((t + 1) * mMessages.size() / chls.size(), 128), mMessages.size());
+            uint64_t start = std::min(roundUpTo(t *     mMessages.size() / chls.size(), 128), mMessages.size());
+            uint64_t end = std::min(roundUpTo((t + 1) * mMessages.size() / chls.size(), 128), mMessages.size());
 
             ArrayView<std::array<block, 2>> range(
                 mMessages.begin() + start,
@@ -114,22 +114,22 @@ namespace osuCrypto
                 chl.asyncSend(&cncRootSeed, sizeof(block));
             }
 
-            u64 sampleCount(0);
+            uint64_t sampleCount(0);
 
             auto sampleIter = mSampled.begin() + start;
             block partialSum(ZeroBlock);
-            u64 onesCount(0);
+            uint64_t onesCount(0);
 
 
 
             ByteStream choiceBuff;
             chl.recv(choiceBuff);
             auto choiceIter = choiceBuff.bitIterBegin();
-            u64 bitsRemaining = choiceBuff.size() * 8;
+            uint64_t bitsRemaining = choiceBuff.size() * 8;
 
 
             //std::cout << IoStream::lock << "send " << end << "  " << px << std::endl;
-            for (u64 i = start; i < end; ++i)
+            for (uint64_t i = start; i < end; ++i)
             {
                 auto vv = cncGens[t].get<u32>();
                 u8 c = (vv <= px);
@@ -184,7 +184,7 @@ namespace osuCrypto
             totalSum = totalSum ^ partialSum;
         };
 
-        for (u64 i = 0; i < parOts.size(); ++i)
+        for (uint64_t i = 0; i < parOts.size(); ++i)
         {
             parOts[i] = std::move(ots.split());
             auto seed = prng.get<block>();

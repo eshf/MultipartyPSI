@@ -15,7 +15,7 @@ namespace osuCrypto
         if (baseOTs.size() != gOtExtBaseOtCount)
             throw std::runtime_error(LOCATION);
 
-        for (u64 i = 0; i < gOtExtBaseOtCount; i++)
+        for (uint64_t i = 0; i < gOtExtBaseOtCount; i++)
         {
             mGens[i][0].SetSeed(baseOTs[i][0]);
             mGens[i][1].SetSeed(baseOTs[i][1]);
@@ -28,7 +28,7 @@ namespace osuCrypto
     {
         std::array<std::array<block, 2>, gOtExtBaseOtCount>baseRecvOts;
 
-        for (u64 i = 0; i < mGens.size(); ++i)
+        for (uint64_t i = 0; i < mGens.size(); ++i)
         {
             baseRecvOts[i][0] = mGens[i][0].get<block>();
             baseRecvOts[i][1] = mGens[i][1].get<block>();
@@ -53,12 +53,12 @@ namespace osuCrypto
             throw std::runtime_error("rt error at " LOCATION);
 
 
-        static const u64 superBlkSize(8);
+        static const uint64_t superBlkSize(8);
 
         // we are going to process OTs in blocks of 128 * superBlkSize messages.
-        u64 numOtExt = roundUpTo(choices.size(), 128);
-        u64 numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
-        u64 numBlocks = numSuperBlocks * superBlkSize;
+        uint64_t numOtExt = roundUpTo(choices.size(), 128);
+        uint64_t numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
+        uint64_t numBlocks = numSuperBlocks * superBlkSize;
 
         // commit to as seed which will be used to 
         block seed = prng.get<block>();
@@ -71,7 +71,7 @@ namespace osuCrypto
         //choices2.randomize(zPrng);
         choices2 = choices;
         choices2.resize(numBlocks * 128);
-        for (u64 i = 0; i < 128; ++i)
+        for (uint64_t i = 0; i < 128; ++i)
         {
             choices2[choices.size() + i] = prng.getBit();
 
@@ -85,11 +85,11 @@ namespace osuCrypto
         std::array<std::array<block, superBlkSize>, 128> t0;
 
         // the index of the OT that has been completed.
-        //u64 doneIdx = 0;
+        //uint64_t doneIdx = 0;
 
         std::array<block, 128> extraBlocks;
         block* xIter = extraBlocks.data();
-        //u64 extraIdx = 0;
+        //uint64_t extraIdx = 0;
 
         block* mIter = messages.data();
 
@@ -99,7 +99,7 @@ namespace osuCrypto
         //   performance reasons. The reason for 8 is that most CPUs have 8 AES vector  
         //   lanes, and so its more efficient to encrypt (aka prng) 8 blocks at a time.
         //   So that's what we do. 
-        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
 
             // this will store the next 128 rows of the matrix u
@@ -113,7 +113,7 @@ namespace osuCrypto
             block* cIter = choiceBlocks.data() + superBlkSize * superBlkIdx;
 
 
-            for (u64 colIdx = 0; colIdx < 128; ++colIdx)
+            for (uint64_t colIdx = 0; colIdx < 128; ++colIdx)
             {
                 // generate the column indexed by colIdx. This is done with
                 // AES in counter mode acting as a PRNG. We don'tIter use the normal
@@ -162,7 +162,7 @@ namespace osuCrypto
             block* mEnd = std::min(mIter + 128 * superBlkSize, (block*)messages.end());
 
             // compute how many rows are unused.
-            u64 unusedCount = (mIter + 128 * superBlkSize) - mEnd;
+            uint64_t unusedCount = (mIter + 128 * superBlkSize) - mEnd;
 
             // compute the begin and end index of the extra rows that 
             // we will compute in this iters. These are taken from the 
@@ -207,7 +207,7 @@ namespace osuCrypto
 
 #ifdef KOS_DEBUG
 
-            u64 doneIdx = mStart - messages.data();
+            uint64_t doneIdx = mStart - messages.data();
             block* msgIter = messages.data() + doneIdx;
             chl.send(msgIter, sizeof(block) * 128 * superBlkSize);
             cIter = choiceBlocks.data() + superBlkSize * superBlkIdx;
@@ -246,7 +246,7 @@ namespace osuCrypto
 
         SHA1 sha;
         u8 hashBuff[20];
-        u64 doneIdx = (0);
+        uint64_t doneIdx = (0);
         //std::cout << IoStream::lock;
 
         std::array<block, 2> zeroOneBlk{ ZeroBlock, AllOneBlock };
@@ -257,12 +257,12 @@ namespace osuCrypto
 
         block mask = _mm_set_epi8(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
-        u64 bb = (messages.size() + 127) / 128;
-        for (u64 blockIdx = 0; blockIdx < bb; ++blockIdx)
+        uint64_t bb = (messages.size() + 127) / 128;
+        for (uint64_t blockIdx = 0; blockIdx < bb; ++blockIdx)
         {
             commonPrng.mAes.ecbEncCounterMode(doneIdx, 128, challenges.data());
 
-            u64 stop = std::min(messages.size(), doneIdx + 128);
+            uint64_t stop = std::min(messages.size(), doneIdx + 128);
 
             expendedChoiceBlk[0] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 0);
             expendedChoiceBlk[1] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 1);
@@ -273,7 +273,7 @@ namespace osuCrypto
             expendedChoiceBlk[6] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 6);
             expendedChoiceBlk[7] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 7);
 
-            for (u64 i = 0; doneIdx < stop; ++doneIdx, ++i)
+            for (uint64_t i = 0; doneIdx < stop; ++doneIdx, ++i)
             {
                 u8 choiceBit = expendedChoice[i % 8][i / 8];
 
@@ -298,7 +298,7 @@ namespace osuCrypto
 
 
 
-        //u64 xtra = 0;;
+        //uint64_t xtra = 0;;
         for (block& blk : extraBlocks)
         {
             // and check for correlation

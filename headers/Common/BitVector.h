@@ -15,7 +15,7 @@ namespace osuCrypto {
     {
 
         u8* mData;
-        u64 mNumBits, mAllocBytes;
+        uint64_t mNumBits, mAllocBytes;
 
     public:
 
@@ -25,7 +25,7 @@ namespace osuCrypto {
             mAllocBytes(0)
         {}
 
-        BitVector(u8* data, u64 length);
+        BitVector(u8* data, uint64_t length);
 
         
         BitVector(std::string data);
@@ -55,23 +55,23 @@ namespace osuCrypto {
         void assign(const block& b);
         void assign(const BitVector& K); 
 
-        void append(u8* data, u64 length, u64 offset = 0);
+        void append(u8* data, uint64_t length, uint64_t offset = 0);
         void append(const BitVector& k) { append(k.data(), k.size()); }
 
         // erases original contents
         void reset(size_t new_nbits = 0);
-        void resize(u64 newSize);
-        void reserve(u64 bits);
+        void resize(uint64_t newSize);
+        void reserve(uint64_t bits);
 
-        void copy(const BitVector& src, u64 idx, u64 length);
+        void copy(const BitVector& src, uint64_t idx, uint64_t length);
 
-        u64 capacity() const { return mAllocBytes * 8; }
-        u64 size() const { return mNumBits; }
-        u64 sizeBytes() const { return (mNumBits + 7) / 8; }
+        uint64_t capacity() const { return mAllocBytes * 8; }
+        uint64_t size() const { return mNumBits; }
+        uint64_t sizeBytes() const { return (mNumBits + 7) / 8; }
         u8* data() const { return mData; }
 
         BitVector& operator=(const BitVector& K);
-        BitReference operator[](const u64 idx) const;
+        BitReference operator[](const uint64_t idx) const;
         BitVector operator^(const BitVector& B)const;
         BitVector operator&(const BitVector& B)const;
         BitVector operator|(const BitVector& B)const;
@@ -89,8 +89,8 @@ namespace osuCrypto {
 
         BitIterator begin() const;
         BitIterator end() const;
-        void nChoosek(u64 n, u64 k, PRNG& prng);
-        u64 hammingWeight() const;
+        void nChoosek(uint64_t n, uint64_t k, PRNG& prng);
+        uint64_t hammingWeight() const;
 
         void pushBack(u8 bit);
         inline BitReference back() { return (*this)[size() - 1]; }
@@ -107,8 +107,8 @@ namespace osuCrypto {
 
     protected:
         u8* ChannelBufferData() const override { return mData; }
-        u64 ChannelBufferSize() const override { return sizeBytes(); };
-        void ChannelBufferResize(u64 len) override
+        uint64_t ChannelBufferSize() const override { return sizeBytes(); };
+        void ChannelBufferResize(uint64_t len) override
         {
             if (sizeBytes() != len)
                 throw std::invalid_argument("asdsdasfaf ;) "); 
