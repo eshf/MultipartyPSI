@@ -1,27 +1,31 @@
-#include "Network/BtEndpoint.h" 
+
 
 #include "OPPRF/OPPRFReceiver.h"
 #include "OPPRF/OPPRFSender.h"
 
 #include <fstream>
 using namespace osuCrypto;
+using namespace std;
 #include "util.h"
 
-#include "Common/Defines.h"
+
 #include "NChooseOne/KkrtNcoOtReceiver.h"
 #include "NChooseOne/KkrtNcoOtSender.h"
 
 #include "NChooseOne/Oos/OosNcoOtReceiver.h"
 #include "NChooseOne/Oos/OosNcoOtSender.h"
-#include "Common/Log.h"
-#include "Common/Log1.h"
 #include "Common/Timer.h"
-#include "Crypto/PRNG.h"
 #include <numeric>
 #include "bitPosition.h"
 #include <set>
+#include <emscripten/emscripten.h>
+#include <wasm_simd128.h>
 
-void Bit_Position_Test()
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+EMSCRIPTEN_KEEPALIVE void Bit_Position_Test()
 {
 	u64 setSize = 32;
 	std::vector<block> testSet(setSize);
@@ -35,7 +39,7 @@ void Bit_Position_Test()
 	BitPosition b;
 	b.init(setSize);
 	std::cout << b.mRealBitSize << std::endl;
-	std::set<u8> masks;
+	std::set<osuCrypto::u8> masks;
 	Timer timer;
 	auto start = timer.setTimePoint("start");
 	b.getMasks(testSet);
@@ -61,7 +65,7 @@ void Bit_Position_Test()
 
 }
 
-void Bit_Position_Map_Test()
+EMSCRIPTEN_KEEPALIVE void Bit_Position_Map_Test()
 {
 	u64 setSize = 1 << 7;
 	std::vector<block> testSet(setSize);
@@ -76,7 +80,7 @@ void Bit_Position_Map_Test()
 	b.init(setSize);
 	b.mRealBitSize = 7;
 
-	for (u8 i = 0; i < b.mRealBitSize; i++)
+	for (osuCrypto::u8 i = 0; i < b.mRealBitSize; i++)
 	{
 		//u64 rand = std::rand() % 128; //choose randome bit location
 		//ret = b.mPos.push_back(rand);
@@ -84,10 +88,10 @@ void Bit_Position_Map_Test()
 		//	it = ret.first;
 	}
 
-	//for (u8 i = 0; i < setSize; i++)
+	//for (osuCrypto::u8 i = 0; i < setSize; i++)
 	//{
-	//	//u8 map1 = b.map(testSet[i]);
-	//	//u8 map2 = b.map2(testSet[i]);
+	//	//osuCrypto::u8 map1 = b.map(testSet[i]);
+	//	//osuCrypto::u8 map2 = b.map2(testSet[i]);
 	//	//if (map1 != map2)
 	//	{
 	//		//std::cout << "map1!=map2" << std::endl;
@@ -98,18 +102,18 @@ void Bit_Position_Map_Test()
 	//}
 	Timer timer;
 	auto start = timer.setTimePoint("start");
-	for (u8 i = 0; i < setSize; i++)
+	for (osuCrypto::u8 i = 0; i < setSize; i++)
 	{
-		//	u8 map2 = b.map2(testSet[i]);
+		//	osuCrypto::u8 map2 = b.map2(testSet[i]);
 	}
 	auto end = timer.setTimePoint("done");
 	auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 	std::cout << "time1: " << time << " ms\n";
 
 	start = timer.setTimePoint("start");
-	for (u8 i = 0; i < setSize; i++)
+	for (osuCrypto::u8 i = 0; i < setSize; i++)
 	{
-		//	u8 map1 = b.map(testSet[i]);
+		//	osuCrypto::u8 map1 = b.map(testSet[i]);
 	}
 	end = timer.setTimePoint("done");
 	time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
@@ -162,13 +166,13 @@ void Bit_Position_Recursive_Test()
 
 u64 numParties = 4;
 std::vector<std::vector<std::vector<Channel*>>> chls(numParties);
-std::vector<std::vector<u8>> revDummy(numParties);
-std::vector<std::vector<u8>> dummy(numParties);
+std::vector<std::vector<osuCrypto::u8>> revDummy(numParties);
+std::vector<std::vector<osuCrypto::u8>> dummy(numParties);
 
 
 
 
-void Channel_Test() {
+EMSCRIPTEN_KEEPALIVE void Channel_Test() {
 	std::string name("psi");
 
 	BtIOService ios(0);
@@ -273,3 +277,7 @@ void Channel_Test() {
 
 	ios.stop();
 }
+
+#ifdef __cplusplus
+}
+#endif

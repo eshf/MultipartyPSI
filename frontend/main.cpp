@@ -1,18 +1,12 @@
-#include "Network/BtChannel.h"
-#include "Network/BtEndpoint.h"
-
-using namespace std;
-#include "Common/Defines.h"
-using namespace osuCrypto;
-
 #include "OtBinMain.h"
 #include "bitPosition.h"
 
 #include <numeric>
-#include "Common/Log.h"
 //int miraclTestMain();
-#include "emscripten/emscripten.h"
 #include <iostream>
+#include "emscripten/emscripten.h"
+#include <wasm_simd128.h>
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -90,7 +84,7 @@ int main(int argc, char** argv)
 		}
 		break;
 	case 9: //nPSI or optimized 3PSI
-		cout << "9\n";
+		std::cout << "9\n";
 		if (argv[1][0] == '-' && argv[1][1] == 'n')
 			nParties = atoi(argv[2]);
 		else
@@ -151,3 +145,6 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+#ifdef __cplusplus
+}
+#endif

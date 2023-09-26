@@ -1,39 +1,44 @@
-#include "Network/BtEndpoint.h" 
+
 
 #include "OPPRF/OPPRFReceiver.h"
 #include "OPPRF/OPPRFSender.h"
 
 #include <fstream>
 using namespace osuCrypto;
+using namespace std;
+
 #include "util.h"
 
-#include "Common/Defines.h"
+
 #include "NChooseOne/KkrtNcoOtReceiver.h"
 #include "NChooseOne/KkrtNcoOtSender.h"
 
 #include "NChooseOne/Oos/OosNcoOtReceiver.h"
 #include "NChooseOne/Oos/OosNcoOtSender.h"
-#include "Common/Log.h"
-#include "Common/Log1.h"
+
 #include "Common/Timer.h"
-#include "Crypto/PRNG.h"
 #include <numeric>
 #include <iostream>
-
+#include <wasm_simd128.h>
 //#define OOS
 //#define PRINT
 #define pows  { 16/*8,12,,20*/ }
 #define threadss {1/*1,4,16,64*/}
 #define  numTrial 2
-std::vector<block> sendSet;
-std::vector<block> mSet;
-u64 nParties(3);
 
-u64 opt = 0;
+std::vector<block> sendSet, mSet;
+
+u64 nParties(3), opt = 0;
 
 bool isNTLThreadSafe = false;
 
-void Channel_test()
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+EMSCRIPTEN_KEEPALIVE void Channel_test()
 {
 	std::string name("psi");
 
@@ -60,7 +65,8 @@ void Channel_test()
 	ep1.stop();
 	ios.stop();
 }
-void Channel_party_test(u64 myIdx)
+
+EMSCRIPTEN_KEEPALIVE void Channel_party_test(u64 myIdx)
 {
 	u64 setSize = 1 << 5, psiSecParam = 40, bitSize = 128, numThreads = 1;
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
@@ -163,7 +169,8 @@ void Channel_party_test(u64 myIdx)
 }
 
 
-void party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet)
+
+EMSCRIPTEN_KEEPALIVE void party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet)
 {
 	//nParties = 4;
 	std::fstream runtime;
@@ -656,7 +663,8 @@ void party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet)
 	ios.stop();
 }
 
-void party3(u64 myIdx, u64 setSize, u64 nTrials)
+
+EMSCRIPTEN_KEEPALIVE void party3(u64 myIdx, u64 setSize, u64 nTrials)
 {
 	std::fstream runtime;
 	if (myIdx == 0)
@@ -1086,7 +1094,8 @@ void party3(u64 myIdx, u64 setSize, u64 nTrials)
 	ios.stop();
 }
 
-void party2(u64 myIdx, u64 setSize)
+
+EMSCRIPTEN_KEEPALIVE void party2(u64 myIdx, u64 setSize)
 {
 	nParties = 2;
 	u64  psiSecParam = 40, bitSize = 128, numThreads = 1;
@@ -1369,7 +1378,8 @@ bool is_in_dual_area(u64 startIdx, u64 endIdx, u64 numIdx, u64 checkIdx) {
 }
 
 //leader is n-1
-void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
+
+EMSCRIPTEN_KEEPALIVE void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
 {
 	u64 opt = 0;
 	std::fstream runtime;
@@ -2266,7 +2276,8 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
 }
 
 
-void BinSize(u64 setSize, std::vector<block> set,u64 psiSecParam)
+
+EMSCRIPTEN_KEEPALIVE void BinSize(u64 setSize, std::vector<block> set, u64 psiSecParam)
 {
 	//std::cout << "maxRealBinSize: " << bins.mSimpleBins.maxRealBinSize() << std::endl;
 
@@ -2290,7 +2301,8 @@ void BinSize(u64 setSize, std::vector<block> set,u64 psiSecParam)
 
 }
 
-void aug_party(u64 myIdx, u64 nParties, u64 setSize,  u64 opt, u64 nTrials)
+
+EMSCRIPTEN_KEEPALIVE void aug_party(u64 myIdx, u64 nParties, u64 setSize,  u64 opt, u64 nTrials)
 {
 	//opt = 1;
 
@@ -2431,7 +2443,7 @@ void aug_party(u64 myIdx, u64 nParties, u64 setSize,  u64 opt, u64 nTrials)
 
 
 		if (myIdx == leaderIdx) //leader
-			for (u32 i = 0; i < recvPayLoads.size(); i++)
+			for 	u32 i = 0; i < recvPayLoads.size(); i++)
 			{
 				recvPayLoads[i].resize(setSize);
 			}
@@ -3000,7 +3012,7 @@ void OPPRFn_Aug_EmptrySet_Test_Impl()
 
 }
 
-void Bit_Position_Random_Test()
+EMSCRIPTEN_KEEPALIVE void Bit_Position_Random_Test()
 {
 	u64 power = 20;
 	u64 setSize = 1 << power;
@@ -3084,7 +3096,7 @@ void Bit_Position_Random_Test()
 
 
 
-void tparty1(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<block>& mSet, u64 nTrials)
+EMSCRIPTEN_KEEPALIVE void tparty1(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<block>& mSet, u64 nTrials)
 {
 
 #pragma region setup
@@ -3872,7 +3884,8 @@ void tparty1(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<blo
 
 	ios.stop();
 }
-void OPPRFnt_EmptrySet_Test_Impl()
+
+EMSCRIPTEN_KEEPALIVE void OPPRFnt_EmptrySet_Test_Impl()
 {
 	u64 setSize = 1 << 5, psiSecParam = 40, bitSize = 128;
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
@@ -3909,6 +3922,9 @@ void OPPRFnt_EmptrySet_Test_Impl()
 
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 //void OPPRF_EmptrySet_Test_Impl1()
 //{

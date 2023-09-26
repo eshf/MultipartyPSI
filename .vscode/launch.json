@@ -10,7 +10,7 @@
             "type": "cppdbg", // c/c++ debugging
             "request": "launch", // launch or attach
             "cwd": "${workspaceFolder}/**", // working directory of the target
-            "program": "${workspaceFolder}/appmpsi/main.cpp", // name of target to run
+            "program": "${workspaceFolder}/frontend/main.cpp", // name of target to run
             "args": [], // arguments to the program
             "stopAtEntry": true, // break at main?
             "environment": [
