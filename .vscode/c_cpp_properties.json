@@ -30,6 +30,7 @@
                 "${workspaceFolder}/thirdparty/win/**",
                 "${workspaceFolder}/frontend/emsdk/scripts/**",
                 "${workspaceFolder}/frontend/emsdk/test/**",
+                "${workspaceFolder}/frontend/emsdk/**",
                 "${workspaceFolder}/frontend/emsdk/upstream/bin/**",
                 "${workspaceFolder}/frontend/emsdk/upstream/emscripten/**",
                 "${workspaceFolder}/frontend/emsdk/upstream/lib/**",
