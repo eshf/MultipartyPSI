@@ -43,9 +43,9 @@ namespace date_time {
       }
       date_duration_type dd = t.date() - time_t_start_day;
       time_duration_type td = t.time_of_day();
-      uint64_t t2 = static_cast<uint64_t>(dd.days())*86400 +
-                    static_cast<uint64_t>(td.hours())*3600 +
-                    static_cast<uint64_t>(td.minutes())*60 +
+      u64 t2 = static_cast<u64>(dd.days())*86400 +
+                    static_cast<u64>(td.hours())*3600 +
+                    static_cast<u64>(td.minutes())*60 +
                     td.seconds();
       // detect y2038 issue and throw instead of proceed with bad time
       std::time_t tv = boost::numeric_cast<std::time_t>(t2);

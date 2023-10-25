@@ -37,7 +37,7 @@ using namespace osuCrypto;
 #define PRINT
 //#define BIN_PRINT
 
-u32 opt = 0;
+uint32_t opt = 0;
 void testPointer(std::vector<block>* test)
 {
 	//int length = test->size();
@@ -1162,12 +1162,12 @@ void party(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	{
 		if (i < myIdx)
 		{
-			u32 port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -1568,12 +1568,12 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	{
 		if (i < myIdx)
 		{
-			u32 port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -1780,7 +1780,7 @@ void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, s
 	sendPayLoads.resize(setSize);
 	
 	if (myIdx == 0) //leader
-		for (u32 i = 0; i < recvPayLoads.size(); i++)
+		for (uint32_t i = 0; i < recvPayLoads.size(); i++)
 		{
 			recvPayLoads[i].resize(setSize);
 		}
@@ -1811,12 +1811,12 @@ void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, s
 	{
 		if (i < myIdx)
 		{
-			u32 port = 1120 + i * 100 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = 1120 + i * 100 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = 1120 + myIdx * 100 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = 1120 + myIdx * 100 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -2107,12 +2107,12 @@ void party3(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	{
 		if (i < myIdx)
 		{
-			u32 port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -2378,12 +2378,12 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 	{
 		if (i < myIdx)
 		{
-			u32 port = 1120 + i * 100 + myIdx;;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = 1120 + i * 100 + myIdx;;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = 1120 + myIdx * 100 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = 1120 + myIdx * 100 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -3265,12 +3265,12 @@ void Channel_party_test(u64 myIdx)
 		dummy[i] = myIdx * 10 + i;
 		if (i < myIdx)
 		{
-			u32 port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -3505,7 +3505,7 @@ void evalPolynomial(std::vector<block>& coeffs, block& x, block& y)
 void polynomial_Test_Impl()
 {	
 	
-	std::vector<u32> test;
+	std::vector<uint32_t> test;
 	test.emplace_back(0);
 	test.emplace_back(0);
 	test.emplace_back(1);
@@ -3563,7 +3563,7 @@ void polynomial_Test_Impl()
 	//std::cout << NTL::deg(p1) << std::endl;
 
 
-	//for (u32 i = 0; i < NTL::deg(p1) + 1; i++)
+	//for (uint32_t i = 0; i < NTL::deg(p1) + 1; i++)
 	//{
 	//	NTL::GF2E x1;
 	//	NTL::GetCoeff(x1, p1, 0);
@@ -3575,7 +3575,7 @@ void polynomial_Test_Impl()
 	//NTL::random(p2, 1);
 	//std::cout << NTL::deg(p2) << std::endl;
 
-	//for (u32 i = 0; i < NTL::deg(p2) + 1; i++)
+	//for (uint32_t i = 0; i < NTL::deg(p2) + 1; i++)
 	//{
 	//	NTL::GF2E x1;
 	//	NTL::GetCoeff(x1, p2, 0);
@@ -3586,7 +3586,7 @@ void polynomial_Test_Impl()
 	//NTL::mul(p3, p1, p2);
 	//std::cout << NTL::deg(p3) << std::endl;
 
-	//for (u32 i = 0; i < NTL::deg(p3) + 1; i++)
+	//for (uint32_t i = 0; i < NTL::deg(p3) + 1; i++)
 	//{
 	//	NTL::GF2E x1;
 	//	NTL::GetCoeff(x1, p3, 0);
@@ -3739,7 +3739,7 @@ void Unconditional_0_Sharing_Test_Impl()
 	prng2.SetSeed(y);
 	//prng3.SetSeed(z);
 
-	for (u32 i = 0; i < 10; i++)
+	for (uint32_t i = 0; i < 10; i++)
 	{
 		block test1 = prng1.get<block>();
 		block test2 = prng2.get<block>();

@@ -20,13 +20,13 @@ namespace osuCrypto
             ArrayView<block> messages,
             PRNG& prng, 
             Channel& chl, 
-            uint64_t numThreads);
+            u64 numThreads);
 
         void send(
             ArrayView<std::array<block, 2>> messages, 
             PRNG& prng, 
             Channel& sock, 
-            uint64_t numThreads);
+            u64 numThreads);
 
         void receive(
             const BitVector& choices,

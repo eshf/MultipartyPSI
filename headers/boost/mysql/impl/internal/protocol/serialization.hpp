@@ -186,7 +186,7 @@ inline deserialize_errc deserialize(deserialization_context& ctx, int_lenenc& ou
     }
     else if (first_byte == 0xFE)
     {
-        std::uint64_t value = 0;
+        std::u64 value = 0;
         err = deserialize(ctx, value);
         output.value = value;
     }
@@ -216,7 +216,7 @@ inline void serialize(serialization_context& ctx, int_lenenc input) noexcept
     else
     {
         ctx.write(0xfe);
-        serialize(ctx, static_cast<std::uint64_t>(input.value));
+        serialize(ctx, static_cast<std::u64>(input.value));
     }
 }
 inline std::size_t get_size(int_lenenc input) noexcept

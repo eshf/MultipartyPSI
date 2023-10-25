@@ -32,8 +32,8 @@ struct per_resultset_data
     std::size_t meta_offset{};       // Offset into the vector of metadata
     std::size_t field_offset;        // Offset into the vector of fields (append mode only)
     std::size_t num_rows{};          // Number of rows this resultset has (append mode only)
-    std::uint64_t affected_rows{};   // OK packet data
-    std::uint64_t last_insert_id{};  // OK packet data
+    std::u64 affected_rows{};   // OK packet data
+    std::u64 last_insert_id{};  // OK packet data
     std::uint16_t warnings{};        // OK packet data
     std::size_t info_offset{};       // Offset into the vector of info characters
     std::size_t info_size{};         // Number of characters that this resultset's info string has
@@ -114,12 +114,12 @@ public:
         );
     }
 
-    std::uint64_t get_affected_rows(std::size_t index) const noexcept
+    std::u64 get_affected_rows(std::size_t index) const noexcept
     {
         return get_resultset(index).affected_rows;
     }
 
-    std::uint64_t get_last_insert_id(std::size_t index) const noexcept
+    std::u64 get_last_insert_id(std::size_t index) const noexcept
     {
         return get_resultset(index).last_insert_id;
     }

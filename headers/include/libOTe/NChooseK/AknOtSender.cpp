@@ -95,7 +95,7 @@ namespace osuCrypto
 
             PRNG prng(extSeed);
             //std::cout << IoStream::lock << "send 0 " << end << std::endl;
-            u8 shaBuff[SHA1::HashSize];
+            uint8_t shaBuff[SHA1::HashSize];
 
 
             otExt.send(range, prng, chl);
@@ -132,7 +132,7 @@ namespace osuCrypto
             for (u64 i = start; i < end; ++i)
             {
                 auto vv = cncGens[t].get<u32>();
-                u8 c = (vv <= px);
+                uint8_t c = (vv <= px);
                 *sampleIter = c;
                 ++sampleIter;
 
@@ -151,7 +151,7 @@ namespace osuCrypto
 
                     ++sampleCount;
 
-                    u8 cc = *choiceIter;
+                    uint8_t cc = *choiceIter;
                     //std::cout << (u32)cc;
 
                     if (cc == 0 && dynamic_cast<LzKosOtExtSender*>(&ots))

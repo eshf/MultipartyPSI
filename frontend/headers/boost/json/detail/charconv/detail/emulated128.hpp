@@ -21,10 +21,10 @@ namespace boost { namespace json { namespace detail { namespace charconv { names
 
 struct uint128
 {
-    std::uint64_t high;
-    std::uint64_t low;
+    std::u64 high;
+    std::u64 low;
 
-    uint128& operator+=(std::uint64_t n) & noexcept
+    uint128& operator+=(std::u64 n) & noexcept
     {
         #if BOOST_JSON_HAS_BUILTIN(__builtin_addcll)
 
@@ -56,34 +56,34 @@ struct uint128
     }
 };
 
-static inline std::uint64_t umul64(std::uint32_t x, std::uint32_t y) noexcept
+static inline std::u64 umul64(std::uint32_t x, std::uint32_t y) noexcept
 {
 #if defined(BOOST_JSON_HAS_MSVC_32BIT_INTRINSICS)
     return __emulu(x, y);
 #else
-    return x * static_cast<std::uint64_t>(y);
+    return x * static_cast<std::u64>(y);
 #endif
 }
 
 // Get 128-bit result of multiplication of two 64-bit unsigned integers.
-BOOST_JSON_SAFEBUFFERS inline uint128 umul128(std::uint64_t x, std::uint64_t y) noexcept
+BOOST_JSON_SAFEBUFFERS inline uint128 umul128(std::u64 x, std::u64 y) noexcept
 {
     #if defined(BOOST_HAS_INT128)
 
     auto result = static_cast<boost::uint128_type>(x) * static_cast<boost::uint128_type>(y);
-    return {static_cast<std::uint64_t>(result >> 64), static_cast<std::uint64_t>(result)};
+    return {static_cast<std::u64>(result >> 64), static_cast<std::u64>(result)};
 
     #elif defined(BOOST_JSON_HAS_MSVC_64BIT_INTRINSICS)
 
-    std::uint64_t high;
-    std::uint64_t low = _umul128(x, y, &high);
+    std::u64 high;
+    std::u64 low = _umul128(x, y, &high);
     return {high, low};
 
     // https://developer.arm.com/documentation/dui0802/a/A64-General-Instructions/UMULH
     #elif defined(_M_ARM64) && !defined(__MINGW32__)
 
-    std::uint64_t high = __umulh(x, y);
-    std::uint64_t low = x * y;
+    std::u64 high = __umulh(x, y);
+    std::u64 low = x * y;
     return {high, low};
 
     #else
@@ -106,12 +106,12 @@ BOOST_JSON_SAFEBUFFERS inline uint128 umul128(std::uint64_t x, std::uint64_t y) 
     #endif
 }
 
-BOOST_JSON_SAFEBUFFERS inline std::uint64_t umul128_upper64(std::uint64_t x, std::uint64_t y) noexcept
+BOOST_JSON_SAFEBUFFERS inline std::u64 umul128_upper64(std::u64 x, std::u64 y) noexcept
 {
     #if defined(BOOST_HAS_INT128)
 
     auto result = static_cast<boost::uint128_type>(x) * static_cast<boost::uint128_type>(y);
-    return static_cast<std::uint64_t>(result >> 64);
+    return static_cast<std::u64>(result >> 64);
 
     #elif defined(BOOST_JSON_HAS_MSVC_64BIT_INTRINSICS)
 
@@ -138,7 +138,7 @@ BOOST_JSON_SAFEBUFFERS inline std::uint64_t umul128_upper64(std::uint64_t x, std
 
 // Get upper 128-bits of multiplication of a 64-bit unsigned integer and a 128-bit
 // unsigned integer.
-BOOST_JSON_SAFEBUFFERS inline uint128 umul192_upper128(std::uint64_t x, uint128 y) noexcept
+BOOST_JSON_SAFEBUFFERS inline uint128 umul192_upper128(std::u64 x, uint128 y) noexcept
 {
     auto r = umul128(x, y.high);
     r += umul128_upper64(x, y.low);
@@ -147,11 +147,11 @@ BOOST_JSON_SAFEBUFFERS inline uint128 umul192_upper128(std::uint64_t x, uint128 
 
 // Get upper 64-bits of multiplication of a 32-bit unsigned integer and a 64-bit
 // unsigned integer.
-inline std::uint64_t umul96_upper64(std::uint32_t x, std::uint64_t y) noexcept
+inline std::u64 umul96_upper64(std::uint32_t x, std::u64 y) noexcept
 {
     #if defined(BOOST_HAS_INT128) || defined(BOOST_JSON_HAS_MSVC_64BIT_INTRINSICS)
 
-    return umul128_upper64(static_cast<std::uint64_t>(x) << 32, y);
+    return umul128_upper64(static_cast<std::u64>(x) << 32, y);
 
     #else
 
@@ -168,7 +168,7 @@ inline std::uint64_t umul96_upper64(std::uint32_t x, std::uint64_t y) noexcept
 
 // Get lower 128-bits of multiplication of a 64-bit unsigned integer and a 128-bit
 // unsigned integer.
-BOOST_JSON_SAFEBUFFERS inline uint128 umul192_lower128(std::uint64_t x, uint128 y) noexcept
+BOOST_JSON_SAFEBUFFERS inline uint128 umul192_lower128(std::u64 x, uint128 y) noexcept
 {
     auto high = x * y.high;
     auto highlow = umul128(x, y.low);
@@ -177,7 +177,7 @@ BOOST_JSON_SAFEBUFFERS inline uint128 umul192_lower128(std::uint64_t x, uint128 
 
 // Get lower 64-bits of multiplication of a 32-bit unsigned integer and a 64-bit
 // unsigned integer.
-inline std::uint64_t umul96_lower64(std::uint32_t x, std::uint64_t y) noexcept
+inline std::u64 umul96_lower64(std::uint32_t x, std::u64 y) noexcept
 {
     return x * y;
 }

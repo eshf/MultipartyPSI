@@ -41,12 +41,12 @@ namespace osuCrypto
 
 	//void Log::EnableTag(const Tag& tag)
 	//{
-	//	//(*(u32*)(&out.mEnabledTags)) |= (u32)tag;
+	//	//(*(uint32_t*)(&out.mEnabledTags)) |= (uint32_t)tag;
 	//}
 
 	//void Log::DisableTag(const Tag& tag)
 	//{
-	//	//(*(u32*)(&out.mEnabledTags)) &= ~(u32)tag;
+	//	//(*(uint32_t*)(&out.mEnabledTags)) &= ~(uint32_t)tag;
 	//}
 
 

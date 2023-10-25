@@ -68,7 +68,7 @@ protected:
     void set_target_impl(string_view);
     void set_reason_impl(string_view);
     void set_chunked_impl(bool);
-    void set_content_length_impl(boost::optional<std::uint64_t>);
+    void set_content_length_impl(boost::optional<std::u64>);
     void set_keep_alive_impl(unsigned, bool);
 };
 
@@ -92,7 +92,7 @@ template<class T>
 struct is_body_sized<T, beast::detail::void_t<
     typename T::value_type,
         decltype(
-    std::declval<std::uint64_t&>() =
+    std::declval<std::u64&>() =
         T::size(std::declval<typename T::value_type const&>())
     )>> : std::true_type {};
 
@@ -173,7 +173,7 @@ struct is_fields_helper : T
     template<class U = is_fields_helper>
     static auto f11(int) -> decltype(
         void(std::declval<U&>().set_content_length_impl(
-            std::declval<boost::optional<std::uint64_t>>())),
+            std::declval<boost::optional<std::u64>>())),
         std::true_type());
     static auto f11(...) -> std::false_type;
     using t11 = decltype(f11(0));

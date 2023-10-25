@@ -150,7 +150,7 @@ typedef int64_t Sint64;
 /**
  * \brief An unsigned 64-bit integer type.
  */
-typedef uint64_t Uint64;
+typedef u64 Uint64;
 
 /*@}*//*Basic data types*/
 

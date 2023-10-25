@@ -98,7 +98,7 @@ namespace date_time {
       }
 #endif
 
-      boost::uint64_t micros = file_time_to_microseconds(ft); // it will not wrap, since ft is the current time
+      boost::u64 micros = file_time_to_microseconds(ft); // it will not wrap, since ft is the current time
                                                               // and cannot be before 1970-Jan-01
       std::time_t t = static_cast<std::time_t>(micros / 1000000UL); // seconds since epoch
       // microseconds -- static casts suppress warnings
@@ -133,14 +133,14 @@ namespace date_time {
      *
      * \note Only dates after 1970-Jan-01 are supported. Dates before will be wrapped.
      */
-    static boost::uint64_t file_time_to_microseconds(boost::winapi::FILETIME_ const& ft)
+    static boost::u64 file_time_to_microseconds(boost::winapi::FILETIME_ const& ft)
     {
       // shift is difference between 1970-Jan-01 & 1601-Jan-01
       // in 100-nanosecond units
-      const boost::uint64_t shift = 116444736000000000ULL; // (27111902 << 32) + 3577643008
+      const boost::u64 shift = 116444736000000000ULL; // (27111902 << 32) + 3577643008
 
       // 100-nanos since 1601-Jan-01
-      boost::uint64_t ft_as_integer = (static_cast< boost::uint64_t >(ft.dwHighDateTime) << 32) | static_cast< boost::uint64_t >(ft.dwLowDateTime);
+      boost::u64 ft_as_integer = (static_cast< boost::u64 >(ft.dwHighDateTime) << 32) | static_cast< boost::u64 >(ft.dwLowDateTime);
 
       ft_as_integer -= shift; // filetime is now 100-nanos since 1970-Jan-01
       return (ft_as_integer / 10U); // truncate to microseconds

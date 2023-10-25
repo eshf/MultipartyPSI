@@ -122,7 +122,7 @@ struct tommath_int
       mp_zero(&m_data);
       while (i)
       {
-         detail::check_tommath_result(mp_set_u64(&t, static_cast<std::uint64_t>(i & mask)));
+         detail::check_tommath_result(mp_set_u64(&t, static_cast<std::u64>(i & mask)));
          if (shift)
             detail::check_tommath_result(mp_mul_2d(&t, shift, &t));
          detail::check_tommath_result((mp_add(&m_data, &t, &m_data)));
@@ -166,9 +166,9 @@ struct tommath_int
       while (i)
       {
 #ifndef mp_get_u32
-         detail::check_tommath_result(mp_set_long_long(&t, static_cast<std::uint64_t>(i & mask)));
+         detail::check_tommath_result(mp_set_long_long(&t, static_cast<std::u64>(i & mask)));
 #else
-         mp_set_u64(&t, static_cast<std::uint64_t>(i & mask));
+         mp_set_u64(&t, static_cast<std::u64>(i & mask));
 #endif
          if (shift)
             detail::check_tommath_result(mp_mul_2d(&t, shift, &t));

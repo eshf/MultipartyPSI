@@ -92,8 +92,8 @@ struct sum_value_type {
     constexpr sum_value_type(const checked_result<T> & t) :
         m_flag(to_flag(t))
     {}
-    constexpr operator std::uint8_t () const {
-        return static_cast<std::uint8_t>(m_flag);
+    constexpr operator std::u8 () const {
+        return static_cast<std::u8>(m_flag);
     }
 };
 
@@ -108,7 +108,7 @@ constexpr inline operator+(
     const checked_result<T> & u
 ){
     using value_type = sum_value_type;
-    const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    const std::u8 order = static_cast<std::u8>(value_type::count);
 
     // note major pain.  Clang constexpr multi-dimensional array is fine.
     // but gcc doesn't permit a multi-dimensional array to be be constexpr.
@@ -181,7 +181,7 @@ constexpr inline operator-(
     const checked_result<T> & u
 ){
     using value_type = sum_value_type;
-    constexpr const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    constexpr const std::u8 order = static_cast<std::u8>(value_type::count);
 
     constexpr const enum safe_numerics_error result[order * order] = {
         // t == known_value
@@ -279,8 +279,8 @@ struct product_value_type {
     constexpr product_value_type(const checked_result<T> & t) :
         m_flag(to_flag(t))
     {}
-    constexpr operator std::uint8_t () const {
-        return static_cast<std::uint8_t>(m_flag);
+    constexpr operator std::u8 () const {
+        return static_cast<std::u8>(m_flag);
     }
 };
 
@@ -295,7 +295,7 @@ constexpr inline operator*(
     const checked_result<T> & u
 ){
     using value_type = product_value_type;
-    const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    const std::u8 order = static_cast<std::u8>(value_type::count);
 
     constexpr const enum value_type::flag result[order * order] = {
         // t == less_than_min
@@ -390,7 +390,7 @@ constexpr inline operator/(
     const checked_result<T> & u
 ){
     using value_type = product_value_type;
-    const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    const std::u8 order = static_cast<std::u8>(value_type::count);
 
     constexpr const enum value_type::flag result[order * order] = {
         // t == less_than_min
@@ -485,7 +485,7 @@ constexpr inline operator%(
     const checked_result<T> & u
 ){
     using value_type = product_value_type;
-    const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    const std::u8 order = static_cast<std::u8>(value_type::count);
 
     constexpr const enum value_type::flag result[order * order] = {
         // t == less_than_min
@@ -582,7 +582,7 @@ constexpr boost::logic::tribool operator<(
     const checked_result<T> & u
 ){
     using value_type = sum_value_type;
-    constexpr const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    constexpr const std::u8 order = static_cast<std::u8>(value_type::count);
 
     // the question arises about how to order values of type greater_than_min.
     // that is: what should greater_than_min < greater_than_min return.
@@ -594,7 +594,7 @@ constexpr boost::logic::tribool operator<(
     //
     // for our purposes, a) seems the better interpretation.
     
-    enum class result_type : std::uint8_t {
+    enum class result_type : std::u8 {
         runtime,
         false_value,
         true_value,
@@ -687,9 +687,9 @@ operator==(
     const checked_result<T> & u
 ){
     using value_type = sum_value_type;
-    constexpr const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    constexpr const std::u8 order = static_cast<std::u8>(value_type::count);
 
-    enum class result_type : std::uint8_t {
+    enum class result_type : std::u8 {
         runtime,
         false_value,
         true_value,
@@ -791,9 +791,9 @@ constexpr inline operator<<(
     const checked_result<T> & u
 ){
     using value_type = product_value_type;
-    const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    const std::u8 order = static_cast<std::u8>(value_type::count);
 
-    constexpr const std::uint8_t result[order * order] = {
+    constexpr const std::u8 result[order * order] = {
         // t == less_than_min
         //{
             // u == ...
@@ -934,9 +934,9 @@ constexpr inline operator>>(
     const checked_result<T> & u
 ){
     using value_type = product_value_type;
-    const std::uint8_t order = static_cast<std::uint8_t>(value_type::count);
+    const std::u8 order = static_cast<std::u8>(value_type::count);
 
-    const std::uint8_t result[order * order] = {
+    const std::u8 result[order * order] = {
         // t == less_than_min
         //{
             // u == ...

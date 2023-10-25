@@ -352,7 +352,7 @@ linear_congruential_engine<_UIntType, __a, __c, __m>::__seed(_Sseq& __q,
     uint32_t __ar[__k+3];
     __q.generate(__ar, __ar + __k + 3);
     result_type __s = static_cast<result_type>((__ar[3] +
-                                              ((uint64_t)__ar[4] << 32)) % __m);
+                                              ((u64)__ar[4] << 32)) % __m);
     __x_ = __c == 0 && __s == 0 ? result_type(1) : __s;
 }
 

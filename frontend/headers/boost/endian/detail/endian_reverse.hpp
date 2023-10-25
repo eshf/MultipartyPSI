@@ -79,12 +79,12 @@ inline uint32_t BOOST_ENDIAN_CONSTEXPR endian_reverse_impl( uint32_t x ) BOOST_N
 #endif
 }
 
-inline uint64_t BOOST_ENDIAN_CONSTEXPR endian_reverse_impl( uint64_t x ) BOOST_NOEXCEPT
+inline u64 BOOST_ENDIAN_CONSTEXPR endian_reverse_impl( u64 x ) BOOST_NOEXCEPT
 {
 #ifdef BOOST_ENDIAN_NO_INTRINSICS
 
-    uint64_t step32 = x << 32 | x >> 32;
-    uint64_t step16 = (step32 & 0x0000FFFF0000FFFFULL) << 16 | (step32 & 0xFFFF0000FFFF0000ULL) >> 16;
+    u64 step32 = x << 32 | x >> 32;
+    u64 step16 = (step32 & 0x0000FFFF0000FFFFULL) << 16 | (step32 & 0xFFFF0000FFFF0000ULL) >> 16;
     return (step16 & 0x00FF00FF00FF00FFULL) << 8 | (step16 & 0xFF00FF00FF00FF00ULL) >> 8;
 
 #else
@@ -98,8 +98,8 @@ inline uint64_t BOOST_ENDIAN_CONSTEXPR endian_reverse_impl( uint64_t x ) BOOST_N
 
 inline uint128_type BOOST_ENDIAN_CONSTEXPR endian_reverse_impl( uint128_type x ) BOOST_NOEXCEPT
 {
-    return endian_reverse_impl( static_cast<uint64_t>( x >> 64 ) ) |
-        static_cast<uint128_type>( endian_reverse_impl( static_cast<uint64_t>( x ) ) ) << 64;
+    return endian_reverse_impl( static_cast<u64>( x >> 64 ) ) |
+        static_cast<uint128_type>( endian_reverse_impl( static_cast<u64>( x ) ) ) << 64;
 }
 
 #endif

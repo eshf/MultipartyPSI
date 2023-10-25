@@ -517,7 +517,7 @@ _mm_cvtepi8_epi16 (__m128i __X)
 /* Packed integer zero-extension. */
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_cvtepu8_epi32 (__m128i __X)
+_mm_cvtepuint8_t_epi32 (__m128i __X)
 {
   return (__m128i) __builtin_ia32_pmovzxbd128 ((__v16qi)__X);
 }
@@ -529,7 +529,7 @@ _mm_cvtepu16_epi32 (__m128i __X)
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_cvtepu8_epi64 (__m128i __X)
+_mm_cvtepuint8_t_epi64 (__m128i __X)
 {
   return (__m128i) __builtin_ia32_pmovzxbq128 ((__v16qi)__X);
 }
@@ -547,7 +547,7 @@ _mm_cvtepu16_epi64 (__m128i __X)
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_cvtepu8_epi16 (__m128i __X)
+_mm_cvtepuint8_t_epi16 (__m128i __X)
 {
   return (__m128i) __builtin_ia32_pmovzxbw128 ((__v16qi)__X);
 }
@@ -566,13 +566,13 @@ _mm_packus_epi32 (__m128i __X, __m128i __Y)
 
 #ifdef __OPTIMIZE__
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_mpsadbw_epu8 (__m128i __X, __m128i __Y, const int __M)
+_mm_mpsadbw_epuint8_t (__m128i __X, __m128i __Y, const int __M)
 {
   return (__m128i) __builtin_ia32_mpsadbw128 ((__v16qi)__X,
 					      (__v16qi)__Y, __M);
 }
 #else
-#define _mm_mpsadbw_epu8(X, Y, M)					\
+#define _mm_mpsadbw_epuint8_t(X, Y, M)					\
   ((__m128i) __builtin_ia32_mpsadbw128 ((__v16qi)(__m128i)(X),		\
 					(__v16qi)(__m128i)(Y), (int)(M)))
 #endif
@@ -824,7 +824,7 @@ _mm_cmpgt_epi64 (__m128i __X, __m128i __Y)
 
 /* Accumulate CRC32 (polynomial 0x11EDC6F41) value.  */
 extern __inline unsigned int __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_crc32_u8 (unsigned int __C, unsigned char __V)
+_mm_crc32_uint8_t (unsigned int __C, unsigned char __V)
 {
   return __builtin_ia32_crc32qi (__C, __V);
 }

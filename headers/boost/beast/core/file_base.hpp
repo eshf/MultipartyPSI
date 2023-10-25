@@ -136,12 +136,12 @@ struct is_file<T, boost::void_t<decltype(
         std::declval<char const*>(),
         std::declval<file_mode>(),
         std::declval<error_code&>()),
-    std::declval<std::uint64_t&>() = std::declval<T&>().size(
+    std::declval<std::u64&>() = std::declval<T&>().size(
         std::declval<error_code&>()),
-    std::declval<std::uint64_t&>() = std::declval<T&>().pos(
+    std::declval<std::u64&>() = std::declval<T&>().pos(
         std::declval<error_code&>()),
     std::declval<T&>().seek(
-        std::declval<std::uint64_t>(),
+        std::declval<std::u64>(),
         std::declval<error_code&>()),
     std::declval<std::size_t&>() = std::declval<T&>().read(
         std::declval<void*>(),

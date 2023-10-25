@@ -553,7 +553,7 @@ GL_API void GL_APIENTRY glResolveMultisampleFramebufferAPPLE (void);
 #ifndef GL_APPLE_sync
 #define GL_APPLE_sync 1
 typedef struct __GLsync *GLsync;
-typedef khronos_uint64_t GLuint64;
+typedef khronos_u64 GLuint64;
 typedef khronos_int64_t GLint64;
 #define GL_SYNC_OBJECT_APPLE              0x8A53
 #define GL_MAX_SERVER_WAIT_TIMEOUT_APPLE  0x9111

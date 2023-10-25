@@ -63,11 +63,11 @@ namespace uuids {
 struct uuid
 {
 public:
-    typedef uint8_t value_type;
-    typedef uint8_t& reference;
-    typedef uint8_t const& const_reference;
-    typedef uint8_t* iterator;
-    typedef uint8_t const* const_iterator;
+    typedef u8 value_type;
+    typedef u8& reference;
+    typedef u8 const& const_reference;
+    typedef u8* iterator;
+    typedef u8 const* const_iterator;
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
 
@@ -124,7 +124,7 @@ public:
     {
         // version is stored in octet 9
         // which is index 6, since indexes count backwards
-        uint8_t octet9 = data[6];
+        u8 octet9 = data[6];
         if ( (octet9 & 0xF0) == 0x10 ) {
             return version_time_based;
         } else if ( (octet9 & 0xF0) == 0x20 ) {
@@ -144,8 +144,8 @@ public:
     void swap(uuid& rhs) BOOST_NOEXCEPT;
 
 public:
-    // or should it be array<uint8_t, 16>
-    uint8_t data[16];
+    // or should it be array<u8, 16>
+    u8 data[16];
 };
 
 bool operator== (uuid const& lhs, uuid const& rhs) BOOST_NOEXCEPT;

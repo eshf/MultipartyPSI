@@ -102,7 +102,7 @@ public:
      * \par Complexity
      * Constant.
      */
-    std::uint64_t affected_rows() const noexcept
+    std::u64 affected_rows() const noexcept
     {
         BOOST_ASSERT(has_value());
         return impl_->get_affected_rows(index_);
@@ -119,7 +119,7 @@ public:
      * \par Complexity
      * Constant.
      */
-    std::uint64_t last_insert_id() const noexcept
+    std::u64 last_insert_id() const noexcept
     {
         BOOST_ASSERT(has_value());
         return impl_->get_last_insert_id(index_);

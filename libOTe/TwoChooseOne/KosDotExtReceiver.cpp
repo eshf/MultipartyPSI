@@ -19,7 +19,7 @@ namespace osuCrypto
         mCode.random(prng, baseOTs.size(), 128);
 
         mGens.resize(baseOTs.size());
-        for (uint64_t i = 0; i < baseOTs.size(); i++)
+        for (u64 i = 0; i < baseOTs.size(); i++)
         {
             mGens[i][0].SetSeed(baseOTs[i][0]);
             mGens[i][1].SetSeed(baseOTs[i][1]);
@@ -32,7 +32,7 @@ namespace osuCrypto
     {
         std::vector<std::array<block, 2>>baseRecvOts(mGens.size());
 
-        for (uint64_t i = 0; i < mGens.size(); ++i)
+        for (u64 i = 0; i < mGens.size(); ++i)
         {
             baseRecvOts[i][0] = mGens[i][0].get<block>();
             baseRecvOts[i][1] = mGens[i][1].get<block>();
@@ -62,9 +62,9 @@ namespace osuCrypto
 
 
         // we are going to process OTs in blocks of 128 * superBlkSize messages.
-        uint64_t numOtExt = roundUpTo(choices.size(), 128);
-        uint64_t numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
-        uint64_t numBlocks = numSuperBlocks * superBlkSize;
+        u64 numOtExt = roundUpTo(choices.size(), 128);
+        u64 numSuperBlocks = (numOtExt / 128 + superBlkSize) / superBlkSize;
+        u64 numBlocks = numSuperBlocks * superBlkSize;
 
         // commit to as seed which will be used to 
         block seed = prng.get<block>();
@@ -77,7 +77,7 @@ namespace osuCrypto
         //choices2.randomize(zPrng);
         choices2 = choices;
         choices2.resize(numBlocks * 128);
-        for (uint64_t i = 0; i < 128; ++i)
+        for (u64 i = 0; i < 128; ++i)
         { 
             choices2[choices.size() + i] = prng.getBit();
 
@@ -91,12 +91,12 @@ namespace osuCrypto
         std::array<std::array<block, superBlkSize>, 128> t0;
 
         // the index of the OT that has been completed.
-        //uint64_t doneIdx = 0;
+        //u64 doneIdx = 0;
 
         std::array<std::array<block,2>, 128> extraBlocks;
         auto xIter = extraBlocks.data();
         auto xIterMaster = xIter;
-        //uint64_t extraIdx = 0;
+        //u64 extraIdx = 0;
 
         std::vector<block> messages1(messages.size());
 
@@ -105,7 +105,7 @@ namespace osuCrypto
         block* mIter0 = messages.data();
         block* mIter1 = messages1.data();
 
-        uint64_t step = std::min(numSuperBlocks, (uint64_t)commStepSize);
+        u64 step = std::min(numSuperBlocks, (u64)commStepSize);
         std::unique_ptr<ByteStream> uBuff(new ByteStream(step * mGens.size() * superBlkSize * sizeof(block)));
 
         // get an array of blocks that we will fill. 
@@ -113,7 +113,7 @@ namespace osuCrypto
         auto uEnd = uIter + step * mGens.size() * superBlkSize;
 
 
-        uint64_t colStepCount = (mGens.size() + 127) / 128;
+        u64 colStepCount = (mGens.size() + 127) / 128;
 
         // we assume we have the number of columns of between 129 and 256...
         if (colStepCount != 2)
@@ -127,24 +127,24 @@ namespace osuCrypto
         //   performance reasons. The reason for 8 is that most CPUs have 8 AES vector  
         //   lanes, and so its more efficient to encrypt (aka prng) 8 blocks at a time.
         //   So that's what we do. 
-        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
 
             // the users next 128 choice bits. This will select what message is receiver.
             block* cIter = choiceBlocks.data() + superBlkSize * superBlkIdx;
 
             // this will store the next 128 rows of the matrix u
-            for (uint64_t colStepIdx = 0; colStepIdx < 2; ++colStepIdx)
+            for (u64 colStepIdx = 0; colStepIdx < 2; ++colStepIdx)
             {
 
                 block* tIter = (block*)t0.data();
                 memset(t0.data(), 0, superBlkSize * 128 * sizeof(block));
 
 
-                uint64_t colStop = std::min((colStepIdx + 1)* 128, mGens.size());
+                u64 colStop = std::min((colStepIdx + 1)* 128, mGens.size());
 
                 // transpose 128 columns at at time. Each column will be 128 * superBlkSize = 1024 bits long.
-                for (uint64_t colIdx = colStepIdx * 128; colIdx < colStop; ++colIdx)
+                for (u64 colIdx = colStepIdx * 128; colIdx < colStop; ++colIdx)
                 {
                     // generate the column indexed by colIdx. This is done with
                     // AES in counter mode acting as a PRNG. We don't use the normal
@@ -186,7 +186,7 @@ namespace osuCrypto
                     // send over u buffer
                     chl.asyncSend(std::move(uBuff));
 
-                    uint64_t step = std::min(numSuperBlocks - superBlkIdx - 1, (uint64_t)commStepSize);
+                    u64 step = std::min(numSuperBlocks - superBlkIdx - 1, (u64)commStepSize);
 
                     if (step)
                     {
@@ -206,7 +206,7 @@ namespace osuCrypto
                 block* mEnd = std::min(mIter + 128 * superBlkSize, (colStepIdx? mEnd1 : mEnd0));
 
                 // compute how many rows are unused.
-                uint64_t unusedCount = (mIter + 128 * superBlkSize) - mEnd;
+                u64 unusedCount = (mIter + 128 * superBlkSize) - mEnd;
 
                 // compute the begin and end index of the extra rows that 
                 // we will compute in this iters. These are taken from the 
@@ -281,7 +281,7 @@ namespace osuCrypto
         x = t = t2 = { ZeroBlock,ZeroBlock };
         block ti, ti2;
 
-        uint64_t doneIdx = (0);
+        u64 doneIdx = (0);
 
         std::array<block, 2> zeroOneBlk{ ZeroBlock, AllOneBlock };
         std::array<block, 128> challenges;
@@ -293,12 +293,12 @@ namespace osuCrypto
 
 
 
-        uint64_t bb = (messages.size() + 127) / 128;
-        for (uint64_t blockIdx = 0; blockIdx < bb; ++blockIdx)
+        u64 bb = (messages.size() + 127) / 128;
+        for (u64 blockIdx = 0; blockIdx < bb; ++blockIdx)
         {
             commonPrng.mAes.ecbEncCounterMode(doneIdx, 128, challenges.data());
 
-            uint64_t stop = std::min(messages.size(), doneIdx + 128);
+            u64 stop = std::min(messages.size(), doneIdx + 128);
 
             expendedChoiceBlk[0] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 0);
             expendedChoiceBlk[1] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 1);
@@ -309,7 +309,7 @@ namespace osuCrypto
             expendedChoiceBlk[6] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 6);
             expendedChoiceBlk[7] = mask & _mm_srai_epi16(choiceBlocks[blockIdx], 7);
              
-            for (uint64_t i = 0, dd = doneIdx; dd < stop; ++dd, ++i)
+            for (u64 i = 0, dd = doneIdx; dd < stop; ++dd, ++i)
             {
 
 

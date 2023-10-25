@@ -863,8 +863,8 @@
 /* Define if your compiler provides uint32_t. */
 #define HAVE_UINT32_T 1
 
-/* Define if your compiler provides uint64_t. */
-#define HAVE_UINT64_T 1
+/* Define if your compiler provides u64. */
+#define HAVE_u64 1
 
 /* Define to 1 if the system has the type `uintptr_t'. */
 #define HAVE_UINTPTR_T 1
@@ -1210,10 +1210,10 @@
    #define below would cause a syntax error. */
 /* #undef _UINT32_T */
 
-/* Define for Solaris 2.5.1 so the uint64_t typedef from <sys/synch.h>,
+/* Define for Solaris 2.5.1 so the u64 typedef from <sys/synch.h>,
    <pthread.h>, or <semaphore.h> is not used. If the typedef were allowed, the
    #define below would cause a syntax error. */
-/* #undef _UINT64_T */
+/* #undef _u64 */
 
 /* Define to the level of X/Open that your system supports */
 #define _XOPEN_SOURCE 600
@@ -1276,7 +1276,7 @@
 
 /* Define to the type of an unsigned integer type of width exactly 64 bits if
    such a type exists and the standard includes do not define it. */
-/* #undef uint64_t */
+/* #undef u64 */
 
 /* Define to empty if the keyword does not work. */
 /* #undef volatile */

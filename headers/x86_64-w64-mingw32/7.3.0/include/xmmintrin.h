@@ -707,7 +707,7 @@ _mm_cvtpi8_ps (__m64 __A)
 
 /* Convert the low four unsigned 8-bit values in A to SPFP form.  */
 extern __inline __m128 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_cvtpu8_ps(__m64 __A)
+_mm_cvtpuint8_t_ps(__m64 __A)
 {
   __A = (__m64) __builtin_ia32_punpcklbw ((__v8qi)__A, (__v8qi)0LL);
   return _mm_cvtpu16_ps(__A);
@@ -1075,7 +1075,7 @@ _m_pmaxsw (__m64 __A, __m64 __B)
 
 /* Compute the element-wise maximum of unsigned 8-bit values.  */
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_max_pu8 (__m64 __A, __m64 __B)
+_mm_max_puint8_t (__m64 __A, __m64 __B)
 {
   return (__m64) __builtin_ia32_pmaxub ((__v8qi)__A, (__v8qi)__B);
 }
@@ -1083,7 +1083,7 @@ _mm_max_pu8 (__m64 __A, __m64 __B)
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _m_pmaxub (__m64 __A, __m64 __B)
 {
-  return _mm_max_pu8 (__A, __B);
+  return _mm_max_puint8_t (__A, __B);
 }
 
 /* Compute the element-wise minimum of signed 16-bit values.  */
@@ -1101,7 +1101,7 @@ _m_pminsw (__m64 __A, __m64 __B)
 
 /* Compute the element-wise minimum of unsigned 8-bit values.  */
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_min_pu8 (__m64 __A, __m64 __B)
+_mm_min_puint8_t (__m64 __A, __m64 __B)
 {
   return (__m64) __builtin_ia32_pminub ((__v8qi)__A, (__v8qi)__B);
 }
@@ -1109,7 +1109,7 @@ _mm_min_pu8 (__m64 __A, __m64 __B)
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _m_pminub (__m64 __A, __m64 __B)
 {
-  return _mm_min_pu8 (__A, __B);
+  return _mm_min_puint8_t (__A, __B);
 }
 
 /* Create an 8-bit mask of the signs of 8-bit values.  */
@@ -1177,7 +1177,7 @@ _m_maskmovq (__m64 __A, __m64 __N, char *__P)
 
 /* Compute the rounded averages of the unsigned 8-bit values in A and B.  */
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_avg_pu8 (__m64 __A, __m64 __B)
+_mm_avg_puint8_t (__m64 __A, __m64 __B)
 {
   return (__m64) __builtin_ia32_pavgb ((__v8qi)__A, (__v8qi)__B);
 }
@@ -1185,7 +1185,7 @@ _mm_avg_pu8 (__m64 __A, __m64 __B)
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _m_pavgb (__m64 __A, __m64 __B)
 {
-  return _mm_avg_pu8 (__A, __B);
+  return _mm_avg_puint8_t (__A, __B);
 }
 
 /* Compute the rounded averages of the unsigned 16-bit values in A and B.  */
@@ -1205,7 +1205,7 @@ _m_pavgw (__m64 __A, __m64 __B)
    values in A and B.  Return the value in the lower 16-bit word; the
    upper words are cleared.  */
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_sad_pu8 (__m64 __A, __m64 __B)
+_mm_sad_puint8_t (__m64 __A, __m64 __B)
 {
   return (__m64) __builtin_ia32_psadbw ((__v8qi)__A, (__v8qi)__B);
 }
@@ -1213,7 +1213,7 @@ _mm_sad_pu8 (__m64 __A, __m64 __B)
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _m_psadbw (__m64 __A, __m64 __B)
 {
-  return _mm_sad_pu8 (__A, __B);
+  return _mm_sad_puint8_t (__A, __B);
 }
 
 /* Stores the data in A to the address P without polluting the caches.  */

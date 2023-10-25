@@ -24,7 +24,7 @@ BOOST_CONSTEXPR static const char16_t* null_char_(char16_t) {return u"";}
 BOOST_CONSTEXPR static const char32_t* null_char_(char32_t) {return U"";}
 
 #if defined(BOOST_PROCESS_V2_HAS_CHAR8_T)
-BOOST_CONSTEXPR static const char8_t* null_char_(char8_t) {return u8"";}
+BOOST_CONSTEXPR static const char8_t* null_char_(char8_t) {return uint8_t"";}
 #endif
 
 }
@@ -221,7 +221,7 @@ std::size_t hash_value(basic_string_view<charT, traits> s) {
 using cstring_ref    = basic_cstring_ref<char>;
 using wcstring_ref   = basic_cstring_ref<wchar_t>;
 using u16cstring_ref = basic_cstring_ref<char16_t>;
-using u32cstring_ref = basic_cstring_ref<char32_t>;
+using uint32_tcstring_ref = basic_cstring_ref<char32_t>;
 
 #if defined(BOOST_PROCESS_V2_HAS_CHAR8_T)
 using u8cstring_ref  = basic_cstring_ref<char8_t>;

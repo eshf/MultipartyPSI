@@ -5,7 +5,7 @@
 
 #define __NEED_uint16_t
 #define __NEED_uint32_t
-#define __NEED_uint64_t
+#define __NEED_u64
 
 #include <bits/alltypes.h>
 
@@ -26,7 +26,7 @@ static __inline uint32_t __bswap32(uint32_t __x)
 	return __x>>24 | __x>>8&0xff00 | __x<<8&0xff0000 | __x<<24;
 }
 
-static __inline uint64_t __bswap64(uint64_t __x)
+static __inline u64 __bswap64(u64 __x)
 {
 	return __bswap32(__x)+0ULL<<32 | __bswap32(__x>>32);
 }
@@ -42,15 +42,15 @@ static __inline uint64_t __bswap64(uint64_t __x)
 #define le16toh(x) (uint16_t)(x)
 #define htole32(x) (uint32_t)(x)
 #define le32toh(x) (uint32_t)(x)
-#define htole64(x) (uint64_t)(x)
-#define le64toh(x) (uint64_t)(x)
+#define htole64(x) (u64)(x)
+#define le64toh(x) (u64)(x)
 #else
 #define htobe16(x) (uint16_t)(x)
 #define be16toh(x) (uint16_t)(x)
 #define htobe32(x) (uint32_t)(x)
 #define be32toh(x) (uint32_t)(x)
-#define htobe64(x) (uint64_t)(x)
-#define be64toh(x) (uint64_t)(x)
+#define htobe64(x) (u64)(x)
+#define be64toh(x) (u64)(x)
 #define htole16(x) __bswap16(x)
 #define le16toh(x) __bswap16(x)
 #define htole32(x) __bswap32(x)
@@ -66,11 +66,11 @@ static __inline uint64_t __bswap64(uint64_t __x)
 #define betoh64(x) __bswap64(x)
 #define letoh16(x) (uint16_t)(x)
 #define letoh32(x) (uint32_t)(x)
-#define letoh64(x) (uint64_t)(x)
+#define letoh64(x) (u64)(x)
 #else
 #define betoh16(x) (uint16_t)(x)
 #define betoh32(x) (uint32_t)(x)
-#define betoh64(x) (uint64_t)(x)
+#define betoh64(x) (u64)(x)
 #define letoh16(x) __bswap16(x)
 #define letoh32(x) __bswap32(x)
 #define letoh64(x) __bswap64(x)

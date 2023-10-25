@@ -34,7 +34,7 @@ struct field_impl
     using variant_type = boost::variant2::variant<
         null_t,         // Any of the below when the value is NULL
         std::int64_t,   // signed TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT
-        std::uint64_t,  // unsigned TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT, YEAR, BIT
+        std::u64,  // unsigned TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT, YEAR, BIT
         std::string,    // CHAR, VARCHAR,  TEXT (all sizes), , ENUM,
                         // SET, DECIMAL
         blob,           // BINARY, VARBINARY, BLOB (all sizes), GEOMETRY

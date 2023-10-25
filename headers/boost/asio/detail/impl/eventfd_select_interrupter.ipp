@@ -118,8 +118,8 @@ void eventfd_select_interrupter::recreate()
 
 void eventfd_select_interrupter::interrupt()
 {
-  uint64_t counter(1UL);
-  int result = ::write(write_descriptor_, &counter, sizeof(uint64_t));
+  u64 counter(1UL);
+  int result = ::write(write_descriptor_, &counter, sizeof(u64));
   (void)result;
 }
 
@@ -130,9 +130,9 @@ bool eventfd_select_interrupter::reset()
     for (;;)
     {
       // Only perform one read. The kernel maintains an atomic counter.
-      uint64_t counter(0);
+      u64 counter(0);
       errno = 0;
-      int bytes_read = ::read(read_descriptor_, &counter, sizeof(uint64_t));
+      int bytes_read = ::read(read_descriptor_, &counter, sizeof(u64));
       if (bytes_read < 0 && errno == EINTR)
         continue;
       return true;

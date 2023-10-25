@@ -39,7 +39,7 @@ class io_uring_descriptor_write_at_op_base : public io_uring_operation
 public:
   io_uring_descriptor_write_at_op_base(
       const boost::system::error_code& success_ec, int descriptor,
-      descriptor_ops::state_type state, uint64_t offset,
+      descriptor_ops::state_type state, u64 offset,
       const ConstBufferSequence& buffers, func_type complete_func)
     : io_uring_operation(success_ec,
         &io_uring_descriptor_write_at_op_base::do_prepare,
@@ -110,7 +110,7 @@ public:
 private:
   int descriptor_;
   descriptor_ops::state_type state_;
-  uint64_t offset_;
+  u64 offset_;
   ConstBufferSequence buffers_;
   buffer_sequence_adapter<boost::asio::const_buffer,
       ConstBufferSequence> bufs_;
@@ -124,7 +124,7 @@ public:
   BOOST_ASIO_DEFINE_HANDLER_PTR(io_uring_descriptor_write_at_op);
 
   io_uring_descriptor_write_at_op(const boost::system::error_code& success_ec,
-      int descriptor, descriptor_ops::state_type state, uint64_t offset,
+      int descriptor, descriptor_ops::state_type state, u64 offset,
       const ConstBufferSequence& buffers, Handler& handler,
       const IoExecutor& io_ex)
     : io_uring_descriptor_write_at_op_base<ConstBufferSequence>(

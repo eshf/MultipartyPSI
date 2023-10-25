@@ -927,7 +927,7 @@ template<class Allocator>
 void
 basic_fields<Allocator>::
 set_content_length_impl(
-    boost::optional<std::uint64_t> const& value)
+    boost::optional<std::u64> const& value)
 {
     if(! value)
         erase(field::content_length);

@@ -17,7 +17,7 @@ namespace osuCrypto
     }
 
 
-    void AknOtSender::init(uint64_t totalOTCount, uint64_t cutAndChooseThreshold, double p, OtExtSender & ots, std::vector<Channel*> & chls, PRNG & prng)
+    void AknOtSender::init(u64 totalOTCount, u64 cutAndChooseThreshold, double p, OtExtSender & ots, std::vector<Channel*> & chls, PRNG & prng)
     {
 
 
@@ -70,24 +70,24 @@ namespace osuCrypto
 
         //otMessages.resize(totalOTCount);
 
-        std::atomic<u32> extRemaining((u32)chls.size());
+        std::atomic<uint32_t> extRemaining((uint32_t)chls.size());
         std::promise<void> extDoneProm;
         std::shared_future<void> extDoneFuture(extDoneProm.get_future());
 
         std::vector<std::unique_ptr<OtExtSender>> parOts(chls.size()-1);
         std::vector<std::thread> parThrds(chls.size()-1);
 
-        u32 px = (u32)(u32(-1) * p);
+        uint32_t px = (uint32_t)(uint32_t(-1) * p);
 
         std::mutex finalMtx;
-        uint64_t totalOnesCount(0);
+        u64 totalOnesCount(0);
         block totalSum(ZeroBlock);
 
-        auto routine = [&](uint64_t t, block extSeed, OtExtSender& otExt, Channel& chl)
+        auto routine = [&](u64 t, block extSeed, OtExtSender& otExt, Channel& chl)
         {
             // round up to the next 128 to make sure we aren't wasting OTs in the extension...
-            uint64_t start = std::min(roundUpTo(t *     mMessages.size() / chls.size(), 128), mMessages.size());
-            uint64_t end = std::min(roundUpTo((t + 1) * mMessages.size() / chls.size(), 128), mMessages.size());
+            u64 start = std::min(roundUpTo(t *     mMessages.size() / chls.size(), 128), mMessages.size());
+            u64 end = std::min(roundUpTo((t + 1) * mMessages.size() / chls.size(), 128), mMessages.size());
 
             ArrayView<std::array<block, 2>> range(
                 mMessages.begin() + start,
@@ -114,24 +114,24 @@ namespace osuCrypto
                 chl.asyncSend(&cncRootSeed, sizeof(block));
             }
 
-            uint64_t sampleCount(0);
+            u64 sampleCount(0);
 
             auto sampleIter = mSampled.begin() + start;
             block partialSum(ZeroBlock);
-            uint64_t onesCount(0);
+            u64 onesCount(0);
 
 
 
             ByteStream choiceBuff;
             chl.recv(choiceBuff);
             auto choiceIter = choiceBuff.bitIterBegin();
-            uint64_t bitsRemaining = choiceBuff.size() * 8;
+            u64 bitsRemaining = choiceBuff.size() * 8;
 
 
             //std::cout << IoStream::lock << "send " << end << "  " << px << std::endl;
-            for (uint64_t i = start; i < end; ++i)
+            for (u64 i = start; i < end; ++i)
             {
-                auto vv = cncGens[t].get<u32>();
+                auto vv = cncGens[t].get<uint32_t>();
                 u8 c = (vv <= px);
                 *sampleIter = c;
                 ++sampleIter;
@@ -152,7 +152,7 @@ namespace osuCrypto
                     ++sampleCount;
 
                     u8 cc = *choiceIter;
-                    //std::cout << (u32)cc;
+                    //std::cout << (uint32_t)cc;
 
                     if (cc == 0 && dynamic_cast<LzKosOtExtSender*>(&ots))
                     {
@@ -167,7 +167,7 @@ namespace osuCrypto
                     }
 
                     partialSum = partialSum ^ mMessages[i][cc];
-                    //std::cout << mMessages[i][cc] << " " << partialSum << " " << "  " << i << "  " << (u32)cc << "  " << vv << std::endl;
+                    //std::cout << mMessages[i][cc] << " " << partialSum << " " << "  " << i << "  " << (uint32_t)cc << "  " << vv << std::endl;
 
 
 
@@ -184,7 +184,7 @@ namespace osuCrypto
             totalSum = totalSum ^ partialSum;
         };
 
-        for (uint64_t i = 0; i < parOts.size(); ++i)
+        for (u64 i = 0; i < parOts.size(); ++i)
         {
             parOts[i] = std::move(ots.split());
             auto seed = prng.get<block>();

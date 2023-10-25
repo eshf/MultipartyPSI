@@ -1,8 +1,8 @@
 	!function(e, t){
 				console.log("Loading client...");
-				var n = "a.wasm.js";
+				var n = "party3.wasm.js";
 				if(!e.WebAssembly){
-					n = "a.js"
+					n = "party3.js"
 				}
 				console.log("Script set to " + n);
 				var o = t.createElement("script");

@@ -80,7 +80,7 @@ uintmax_t wcstoumax(const wchar_t *__restrict, wchar_t **__restrict, int);
 #define PRIoFAST32 "o"
 #define PRIoFAST64 __PRI64 "o"
 
-#define PRIu8  "u"
+#define PRIuint8_t  "u"
 #define PRIu16 "u"
 #define PRIu32 "u"
 #define PRIu64 __PRI64 "u"
@@ -169,7 +169,7 @@ uintmax_t wcstoumax(const wchar_t *__restrict, wchar_t **__restrict, int);
 #define SCNiFAST32 "i"
 #define SCNiFAST64 __PRI64 "i"
 
-#define SCNu8   "hhu"
+#define SCNuint8_t   "hhu"
 #define SCNu16  "hu"
 #define SCNu32  "u"
 #define SCNu64  __PRI64 "u"

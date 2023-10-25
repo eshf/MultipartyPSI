@@ -48,11 +48,11 @@ typedef __UINT8_TYPE__ uint8_t;
 #ifdef __UINT16_TYPE__
 typedef __UINT16_TYPE__ uint16_t;
 #endif
-#ifdef __UINT32_TYPE__
-typedef __UINT32_TYPE__ uint32_t;
+#ifdef __u32YPE__
+typedef __u32YPE__ u32;
 #endif
-#ifdef __UINT64_TYPE__
-typedef __UINT64_TYPE__ uint64_t;
+#ifdef __u64YPE__
+typedef __u64YPE__ u64;
 #endif
 
 /* 7.8.1.2 Minimum-width integer types */
@@ -283,7 +283,7 @@ typedef __UINTMAX_TYPE__ uintmax_t;
 # undef INT32_WIDTH
 # define INT32_WIDTH 32
 #endif
-#ifdef __UINT32_TYPE__
+#ifdef __u32YPE__
 # undef UINT32_WIDTH
 # define UINT32_WIDTH 32
 #endif
@@ -291,7 +291,7 @@ typedef __UINTMAX_TYPE__ uintmax_t;
 # undef INT64_WIDTH
 # define INT64_WIDTH 64
 #endif
-#ifdef __UINT64_TYPE__
+#ifdef __u64YPE__
 # undef UINT64_WIDTH
 # define UINT64_WIDTH 64
 #endif

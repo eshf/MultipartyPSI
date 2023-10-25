@@ -184,7 +184,7 @@ namespace osuCrypto
 
 #ifdef IKNP_SHA_HASH
         SHA1 sha;
-        u8 hashBuff[20];
+        uint8_t hashBuff[20];
 #else
         std::array<block, 8> aesHashTemp;
 #endif
@@ -201,7 +201,7 @@ namespace osuCrypto
             {
                 // hash it
                 sha.Reset();
-                sha.Update((u8*)&messages[doneIdx], sizeof(block));
+                sha.Update((uint8_t*)&messages[doneIdx], sizeof(block));
                 sha.Final(hashBuff);
                 messages[doneIdx] = *(block*)hashBuff;
             }

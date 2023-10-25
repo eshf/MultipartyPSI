@@ -19,7 +19,7 @@
 namespace boost { namespace json { namespace detail { namespace charconv { namespace detail { namespace fast_float {
 
 // 1e0 to 1e19
-constexpr static uint64_t powers_of_ten_uint64[] = {
+constexpr static u64 powers_of_ten_uint64[] = {
     1UL, 10UL, 100UL, 1000UL, 10000UL, 100000UL, 1000000UL, 10000000UL, 100000000UL,
     1000000000UL, 10000000000UL, 100000000000UL, 1000000000000UL, 10000000000000UL,
     100000000000000UL, 1000000000000000UL, 10000000000000000UL, 100000000000000000UL,
@@ -32,7 +32,7 @@ constexpr static uint64_t powers_of_ten_uint64[] = {
 template <typename UC>
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
 int32_t scientific_exponent(parsed_number_string_t<UC> & num) noexcept {
-  uint64_t mantissa = num.mantissa;
+  u64 mantissa = num.mantissa;
   int32_t exponent = int32_t(num.exponent);
   while (mantissa >= 10000) {
     mantissa /= 10000;
@@ -103,7 +103,7 @@ void round(adjusted_mantissa& am, callback cb) noexcept {
     int32_t shift = -am.power2 + 1;
     cb(am, std::min<int32_t>(shift, 64));
     // check for round-up: if rounding-nearest carried us to the hidden bit.
-    am.power2 = (am.mantissa < (uint64_t(1) << binary_format<T>::mantissa_explicit_bits())) ? 0 : 1;
+    am.power2 = (am.mantissa < (u64(1) << binary_format<T>::mantissa_explicit_bits())) ? 0 : 1;
     return;
   }
 
@@ -111,13 +111,13 @@ void round(adjusted_mantissa& am, callback cb) noexcept {
   cb(am, mantissa_shift);
 
   // check for carry
-  if (am.mantissa >= (uint64_t(2) << binary_format<T>::mantissa_explicit_bits())) {
-    am.mantissa = (uint64_t(1) << binary_format<T>::mantissa_explicit_bits());
+  if (am.mantissa >= (u64(2) << binary_format<T>::mantissa_explicit_bits())) {
+    am.mantissa = (u64(1) << binary_format<T>::mantissa_explicit_bits());
     am.power2++;
   }
 
   // check for infinite: we could have carried to an infinite power
-  am.mantissa &= ~(uint64_t(1) << binary_format<T>::mantissa_explicit_bits());
+  am.mantissa &= ~(u64(1) << binary_format<T>::mantissa_explicit_bits());
   if (am.power2 >= binary_format<T>::infinite_power()) {
     am.power2 = binary_format<T>::infinite_power();
     am.mantissa = 0;
@@ -127,15 +127,15 @@ void round(adjusted_mantissa& am, callback cb) noexcept {
 template <typename callback>
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
 void round_nearest_tie_even(adjusted_mantissa& am, int32_t shift, callback cb) noexcept {
-  const uint64_t mask
+  const u64 mask
   = (shift == 64)
     ? UINT64_MAX
-    : (uint64_t(1) << shift) - 1;
-  const uint64_t halfway
+    : (u64(1) << shift) - 1;
+  const u64 halfway
   = (shift == 0)
     ? 0
-    : uint64_t(1) << (shift - 1);
-  uint64_t truncated_bits = am.mantissa & mask;
+    : u64(1) << (shift - 1);
+  u64 truncated_bits = am.mantissa & mask;
   bool is_above = truncated_bits > halfway;
   bool is_halfway = truncated_bits == halfway;
 
@@ -148,7 +148,7 @@ void round_nearest_tie_even(adjusted_mantissa& am, int32_t shift, callback cb) n
   am.power2 += shift;
 
   bool is_odd = (am.mantissa & 1) == 1;
-  am.mantissa += uint64_t(cb(is_odd, is_halfway, is_above));
+  am.mantissa += u64(cb(is_odd, is_halfway, is_above));
 }
 
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
@@ -163,9 +163,9 @@ void round_down(adjusted_mantissa& am, int32_t shift) noexcept {
 template <typename UC>
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
 void skip_zeros(UC const * & first, UC const * last) noexcept {
-  uint64_t val;
+  u64 val;
   while (!cpp20_and_in_constexpr() && std::distance(first, last) >= int_cmp_len<UC>()) {
-    ::memcpy(&val, first, sizeof(uint64_t));
+    ::memcpy(&val, first, sizeof(u64));
     if (val != int_cmp_zeros<UC>()) {
       break;
     }
@@ -185,9 +185,9 @@ template <typename UC>
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
 bool is_truncated(UC const * first, UC const * last) noexcept {
   // do 8-bit optimizations, can just compare to 8 literal 0s.
-  uint64_t val;
+  u64 val;
   while (!cpp20_and_in_constexpr() && std::distance(first, last) >= int_cmp_len<UC>()) {
-    ::memcpy(&val, first, sizeof(uint64_t));
+    ::memcpy(&val, first, sizeof(u64));
     if (val != int_cmp_zeros<UC>()) {
       return true;
     }

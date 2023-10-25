@@ -73,7 +73,7 @@ namespace osuCrypto
 	//#################Table based
 	bool BitPosition::getMasks(std::vector<block>& codeword) {
 
-		u8 rs, idx;
+		uint8_t rs, idx;
 		for (int i = 0; i < codeword.size(); i++) {
 			rs = 0;
 			idx = 1;
@@ -98,9 +98,9 @@ namespace osuCrypto
 		}
 		return true;
 	}
-	void BitPosition::getMask(block& codeword, u8& mask) {
+	void BitPosition::getMask(block& codeword, uint8_t& mask) {
 
-		u8 rs, idx;
+		uint8_t rs, idx;
 		mask = 0;
 		idx = 1;
 		for (auto it = mPos.begin(); it != mPos.end(); ++it)
@@ -312,7 +312,7 @@ namespace osuCrypto
 				isFind = getMasks(codewords);
 
 				//// using default comparison:
-				//std::vector<u8>::iterator it;
+				//std::vector<uint8_t>::iterator it;
 				//it = std::unique(mMaps.begin(), mMaps.end());
 
 				////remove duplicate
@@ -361,7 +361,7 @@ namespace osuCrypto
 		//x1=NTL::BuildSparseIrred_GF2X(128);
 		//NTL::GF2E::init(x1);
 		//convert the Block to GF2X element.
-		NTL::GF2XFromBytes(mGf2x, (u8*)&blk, size);
+		NTL::GF2XFromBytes(mGf2x, (uint8_t*)&blk, size);
 
 		//TODO("remove this hack, get NTL thread safe");
 		element = to_GF2E(mGf2x);
@@ -375,7 +375,7 @@ namespace osuCrypto
 		//Get the bytes of the random element.
 		NTL::GF2X fromEl = NTL::rep(element); //convert the GF2E element to GF2X element.	
 											  //the function rep returns the representation of GF2E as the related GF2X, it returns as read only.
-		BytesFromGF2X((u8*)&blk, fromEl, size);
+		BytesFromGF2X((uint8_t*)&blk, fromEl, size);
 	}
 
 
@@ -521,15 +521,15 @@ namespace osuCrypto
 //void BaseOPPRF::findPos(std::vector<block>& codewords) {
 //	bool isDone=false;
 //	mMasks.clear();
-//	std::set<u8>::iterator it;
-//	std::pair<std::set<u8>::iterator, bool> ret;
-//	std::pair<std::set<u8>::iterator, bool> retMask;
+//	std::set<uint8_t>::iterator it;
+//	std::pair<std::set<uint8_t>::iterator, bool> ret;
+//	std::pair<std::set<uint8_t>::iterator, bool> retMask;
 
 //	mNumTrial = 0;
 //	while (!isDone) {
 //		mPos.clear();
 //		mMasks.clear();
-//		for (u8 i = 0; i < mSize; i++)
+//		for (uint8_t i = 0; i < mSize; i++)
 //		{
 //			u64 rand = std::rand() % 128; //choose randome bit location
 //			ret = mPos.insert(rand);
@@ -539,10 +539,10 @@ namespace osuCrypto
 //	//	std::cout << "\n\n ";
 //		//print();
 //		isDone = true;	
-//		//std::set<u8> masks1;
+//		//std::set<uint8_t> masks1;
 
 //		
-//		for (u8 i = 0; i < codewords.size(); i++)
+//		for (uint8_t i = 0; i < codewords.size(); i++)
 //		{
 //			auto m = map(codewords[i]);
 //			std::cout << static_cast<int16_t>(m) << " ";
@@ -559,9 +559,9 @@ namespace osuCrypto
 //	//std::cout << static_cast<int16_t>(masks[0]) << " ";
 //}
 
-//u8 BaseOPPRF::map(block& codeword) {
-//	u8 rs = 0;
-//	u8 idx = 0;
+//uint8_t BaseOPPRF::map(block& codeword) {
+//	uint8_t rs = 0;
+//	uint8_t idx = 0;
 //	for (auto it = mPos.begin(); it != mPos.end(); ++it)
 //	{
 //		//	int i = *it / 8; //index of a block of 8 bits
@@ -571,7 +571,7 @@ namespace osuCrypto
 //		////	__int8 c = codeword.m128i_i8[i];  //a block of 8 bits
 //
 //		//	//std::cout << static_cast<int16_t>(c) << std::endl;
-//		//	u8 cq = ((codeword.m128i_i8[i] << (7 - r))); //shift to rightmost and left most to get only the single bit
+//		//	uint8_t cq = ((codeword.m128i_i8[i] << (7 - r))); //shift to rightmost and left most to get only the single bit
 //		//	cq = (cq >> 7) << idx; //then shift to location r
 //		//	//std::cout << static_cast<int16_t>(cq) << std::endl;
 //		//	rs = rs ^ cq; 

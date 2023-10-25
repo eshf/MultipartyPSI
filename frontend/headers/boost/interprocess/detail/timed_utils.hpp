@@ -121,14 +121,14 @@ struct enable_if_duration
 *
 * \note Only dates after 1970-Jan-01 are supported. Dates before will be wrapped.
 */
-inline boost::uint64_t file_time_to_microseconds(const boost::winapi::FILETIME_ & ft)
+inline boost::u64 file_time_to_microseconds(const boost::winapi::FILETIME_ & ft)
 {
    // shift is difference between 1970-Jan-01 & 1601-Jan-01
    // in 100-nanosecond units
-   const boost::uint64_t shift = 116444736000000000ULL; // (27111902 << 32) + 3577643008
+   const boost::u64 shift = 116444736000000000ULL; // (27111902 << 32) + 3577643008
 
    // 100-nanos since 1601-Jan-01
-   boost::uint64_t ft_as_integer = (static_cast< boost::uint64_t >(ft.dwHighDateTime) << 32) | static_cast< boost::uint64_t >(ft.dwLowDateTime);
+   boost::u64 ft_as_integer = (static_cast< boost::u64 >(ft.dwHighDateTime) << 32) | static_cast< boost::u64 >(ft.dwLowDateTime);
 
    ft_as_integer -= shift; // filetime is now 100-nanos since 1970-Jan-01
    return (ft_as_integer / 10U); // truncate to microseconds
@@ -142,11 +142,11 @@ class usduration
    public:
    friend class ustime;
 
-   explicit usduration(boost::uint64_t microsecs)
+   explicit usduration(boost::u64 microsecs)
       : m_microsecs(microsecs)
    {}
 
-   boost::uint64_t get_microsecs() const
+   boost::u64 get_microsecs() const
    {  return m_microsecs;  }
 
    bool operator < (const usduration &other) const
@@ -162,13 +162,13 @@ class usduration
    {  return m_microsecs >= other.m_microsecs; }
 
    private:
-   boost::uint64_t m_microsecs;
+   boost::u64 m_microsecs;
 };
 
 class ustime
 {
    public:
-   explicit ustime(boost::uint64_t microsecs)
+   explicit ustime(boost::u64 microsecs)
       : m_microsecs(microsecs)
    {}
 
@@ -199,18 +199,18 @@ class ustime
    bool operator >= (const ustime &other) const
    {  return m_microsecs >= other.m_microsecs; }
 
-   boost::uint64_t get_microsecs() const
+   boost::u64 get_microsecs() const
    {  return m_microsecs;  }
 
    private:
-   boost::uint64_t m_microsecs;
+   boost::u64 m_microsecs;
 };
 
-inline usduration usduration_milliseconds(boost::uint64_t millisec)
+inline usduration usduration_milliseconds(boost::u64 millisec)
 {  return usduration(millisec*1000u);   }
 
-inline usduration usduration_seconds(boost::uint64_t sec)
-{  return usduration(sec*uint64_t(1000000u));   }
+inline usduration usduration_seconds(boost::u64 sec)
+{  return usduration(sec*u64(1000000u));   }
 
 template<class TimeType, class Enable = void>
 class microsec_clock;
@@ -234,7 +234,7 @@ class microsec_clock<TimeType, typename enable_if_ptime<TimeType>::type>
       #elif defined(BOOST_HAS_FTIME)
          boost::winapi::FILETIME_ ft;
          boost::winapi::GetSystemTimeAsFileTime(&ft);
-         boost::uint64_t micros = file_time_to_microseconds(ft); // it will not wrap, since ft is the current time
+         boost::u64 micros = file_time_to_microseconds(ft); // it will not wrap, since ft is the current time
                                                                   // and cannot be before 1970-Jan-01
          std::time_t t = static_cast<std::time_t>(micros / 1000000UL); // seconds since epoch
          // microseconds -- static casts suppress warnings
@@ -273,12 +273,12 @@ class microsec_clock<ustime>
       #ifdef BOOST_HAS_GETTIMEOFDAY
          timeval tv;
          gettimeofday(&tv, 0); //gettimeofday does not support TZ adjust on Linux.
-         boost::uint64_t micros = boost::uint64_t(tv.tv_sec)*1000000;
-         micros += (boost::uint64_t)tv.tv_usec;
+         boost::u64 micros = boost::u64(tv.tv_sec)*1000000;
+         micros += (boost::u64)tv.tv_usec;
       #elif defined(BOOST_HAS_FTIME)
          boost::winapi::FILETIME_ ft;
          boost::winapi::GetSystemTimeAsFileTime(&ft);
-         boost::uint64_t micros = file_time_to_microseconds(ft); // it will not wrap, since ft is the current time
+         boost::u64 micros = file_time_to_microseconds(ft); // it will not wrap, since ft is the current time
                                                                   // and cannot be before 1970-Jan-01
       #else
          #error "Unsupported date-time error: neither gettimeofday nor FILETIME support is detected"
@@ -337,19 +337,19 @@ inline bool duration_to_timepoint(const Duration &, typename disable_if_ptime<Du
 // duration_to_milliseconds
 
 template<class Duration>
-inline boost::uint64_t duration_to_milliseconds(const Duration &abs_time, typename enable_if_ptime_duration<Duration>::type* = 0)
+inline boost::u64 duration_to_milliseconds(const Duration &abs_time, typename enable_if_ptime_duration<Duration>::type* = 0)
 {
-   return static_cast<boost::uint64_t>(abs_time.total_milliseconds());
+   return static_cast<boost::u64>(abs_time.total_milliseconds());
 }
 
 template<class Duration>
-inline boost::uint64_t duration_to_milliseconds(const Duration &d, typename enable_if_duration<Duration>::type* = 0)
+inline boost::u64 duration_to_milliseconds(const Duration &d, typename enable_if_duration<Duration>::type* = 0)
 {
    const double factor = double(Duration::period::num)*1000.0/double(Duration::period::den);
-   return static_cast<boost::uint64_t>(double(d.count())*factor);
+   return static_cast<boost::u64>(double(d.count())*factor);
 }
 
-inline boost::uint64_t duration_to_milliseconds(const usduration &d)
+inline boost::u64 duration_to_milliseconds(const usduration &d)
 {
    return d.get_microsecs()/1000;
 }
@@ -359,14 +359,14 @@ inline boost::uint64_t duration_to_milliseconds(const usduration &d)
 template<class Duration>
 inline usduration duration_to_usduration(const Duration &d, typename enable_if_ptime_duration<Duration>::type* = 0)
 {
-   return usduration(static_cast<boost::uint64_t>(d.total_microseconds()));
+   return usduration(static_cast<boost::u64>(d.total_microseconds()));
 }
 
 template<class Duration>
 inline usduration duration_to_usduration(const Duration &d, typename enable_if_duration<Duration>::type* = 0)
 {
    const double factor = double(Duration::period::num)*1000000.0/double(Duration::period::den);
-   return usduration(static_cast<boost::uint64_t>(double(d.count())*factor));
+   return usduration(static_cast<boost::u64>(double(d.count())*factor));
 }
 
 // duration_to_ustime

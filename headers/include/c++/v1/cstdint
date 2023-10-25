@@ -109,7 +109,7 @@ Types:
     uint8_t
     uint16_t
     uint32_t
-    uint64_t
+    u64
 
     int_least8_t
     int_least16_t
@@ -167,7 +167,7 @@ using ::int64_t _LIBCPP_USING_IF_EXISTS;
 using ::uint8_t _LIBCPP_USING_IF_EXISTS;
 using ::uint16_t _LIBCPP_USING_IF_EXISTS;
 using ::uint32_t _LIBCPP_USING_IF_EXISTS;
-using ::uint64_t _LIBCPP_USING_IF_EXISTS;
+using ::u64 _LIBCPP_USING_IF_EXISTS;
 
 using ::int_least8_t _LIBCPP_USING_IF_EXISTS;
 using ::int_least16_t _LIBCPP_USING_IF_EXISTS;

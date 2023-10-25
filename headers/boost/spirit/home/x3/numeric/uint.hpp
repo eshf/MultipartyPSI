@@ -51,10 +51,10 @@ namespace boost { namespace spirit { namespace x3
     BOOST_SPIRIT_X3_UINT_PARSER(unsigned int, uint_)
     BOOST_SPIRIT_X3_UINT_PARSER(unsigned long long, ulong_long)
 
-    BOOST_SPIRIT_X3_UINT_PARSER(uint8_t, uint8)
+    BOOST_SPIRIT_X3_UINT_PARSER(u8, uint8)
     BOOST_SPIRIT_X3_UINT_PARSER(uint16_t, uint16)
     BOOST_SPIRIT_X3_UINT_PARSER(uint32_t, uint32)
-    BOOST_SPIRIT_X3_UINT_PARSER(uint64_t, uint64)
+    BOOST_SPIRIT_X3_UINT_PARSER(u64, uint64)
 
 #undef BOOST_SPIRIT_X3_UINT_PARSER
 

@@ -417,7 +417,7 @@ struct group15
 
   inline void initialize()
   {
-    vst1q_u8(reinterpret_cast<uint8_t*>(m),vdupq_n_u8(0));
+    vst1q_u8(reinterpret_cast<u8*>(m),vdupq_n_u8(0));
   }
 
   inline void set(std::size_t pos,std::size_t hash)
@@ -515,12 +515,12 @@ private:
      * 16-byte atomic reads.
      */
 
-    alignas(16) uint8_t data[16]={
+    alignas(16) u8 data[16]={
       m[ 0],m[ 1],m[ 2],m[ 3],m[ 4],m[ 5],m[ 6],m[ 7],
       m[ 8],m[ 9],m[10],m[11],m[12],m[13],m[14],m[15]};
     return vld1q_u8(data);
 #else
-    return vld1q_u8(reinterpret_cast<const uint8_t*>(m));
+    return vld1q_u8(reinterpret_cast<const u8*>(m));
 #endif
   }
 
@@ -554,7 +554,7 @@ private:
 
   static inline int simde_mm_movemask_epi8(uint8x16_t a)
   {
-    static constexpr uint8_t md[16]={
+    static constexpr u8 md[16]={
       1 << 0, 1 << 1, 1 << 2, 1 << 3,
       1 << 4, 1 << 5, 1 << 6, 1 << 7,
       1 << 0, 1 << 1, 1 << 2, 1 << 3,
@@ -568,8 +568,8 @@ private:
 #if defined(__ARM_ARCH_ISA_A64)
     return vaddvq_u16(x);
 #else
-    uint64x2_t t64=vpaddlq_u32(vpaddlq_u16(x));
-    return int(vgetq_lane_uint64_t(t64,0))+int(vgetq_lane_uint64_t(t64,1));
+    uint64x2_t t64=vpaddlq_uint32_t(vpaddlq_u16(x));
+    return int(vgetq_lane_u64(t64,0))+int(vgetq_lane_u64(t64,1));
 #endif
   }
 
@@ -606,7 +606,7 @@ struct group15
 
   struct dummy_group_type
   {
-    alignas(16) boost::uint64_t m[2]=
+    alignas(16) boost::u64 m[2]=
       {0x0000000000004000ull,0x0000000000000000ull};
   };
 
@@ -628,8 +628,8 @@ struct group15
     BOOST_ASSERT(pos<N);
     return 
       pos==N-1&&
-      (m[0] & boost::uint64_t(0x4000400040004000ull))==boost::uint64_t(0x4000ull)&&
-      (m[1] & boost::uint64_t(0x4000400040004000ull))==0;
+      (m[0] & boost::u64(0x4000400040004000ull))==boost::u64(0x4000ull)&&
+      (m[1] & boost::u64(0x4000400040004000ull))==0;
   }
 
   inline void reset(std::size_t pos)
@@ -664,14 +664,14 @@ struct group15
   {
     std::size_t     pos=reinterpret_cast<uintptr_t>(pc)%sizeof(group15);
     group15        *pg=reinterpret_cast<group15*>(pc-pos);
-    boost::uint64_t x=((pg->m[0])>>pos)&0x000100010001ull;
+    boost::u64 x=((pg->m[0])>>pos)&0x000100010001ull;
     boost::uint32_t y=narrow_cast<boost::uint32_t>(x|(x>>15)|(x>>30));
     return !pg->is_not_overflowed(y);
   };
 
   inline int match_available()const
   {
-    boost::uint64_t x=~(m[0]|m[1]);
+    boost::u64 x=~(m[0]|m[1]);
     boost::uint32_t y=static_cast<boost::uint32_t>(x&(x>>32));
     y&=y>>16;
     return y&0x7FFF;
@@ -680,20 +680,20 @@ struct group15
   inline bool is_occupied(std::size_t pos)const
   {
     BOOST_ASSERT(pos<N);
-    boost::uint64_t x=m[0]|m[1];
+    boost::u64 x=m[0]|m[1];
     return (x&(0x0001000100010001ull<<pos))!=0;
   }
 
   inline int match_occupied()const
   {
-    boost::uint64_t x=m[0]|m[1];
+    boost::u64 x=m[0]|m[1];
     boost::uint32_t y=narrow_cast<boost::uint32_t>(x|(x>>32));
     y|=y>>16;
     return y&0x7FFF;
   }
 
 private:
-  using word_type=IntegralWrapper<uint64_t>;
+  using word_type=IntegralWrapper<u64>;
   BOOST_STATIC_ASSERT(sizeof(word_type)==8);
 
   static constexpr unsigned char available_=0,
@@ -732,7 +732,7 @@ private:
 
   static inline void set_impl(word_type& x,std::size_t pos,std::size_t n)
   {
-    static constexpr boost::uint64_t mask[]=
+    static constexpr boost::u64 mask[]=
     {
       0x0000000000000000ull,0x0000000000000001ull,0x0000000000010000ull,
       0x0000000000010001ull,0x0000000100000000ull,0x0000000100000001ull,
@@ -741,7 +741,7 @@ private:
       0x0001000100000000ull,0x0001000100000001ull,0x0001000100010000ull,
       0x0001000100010001ull,
     };
-    static constexpr boost::uint64_t imask[]=
+    static constexpr boost::u64 imask[]=
     {
       0x0001000100010001ull,0x0001000100010000ull,0x0001000100000001ull,
       0x0001000100000000ull,0x0001000000010001ull,0x0001000000010000ull,
@@ -758,7 +758,7 @@ private:
 
   inline int match_impl(std::size_t n)const
   {
-    static constexpr boost::uint64_t mask[]=
+    static constexpr boost::u64 mask[]=
     {
       0x0000000000000000ull,0x000000000000ffffull,0x00000000ffff0000ull,
       0x00000000ffffffffull,0x0000ffff00000000ull,0x0000ffff0000ffffull,
@@ -769,7 +769,7 @@ private:
     };
 
     BOOST_ASSERT(n<256);
-    boost::uint64_t x=m[0]^mask[n&0xFu];
+    boost::u64 x=m[0]^mask[n&0xFu];
                     x=~((m[1]^mask[n>>4])|x);
     boost::uint32_t y=static_cast<boost::uint32_t>(x&(x>>32));
                     y&=y>>16;

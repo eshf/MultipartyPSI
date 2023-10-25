@@ -1201,7 +1201,7 @@ cpp_dec_float<Digits10, ExponentType, Allocator>& cpp_dec_float<Digits10, Expone
                    data.begin() + static_cast<std::ptrdiff_t>(prec_elem - static_cast<std::int32_t>(1)),
                    data.begin());
 
-         data[static_cast<std::size_t>(prec_elem - static_cast<std::int32_t>(1))] = static_cast<std::uint32_t>(static_cast<std::uint64_t>(prev * static_cast<std::uint64_t>(cpp_dec_float_elem_mask)) / nn);
+         data[static_cast<std::size_t>(prec_elem - static_cast<std::int32_t>(1))] = static_cast<std::uint32_t>(static_cast<std::u64>(prev * static_cast<std::u64>(cpp_dec_float_elem_mask)) / nn);
       }
    }
 
@@ -2449,7 +2449,7 @@ cpp_dec_float<Digits10, ExponentType, Allocator>::cpp_dec_float(const double man
 
    for (std::int32_t i = static_cast<std::int32_t>(0); i < digit_loops; i++)
    {
-      std::uint32_t n = static_cast<std::uint32_t>(static_cast<std::uint64_t>(d));
+      std::uint32_t n = static_cast<std::uint32_t>(static_cast<std::u64>(d));
       data[static_cast<std::size_t>(i)] = static_cast<std::uint32_t>(n);
       d -= static_cast<double>(n);
       d *= static_cast<double>(cpp_dec_float_elem_mask);
@@ -2648,7 +2648,7 @@ void cpp_dec_float<Digits10, ExponentType, Allocator>::eval_multiply_n_by_n_to_2
 {
    using local_limb_type = std::uint32_t;
 
-   using local_double_limb_type = std::uint64_t;
+   using local_double_limb_type = std::u64;
 
    using local_reverse_iterator_type = std::reverse_iterator<local_limb_type*>;
 
@@ -2690,14 +2690,14 @@ void cpp_dec_float<Digits10, ExponentType, Allocator>::eval_multiply_n_by_n_to_2
 template <unsigned Digits10, class ExponentType, class Allocator>
 std::uint32_t cpp_dec_float<Digits10, ExponentType, Allocator>::mul_loop_n(std::uint32_t* const u, std::uint32_t n, const std::int32_t p)
 {
-   std::uint64_t carry = static_cast<std::uint64_t>(0u);
+   std::u64 carry = static_cast<std::u64>(0u);
 
    // Multiplication loop.
    for (std::int32_t j = p - 1; j >= static_cast<std::int32_t>(0); j--)
    {
-      const std::uint64_t t = static_cast<std::uint64_t>(carry + static_cast<std::uint64_t>(u[j] * static_cast<std::uint64_t>(n)));
-      carry                 = static_cast<std::uint64_t>(t / static_cast<std::uint32_t>(cpp_dec_float_elem_mask));
-      u[j]                  = static_cast<std::uint32_t>(t - static_cast<std::uint64_t>(static_cast<std::uint32_t>(cpp_dec_float_elem_mask) * static_cast<std::uint64_t>(carry)));
+      const std::u64 t = static_cast<std::u64>(carry + static_cast<std::u64>(u[j] * static_cast<std::u64>(n)));
+      carry                 = static_cast<std::u64>(t / static_cast<std::uint32_t>(cpp_dec_float_elem_mask));
+      u[j]                  = static_cast<std::uint32_t>(t - static_cast<std::u64>(static_cast<std::uint32_t>(cpp_dec_float_elem_mask) * static_cast<std::u64>(carry)));
    }
 
    return static_cast<std::uint32_t>(carry);
@@ -2706,13 +2706,13 @@ std::uint32_t cpp_dec_float<Digits10, ExponentType, Allocator>::mul_loop_n(std::
 template <unsigned Digits10, class ExponentType, class Allocator>
 std::uint32_t cpp_dec_float<Digits10, ExponentType, Allocator>::div_loop_n(std::uint32_t* const u, std::uint32_t n, const std::int32_t p)
 {
-   std::uint64_t prev = static_cast<std::uint64_t>(0u);
+   std::u64 prev = static_cast<std::u64>(0u);
 
    for (std::int32_t j = static_cast<std::int32_t>(0); j < p; j++)
    {
-      const std::uint64_t t = static_cast<std::uint64_t>(u[j] + static_cast<std::uint64_t>(prev * static_cast<std::uint32_t>(cpp_dec_float_elem_mask)));
+      const std::u64 t = static_cast<std::u64>(u[j] + static_cast<std::u64>(prev * static_cast<std::uint32_t>(cpp_dec_float_elem_mask)));
       u[j]                    = static_cast<std::uint32_t>(t / n);
-      prev                    = static_cast<std::uint64_t>(t - static_cast<std::uint64_t>(n * static_cast<std::uint64_t>(u[j])));
+      prev                    = static_cast<std::u64>(t - static_cast<std::u64>(n * static_cast<std::u64>(u[j])));
    }
 
    return static_cast<std::uint32_t>(prev);
@@ -2731,7 +2731,7 @@ void cpp_dec_float<Digits10, ExponentType, Allocator>::eval_multiply_kara_propag
 
    while((carry_out != 0U) && (ri_t != rend_t))
    {
-      const std::uint64_t tt = *ri_t + carry_out;
+      const std::u64 tt = *ri_t + carry_out;
 
       carry_out = ((tt >= static_cast<std::uint32_t>(cpp_dec_float_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
                                                                                : static_cast<std::uint_fast8_t>(0U));

@@ -7,7 +7,7 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <cstdint> // intmax_t, uintmax_t, uint8_t, ...
+#include <cstdint> // intmax_t, uintmax_t, u8, ...
 #include <algorithm>
 #include <type_traits> // conditional
 #include <limits>
@@ -238,13 +238,13 @@ minmax(const std::initializer_list<T> & l){
 template<typename T>
 constexpr inline T round_out(const T & t){
     if(t >= 0){
-        const std::uint8_t sb = utility::significant_bits(t);
+        const std::u8 sb = utility::significant_bits(t);
         return (sb < sizeof(T) * 8)
             ? ((T)1 << sb) - 1
             : std::numeric_limits<T>::max();
     }
     else{
-        const std::uint8_t sb = utility::significant_bits(~t);
+        const std::u8 sb = utility::significant_bits(~t);
         return (sb < sizeof(T) * 8)
             ? ~(((T)1 << sb) - 1)
             : std::numeric_limits<T>::min();

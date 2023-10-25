@@ -49,26 +49,26 @@ namespace osuCrypto
         // Performs the PRNG expantion and transope operations. 
         // @ numOtExt: denotes the number of OTs that can be used before init
         //      should be called again.
-        virtual void init(uint64_t numOtExt) = 0;
+        virtual void init(u64 numOtExt) = 0;
 
         
         virtual void encode(
-            uint64_t otIdx,
+            u64 otIdx,
             const ArrayView<block> choiceWord,
             block& encoding) = 0;
 
         //virtual void encode(
-        //    uint64_t otIdx,
+        //    u64 otIdx,
         //    const MatrixView<block> choiceWord,
         //    ArrayView<block> encoding) = 0;
 
 
         virtual void getParams(
             bool maliciousSecure,
-            uint64_t compSecParm, uint64_t statSecParam, uint64_t inputBitCount, uint64_t inputCount, 
-            uint64_t& inputBlkSize, uint64_t& baseOtCount) = 0;
+            u64 compSecParm, u64 statSecParam, u64 inputBitCount, u64 inputCount, 
+            u64& inputBlkSize, u64& baseOtCount) = 0;
 
-        virtual void recvCorrection(Channel& chl, uint64_t recvCount) = 0;
+        virtual void recvCorrection(Channel& chl, u64 recvCount) = 0;
 
         virtual void check(Channel& chl) = 0;
     };
@@ -94,22 +94,22 @@ namespace osuCrypto
 
         virtual std::unique_ptr<NcoOtExtReceiver> split() = 0;
 
-        virtual void init(uint64_t numOtExt) = 0;
+        virtual void init(u64 numOtExt) = 0;
 
         virtual void encode(
-            uint64_t otIdx,
+            u64 otIdx,
             const ArrayView<block> choiceWord,
             block& encoding) = 0;
 
-        virtual void zeroEncode(uint64_t otIdx) = 0;
+        virtual void zeroEncode(u64 otIdx) = 0;
 
 
         virtual void getParams(
             bool maliciousSecure,
-            uint64_t compSecParm, uint64_t statSecParam, uint64_t inputBitCount, uint64_t inputCount,
-            uint64_t& inputBlkSize, uint64_t& baseOtCount) = 0;
+            u64 compSecParm, u64 statSecParam, u64 inputBitCount, u64 inputCount,
+            u64& inputBlkSize, u64& baseOtCount) = 0;
 
-        virtual void sendCorrection(Channel& chl, uint64_t sendCount) = 0;
+        virtual void sendCorrection(Channel& chl, u64 sendCount) = 0;
 
         virtual void check(Channel& chl) = 0;
 

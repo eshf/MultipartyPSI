@@ -40,7 +40,7 @@ inline symbols<T, CharT, SetT>::symbols()
 template <typename T, typename CharT, typename SetT>
 symbols<T, CharT, SetT>::symbols(symbols const& other)
 : SetT(other)
-// Truint64_t CXX seems to be confused by the explicit call of the default
+// Tru64 CXX seems to be confused by the explicit call of the default
 // constructor and generates wrong code which invalidates the just contructed
 // first base class in the line above.
 #if !BOOST_WORKAROUND(__DECCXX_VER, BOOST_TESTED_AT(60590041))

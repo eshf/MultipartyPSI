@@ -36,7 +36,7 @@ namespace osuCrypto {
 
 
 
-    void BtAcceptor::bind(u32 port, std::string ip)
+    void BtAcceptor::bind(uint32_t port, std::string ip)
     {
         auto pStr = std::to_string(port);
         mPort = port;
@@ -98,17 +98,17 @@ namespace osuCrypto {
                     //std::cout << option3.value() << std::endl;
 
                     newSocket->mHandle.async_receive(boost::asio::buffer(buff->data(), buff->size()), 
-                        [newSocket, buff, this](const boost::system::error_code& ec2, uint64_t bytesTransferred)
+                        [newSocket, buff, this](const boost::system::error_code& ec2, u64 bytesTransferred)
                     {
                         if(!ec2 || bytesTransferred != 4)
                         {
-                            u32 size = buff->getArrayView<u32>()[0];
+                            uint32_t size = buff->getArrayView<uint32_t>()[0];
 
                             buff->reserve(size);
                             buff->setp(size);
 
                             newSocket->mHandle.async_receive(boost::asio::buffer(buff->data(), buff->size()),
-                                [newSocket, buff, size, this](const boost::system::error_code& ec3, uint64_t bytesTransferred2)
+                                [newSocket, buff, size, this](const boost::system::error_code& ec3, u64 bytesTransferred2)
                             {
                                 if (!ec3 || bytesTransferred2 != size)
                                 {

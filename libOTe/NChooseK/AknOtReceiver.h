@@ -16,7 +16,7 @@ public:
     AknOtReceiver();
     ~AknOtReceiver();
 
-    void init(uint64_t totalOTCount, uint64_t numberOfOnes, double p,
+    void init(u64 totalOTCount, u64 numberOfOnes, double p,
         OtExtReceiver& ots, Channel& chl, PRNG& prng)
     {
         std::vector<Channel*> chls{ &chl };
@@ -24,10 +24,10 @@ public:
     }
 
 
-    void init(uint64_t totalOTCount, uint64_t numberOfOnes, double p,
+    void init(u64 totalOTCount, u64 numberOfOnes, double p,
         OtExtReceiver& ots, std::vector<Channel*>& chls, PRNG& prng);
 
-    std::vector<uint64_t> mOnes, mZeros;
+    std::vector<u64> mOnes, mZeros;
     std::vector<block> mMessages;
     BitVector mChoices;
 };

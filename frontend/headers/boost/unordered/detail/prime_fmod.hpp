@@ -48,7 +48,7 @@ namespace boost {
         static std::size_t (*positions[])(std::size_t);
 
 #if defined(BOOST_UNORDERED_FCA_HAS_64B_SIZE_T)
-        static boost::uint64_t inv_sizes32[];
+        static boost::u64 inv_sizes32[];
         static std::size_t const inv_sizes32_len;
 #endif /* defined(BOOST_UNORDERED_FCA_HAS_64B_SIZE_T) */
 
@@ -83,31 +83,31 @@ namespace boost {
         // modulo) exploiting how compilers transform division
         //
 
-        static inline boost::uint64_t get_remainder(
-          boost::uint64_t fractional, boost::uint32_t d)
+        static inline boost::u64 get_remainder(
+          boost::u64 fractional, boost::uint32_t d)
         {
 #if defined(_MSC_VER)
           // use MSVC intrinsics when available to avoid promotion to 128 bits
 
           return __umulh(fractional, d);
 #elif defined(BOOST_HAS_INT128)
-          return static_cast<boost::uint64_t>(
+          return static_cast<boost::u64>(
             ((boost::uint128_type)fractional * d) >> 64);
 #else
           // portable implementation in the absence of boost::uint128_type on 64
           // bits, which happens at least in GCC 4.5 and prior
 
-          boost::uint64_t r1 = (fractional & UINT32_MAX) * d;
-          boost::uint64_t r2 = (fractional >> 32) * d;
+          boost::u64 r1 = (fractional & UINT32_MAX) * d;
+          boost::u64 r2 = (fractional >> 32) * d;
           r2 += r1 >> 32;
           return r2 >> 32;
 #endif /* defined(_MSC_VER) */
         }
 
         static inline boost::uint32_t fast_modulo(
-          boost::uint32_t a, boost::uint64_t M, boost::uint32_t d)
+          boost::uint32_t a, boost::u64 M, boost::uint32_t d)
         {
-          boost::uint64_t fractional = M * a;
+          boost::u64 fractional = M * a;
           return (boost::uint32_t)(get_remainder(fractional, d));
         }
 #endif /* defined(BOOST_UNORDERED_FCA_HAS_64B_SIZE_T) */
@@ -197,7 +197,7 @@ namespace boost {
 #if defined(BOOST_UNORDERED_FCA_HAS_64B_SIZE_T)
       // clang-format off
         template <class T>
-        boost::uint64_t prime_fmod_size<T>::inv_sizes32[] = {
+        boost::u64 prime_fmod_size<T>::inv_sizes32[] = {
           (boost::ulong_long_type(330382099ul) << 32) + boost::ulong_long_type(2973438898ul) /* = 1418980313362273202 */,
           (boost::ulong_long_type(148102320ul) << 32) + boost::ulong_long_type(2369637129ul) /* = 636094623231363849 */,
           (boost::ulong_long_type(81037118ul) << 32)  + boost::ulong_long_type(3403558990ul) /* = 348051774975651918 */,

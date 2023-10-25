@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 /// @file int_array.hpp
 /// @brief This file contains the struct int_array , which is an array of
-///        uint64_t elements, being the template parameter NN the number of
+///        u64 elements, being the template parameter NN the number of
 ///        elements in the array
 ///
 /// @author Copyright (c) 2010 2015 Francisco José Tapia (fjtapia@gmail.com )\n
@@ -29,7 +29,7 @@ namespace common
 template<uint32_t NN>
 struct int_array
 {
-    uint64_t M[NN];
+    u64 M[NN];
 
     template<class generator>
     static int_array<NN> generate(generator & gen)
@@ -42,9 +42,9 @@ struct int_array
         return result;
     };
 
-    uint64_t counter(void) const
+    u64 counter(void) const
     {
-        uint64_t Acc = M[0];
+        u64 Acc = M[0];
         for (uint32_t i = 1; i < NN; Acc += M[i++])
             ;
         return Acc;

@@ -80,7 +80,7 @@ uint32_t __sanitizer_unaligned_load32(const void *p);
 /// \param p Pointer to unaligned memory.
 ///
 /// \returns Loaded value.
-uint64_t __sanitizer_unaligned_load64(const void *p);
+u64 __sanitizer_unaligned_load64(const void *p);
 
 /// Stores a 16-bit unaligned value.
 ///
@@ -98,7 +98,7 @@ void __sanitizer_unaligned_store32(void *p, uint32_t x);
 ///
 /// \param p Pointer to unaligned memory.
 /// \param x 64-bit value to store.
-void __sanitizer_unaligned_store64(void *p, uint64_t x);
+void __sanitizer_unaligned_store64(void *p, u64 x);
 
 // Returns 1 on the first call, then returns 0 thereafter.  Called by the tool
 // to ensure only one report is printed when multiple errors occur

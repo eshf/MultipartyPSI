@@ -74,7 +74,7 @@ inline void decompose_time_of_day(TimeDurationT const& tod, boost::log::aux::dec
             traits_type::ticks_per_second / boost::log::aux::decomposed_time::subseconds_per_second :
             boost::log::aux::decomposed_time::subseconds_per_second / traits_type::ticks_per_second)
     };
-    uint64_t frac = tod.fractional_seconds();
+    u64 frac = tod.fractional_seconds();
     v.subseconds = static_cast< uint32_t >(traits_type::ticks_per_second > boost::log::aux::decomposed_time::subseconds_per_second ? frac / adjustment_ratio : frac * adjustment_ratio);
 }
 
@@ -455,7 +455,7 @@ struct date_time_formatter_generator_traits< posix_time::seconds, CharT, VoidT >
 {
 };
 
-template< typename BaseDurationT, uint64_t FracOfSecondV, typename CharT, typename VoidT >
+template< typename BaseDurationT, u64 FracOfSecondV, typename CharT, typename VoidT >
 struct date_time_formatter_generator_traits< date_time::subsecond_duration< BaseDurationT, FracOfSecondV >, CharT, VoidT > :
     public time_duration_formatter_generator_traits_impl< date_time::subsecond_duration< BaseDurationT, FracOfSecondV >, CharT >
 {

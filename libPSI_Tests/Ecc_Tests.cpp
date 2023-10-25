@@ -343,13 +343,13 @@ void Ecc2mNumber_Test()
         for (u64 j = 0; j < 20; ++j)
         {
             // sample Z*_p
-            auto mult = prng.get<u32>() >> 1;
+            auto mult = prng.get<uint32_t>() >> 1;
             //std::cout << mult_var << " * " << mult << std::endl;
 
             //std::cout << "mult in " << mult << std::endl;
 
             // sample Z_p
-            auto add = prng.get<u32>() >> 1;
+            auto add = prng.get<uint32_t>() >> 1;
 
             mult_var = mult_var * mult;
             mult_var2 = mult_var2 * EccNumber(curve, mult);

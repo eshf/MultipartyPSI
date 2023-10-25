@@ -128,8 +128,8 @@ inline uint32_t float_to_bits(const float f) {
   return bits;
 }
 
-inline uint64_t double_to_bits(const double d) {
-  uint64_t bits = 0;
+inline u64 double_to_bits(const double d) {
+  u64 bits = 0;
   memcpy(&bits, &d, sizeof(double));
   return bits;
 }

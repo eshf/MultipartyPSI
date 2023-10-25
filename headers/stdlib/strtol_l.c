@@ -123,7 +123,7 @@
   (current->values[_NL_ITEM_INDEX (item)].string)
 #undef _NL_CURRENT_WORD
 #define _NL_CURRENT_WORD(category, item) \
-  ((uint32_t) current->values[_NL_ITEM_INDEX (item)].word)
+  ((u32) current->values[_NL_ITEM_INDEX (item)].word)
 
 #if defined _LIBC || defined HAVE_WCHAR_H
 # include <wchar.h>

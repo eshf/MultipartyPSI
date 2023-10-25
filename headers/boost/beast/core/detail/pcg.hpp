@@ -20,8 +20,8 @@ namespace detail {
 
 class pcg
 {
-    std::uint64_t state_ = 0;
-    std::uint64_t increment_;
+    std::u64 state_ = 0;
+    std::u64 increment_;
 
 public:
     using result_type = std::uint32_t;
@@ -29,8 +29,8 @@ public:
     // Initialize the generator.
     // There are no restrictions on the input values.
     pcg(
-        std::uint64_t seed,
-        std::uint64_t stream)
+        std::u64 seed,
+        std::u64 stream)
     {
         // increment must be odd
         increment_ = 2 * stream + 1;
@@ -42,7 +42,7 @@ public:
     std::uint32_t
     operator()()
     {
-        std::uint64_t const p = state_;
+        std::u64 const p = state_;
         state_ = p *
             6364136223846793005ULL +
             increment_;

@@ -120,7 +120,7 @@ private:
     void save(const boost::int64_t t) BOOST_OVERRIDE {
         ArchiveImplementation::save(t);
     }
-    void save(const boost::uint64_t t) BOOST_OVERRIDE {
+    void save(const boost::u64 t) BOOST_OVERRIDE {
         ArchiveImplementation::save(t);
     }
     #endif

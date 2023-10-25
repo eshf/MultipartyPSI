@@ -928,14 +928,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /// atomic_int32_t
   typedef atomic<int32_t>		atomic_int32_t;
 
-  /// atomic_uint32_t
-  typedef atomic<uint32_t>		atomic_uint32_t;
+  /// atomic_u32
+  typedef atomic<u32>		atomic_u32;
 
   /// atomic_int64_t
   typedef atomic<int64_t>		atomic_int64_t;
 
-  /// atomic_uint64_t
-  typedef atomic<uint64_t>		atomic_uint64_t;
+  /// atomic_u64
+  typedef atomic<u64>		atomic_u64;
 
 
   /// atomic_int_least8_t

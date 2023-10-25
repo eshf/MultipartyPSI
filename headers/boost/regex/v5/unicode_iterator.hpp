@@ -24,23 +24,23 @@ Contents:
 1) Read Only, Input Adapters:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-template <class BaseIterator, class U8Type = std::uint8_t>
-class u32_to_u8_iterator;
+template <class BaseIterator, class u8Type = std::u8>
+class uint32_t_to_u8_iterator;
 
 Adapts sequence of UTF-32 code points to "look like" a sequence of UTF-8.
 
-template <class BaseIterator, class U32Type = std::uint32_t>
-class u8_to_u32_iterator;
+template <class BaseIterator, class uint32_tType = std::uint32_t>
+class u8_to_uint32_t_iterator;
 
 Adapts sequence of UTF-8 code points to "look like" a sequence of UTF-32.
 
 template <class BaseIterator, class U16Type = std::uint16_t>
-class u32_to_u16_iterator;
+class uint32_t_to_u16_iterator;
 
 Adapts sequence of UTF-32 code points to "look like" a sequence of UTF-16.
 
-template <class BaseIterator, class U32Type = std::uint32_t>
-class u16_to_u32_iterator;
+template <class BaseIterator, class uint32_tType = std::uint32_t>
+class u16_to_uint32_t_iterator;
 
 Adapts sequence of UTF-16 code points to "look like" a sequence of UTF-32.
 
@@ -93,11 +93,11 @@ inline bool is_surrogate(T v)
    return (v & 0xFFFFF800u) == 0xd800;
 }
 
-inline unsigned utf8_byte_count(std::uint8_t c)
+inline unsigned utf8_byte_count(std::u8 c)
 {
    // if the most significant bit with a zero in it is in position
    // 8-N then there are N bytes in this UTF-8 sequence:
-   std::uint8_t mask = 0x80u;
+   std::u8 mask = 0x80u;
    unsigned result = 0;
    while(c & mask)
    {
@@ -107,7 +107,7 @@ inline unsigned utf8_byte_count(std::uint8_t c)
    return (result == 0) ? 1 : ((result > 4) ? 4 : result);
 }
 
-inline unsigned utf8_trailing_byte_count(std::uint8_t c)
+inline unsigned utf8_trailing_byte_count(std::u8 c)
 {
    return utf8_byte_count(c) - 1;
 }
@@ -138,7 +138,7 @@ inline void invalid_utf32_code_point(std::uint32_t val)
 } // namespace detail
 
 template <class BaseIterator, class U16Type = std::uint16_t>
-class u32_to_u16_iterator
+class uint32_t_to_u16_iterator
 {
    typedef typename std::iterator_traits<BaseIterator>::value_type base_value_type;
 
@@ -158,7 +158,7 @@ public:
          extract_current();
       return m_values[m_current];
    }
-   bool operator==(const u32_to_u16_iterator& that)const
+   bool operator==(const uint32_t_to_u16_iterator& that)const
    {
       if(m_position == that.m_position)
       {
@@ -168,11 +168,11 @@ public:
       }
       return false;
    }
-   bool operator!=(const u32_to_u16_iterator& that)const
+   bool operator!=(const uint32_t_to_u16_iterator& that)const
    {
       return !(*this == that);
    }
-   u32_to_u16_iterator& operator++()
+   uint32_t_to_u16_iterator& operator++()
    {
       // if we have a pending read then read now, so that we know whether
       // to skip a position, or move to a low-surrogate:
@@ -191,13 +191,13 @@ public:
       }
       return *this;
    }
-   u32_to_u16_iterator operator++(int)
+   uint32_t_to_u16_iterator operator++(int)
    {
-      u32_to_u16_iterator r(*this);
+      uint32_t_to_u16_iterator r(*this);
       ++(*this);
       return r;
    }
-   u32_to_u16_iterator& operator--()
+   uint32_t_to_u16_iterator& operator--()
    {
       if(m_current != 1)
       {
@@ -212,9 +212,9 @@ public:
       }
       return *this;
    }
-   u32_to_u16_iterator operator--(int)
+   uint32_t_to_u16_iterator operator--(int)
    {
-      u32_to_u16_iterator r(*this);
+      uint32_t_to_u16_iterator r(*this);
       --(*this);
       return r;
    }
@@ -223,13 +223,13 @@ public:
       return m_position;
    }
    // construct:
-   u32_to_u16_iterator() : m_position(), m_current(0)
+   uint32_t_to_u16_iterator() : m_position(), m_current(0)
    {
       m_values[0] = 0;
       m_values[1] = 0;
       m_values[2] = 0;
    }
-   u32_to_u16_iterator(BaseIterator b) : m_position(b), m_current(2)
+   uint32_t_to_u16_iterator(BaseIterator b) : m_position(b), m_current(2)
    {
       m_values[0] = 0;
       m_values[1] = 0;
@@ -268,20 +268,20 @@ private:
    mutable unsigned m_current;
 };
 
-template <class BaseIterator, class U32Type = std::uint32_t>
-class u16_to_u32_iterator
+template <class BaseIterator, class uint32_tType = std::uint32_t>
+class u16_to_uint32_t_iterator
 {
    // special values for pending iterator reads:
-   static const U32Type pending_read = 0xffffffffu;
+   static const uint32_tType pending_read = 0xffffffffu;
 
    typedef typename std::iterator_traits<BaseIterator>::value_type base_value_type;
 
    static_assert(sizeof(base_value_type)*CHAR_BIT == 16, "Incorrectly sized template argument");
-   static_assert(sizeof(U32Type)*CHAR_BIT == 32, "Incorrectly sized template argument");
+   static_assert(sizeof(uint32_tType)*CHAR_BIT == 32, "Incorrectly sized template argument");
 
 public:
    typedef std::ptrdiff_t     difference_type;
-   typedef U32Type            value_type;
+   typedef uint32_tType            value_type;
    typedef value_type const*  pointer;
    typedef value_type const   reference;
    typedef std::bidirectional_iterator_tag iterator_category;
@@ -292,15 +292,15 @@ public:
          extract_current();
       return m_value;
    }
-   bool operator==(const u16_to_u32_iterator& that)const
+   bool operator==(const u16_to_uint32_t_iterator& that)const
    {
       return m_position == that.m_position;
    }
-   bool operator!=(const u16_to_u32_iterator& that)const
+   bool operator!=(const u16_to_uint32_t_iterator& that)const
    {
       return !(*this == that);
    }
-   u16_to_u32_iterator& operator++()
+   u16_to_uint32_t_iterator& operator++()
    {
       // skip high surrogate first if there is one:
       if(detail::is_high_surrogate(*m_position)) ++m_position;
@@ -308,13 +308,13 @@ public:
       m_value = pending_read;
       return *this;
    }
-   u16_to_u32_iterator operator++(int)
+   u16_to_uint32_t_iterator operator++(int)
    {
-      u16_to_u32_iterator r(*this);
+      u16_to_uint32_t_iterator r(*this);
       ++(*this);
       return r;
    }
-   u16_to_u32_iterator& operator--()
+   u16_to_uint32_t_iterator& operator--()
    {
       --m_position;
       // if we have a low surrogate then go back one more:
@@ -323,9 +323,9 @@ public:
       m_value = pending_read;
       return *this;
    }
-   u16_to_u32_iterator operator--(int)
+   u16_to_uint32_t_iterator operator--(int)
    {
-      u16_to_u32_iterator r(*this);
+      u16_to_uint32_t_iterator r(*this);
       --(*this);
       return r;
    }
@@ -334,18 +334,18 @@ public:
       return m_position;
    }
    // construct:
-   u16_to_u32_iterator() : m_position()
+   u16_to_uint32_t_iterator() : m_position()
    {
       m_value = pending_read;
    }
-   u16_to_u32_iterator(BaseIterator b) : m_position(b)
+   u16_to_uint32_t_iterator(BaseIterator b) : m_position(b)
    {
       m_value = pending_read;
    }
    //
    // Range checked version:
    //
-   u16_to_u32_iterator(BaseIterator b, BaseIterator start, BaseIterator end) : m_position(b)
+   u16_to_uint32_t_iterator(BaseIterator b, BaseIterator start, BaseIterator end) : m_position(b)
    {
       m_value = pending_read;
       //
@@ -384,7 +384,7 @@ private:
    }
    void extract_current()const
    {
-      m_value = static_cast<U32Type>(static_cast< std::uint16_t>(*m_position));
+      m_value = static_cast<uint32_tType>(static_cast< std::uint16_t>(*m_position));
       // if the last value is a high surrogate then adjust m_position and m_value as needed:
       if(detail::is_high_surrogate(*m_position))
       {
@@ -394,27 +394,27 @@ private:
          if((t & 0xFC00u) != 0xDC00u)
             invalid_code_point(t);
          m_value = (m_value - detail::high_surrogate_base) << 10;
-         m_value |= (static_cast<U32Type>(static_cast< std::uint16_t>(t)) & detail::ten_bit_mask);
+         m_value |= (static_cast<uint32_tType>(static_cast< std::uint16_t>(t)) & detail::ten_bit_mask);
       }
       // postcondition; result must not be a surrogate:
       if(detail::is_surrogate(m_value))
          invalid_code_point(static_cast< std::uint16_t>(m_value));
    }
    BaseIterator m_position;
-   mutable U32Type m_value;
+   mutable uint32_tType m_value;
 };
 
-template <class BaseIterator, class U8Type = std::uint8_t>
-class u32_to_u8_iterator
+template <class BaseIterator, class u8Type = std::u8>
+class uint32_t_to_u8_iterator
 {
    typedef typename std::iterator_traits<BaseIterator>::value_type base_value_type;
 
    static_assert(sizeof(base_value_type)*CHAR_BIT == 32, "Incorrectly sized template argument");
-   static_assert(sizeof(U8Type)*CHAR_BIT == 8, "Incorrectly sized template argument");
+   static_assert(sizeof(u8Type)*CHAR_BIT == 8, "Incorrectly sized template argument");
 
 public:
    typedef std::ptrdiff_t     difference_type;
-   typedef U8Type             value_type;
+   typedef u8Type             value_type;
    typedef value_type const*  pointer;
    typedef value_type const   reference;
    typedef std::bidirectional_iterator_tag iterator_category;
@@ -425,7 +425,7 @@ public:
          extract_current();
       return m_values[m_current];
    }
-   bool operator==(const u32_to_u8_iterator& that)const
+   bool operator==(const uint32_t_to_u8_iterator& that)const
    {
       if(m_position == that.m_position)
       {
@@ -436,11 +436,11 @@ public:
       }
       return false;
    }
-   bool operator!=(const u32_to_u8_iterator& that)const
+   bool operator!=(const uint32_t_to_u8_iterator& that)const
    {
       return !(*this == that);
    }
-   u32_to_u8_iterator& operator++()
+   uint32_t_to_u8_iterator& operator++()
    {
       // if we have a pending read then read now, so that we know whether
       // to skip a position, or move to a low-surrogate:
@@ -459,13 +459,13 @@ public:
       }
       return *this;
    }
-   u32_to_u8_iterator operator++(int)
+   uint32_t_to_u8_iterator operator++(int)
    {
-      u32_to_u8_iterator r(*this);
+      uint32_t_to_u8_iterator r(*this);
       ++(*this);
       return r;
    }
-   u32_to_u8_iterator& operator--()
+   uint32_t_to_u8_iterator& operator--()
    {
       if((m_current & 3) == 0)
       {
@@ -479,9 +479,9 @@ public:
          --m_current;
       return *this;
    }
-   u32_to_u8_iterator operator--(int)
+   uint32_t_to_u8_iterator operator--(int)
    {
-      u32_to_u8_iterator r(*this);
+      uint32_t_to_u8_iterator r(*this);
       --(*this);
       return r;
    }
@@ -490,7 +490,7 @@ public:
       return m_position;
    }
    // construct:
-   u32_to_u8_iterator() : m_position(), m_current(0)
+   uint32_t_to_u8_iterator() : m_position(), m_current(0)
    {
       m_values[0] = 0;
       m_values[1] = 0;
@@ -498,7 +498,7 @@ public:
       m_values[3] = 0;
       m_values[4] = 0;
    }
-   u32_to_u8_iterator(BaseIterator b) : m_position(b), m_current(4)
+   uint32_t_to_u8_iterator(BaseIterator b) : m_position(b), m_current(4)
    {
       m_values[0] = 0;
       m_values[1] = 0;
@@ -544,24 +544,24 @@ private:
       m_current= 0;
    }
    BaseIterator m_position;
-   mutable U8Type m_values[5];
+   mutable u8Type m_values[5];
    mutable unsigned m_current;
 };
 
-template <class BaseIterator, class U32Type = std::uint32_t>
-class u8_to_u32_iterator
+template <class BaseIterator, class uint32_tType = std::uint32_t>
+class u8_to_uint32_t_iterator
 {
    // special values for pending iterator reads:
-   static const U32Type pending_read = 0xffffffffu;
+   static const uint32_tType pending_read = 0xffffffffu;
 
    typedef typename std::iterator_traits<BaseIterator>::value_type base_value_type;
 
    static_assert(sizeof(base_value_type)*CHAR_BIT == 8, "Incorrectly sized template argument");
-   static_assert(sizeof(U32Type)*CHAR_BIT == 32, "Incorrectly sized template argument");
+   static_assert(sizeof(uint32_tType)*CHAR_BIT == 32, "Incorrectly sized template argument");
 
 public:
    typedef std::ptrdiff_t     difference_type;
-   typedef U32Type            value_type;
+   typedef uint32_tType            value_type;
    typedef value_type const*  pointer;
    typedef value_type const   reference;
    typedef std::bidirectional_iterator_tag iterator_category;
@@ -572,18 +572,18 @@ public:
          extract_current();
       return m_value;
    }
-   bool operator==(const u8_to_u32_iterator& that)const
+   bool operator==(const u8_to_uint32_t_iterator& that)const
    {
       return m_position == that.m_position;
    }
-   bool operator!=(const u8_to_u32_iterator& that)const
+   bool operator!=(const u8_to_uint32_t_iterator& that)const
    {
       return !(*this == that);
    }
-   u8_to_u32_iterator& operator++()
+   u8_to_uint32_t_iterator& operator++()
    {
       // We must not start with a continuation character:
-      if((static_cast<std::uint8_t>(*m_position) & 0xC0) == 0x80)
+      if((static_cast<std::u8>(*m_position) & 0xC0) == 0x80)
          invalid_sequence();
       // skip high surrogate first if there is one:
       unsigned c = detail::utf8_byte_count(*m_position);
@@ -594,7 +594,7 @@ public:
          {
             ++m_position;
             // We must have a continuation byte:
-            if((i != c - 1) && ((static_cast<std::uint8_t>(*m_position) & 0xC0) != 0x80))
+            if((i != c - 1) && ((static_cast<std::u8>(*m_position) & 0xC0) != 0x80))
                invalid_sequence();
          }
       }
@@ -605,13 +605,13 @@ public:
       m_value = pending_read;
       return *this;
    }
-   u8_to_u32_iterator operator++(int)
+   u8_to_uint32_t_iterator operator++(int)
    {
-      u8_to_u32_iterator r(*this);
+      u8_to_uint32_t_iterator r(*this);
       ++(*this);
       return r;
    }
-   u8_to_u32_iterator& operator--()
+   u8_to_uint32_t_iterator& operator--()
    {
       // Keep backtracking until we don't have a trailing character:
       unsigned count = 0;
@@ -622,9 +622,9 @@ public:
       m_value = pending_read;
       return *this;
    }
-   u8_to_u32_iterator operator--(int)
+   u8_to_uint32_t_iterator operator--(int)
    {
-      u8_to_u32_iterator r(*this);
+      u8_to_uint32_t_iterator r(*this);
       --(*this);
       return r;
    }
@@ -633,18 +633,18 @@ public:
       return m_position;
    }
    // construct:
-   u8_to_u32_iterator() : m_position()
+   u8_to_uint32_t_iterator() : m_position()
    {
       m_value = pending_read;
    }
-   u8_to_u32_iterator(BaseIterator b) : m_position(b)
+   u8_to_uint32_t_iterator(BaseIterator b) : m_position(b)
    {
       m_value = pending_read;
    }
    //
    // Checked constructor:
    //
-   u8_to_u32_iterator(BaseIterator b, BaseIterator start, BaseIterator end) : m_position(b)
+   u8_to_uint32_t_iterator(BaseIterator b, BaseIterator start, BaseIterator end) : m_position(b)
    {
       m_value = pending_read;
       //
@@ -682,7 +682,7 @@ private:
    }
    void extract_current()const
    {
-      m_value = static_cast<U32Type>(static_cast< std::uint8_t>(*m_position));
+      m_value = static_cast<uint32_tType>(static_cast< std::u8>(*m_position));
       // we must not have a continuation character:
       if((m_value & 0xC0u) == 0x80u)
          invalid_sequence();
@@ -695,9 +695,9 @@ private:
          ++next;
          m_value <<= 6;
          // We must have a continuation byte:
-         if((static_cast<std::uint8_t>(*next) & 0xC0) != 0x80)
+         if((static_cast<std::u8>(*next) & 0xC0) != 0x80)
             invalid_sequence();
-         m_value += static_cast<std::uint8_t>(*next) & 0x3Fu;
+         m_value += static_cast<std::u8>(*next) & 0x3Fu;
       }
       // we now need to remove a few of the leftmost bits, but how many depends
       // upon how many extra bytes we've extracted:
@@ -710,17 +710,17 @@ private:
       };
       m_value &= masks[extra];
       // check the result is in range:
-      if(m_value > static_cast<U32Type>(0x10FFFFu))
+      if(m_value > static_cast<uint32_tType>(0x10FFFFu))
          invalid_sequence();
       // The result must not be a surrogate:
-      if((m_value >= static_cast<U32Type>(0xD800)) && (m_value <= static_cast<U32Type>(0xDFFF)))
+      if((m_value >= static_cast<uint32_tType>(0xD800)) && (m_value <= static_cast<uint32_tType>(0xDFFF)))
          invalid_sequence();
       // We should not have had an invalidly encoded UTF8 sequence:
-      if((extra > 0) && (m_value <= static_cast<U32Type>(masks[extra - 1])))
+      if((extra > 0) && (m_value <= static_cast<uint32_tType>(masks[extra - 1])))
          invalid_sequence();
    }
    BaseIterator m_position;
-   mutable U32Type m_value;
+   mutable uint32_tType m_value;
 };
 
 template <class BaseIterator>

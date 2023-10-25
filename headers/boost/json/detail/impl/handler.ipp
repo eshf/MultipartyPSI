@@ -143,7 +143,7 @@ on_int64(
 bool
 handler::
 on_uint64(
-    std::uint64_t u,
+    std::u64 u,
     string_view,
     error_code&)
 {

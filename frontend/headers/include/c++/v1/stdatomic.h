@@ -62,7 +62,7 @@ using std::atomic_uint16_t             // see below
 using std::atomic_int32_t              // see below
 using std::atomic_uint32_t             // see below
 using std::atomic_int64_t              // see below
-using std::atomic_uint64_t             // see below
+using std::atomic_u64             // see below
 using std::atomic_int_least8_t         // see below
 using std::atomic_uint_least8_t        // see below
 using std::atomic_int_least16_t        // see below
@@ -166,7 +166,7 @@ using std::atomic_uint16_t _LIBCPP_USING_IF_EXISTS;
 using std::atomic_int32_t _LIBCPP_USING_IF_EXISTS;
 using std::atomic_uint32_t _LIBCPP_USING_IF_EXISTS;
 using std::atomic_int64_t _LIBCPP_USING_IF_EXISTS;
-using std::atomic_uint64_t _LIBCPP_USING_IF_EXISTS;
+using std::atomic_u64 _LIBCPP_USING_IF_EXISTS;
 
 using std::atomic_int_least8_t _LIBCPP_USING_IF_EXISTS;
 using std::atomic_uint_least8_t _LIBCPP_USING_IF_EXISTS;

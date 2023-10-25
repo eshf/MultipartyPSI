@@ -39,8 +39,8 @@ _LIBCPP_HIDE_FROM_ABI constexpr _Tp byteswap(_Tp __val) noexcept {
 #if __has_builtin(__builtin_bswap128)
     return __builtin_bswap128(__val);
 #else
-    return static_cast<_Tp>(byteswap(static_cast<uint64_t>(__val))) << 64 |
-           static_cast<_Tp>(byteswap(static_cast<uint64_t>(__val >> 64)));
+    return static_cast<_Tp>(byteswap(static_cast<u64>(__val))) << 64 |
+           static_cast<_Tp>(byteswap(static_cast<u64>(__val >> 64)));
 #endif // __has_builtin(__builtin_bswap128)
 #endif // _LIBCPP_HAS_NO_INT128
   } else {

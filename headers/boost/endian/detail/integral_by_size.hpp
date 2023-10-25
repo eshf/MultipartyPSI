@@ -38,7 +38,7 @@ template<> struct integral_by_size<4>
 
 template<> struct integral_by_size<8>
 {
-    typedef uint64_t type;
+    typedef u64 type;
 };
 
 #if defined(BOOST_HAS_INT128)

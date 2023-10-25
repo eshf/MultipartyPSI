@@ -283,7 +283,7 @@ _mm_max_epu32(__m128i __a, __m128i __b)
                                      (__m128i)wasm_i64x2_replace_lane((__a), (__imm8) & 1, (__i)); })
 
 #define _mm_extract_epi8(__a, __imm8) __extension__ ({       \
-                                       wasm_u8x16_extract_lane((__a), (__imm8) & 15); })
+                                       wasm_uint8_tx16_extract_lane((__a), (__imm8) & 15); })
 
 #define _mm_extract_epi32(__a, __imm8) __extension__ ({       \
                                        wasm_i32x4_extract_lane((__a), (__imm8) & 3); })
@@ -387,19 +387,19 @@ _mm_cvtepi32_epi64(__m128i __a)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_cvtepu8_epi16(__m128i __a)
+_mm_cvtepuint8_t_epi16(__m128i __a)
 {
-  return (__m128i)wasm_u16x8_extend_low_u8x16((v128_t)__a);
+  return (__m128i)wasm_u16x8_extend_low_uint8_tx16((v128_t)__a);
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_cvtepu8_epi32(__m128i __a)
+_mm_cvtepuint8_t_epi32(__m128i __a)
 {
-  return (__m128i)wasm_u32x4_extend_low_u16x8(wasm_i16x8_widen_low_u8x16((v128_t)__a));
+  return (__m128i)wasm_u32x4_extend_low_u16x8(wasm_i16x8_widen_low_uint8_tx16((v128_t)__a));
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_cvtepu8_epi64(__m128i __a)
+_mm_cvtepuint8_t_epi64(__m128i __a)
 {
   const __m128i __zero = _mm_setzero_si128();
   return _mm_unpacklo_epi32(_mm_unpacklo_epi16(_mm_unpacklo_epi8(__a, __zero), __zero), __zero);
@@ -438,17 +438,17 @@ __uabs(int __i)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_mpsadbw_epu8(__m128i __a, __m128i __b, int __imm8)
+_mm_mpsadbw_epuint8_t(__m128i __a, __m128i __b, int __imm8)
 {
   int __aOffset = __imm8 & 4;
   int __bOffset = (__imm8 & 3) << 2;
   unsigned short __ret[8];
   for(int __i = 0; __i < 8; ++__i)
   {
-    __ret[__i] = __uabs(((__u8x16)__a)[__i + __aOffset    ] - ((__u8x16)__b)[__bOffset    ])
-               + __uabs(((__u8x16)__a)[__i + __aOffset + 1] - ((__u8x16)__b)[__bOffset + 1])
-               + __uabs(((__u8x16)__a)[__i + __aOffset + 2] - ((__u8x16)__b)[__bOffset + 2])
-               + __uabs(((__u8x16)__a)[__i + __aOffset + 3] - ((__u8x16)__b)[__bOffset + 3]);
+    __ret[__i] = __uabs(((__uint8_tx16)__a)[__i + __aOffset    ] - ((__uint8_tx16)__b)[__bOffset    ])
+               + __uabs(((__uint8_tx16)__a)[__i + __aOffset + 1] - ((__uint8_tx16)__b)[__bOffset + 1])
+               + __uabs(((__uint8_tx16)__a)[__i + __aOffset + 2] - ((__uint8_tx16)__b)[__bOffset + 2])
+               + __uabs(((__uint8_tx16)__a)[__i + __aOffset + 3] - ((__uint8_tx16)__b)[__bOffset + 3]);
   }
   return (__m128i)wasm_v128_load(__ret);
 }

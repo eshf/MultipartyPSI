@@ -51,7 +51,7 @@ using wstring = basic_string<wchar_t>;
 #endif
 
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-using u8string = basic_string<char8_t>;
+using uint8_tstring = basic_string<char8_t>;
 #endif
 
 using u16string = basic_string<char16_t>;
@@ -70,7 +70,7 @@ using wstring = basic_string<wchar_t>;
 #  endif
 
 #  ifndef _LIBCPP_HAS_NO_CHAR8_T
-using u8string = basic_string<char8_t>;
+using uint8_tstring = basic_string<char8_t>;
 #  endif
 
 using u16string = basic_string<char16_t>;
@@ -87,7 +87,7 @@ class _LIBCPP_PREFERRED_NAME(string)
       _LIBCPP_PREFERRED_NAME(wstring)
 #endif
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-      _LIBCPP_PREFERRED_NAME(u8string)
+      _LIBCPP_PREFERRED_NAME(uint8_tstring)
 #endif
       _LIBCPP_PREFERRED_NAME(u16string)
       _LIBCPP_PREFERRED_NAME(u32string)
@@ -97,7 +97,7 @@ class _LIBCPP_PREFERRED_NAME(string)
       _LIBCPP_PREFERRED_NAME(pmr::wstring)
 #  endif
 #  ifndef _LIBCPP_HAS_NO_CHAR8_T
-      _LIBCPP_PREFERRED_NAME(pmr::u8string)
+      _LIBCPP_PREFERRED_NAME(pmr::uint8_tstring)
 #  endif
       _LIBCPP_PREFERRED_NAME(pmr::u16string)
       _LIBCPP_PREFERRED_NAME(pmr::u32string)

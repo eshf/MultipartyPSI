@@ -25,11 +25,11 @@ namespace osuCrypto
 	{
 	}
 
-	void OPPRFReceiver::init(u32 opt, uint64_t numParties,
-		uint64_t n,
-		uint64_t statSec,
-		uint64_t inputBitSize,
-		Channel & chl0, uint64_t otCounts,
+	void OPPRFReceiver::init(u32 opt, u64 numParties,
+		u64 n,
+		u64 statSec,
+		u64 inputBitSize,
+		Channel & chl0, u64 otCounts,
 		NcoOtExtReceiver& otRecv,
 		NcoOtExtSender& otSend,
 		block seed, bool isOtherDirection)
@@ -38,11 +38,11 @@ namespace osuCrypto
 	}
 
 
-	void OPPRFReceiver::init(u32 opt, uint64_t numParties,
-		uint64_t n,
-		uint64_t statSecParam,
-		uint64_t inputBitSize,
-		const std::vector<Channel*>& chls, uint64_t otCounts,
+	void OPPRFReceiver::init(u32 opt, u64 numParties,
+		u64 n,
+		u64 statSecParam,
+		u64 inputBitSize,
+		const std::vector<Channel*>& chls, u64 otCounts,
 		NcoOtExtReceiver& otRecv,
 		NcoOtExtSender& otSend,
 		block seed, bool isOtherDirection)
@@ -57,8 +57,8 @@ namespace osuCrypto
 
 
 		// must be a multiple of 128...
-		uint64_t baseOtCount;// = 128 * CodeWordSize;
-		uint64_t compSecParam = 128;
+		u64 baseOtCount;// = 128 * CodeWordSize;
+		u64 compSecParam = 128;
 
 		otSend.getParams(
 			false,
@@ -70,7 +70,7 @@ namespace osuCrypto
 		{
 			//######create hash
 			mBFHasher.resize(mNumBFhashs);
-			for (uint64_t i = 0; i < mBFHasher.size(); ++i)
+			for (u64 i = 0; i < mBFHasher.size(); ++i)
 				mBFHasher[i].setKey(_mm_set1_epi64x(i));// ^ mHashingSeed);
 		}
 
@@ -101,8 +101,8 @@ namespace osuCrypto
 
 
 		// how many OTs we need in total.
-		uint64_t otCountSend = otCounts;// mSimpleBins.mBins.size();
-		uint64_t otCountRecv = otCounts; //mCuckooBins.mBins.size();
+		u64 otCountSend = otCounts;// mSimpleBins.mBins.size();
+		u64 otCountRecv = otCounts; //mCuckooBins.mBins.size();
 
 
 		gTimer.setTimePoint("Init.recv.baseStart");
@@ -120,7 +120,7 @@ namespace osuCrypto
 
 
 			// now extend these to enough recv OTs to seed the send Kco and the send Kos ot extension
-			uint64_t dualBaseOtCount = gOtExtBaseOtCount;
+			u64 dualBaseOtCount = gOtExtBaseOtCount;
 			if (!isOtherDirection) //if it is not dual, number extend OT is 128
 				dualBaseOtCount = 0;
 
@@ -159,7 +159,7 @@ namespace osuCrypto
 
 
 
-		auto sendOtRoutine = [&](uint64_t tIdx, uint64_t total, NcoOtExtSender& ots, Channel& chl)
+		auto sendOtRoutine = [&](u64 tIdx, u64 total, NcoOtExtSender& ots, Channel& chl)
 		{
 			auto start = (tIdx     *otCountSend / total);
 			auto end = ((tIdx + 1) * otCountSend / total);
@@ -167,7 +167,7 @@ namespace osuCrypto
 			ots.init(end - start);
 		};
 
-		auto recvOtRoutine = [&](uint64_t tIdx, uint64_t total, NcoOtExtReceiver& ots, Channel& chl)
+		auto recvOtRoutine = [&](u64 tIdx, u64 total, NcoOtExtReceiver& ots, Channel& chl)
 		{
 			auto start = (tIdx     * otCountRecv / total);
 			auto end = ((tIdx + 1) * otCountRecv / total);
@@ -178,8 +178,8 @@ namespace osuCrypto
 
 		// compute how amny threads we want to do for each direction.
 		// the current thread will do one of the OT receives so -1 for that.
-		uint64_t numThreads = chls.size() - 1;
-		uint64_t numRecvThreads, numSendThreads;
+		u64 numThreads = chls.size() - 1;
+		u64 numRecvThreads, numSendThreads;
 
 		if (isOtherDirection) {
 			numRecvThreads = numThreads / 2;
@@ -199,7 +199,7 @@ namespace osuCrypto
 		mOtRecvs.resize(chls.size());
 
 		// now make the threads that will to the extension
-		for (uint64_t i = 0; i < numRecvThreads; ++i)
+		for (u64 i = 0; i < numRecvThreads; ++i)
 		{
 			mOtRecvs[i + 1] = std::move(otRecv.split());
 
@@ -219,7 +219,7 @@ namespace osuCrypto
 
 		mOtSends.resize(chls.size());
 		// do the same thing but for the send OT extensions
-		for (uint64_t i = 0; i < numSendThreads; ++i)
+		for (u64 i = 0; i < numSendThreads; ++i)
 		{
 
 			mOtSends[i] = std::move(otSend.split());
@@ -250,7 +250,7 @@ namespace osuCrypto
 
 
 
-	void OPPRFReceiver::getOPRFkeys(uint64_t IdxParty, binSet& bins, Channel & chl, bool isOtherDirectionGetOPRF)
+	void OPPRFReceiver::getOPRFkeys(u64 IdxParty, binSet& bins, Channel & chl, bool isOtherDirectionGetOPRF)
 	{
 
 		if (bins.mOpt == 0)
@@ -261,7 +261,7 @@ namespace osuCrypto
 			getOPRFkeysCombined(IdxParty, bins, { &chl }, isOtherDirectionGetOPRF);
 	}
 
-	void OPPRFReceiver::getOPRFkeys(uint64_t IdxParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
+	void OPPRFReceiver::getOPRFkeys(u64 IdxParty, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
 	{
 		if (bins.mOpt == 0)
 			getOPRFkeysSeperatedandTable(IdxParty, bins, chls, isOtherDirectionGetOPRF);
@@ -272,7 +272,7 @@ namespace osuCrypto
 
 	}
 
-	void OPPRFReceiver::sendSS(uint64_t IdxParty, binSet& bins, std::vector<block>& plaintexts, Channel & chl)
+	void OPPRFReceiver::sendSS(u64 IdxParty, binSet& bins, std::vector<block>& plaintexts, Channel & chl)
 	{
 		if (bins.mOpt == 0)
 			sendSSTableBased(IdxParty, bins, plaintexts, { &chl });
@@ -284,7 +284,7 @@ namespace osuCrypto
 			sendBFBased(IdxParty, bins, plaintexts, { &chl });
 
 	}
-	void OPPRFReceiver::recvSS(uint64_t IdxParty, binSet& bins, std::vector<block>& plaintexts, Channel & chl)
+	void OPPRFReceiver::recvSS(u64 IdxParty, binSet& bins, std::vector<block>& plaintexts, Channel & chl)
 	{
 		if (bins.mOpt == 0)
 			recvSSTableBased(IdxParty, bins, plaintexts, { &chl });
@@ -296,7 +296,7 @@ namespace osuCrypto
 			recvBFBased(IdxParty, bins, plaintexts, { &chl });
 	}
 
-	void OPPRFReceiver::sendSS(uint64_t IdxParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::sendSS(u64 IdxParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 		if (bins.mOpt == 0)
 			sendSSTableBased(IdxParty, bins, plaintexts, chls);
@@ -309,7 +309,7 @@ namespace osuCrypto
 
 	}
 
-	void OPPRFReceiver::recvSS(uint64_t IdxParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::recvSS(u64 IdxParty, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 		if (bins.mOpt == 0)
 			recvSSTableBased(IdxParty, bins, plaintexts, chls);
@@ -321,7 +321,7 @@ namespace osuCrypto
 			recvBFBased(IdxParty, bins, plaintexts, chls);
 	}
 
-	void OPPRFReceiver::getOPRFkeysSeperatedandTable(uint64_t IdxP, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
+	void OPPRFReceiver::getOPRFkeysSeperatedandTable(u64 IdxP, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
 	{
 #if 1
 		// this is the online phase.
@@ -332,7 +332,7 @@ namespace osuCrypto
 		//  std::vector<std::thread>  thrds(1);
 
 		// fr each thread, spawn it.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -346,7 +346,7 @@ namespace osuCrypto
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.insertDone");
 
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				std::vector<block> ncoInput(bins.mNcoInputBlkSize);
 
@@ -363,19 +363,19 @@ namespace osuCrypto
 				auto binStart = tIdx       * otCountRecv / thrds.size();
 				auto binEnd = (tIdx + 1) * otCountRecv / thrds.size();
 
-				for (uint64_t bIdx = binStart; bIdx < binEnd;)
+				for (u64 bIdx = binStart; bIdx < binEnd;)
 				{
-					uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+					u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 
-					for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 					{
 						auto& bin = bins.mCuckooBins.mBins[bIdx];
 
 						if (!bin.isEmpty())
 						{
-							uint64_t inputIdx = bin.idx();
+							u64 inputIdx = bin.idx();
 
-							for (uint64_t j = 0; j < ncoInput.size(); ++j)
+							for (u64 j = 0; j < ncoInput.size(); ++j)
 								ncoInput[j] = bins.mNcoInputBuff[j][inputIdx];
 
 							otRecv.encode(
@@ -411,12 +411,12 @@ namespace osuCrypto
 
 					if (tIdx == 0) gTimer.setTimePoint("online.send.OT");
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						otSend.recvCorrection(chl, currentStepSize);
 
-						for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
 
 							auto& bin = bins.mSimpleBins.mBins[bIdx];
@@ -426,12 +426,12 @@ namespace osuCrypto
 								bin.mValOPRF[IdxP].resize(bin.mIdx.size());
 
 								//std::cout << "s-" << bIdx << ", ";
-								for (uint64_t i = 0; i < bin.mIdx.size(); ++i)
+								for (u64 i = 0; i < bin.mIdx.size(); ++i)
 								{
 
-									uint64_t inputIdx = bin.mIdx[i];
+									u64 inputIdx = bin.mIdx[i];
 
-									for (uint64_t j = 0; j < mNcoInputBlkSize; ++j)
+									for (u64 j = 0; j < mNcoInputBlkSize; ++j)
 									{
 										ncoInput[j] = bins.mNcoInputBuff[j][inputIdx];
 									}
@@ -473,7 +473,7 @@ namespace osuCrypto
 		}
 
 		// join the threads.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 			thrds[tIdx].join();
 
 		gTimer.setTimePoint("online.recv.exit");
@@ -482,7 +482,7 @@ namespace osuCrypto
 #endif
 	}
 
-	void  OPPRFReceiver::getOPRFkeysSeperated(uint64_t IdxP, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
+	void  OPPRFReceiver::getOPRFkeysSeperated(u64 IdxP, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
 	{
 #if 1
 		// this is the online phase.
@@ -493,7 +493,7 @@ namespace osuCrypto
 		//  std::vector<std::thread>  thrds(1);
 
 		// fr each thread, spawn it.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -507,7 +507,7 @@ namespace osuCrypto
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.insertDone");
 
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				std::vector<block> ncoInput(bins.mNcoInputBlkSize);
 
@@ -524,19 +524,19 @@ namespace osuCrypto
 				auto binStart = tIdx       * otCountRecv / thrds.size();
 				auto binEnd = (tIdx + 1) * otCountRecv / thrds.size();
 
-				for (uint64_t bIdx = binStart; bIdx < binEnd;)
+				for (u64 bIdx = binStart; bIdx < binEnd;)
 				{
-					uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+					u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 
-					for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 					{
 						auto& bin = bins.mCuckooBins.mBins[bIdx];
 
 						if (!bin.isEmpty())
 						{
-							uint64_t inputIdx = bin.idx();
+							u64 inputIdx = bin.idx();
 
-							for (uint64_t j = 0; j < ncoInput.size(); ++j)
+							for (u64 j = 0; j < ncoInput.size(); ++j)
 								ncoInput[j] = bins.mNcoInputBuff[j][inputIdx];
 
 							otRecv.encode(
@@ -572,12 +572,12 @@ namespace osuCrypto
 
 					if (tIdx == 0) gTimer.setTimePoint("online.send.OT");
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						otSend.recvCorrection(chl, currentStepSize);
 
-						for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
 
 							auto& bin = bins.mSimpleBins.mBins[bIdx];
@@ -587,12 +587,12 @@ namespace osuCrypto
 								bin.mValOPRF[IdxP].resize(bin.mIdx.size());
 
 								//std::cout << "s-" << bIdx << ", ";
-								for (uint64_t i = 0; i < bin.mIdx.size(); ++i)
+								for (u64 i = 0; i < bin.mIdx.size(); ++i)
 								{
 
-									uint64_t inputIdx = bin.mIdx[i];
+									u64 inputIdx = bin.mIdx[i];
 
-									for (uint64_t j = 0; j < mNcoInputBlkSize; ++j)
+									for (u64 j = 0; j < mNcoInputBlkSize; ++j)
 									{
 										ncoInput[j] = bins.mNcoInputBuff[j][inputIdx];
 									}
@@ -616,7 +616,7 @@ namespace osuCrypto
 		}
 
 		// join the threads.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 			thrds[tIdx].join();
 
 		gTimer.setTimePoint("online.recv.exit");
@@ -625,7 +625,7 @@ namespace osuCrypto
 #endif
 	}
 
-	void  OPPRFReceiver::getOPRFkeysCombined(uint64_t IdxP, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
+	void  OPPRFReceiver::getOPRFkeysCombined(u64 IdxP, binSet& bins, const std::vector<Channel*>& chls, bool isOtherDirectionGetOPRF)
 	{
 #if 1
 		// this is the online phase.
@@ -636,7 +636,7 @@ namespace osuCrypto
 		//  std::vector<std::thread>  thrds(1);
 
 		// fr each thread, spawn it.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -650,7 +650,7 @@ namespace osuCrypto
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.insertDone");
 
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				std::vector<block> ncoInput(bins.mNcoInputBlkSize);
 
@@ -667,19 +667,19 @@ namespace osuCrypto
 				auto binStart = tIdx       * otCountRecv / thrds.size();
 				auto binEnd = (tIdx + 1) * otCountRecv / thrds.size();
 
-				for (uint64_t bIdx = binStart; bIdx < binEnd;)
+				for (u64 bIdx = binStart; bIdx < binEnd;)
 				{
-					uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+					u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 
-					for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 					{
 						auto& bin = bins.mCuckooBins.mBins[bIdx];
 
 						if (!bin.isEmpty())
 						{
-							uint64_t inputIdx = bin.idx();
+							u64 inputIdx = bin.idx();
 
-							for (uint64_t j = 0; j < ncoInput.size(); ++j)
+							for (u64 j = 0; j < ncoInput.size(); ++j)
 								ncoInput[j] = bins.mNcoInputBuff[j][inputIdx];
 
 							otRecv.encode(
@@ -715,12 +715,12 @@ namespace osuCrypto
 
 					if (tIdx == 0) gTimer.setTimePoint("online.send.OT");
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						otSend.recvCorrection(chl, currentStepSize);
 
-						for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
 
 							auto& bin = bins.mSimpleBins.mBins[bIdx];
@@ -730,12 +730,12 @@ namespace osuCrypto
 								bin.mValOPRF[IdxP].resize(bin.mIdx.size());
 
 								//std::cout << "s-" << bIdx << ", ";
-								for (uint64_t i = 0; i < bin.mIdx.size(); ++i)
+								for (u64 i = 0; i < bin.mIdx.size(); ++i)
 								{
 
-									uint64_t inputIdx = bin.mIdx[i];
+									u64 inputIdx = bin.mIdx[i];
 
-									for (uint64_t j = 0; j < mNcoInputBlkSize; ++j)
+									for (u64 j = 0; j < mNcoInputBlkSize; ++j)
 									{
 										ncoInput[j] = bins.mNcoInputBuff[j][inputIdx];
 									}
@@ -760,7 +760,7 @@ namespace osuCrypto
 		}
 
 		// join the threads.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 			thrds[tIdx].join();
 
 		gTimer.setTimePoint("online.recv.exit");
@@ -769,14 +769,14 @@ namespace osuCrypto
 #endif
 	}
 
-	void OPPRFReceiver::recvSSTableBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::recvSSTableBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 
 		// this is the online phase.
 		gTimer.setTimePoint("online.recv.start");
 
-		//uint64_t maskSize = sizeof(block);// roundUpTo(mStatSecParam + 2 * std::log(mN) - 1, 8) / 8;
-		//uint64_t numBitLoc = bins.mSimpleBins.mNumBits[1];
+		//u64 maskSize = sizeof(block);// roundUpTo(mStatSecParam + 2 * std::log(mN) - 1, 8) / 8;
+		//u64 numBitLoc = bins.mSimpleBins.mNumBits[1];
 		
 
 
@@ -785,7 +785,7 @@ namespace osuCrypto
 		std::mutex mInsertMtx;
 
 		// fr each thread, spawn it.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -793,7 +793,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.recvShare");
 
@@ -803,7 +803,7 @@ namespace osuCrypto
 					auto binCountRecv = bins.mCuckooBins.mBinCount[bIdxType];
 					//bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 
-					uint64_t binStart, binEnd;
+					u64 binStart, binEnd;
 					if (bIdxType == 0)
 					{
 						binStart = tIdx       * binCountRecv / thrds.size();
@@ -818,11 +818,11 @@ namespace osuCrypto
 
 
 					//use the params of the simple hashing as their params
-					uint64_t mTheirBins_mMaxBinSize = bins.mSimpleBins.mMaxBinSize[bIdxType];
-					uint64_t mTheirBins_mNumBits = bins.mSimpleBins.mNumBits[bIdxType];
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					u64 mTheirBins_mMaxBinSize = bins.mSimpleBins.mMaxBinSize[bIdxType];
+					u64 mTheirBins_mNumBits = bins.mSimpleBins.mNumBits[bIdxType];
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t curStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 curStepSize = std::min(stepSize, binEnd - bIdx);
 
 						MatrixView<u8> maskView;
 						ByteStream maskBuffer;
@@ -832,17 +832,17 @@ namespace osuCrypto
 						if (maskView.size()[0] != curStepSize)
 							throw std::runtime_error("size not expedted");
 
-						for (uint64_t stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
 						{
 
 							auto& bin = bins.mCuckooBins.mBins[bIdx];
 							if (!bin.isEmpty())
 							{
-								uint64_t baseMaskIdx = stepIdx;
+								u64 baseMaskIdx = stepIdx;
 								auto mask = maskView[baseMaskIdx];
 								BitPosition b;
 								b.mMaxBitSize = mTheirBins_mNumBits;
-								for (uint64_t i = 0; i < b.mMaxBitSize; i++)
+								for (u64 i = 0; i < b.mMaxBitSize; i++)
 								{
 									int idxPos = 0;
 									memcpy(&idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
@@ -851,18 +851,18 @@ namespace osuCrypto
 #ifdef PRINT
 								Log::out << "RBin #" << bIdx << Log::endl;
 								Log::out << "    cc_mPos= ";
-								for (uint64_t idxPos = 0; idxPos < b.mPos.size(); idxPos++)
+								for (u64 idxPos = 0; idxPos < b.mPos.size(); idxPos++)
 								{
 									Log::out << static_cast<int16_t>(b.mPos[idxPos]) << " ";
 								}
 								Log::out << Log::endl;
 #endif
-								uint64_t inputIdx = bin.idx();
+								u64 inputIdx = bin.idx();
 								auto myMask = bin.mValOPRF[IdxP];
 								//	u8 myMaskPos = 0;
 								b.getMask(myMask, bin.mValMap[IdxP]);
 
-								uint64_t	MaskIdx = bin.mValMap[IdxP] * bins.mMaskSize + mTheirBins_mNumBits;
+								u64	MaskIdx = bin.mValMap[IdxP] * bins.mMaskSize + mTheirBins_mNumBits;
 
 								auto theirMask = ZeroBlock;
 								memcpy(&theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
@@ -899,7 +899,7 @@ namespace osuCrypto
 
 	}
 
-	void  OPPRFReceiver::recvSSPolyBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void  OPPRFReceiver::recvSSPolyBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 
 		// this is the online phase.
@@ -914,7 +914,7 @@ namespace osuCrypto
 
 
 		// fr each thread, spawn it.
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -922,7 +922,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.recvShare");
 
@@ -938,7 +938,7 @@ namespace osuCrypto
 
 
 
-					uint64_t binStart, binEnd;
+					u64 binStart, binEnd;
 					if (bIdxType == 0)
 					{
 						binStart = tIdx       * binCountRecv / thrds.size();
@@ -954,11 +954,11 @@ namespace osuCrypto
 
 
 					//use the params of the simple hashing as their params
-					uint64_t mTheirBins_mMaxBinSize = bins.mSimpleBins.mMaxBinSize[bIdxType];
+					u64 mTheirBins_mMaxBinSize = bins.mSimpleBins.mMaxBinSize[bIdxType];
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t curStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 curStepSize = std::min(stepSize, binEnd - bIdx);
 
 						MatrixView<u8> maskView;
 						ByteStream maskBuffer;
@@ -969,7 +969,7 @@ namespace osuCrypto
 						if (maskView.size()[0] != curStepSize)
 							throw std::runtime_error("size not expedted");
 
-						for (uint64_t stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
 						{
 
 							auto& bin = bins.mCuckooBins.mBins[bIdx];
@@ -977,13 +977,13 @@ namespace osuCrypto
 							{
 								bin.mCoeffs[IdxP].resize(mTheirBins_mMaxBinSize);
 
-								uint64_t baseMaskIdx = stepIdx;
+								u64 baseMaskIdx = stepIdx;
 
-								uint64_t inputIdx = bin.idx();
+								u64 inputIdx = bin.idx();
 
 								//compute p(x*)
 
-								for (uint64_t i = 0; i < mTheirBins_mMaxBinSize; i++)
+								for (u64 i = 0; i < mTheirBins_mMaxBinSize; i++)
 								{
 									memcpy(&bin.mCoeffs[IdxP][i], maskView[baseMaskIdx].data() + i*bins.mMaskSize, bins.mMaskSize);
 
@@ -1021,7 +1021,7 @@ namespace osuCrypto
 
 
 	}
-	void OPPRFReceiver::recvFullPolyBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::recvFullPolyBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 
 		// this is the online phase.
@@ -1057,8 +1057,8 @@ namespace osuCrypto
 		//std::cout << "\nr[" << IdxP << "]-coeffs[3]" << maskView[3] << "\n";
 
 		block blkCoff;
-		for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
-			for (uint64_t i = 0; i < mN; ++i)
+		for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
+			for (u64 i = 0; i < mN; ++i)
 			{
 
 				memcpy(&blkCoff, maskView[hIdx*mN + i].data(), bins.mMaskSize);
@@ -1070,7 +1070,7 @@ namespace osuCrypto
 
 #if 1
 
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -1078,7 +1078,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.recvShare");
 
@@ -1087,7 +1087,7 @@ namespace osuCrypto
 				{
 					auto binCountRecv = bins.mCuckooBins.mBinCount[bIdxType];
 
-					uint64_t binStart, binEnd;
+					u64 binStart, binEnd;
 					if (bIdxType == 0)
 					{
 						binStart = tIdx       * binCountRecv / thrds.size();
@@ -1100,17 +1100,17 @@ namespace osuCrypto
 					}
 
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t curStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 curStepSize = std::min(stepSize, binEnd - bIdx);
 
-						for (uint64_t stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
 						{
 							auto& bin = bins.mCuckooBins.mBins[bIdx];
 							if (!bin.isEmpty())
 							{
-								uint64_t inputIdx = bin.idx();
-								uint64_t hIdx = bin.hashIdx();
+								u64 inputIdx = bin.idx();
+								u64 hIdx = bin.hashIdx();
 								block blkY;
 								b.GF2EFromBlock(e, bins.mXsets[inputIdx], bins.mMaskSize);
 								e = NTL::eval(polynomial[hIdx], e); //get y=f(x) in GF2E
@@ -1139,7 +1139,7 @@ namespace osuCrypto
 
 
 	}
-	void  OPPRFReceiver::recvBFBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void  OPPRFReceiver::recvBFBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 
 		// this is the online phase.
@@ -1159,7 +1159,7 @@ namespace osuCrypto
 		//bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
 
 
-		//uint64_t mMaskSize = sizeof(block);
+		//u64 mMaskSize = sizeof(block);
 
 		if (bins.mMaskSize > sizeof(block))
 			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");
@@ -1186,7 +1186,7 @@ namespace osuCrypto
 
 #if 1
 
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]()
@@ -1194,7 +1194,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 				if (tIdx == 0) gTimer.setTimePoint("online.recv.recvShare");
 
@@ -1203,7 +1203,7 @@ namespace osuCrypto
 				{
 					auto binCountRecv = bins.mCuckooBins.mBinCount[bIdxType];
 
-					uint64_t binStart, binEnd;
+					u64 binStart, binEnd;
 					if (bIdxType == 0)
 					{
 						binStart = tIdx       * binCountRecv / thrds.size();
@@ -1216,25 +1216,25 @@ namespace osuCrypto
 					}
 
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t curStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 curStepSize = std::min(stepSize, binEnd - bIdx);
 
-						for (uint64_t stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < curStepSize; ++bIdx, ++stepIdx)
 						{
 							auto& bin = bins.mCuckooBins.mBins[bIdx];
 							if (!bin.isEmpty())
 							{
-								uint64_t inputIdx = bin.idx();
-								uint64_t hIdx = bin.hashIdx();
+								u64 inputIdx = bin.idx();
+								u64 hIdx = bin.hashIdx();
 
 								block blkY = ZeroBlock;
 
 
-								for (uint64_t hashIdx = 0; hashIdx < mBFHasher.size(); ++hashIdx)
+								for (u64 hashIdx = 0; hashIdx < mBFHasher.size(); ++hashIdx)
 								{
 									block hashOut = mBFHasher[hashIdx].ecbEncBlock(bins.mXsets[inputIdx]);
-									uint64_t& idx = *(uint64_t*)&hashOut;
+									u64& idx = *(u64*)&hashOut;
 									idx %= mBfSize;
 									auto theirBFMask = ZeroBlock;
 									memcpy(&theirBFMask, maskBFView[hIdx*mBfSize + idx].data(), bins.mMaskSize);
@@ -1268,7 +1268,7 @@ namespace osuCrypto
 
 	}
 
-	void OPPRFReceiver::sendSSTableBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::sendSSTableBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 		if (plaintexts.size() != mN)
 			throw std::runtime_error(LOCATION);
@@ -1283,7 +1283,7 @@ namespace osuCrypto
 
 		gTimer.setTimePoint("online.send.spaw");
 
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]() {
@@ -1293,7 +1293,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.send.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 #pragma region sendShare
 #if 1
@@ -1305,7 +1305,7 @@ namespace osuCrypto
 					//bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 
 					auto binCountSend = bins.mSimpleBins.mBinCount[bIdxType];
-					uint64_t binStart, binEnd;
+					u64 binStart, binEnd;
 					if (bIdxType == 0)
 					{
 						binStart = tIdx       * binCountSend / thrds.size();
@@ -1319,19 +1319,19 @@ namespace osuCrypto
 
 					if (tIdx == 0) gTimer.setTimePoint("online.send.masks.init.step");
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						uPtr<Buff> sendMaskBuff(new Buff);
 						sendMaskBuff->resize(currentStepSize * (bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType] * sizeof(u8)));
 						auto maskView = sendMaskBuff->getMatrixView<u8>(bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType] * sizeof(u8));
 
-						for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
 							//Log::out << "sBin #" << bIdx << Log::endl;
 
 							auto& bin = bins.mSimpleBins.mBins[bIdx];
-							uint64_t baseMaskIdx = stepIdx;
+							u64 baseMaskIdx = stepIdx;
 							int MaskIdx = 0;
 
 							if (bin.mIdx.size() > 0)
@@ -1354,7 +1354,7 @@ namespace osuCrypto
 								}
 
 								//copy bit positions
-								for (uint64_t idxPos = 0; idxPos < bin.mBits[IdxP].mPos.size(); idxPos++)
+								for (u64 idxPos = 0; idxPos < bin.mBits[IdxP].mPos.size(); idxPos++)
 								{
 									//	Log::out << static_cast<int16_t>(bin.mBits[IdxP].mPos[idxPos]) << " ";
 									memcpy(
@@ -1364,9 +1364,9 @@ namespace osuCrypto
 								//Log::out << Log::endl;
 
 
-								for (uint64_t i = 0; i < bin.mIdx.size(); ++i)
+								for (u64 i = 0; i < bin.mIdx.size(); ++i)
 								{
-									uint64_t inputIdx = bin.mIdx[i];
+									u64 inputIdx = bin.mIdx[i];
 									block encr = bin.mValOPRF[IdxP][i] ^ plaintexts[inputIdx];
 
 									//Log::out << "    c_idx=" << inputIdx;
@@ -1387,7 +1387,7 @@ namespace osuCrypto
 								//######Filling dummy mask
 								//#####################
 
-								for (uint64_t i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
+								for (u64 i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
 								{
 									if (std::find(bin.mBits[IdxP].mMaps.begin(), bin.mBits[IdxP].mMaps.end(), i) == bin.mBits[IdxP].mMaps.end())
 									{
@@ -1407,7 +1407,7 @@ namespace osuCrypto
 								auto idxDummyPos = 0;
 								while (dummyPos.size()<bins.mSimpleBins.mNumBits[bIdxType])
 								{
-									uint64_t rand = std::rand() % 128; //choose randome bit location
+									u64 rand = std::rand() % 128; //choose randome bit location
 									if (std::find(dummyPos.begin(), dummyPos.end(), rand) == dummyPos.end())
 									{
 										dummyPos.push_back(rand);
@@ -1418,7 +1418,7 @@ namespace osuCrypto
 									}
 								}
 
-								for (uint64_t i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
+								for (u64 i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
 								{
 									MaskIdx = i* bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType];
 									//	Log::out << "    cc_Map=" << i << Log::endl;
@@ -1483,7 +1483,7 @@ namespace osuCrypto
 
 	}
 
-	void OPPRFReceiver::sendSSPolyBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::sendSSPolyBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 		if (plaintexts.size() != mN)
 			throw std::runtime_error(LOCATION);
@@ -1499,7 +1499,7 @@ namespace osuCrypto
 
 		gTimer.setTimePoint("online.send.spaw");
 
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]() {
@@ -1509,7 +1509,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.send.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 #pragma region sendShare
 #if 1
@@ -1525,7 +1525,7 @@ namespace osuCrypto
 					mPoly.poly_init(bins.mMaskSize);
 
 					auto binCountSend = bins.mSimpleBins.mBinCount[bIdxType];
-					uint64_t binStart, binEnd;
+					u64 binStart, binEnd;
 					if (bIdxType == 0)
 					{
 						binStart = tIdx       * binCountSend / thrds.size();
@@ -1542,19 +1542,19 @@ namespace osuCrypto
 
 					if (tIdx == 0) gTimer.setTimePoint("online.send.masks.init.step");
 
-					for (uint64_t bIdx = binStart; bIdx < binEnd;)
+					for (u64 bIdx = binStart; bIdx < binEnd;)
 					{
-						uint64_t currentStepSize = std::min(stepSize, binEnd - bIdx);
+						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						uPtr<Buff> sendMaskBuff(new Buff);
 						sendMaskBuff->resize(currentStepSize * (bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize));
 						auto maskView = sendMaskBuff->getMatrixView<u8>(bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize);
 
-						for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
+						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
 							//Log::out << "sBin #" << inputIdx << Log::endl;
 
 							auto& bin = bins.mSimpleBins.mBins[bIdx];
-							uint64_t baseMaskIdx = stepIdx;
+							u64 baseMaskIdx = stepIdx;
 							int MaskIdx = 0;
 
 							//	Log::out << "bin.mIdx[" << inputIdx << "]: " <<  Log::endl;
@@ -1564,9 +1564,9 @@ namespace osuCrypto
 
 								//get y[i]
 								std::vector<block> setY(bin.mIdx.size());
-								for (uint64_t i = 0; i < bin.mIdx.size(); ++i)
+								for (u64 i = 0; i < bin.mIdx.size(); ++i)
 								{
-									uint64_t inputIdx = bin.mIdx[i];
+									u64 inputIdx = bin.mIdx[i];
 									//NOTE that it is fine to compute p(oprf(x[i]))=y[i] as long as receiver reconstruct y*=p(oprf(x*))
 
 									setY[i] = plaintexts[inputIdx] ^ bin.mValOPRF[IdxP][i];
@@ -1588,13 +1588,13 @@ namespace osuCrypto
 								//{
 								//	//Log::out << "coeffs.size(): " << coeffs.size()<< Log::endl;
 
-								//	for (uint64_t i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
+								//	for (u64 i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
 								//		if (i == 3)
 								//			Log::out << IdxP << "s-coeffs[" << i << "] #" << coeffs[i] << Log::endl;
 								//}
 
 								//it already contain a dummy item
-								for (uint64_t i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
+								for (u64 i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
 								{
 									memcpy(
 										maskView[baseMaskIdx].data() + i* bins.mMaskSize,
@@ -1605,7 +1605,7 @@ namespace osuCrypto
 							}
 							else //pad all dummy
 							{
-								for (uint64_t i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
+								for (u64 i = 0; i < bins.mSimpleBins.mMaxBinSize[bIdxType]; ++i)
 								{
 									memcpy(
 										maskView[baseMaskIdx].data() + i* bins.mMaskSize,
@@ -1631,7 +1631,7 @@ namespace osuCrypto
 			thrd.join();
 
 	}
-	void OPPRFReceiver::sendFullPolyBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::sendFullPolyBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 		if (plaintexts.size() != mN)
 			throw std::runtime_error(LOCATION);
@@ -1649,14 +1649,14 @@ namespace osuCrypto
 		std::mutex mtx;
 		std::vector<NTL::vec_GF2E> vec_GF2E_X(numHashes);
 		std::vector<NTL::vec_GF2E> vec_GF2E_Y(numHashes);
-		std::vector<uint64_t> size_vec_GF2E_X(numHashes);
+		std::vector<u64> size_vec_GF2E_X(numHashes);
 		NTL::GF2E e;
 		BaseOPPRF base_poly;
 		base_poly.poly_init(bins.mMaskSize);
 
 		gTimer.setTimePoint("online.send.spaw");
 
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]() {
@@ -1666,7 +1666,7 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.send.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 #pragma region sendShare
 #if 1
@@ -1675,25 +1675,25 @@ namespace osuCrypto
 				//2 type of bins: normal bin in inital step + stash bin
 				//auto binCountSend = bins.mSimpleBins.mBinCount[bIdxType];
 
-				uint64_t idxStart, idxEnd; //by mXset 
+				u64 idxStart, idxEnd; //by mXset 
 
 				idxStart = tIdx       * mN / thrds.size();
 				idxEnd = (tIdx + 1) * mN / thrds.size();
 
 
-				for (uint64_t inputIdx = idxStart; inputIdx < idxEnd;)
+				for (u64 inputIdx = idxStart; inputIdx < idxEnd;)
 				{
-					uint64_t currentStepSize = std::min(stepSize, idxEnd - inputIdx);
+					u64 currentStepSize = std::min(stepSize, idxEnd - inputIdx);
 
-					for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++inputIdx, ++stepIdx)
+					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++inputIdx, ++stepIdx)
 					{
 
-						uint64_t baseMaskIdx = stepIdx;
+						u64 baseMaskIdx = stepIdx;
 						int MaskIdx = 0;
 
 						//compute p((x[i]))=y[i]-(oprf(x[i])) by BFhashIdx
 
-						for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
+						for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
 						{
 
 							block y = plaintexts[inputIdx] ^ bins.mSimpleBins.mOprfs[IdxP][inputIdx][hIdx];
@@ -1736,7 +1736,7 @@ namespace osuCrypto
 
 		//ADDING DUMMY
 		//because 2 h(x1) and h(x2) might have the same value
-		for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
+		for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
 		{
 			/*std::cout << "bins.mN - size_vec_GF2E_X[" << hIdx << "]"
 			<< bins.mN - size_vec_GF2E_X[hIdx] << "\n";*/
@@ -1756,7 +1756,7 @@ namespace osuCrypto
 		//computes coefficients (in blocks) of p such that p(x[i]) = y[i]
 		//NOTE that it is fine to compute p(oprf(x[i]))=y[i] as long as receiver reconstruct y*=p(oprf(x*))
 
-		for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
+		for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
 		{
 			//	std::cout << "getBlkCoefficients " << hIdx <<"start \n";
 			base_poly.getBlkCoefficients(vec_GF2E_X[hIdx], vec_GF2E_Y[hIdx], coeffs[hIdx]);
@@ -1773,10 +1773,10 @@ namespace osuCrypto
 #if 1
 
 		//it already contain a dummy item
-		for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
+		for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
 		{
 			//std::cout << "coeffs["<<hIdx<<"].size()"<<coeffs[hIdx].size()<<"\n";
-			for (uint64_t i = 0; i < coeffs[hIdx].size(); ++i)
+			for (u64 i = 0; i < coeffs[hIdx].size(); ++i)
 			{
 				memcpy(
 					maskView[hIdx*mN + i].data(),
@@ -1795,7 +1795,7 @@ namespace osuCrypto
 
 
 	}
-	void OPPRFReceiver::sendBFBased(uint64_t IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+	void OPPRFReceiver::sendBFBased(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
 	{
 		if (plaintexts.size() != mN)
 			throw std::runtime_error(LOCATION);
@@ -1827,7 +1827,7 @@ namespace osuCrypto
 
 		//y-oprf1(x)||y-oprf2(x)||...||y-oprf5(x)
 		std::vector<std::vector<block>> GarbleBF(numHashes);
-		for (uint64_t hIdx = 0; hIdx < GarbleBF.size(); ++hIdx)
+		for (u64 hIdx = 0; hIdx < GarbleBF.size(); ++hIdx)
 		{
 			GarbleBF[hIdx].resize(mBfSize);
 		}
@@ -1835,7 +1835,7 @@ namespace osuCrypto
 
 		gTimer.setTimePoint("online.send.spaw");
 
-		for (uint64_t tIdx = 0; tIdx < thrds.size(); ++tIdx)
+		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]() {
@@ -1845,13 +1845,13 @@ namespace osuCrypto
 				if (tIdx == 0) gTimer.setTimePoint("online.send.thrdStart");
 
 				auto& chl = *chls[tIdx];
-				const uint64_t stepSize = 16;
+				const u64 stepSize = 16;
 
 #pragma region sendShare
 #if 1
 				if (tIdx == 0) gTimer.setTimePoint("online.send.sendShare");
 
-				uint64_t idxStart, idxEnd;
+				u64 idxStart, idxEnd;
 
 				idxStart = tIdx       * mN / thrds.size();
 				idxEnd = (tIdx + 1) * mN / thrds.size();
@@ -1859,37 +1859,37 @@ namespace osuCrypto
 
 				if (tIdx == 0) gTimer.setTimePoint("online.send.masks.init.step");
 
-				for (uint64_t inputIdx = idxStart; inputIdx < idxEnd;)
+				for (u64 inputIdx = idxStart; inputIdx < idxEnd;)
 				{
-					uint64_t currentStepSize = std::min(stepSize, idxEnd - inputIdx);
+					u64 currentStepSize = std::min(stepSize, idxEnd - inputIdx);
 
-					for (uint64_t stepIdx = 0; stepIdx < currentStepSize; ++inputIdx, ++stepIdx)
+					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++inputIdx, ++stepIdx)
 					{
-						uint64_t baseMaskIdx = stepIdx;
+						u64 baseMaskIdx = stepIdx;
 						int MaskIdx = 0;
 
-						std::set<uint64_t> idxs;
+						std::set<u64> idxs;
 
 
 						//normal BF presented by one bit
-						for (uint64_t BFhashIdx = 0; BFhashIdx < mBFHasher.size(); ++BFhashIdx)
+						for (u64 BFhashIdx = 0; BFhashIdx < mBFHasher.size(); ++BFhashIdx)
 						{
 							block hashOut = mBFHasher[BFhashIdx].ecbEncBlock(bins.mXsets[inputIdx]);
-							uint64_t& idx = *(uint64_t*)&hashOut;
+							u64& idx = *(u64*)&hashOut;
 							idx %= mBfSize;
 							idxs.emplace(idx);
 						}
 
 						//GBF
-						for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
+						for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
 						{
 							block sum = ZeroBlock;
-							uint64_t firstFreeIdx(-1);
+							u64 firstFreeIdx(-1);
 							for (auto idx : idxs)
 							{
 								if (eq(GarbleBF[hIdx][idx], ZeroBlock))
 								{
-									if (firstFreeIdx == uint64_t(-1))
+									if (firstFreeIdx == u64(-1))
 									{
 										firstFreeIdx = idx;
 										//	std::cout << "firstFreeIdx: " << firstFreeIdx << std::endl;
@@ -1940,9 +1940,9 @@ namespace osuCrypto
 		for (auto& thrd : thrds)
 			thrd.join();
 
-		for (uint64_t hIdx = 0; hIdx < numHashes; ++hIdx)
+		for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
 		{
-			for (uint64_t i = 0; i < GarbleBF[hIdx].size(); ++i)
+			for (u64 i = 0; i < GarbleBF[hIdx].size(); ++i)
 			{
 				if (eq(GarbleBF[hIdx][i], ZeroBlock))
 				{

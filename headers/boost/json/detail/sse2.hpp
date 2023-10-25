@@ -313,7 +313,7 @@ inline int count_digits( char const* p ) noexcept
 
 // parse_unsigned
 
-inline uint64_t parse_unsigned( uint64_t r, char const * p, std::size_t n ) noexcept
+inline u64 parse_unsigned( u64 r, char const * p, std::size_t n ) noexcept
 {
     while( n >= 4 )
     {

@@ -148,8 +148,8 @@ struct _LIBCPP_HIDDEN __traits_base<_Tp, __enable_if_t<sizeof(_Tp) <= sizeof(uin
 
 template <typename _Tp>
 struct _LIBCPP_HIDDEN
-    __traits_base<_Tp, __enable_if_t<sizeof(_Tp) == sizeof(uint64_t)>> {
-  using type = uint64_t;
+    __traits_base<_Tp, __enable_if_t<sizeof(_Tp) == sizeof(u64)>> {
+  using type = u64;
 
   /// The width estimation using a log10 algorithm.
   ///
@@ -185,9 +185,9 @@ struct _LIBCPP_HIDDEN
   /// zero is set to one. This means the first element of the lookup table is
   /// zero.
   static _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI int __width(_Tp __v) {
-    _LIBCPP_ASSERT(__v > numeric_limits<uint64_t>::max(), "The optimizations for this algorithm fail when this isn't true.");
+    _LIBCPP_ASSERT(__v > numeric_limits<u64>::max(), "The optimizations for this algorithm fail when this isn't true.");
     // There's always a bit set in the upper 64-bits.
-    auto __t = (128 - std::__libcpp_clz(static_cast<uint64_t>(__v >> 64))) * 1233 >> 12;
+    auto __t = (128 - std::__libcpp_clz(static_cast<u64>(__v >> 64))) * 1233 >> 12;
     _LIBCPP_ASSERT(__t >= __itoa::__pow10_128_offset, "Index out of bounds");
     // __t is adjusted since the lookup table misses the lower entries.
     return __t - (__v < __itoa::__pow10_128[__t - __itoa::__pow10_128_offset]) + 1;
@@ -322,8 +322,8 @@ __to_chars_itoa(char* __first, char* __last, __uint128_t __value, false_type)
     // the number of expensive calculations on 128-bit values.
     //
     // NOTE the 128-bit code path requires this optimization.
-    if(__value <= numeric_limits<uint64_t>::max())
-        return __to_chars_itoa(__first, __last, static_cast<uint64_t>(__value), false_type());
+    if(__value <= numeric_limits<u64>::max())
+        return __to_chars_itoa(__first, __last, static_cast<u64>(__value), false_type());
 
     using __tx = __itoa::__traits<__uint128_t>;
     auto __diff = __last - __first;

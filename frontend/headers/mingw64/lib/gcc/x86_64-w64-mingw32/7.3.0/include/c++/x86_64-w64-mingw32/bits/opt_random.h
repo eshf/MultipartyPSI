@@ -52,7 +52,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		 _UniformRandomNumberGenerator& __urng,
 		 const param_type& __param)
       {
-	typedef uint64_t __uctype;
+	typedef u64 __uctype;
 
 	if (__f == __t)
 	  return;
@@ -66,7 +66,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	      return;
 	  }
 
-	constexpr uint64_t __maskval = 0xfffffffffffffull;
+	constexpr u64 __maskval = 0xfffffffffffffull;
 	static const __m128i __mask = _mm_set1_epi64x(__maskval);
 	static const __m128i __two = _mm_set1_epi64x(0x4000000000000000ull);
 	static const __m128d __three = _mm_set1_pd(3.0);
@@ -100,12 +100,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			const __uctype __uerange = __maskval + 1;
 			const __uctype __scaling = __urngrange / __uerange;
 			const __uctype __past = __uerange * __scaling;
-			uint64_t __v1;
+			u64 __v1;
 			do
 			  __v1 = __uctype(__urng()) - __urngmin;
 			while (__v1 >= __past);
 			__v1 /= __scaling;
-			uint64_t __v2;
+			u64 __v2;
 			do
 			  __v2 = __uctype(__urng()) - __urngmin;
 			while (__v2 >= __past);
@@ -119,8 +119,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		else if ((__urngrange + 2) * __urngrange >= __maskval
 			 && __detail::_Power_of_2(__uerngrange))
 		  {
-		    uint64_t __v1 = __urng() * __uerngrange + __urng();
-		    uint64_t __v2 = __urng() * __uerngrange + __urng();
+		    u64 __v1 = __urng() * __uerngrange + __urng();
+		    u64 __v2 = __urng() * __uerngrange + __urng();
 
 		    __v.__i = _mm_and_si128(_mm_set_epi64x(__v1, __v2),
 					    __mask);
@@ -139,7 +139,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		    const __uctype __past = __highrange * __scaling;
 		    __uctype __tmp;
 
-		    uint64_t __v1;
+		    u64 __v1;
 		    do
 		      {
 			do
@@ -155,7 +155,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		      }
 		    while (__v1 > __maskval || __v1 < __tmp);
 
-		    uint64_t __v2;
+		    u64 __v2;
 		    do
 		      {
 			do

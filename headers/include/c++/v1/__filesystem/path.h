@@ -82,9 +82,9 @@ __is_separator(_ECharT __e) {
 }
 
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-typedef u8string __u8_string;
+typedef uint8_tstring __uint8_t_string;
 #else
-typedef string __u8_string;
+typedef string __uint8_t_string;
 #endif
 
 struct _NullSentinel {};
@@ -806,9 +806,9 @@ public:
   _LIBCPP_HIDE_FROM_ABI _VSTD::string string() const {
     return string<char>();
   }
-  _LIBCPP_HIDE_FROM_ABI __u8_string u8string() const {
+  _LIBCPP_HIDE_FROM_ABI __uint8_t_string uint8_tstring() const {
     using _CVT = __narrow_to_utf8<sizeof(wchar_t) * __CHAR_BIT__>;
-    __u8_string __s;
+    __uint8_t_string __s;
     __s.reserve(__pn_.size());
     _CVT()(back_inserter(__s), __pn_.data(), __pn_.data() + __pn_.size());
     return __s;
@@ -829,7 +829,7 @@ public:
   generic_string(const _Allocator& __a = _Allocator()) const {
     using _Str = basic_string<_ECharT, _Traits, _Allocator>;
     _Str __s = string<_ECharT, _Traits, _Allocator>(__a);
-    // Note: This (and generic_u8string below) is slightly suboptimal as
+    // Note: This (and generic_uint8_tstring below) is slightly suboptimal as
     // it iterates twice over the string; once to convert it to the right
     // character type, and once to replace path delimiters.
     _VSTD::replace(__s.begin(), __s.end(),
@@ -841,8 +841,8 @@ public:
   _LIBCPP_HIDE_FROM_ABI _VSTD::u16string generic_u16string() const { return generic_string<char16_t>(); }
   _LIBCPP_HIDE_FROM_ABI _VSTD::u32string generic_u32string() const { return generic_string<char32_t>(); }
   _LIBCPP_HIDE_FROM_ABI
-  __u8_string generic_u8string() const {
-    __u8_string __s = u8string();
+  __uint8_t_string generic_uint8_tstring() const {
+    __uint8_t_string __s = uint8_tstring();
     _VSTD::replace(__s.begin(), __s.end(), '\\', '/');
     return __s;
   }
@@ -851,9 +851,9 @@ public:
 
   _LIBCPP_HIDE_FROM_ABI _VSTD::string string() const { return __pn_; }
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-  _LIBCPP_HIDE_FROM_ABI _VSTD::u8string u8string() const { return _VSTD::u8string(__pn_.begin(), __pn_.end()); }
+  _LIBCPP_HIDE_FROM_ABI _VSTD::uint8_tstring uint8_tstring() const { return _VSTD::uint8_tstring(__pn_.begin(), __pn_.end()); }
 #else
-  _LIBCPP_HIDE_FROM_ABI _VSTD::string u8string() const { return __pn_; }
+  _LIBCPP_HIDE_FROM_ABI _VSTD::string uint8_tstring() const { return __pn_; }
 #endif
 
 #if !defined(_LIBCPP_HAS_NO_LOCALIZATION)
@@ -886,9 +886,9 @@ public:
   // generic format observers
   _LIBCPP_HIDE_FROM_ABI _VSTD::string generic_string() const { return __pn_; }
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-  _LIBCPP_HIDE_FROM_ABI _VSTD::u8string generic_u8string() const { return _VSTD::u8string(__pn_.begin(), __pn_.end()); }
+  _LIBCPP_HIDE_FROM_ABI _VSTD::uint8_tstring generic_uint8_tstring() const { return _VSTD::uint8_tstring(__pn_.begin(), __pn_.end()); }
 #else
-  _LIBCPP_HIDE_FROM_ABI _VSTD::string generic_u8string() const { return __pn_; }
+  _LIBCPP_HIDE_FROM_ABI _VSTD::string generic_uint8_tstring() const { return __pn_; }
 #endif
 
 #if !defined(_LIBCPP_HAS_NO_LOCALIZATION)

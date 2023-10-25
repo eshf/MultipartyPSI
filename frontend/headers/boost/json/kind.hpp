@@ -33,7 +33,7 @@ enum class kind : unsigned char
     /// A `std::int64_t`
     int64,
 
-    /// A `std::uint64_t`
+    /// A `std::u64`
     uint64,
 
     /// A `double`.

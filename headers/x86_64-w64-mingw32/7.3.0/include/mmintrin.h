@@ -360,7 +360,7 @@ _m_paddsw (__m64 __m1, __m64 __m2)
 /* Add the 8-bit values in M1 to the 8-bit values in M2 using unsigned
    saturated arithmetic.  */
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_adds_pu8 (__m64 __m1, __m64 __m2)
+_mm_adds_puint8_t (__m64 __m1, __m64 __m2)
 {
   return (__m64) __builtin_ia32_paddusb ((__v8qi)__m1, (__v8qi)__m2);
 }
@@ -368,7 +368,7 @@ _mm_adds_pu8 (__m64 __m1, __m64 __m2)
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _m_paddusb (__m64 __m1, __m64 __m2)
 {
-  return _mm_adds_pu8 (__m1, __m2);
+  return _mm_adds_puint8_t (__m1, __m2);
 }
 
 /* Add the 16-bit values in M1 to the 16-bit values in M2 using unsigned
@@ -472,7 +472,7 @@ _m_psubsw (__m64 __m1, __m64 __m2)
 /* Subtract the 8-bit values in M2 from the 8-bit values in M1 using
    unsigned saturating arithmetic.  */
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_subs_pu8 (__m64 __m1, __m64 __m2)
+_mm_subs_puint8_t (__m64 __m1, __m64 __m2)
 {
   return (__m64) __builtin_ia32_psubusb ((__v8qi)__m1, (__v8qi)__m2);
 }
@@ -480,7 +480,7 @@ _mm_subs_pu8 (__m64 __m1, __m64 __m2)
 extern __inline __m64 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _m_psubusb (__m64 __m1, __m64 __m2)
 {
-  return _mm_subs_pu8 (__m1, __m2);
+  return _mm_subs_puint8_t (__m1, __m2);
 }
 
 /* Subtract the 16-bit values in M2 from the 16-bit values in M1 using

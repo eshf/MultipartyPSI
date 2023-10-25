@@ -72,7 +72,7 @@ BOOST_MYSQL_STATIC_OR_INLINE deserialize_errc
 deserialize_binary_field_int(const metadata& meta, deserialization_context& ctx, field_view& output) noexcept
 {
     return meta.is_unsigned()
-               ? deserialize_binary_field_int_impl<std::uint64_t, DeserializableTypeUnsigned>(ctx, output)
+               ? deserialize_binary_field_int_impl<std::u64, DeserializableTypeUnsigned>(ctx, output)
                : deserialize_binary_field_int_impl<std::int64_t, DeserializableTypeSigned>(ctx, output);
 }
 
@@ -291,7 +291,7 @@ boost::mysql::detail::deserialize_errc boost::mysql::detail::deserialize_binary_
     case column_type::int_:
         return deserialize_binary_field_int<std::uint32_t, std::int32_t>(meta, ctx, output);
     case column_type::bigint:
-        return deserialize_binary_field_int<std::uint64_t, std::int64_t>(meta, ctx, output);
+        return deserialize_binary_field_int<std::u64, std::int64_t>(meta, ctx, output);
     case column_type::bit: return deserialize_binary_field_bit(ctx, output);
     case column_type::float_: return deserialize_binary_field_float<float>(ctx, output);
     case column_type::double_: return deserialize_binary_field_float<double>(ctx, output);

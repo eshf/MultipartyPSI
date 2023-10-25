@@ -723,7 +723,7 @@ protected:
     */
     void
     set_content_length_impl(
-        boost::optional<std::uint64_t> const& value);
+        boost::optional<std::u64> const& value);
 
     /** Adjusts the Connection field
     */

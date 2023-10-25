@@ -29,31 +29,31 @@ namespace osuCrypto
         std::vector<std::array<PRNG,2>> mGens;
         MatrixView<block> mT0;
         MatrixView<block> mT1;
-        uint64_t mCorrectionIdx;
+        u64 mCorrectionIdx;
 
         void setBaseOts(
             ArrayView<std::array<block, 2>> baseRecvOts) override;
         
 
-        void init(uint64_t numOtExt) override;
+        void init(u64 numOtExt) override;
 
 
         std::unique_ptr<NcoOtExtReceiver> split() override;
 
         void encode(
-            uint64_t otIdx,
+            u64 otIdx,
             const ArrayView<block> inputword,
             block& val) override;
 
-        void zeroEncode(uint64_t otIdx) override;
+        void zeroEncode(u64 otIdx) override;
 
         void getParams(
             bool maliciousSecure,
-            uint64_t compSecParm, uint64_t statSecParam, uint64_t inputBitCount, uint64_t inputCount,
-            uint64_t& inputBlkSize, uint64_t& baseOtCount) override;
+            u64 compSecParm, u64 statSecParam, u64 inputBitCount, u64 inputCount,
+            u64& inputBlkSize, u64& baseOtCount) override;
 
 
-        void sendCorrection(Channel& chl, uint64_t sendCount) override;
+        void sendCorrection(Channel& chl, u64 sendCount) override;
 
         void check(Channel& chl) override {}
     };

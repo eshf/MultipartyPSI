@@ -36,7 +36,7 @@ namespace osuCrypto {
         {
             mType = copy.mType;
             mSize = copy.mSize;
-            mBuffs[0] = boost::asio::buffer(&mSize, sizeof(u32));
+            mBuffs[0] = boost::asio::buffer(&mSize, sizeof(uint32_t));
             mBuffs[1] = copy.mBuffs[1];
             mOther = copy.mOther;
             mPromise = copy.mPromise;
@@ -46,7 +46,7 @@ namespace osuCrypto {
         {
             mType = (Type)0;
             mSize = 0; 
-            mBuffs[0] = boost::asio::buffer(&mSize, sizeof(u32));
+            mBuffs[0] = boost::asio::buffer(&mSize, sizeof(uint32_t));
             mBuffs[1] = boost::asio::mutable_buffer();
             mOther = nullptr;
             mPromise = nullptr;
@@ -55,7 +55,7 @@ namespace osuCrypto {
 
         std::array<boost::asio::mutable_buffer,2> mBuffs;
         Type mType;
-        u32 mSize;
+        uint32_t mSize;
 
         void* mOther;
         std::promise<void>* mPromise;
@@ -76,7 +76,7 @@ namespace osuCrypto {
         std::deque<BoostIOOperation> mSendQueue, mRecvQueue;
         bool mStopped;
 
-        std::atomic<uint64_t> mOutstandingSendData, mMaxOutstandingSendData, mTotalSentData, mTotalRecvData;
+        std::atomic<u64> mOutstandingSendData, mMaxOutstandingSendData, mTotalSentData, mTotalRecvData;
     };
 
     inline BtSocket::BtSocket(BtIOService& ios) :

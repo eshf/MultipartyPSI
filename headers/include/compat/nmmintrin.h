@@ -37,6 +37,6 @@ _mm_cmpgt_epi64(__m128i __a, __m128i __b)
 // _mm_crc32_u16
 // _mm_crc32_u32
 // _mm_crc32_u64
-// _mm_crc32_u8
+// _mm_crc32_uint8_t
 
 #endif /* __emscripten_nmmintrin_h__ */

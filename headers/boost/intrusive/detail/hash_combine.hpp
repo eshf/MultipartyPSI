@@ -66,9 +66,9 @@ inline void hash_combine_size_t(boost::uint32_t& h1, boost::uint32_t k1)
    // and also not for 32-bit gcc as it warns about the 64-bit constant.
    #if !defined(BOOST_NO_INT64_T) && \
        !(defined(__GNUC__) && ULONG_MAX == 0xffffffff)
-   inline void hash_combine_size_t(boost::uint64_t& h, boost::uint64_t k)
+   inline void hash_combine_size_t(boost::u64& h, boost::u64 k)
    {
-      const boost::uint64_t m = UINT64_C(0xc6a4a7935bd1e995);
+      const boost::u64 m = UINT64_C(0xc6a4a7935bd1e995);
       const int r = 47;
 
       k *= m;

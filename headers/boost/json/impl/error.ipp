@@ -79,7 +79,7 @@ case error::not_array: return "value is not an array";
 case error::not_object: return "value is not an object";
 case error::not_string: return "value is not a string";
 case error::not_int64: return "value is not a std::int64_t number";
-case error::not_uint64: return "value is not a std::uint64_t number";
+case error::not_uint64: return "value is not a std::u64 number";
 case error::not_double: return "value is not a double";
 case error::size_mismatch: return "source composite size does not match target size";
 case error::exhausted_variants: return "exhausted all variants";

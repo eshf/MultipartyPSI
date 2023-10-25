@@ -622,9 +622,9 @@ _mm_adds_epi16(__m128i __a, __m128i __b)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_adds_epu8(__m128i __a, __m128i __b)
+_mm_adds_epuint8_t(__m128i __a, __m128i __b)
 {
-  return (__m128i)wasm_u8x16_add_saturate((v128_t)__a, (v128_t)__b);
+  return (__m128i)wasm_uint8_tx16_add_saturate((v128_t)__a, (v128_t)__b);
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
@@ -634,9 +634,9 @@ _mm_adds_epu16(__m128i __a, __m128i __b)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_avg_epu8(__m128i __a, __m128i __b)
+_mm_avg_epuint8_t(__m128i __a, __m128i __b)
 {
-  return (__m128i)wasm_u8x16_avgr((v128_t)__a, (v128_t)__b);
+  return (__m128i)wasm_uint8_tx16_avgr((v128_t)__a, (v128_t)__b);
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
@@ -658,9 +658,9 @@ _mm_max_epi16(__m128i __a, __m128i __b)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_max_epu8(__m128i __a, __m128i __b)
+_mm_max_epuint8_t(__m128i __a, __m128i __b)
 {
-  return (__m128i)wasm_u8x16_max((v128_t)__a, (v128_t)__b);
+  return (__m128i)wasm_uint8_tx16_max((v128_t)__a, (v128_t)__b);
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
@@ -670,9 +670,9 @@ _mm_min_epi16(__m128i __a, __m128i __b)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_min_epu8(__m128i __a, __m128i __b)
+_mm_min_epuint8_t(__m128i __a, __m128i __b)
 {
-  return (__m128i)wasm_u8x16_min((v128_t)__a, (v128_t)__b);
+  return (__m128i)wasm_uint8_tx16_min((v128_t)__a, (v128_t)__b);
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
@@ -742,9 +742,9 @@ _mm_subs_epi16(__m128i __a, __m128i __b)
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_subs_epu8(__m128i __a, __m128i __b)
+_mm_subs_epuint8_t(__m128i __a, __m128i __b)
 {
-  return (__m128i)wasm_u8x16_sub_saturate((v128_t)__a, (v128_t)__b);
+  return (__m128i)wasm_uint8_tx16_sub_saturate((v128_t)__a, (v128_t)__b);
 }
 
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
@@ -1317,7 +1317,7 @@ _mm_packs_epi32(__m128i __a, __m128i __b)
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
 _mm_packus_epi16(__m128i __a, __m128i __b)
 {
-  return wasm_u8x16_narrow_i16x8(__a, __b);
+  return wasm_uint8_tx16_narrow_i16x8(__a, __b);
 }
 
 #define _mm_extract_epi16(__a, __imm) wasm_u16x8_extract_lane((v128_t)(__a), (__imm) & 7)
@@ -1486,10 +1486,10 @@ _mm_undefined_si128()
 
 // Must be in the very end as it uses other SSE2 intrinsics
 static __inline__ __m128i __attribute__((__always_inline__, __nodebug__))
-_mm_sad_epu8(__m128i __a, __m128i __b)
+_mm_sad_epuint8_t(__m128i __a, __m128i __b)
 {
-  __m128i __diff = _mm_or_si128(_mm_subs_epu8(__a, __b),
-                                _mm_subs_epu8(__b, __a));
+  __m128i __diff = _mm_or_si128(_mm_subs_epuint8_t(__a, __b),
+                                _mm_subs_epuint8_t(__b, __a));
   __diff = _mm_add_epi16(_mm_srli_epi16(__diff, 8),
                          _mm_and_si128(__diff, _mm_set1_epi16(0x00FF)));
   __diff = _mm_add_epi16(__diff, _mm_slli_epi32(__diff, 16));

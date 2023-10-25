@@ -43,7 +43,7 @@ namespace detail
   template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence,
       typename MutableBufferIterator, typename CompletionCondition>
   std::size_t read_at_buffer_sequence(SyncRandomAccessReadDevice& d,
-      uint64_t offset, const MutableBufferSequence& buffers,
+      u64 offset, const MutableBufferSequence& buffers,
       const MutableBufferIterator&, CompletionCondition completion_condition,
       boost::system::error_code& ec)
   {
@@ -68,7 +68,7 @@ namespace detail
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence,
     typename CompletionCondition>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    u64 offset, const MutableBufferSequence& buffers,
     CompletionCondition completion_condition, boost::system::error_code& ec)
 {
   return detail::read_at_buffer_sequence(d, offset, buffers,
@@ -78,7 +78,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence>
 inline std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers)
+    u64 offset, const MutableBufferSequence& buffers)
 {
   boost::system::error_code ec;
   std::size_t bytes_transferred = read_at(
@@ -89,7 +89,7 @@ inline std::size_t read_at(SyncRandomAccessReadDevice& d,
 
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence>
 inline std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    u64 offset, const MutableBufferSequence& buffers,
     boost::system::error_code& ec)
 {
   return read_at(d, offset, buffers, transfer_all(), ec);
@@ -98,7 +98,7 @@ inline std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename MutableBufferSequence,
     typename CompletionCondition>
 inline std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    u64 offset, const MutableBufferSequence& buffers,
     CompletionCondition completion_condition)
 {
   boost::system::error_code ec;
@@ -114,7 +114,7 @@ inline std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename Allocator,
     typename CompletionCondition>
 std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, boost::asio::basic_streambuf<Allocator>& b,
+    u64 offset, boost::asio::basic_streambuf<Allocator>& b,
     CompletionCondition completion_condition, boost::system::error_code& ec)
 {
   ec = boost::system::error_code();
@@ -137,7 +137,7 @@ std::size_t read_at(SyncRandomAccessReadDevice& d,
 
 template <typename SyncRandomAccessReadDevice, typename Allocator>
 inline std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, boost::asio::basic_streambuf<Allocator>& b)
+    u64 offset, boost::asio::basic_streambuf<Allocator>& b)
 {
   boost::system::error_code ec;
   std::size_t bytes_transferred = read_at(
@@ -148,7 +148,7 @@ inline std::size_t read_at(SyncRandomAccessReadDevice& d,
 
 template <typename SyncRandomAccessReadDevice, typename Allocator>
 inline std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, boost::asio::basic_streambuf<Allocator>& b,
+    u64 offset, boost::asio::basic_streambuf<Allocator>& b,
     boost::system::error_code& ec)
 {
   return read_at(d, offset, b, transfer_all(), ec);
@@ -157,7 +157,7 @@ inline std::size_t read_at(SyncRandomAccessReadDevice& d,
 template <typename SyncRandomAccessReadDevice, typename Allocator,
     typename CompletionCondition>
 inline std::size_t read_at(SyncRandomAccessReadDevice& d,
-    uint64_t offset, boost::asio::basic_streambuf<Allocator>& b,
+    u64 offset, boost::asio::basic_streambuf<Allocator>& b,
     CompletionCondition completion_condition)
 {
   boost::system::error_code ec;
@@ -181,7 +181,7 @@ namespace detail
   {
   public:
     read_at_op(AsyncRandomAccessReadDevice& device,
-        uint64_t offset, const MutableBufferSequence& buffers,
+        u64 offset, const MutableBufferSequence& buffers,
         CompletionCondition& completion_condition, ReadHandler& handler)
       : base_from_cancellation_state<ReadHandler>(
           handler, enable_partial_cancellation()),
@@ -263,7 +263,7 @@ namespace detail
         MutableBufferSequence, MutableBufferIterator> buffers_type;
 
     AsyncRandomAccessReadDevice& device_;
-    uint64_t offset_;
+    u64 offset_;
     buffers_type buffers_;
     int start_;
     ReadHandler handler_;
@@ -347,7 +347,7 @@ namespace detail
       typename MutableBufferSequence, typename MutableBufferIterator,
       typename CompletionCondition, typename ReadHandler>
   inline void start_read_at_op(AsyncRandomAccessReadDevice& d,
-      uint64_t offset, const MutableBufferSequence& buffers,
+      u64 offset, const MutableBufferSequence& buffers,
       const MutableBufferIterator&, CompletionCondition& completion_condition,
       ReadHandler& handler)
   {
@@ -376,7 +376,7 @@ namespace detail
     template <typename ReadHandler, typename MutableBufferSequence,
         typename CompletionCondition>
     void operator()(BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-        uint64_t offset, const MutableBufferSequence& buffers,
+        u64 offset, const MutableBufferSequence& buffers,
         BOOST_ASIO_MOVE_ARG(CompletionCondition) completion_cond) const
     {
       // If you get an error on the following line it means that your handler
@@ -437,7 +437,7 @@ template <typename AsyncRandomAccessReadDevice,
 inline BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
     void (boost::system::error_code, std::size_t))
 async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    u64 offset, const MutableBufferSequence& buffers,
     CompletionCondition completion_condition,
     BOOST_ASIO_MOVE_ARG(ReadToken) token)
   BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
@@ -460,7 +460,7 @@ template <typename AsyncRandomAccessReadDevice, typename MutableBufferSequence,
 inline BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
     void (boost::system::error_code, std::size_t))
 async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, const MutableBufferSequence& buffers,
+    u64 offset, const MutableBufferSequence& buffers,
     BOOST_ASIO_MOVE_ARG(ReadToken) token)
   BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
     async_initiate<ReadToken,
@@ -487,7 +487,7 @@ namespace detail
   {
   public:
     read_at_streambuf_op(AsyncRandomAccessReadDevice& device,
-        uint64_t offset, basic_streambuf<Allocator>& streambuf,
+        u64 offset, basic_streambuf<Allocator>& streambuf,
         CompletionCondition& completion_condition, ReadHandler& handler)
       : base_from_cancellation_state<ReadHandler>(
           handler, enable_partial_cancellation()),
@@ -570,7 +570,7 @@ namespace detail
 
   //private:
     AsyncRandomAccessReadDevice& device_;
-    uint64_t offset_;
+    u64 offset_;
     boost::asio::basic_streambuf<Allocator>& streambuf_;
     int start_;
     std::size_t total_transferred_;
@@ -666,7 +666,7 @@ namespace detail
     template <typename ReadHandler,
         typename Allocator, typename CompletionCondition>
     void operator()(BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-        uint64_t offset, basic_streambuf<Allocator>* b,
+        u64 offset, basic_streambuf<Allocator>* b,
         BOOST_ASIO_MOVE_ARG(CompletionCondition) completion_cond) const
     {
       // If you get an error on the following line it means that your handler
@@ -726,7 +726,7 @@ template <typename AsyncRandomAccessReadDevice,
 inline BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
     void (boost::system::error_code, std::size_t))
 async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, boost::asio::basic_streambuf<Allocator>& b,
+    u64 offset, boost::asio::basic_streambuf<Allocator>& b,
     CompletionCondition completion_condition,
     BOOST_ASIO_MOVE_ARG(ReadToken) token)
   BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
@@ -750,7 +750,7 @@ template <typename AsyncRandomAccessReadDevice, typename Allocator,
 inline BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
     void (boost::system::error_code, std::size_t))
 async_read_at(AsyncRandomAccessReadDevice& d,
-    uint64_t offset, boost::asio::basic_streambuf<Allocator>& b,
+    u64 offset, boost::asio::basic_streambuf<Allocator>& b,
     BOOST_ASIO_MOVE_ARG(ReadToken) token)
   BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_SUFFIX((
     async_initiate<ReadToken,

@@ -67,7 +67,7 @@
 //std C++
 #include <boost/intrusive/detail/minimal_pair_header.hpp>   //std::pair
 #include <cstddef>      //std::size_t
-#include <boost/cstdint.hpp>      //std::uint64_t
+#include <boost/cstdint.hpp>      //std::u64
 
 #if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
@@ -167,7 +167,7 @@ struct prime_list_holder
    static std::size_t(*const positions[])(std::size_t);
 
    #if BOOST_INTRUSIVE_64_BIT_SIZE_T
-   static const uint64_t inv_sizes32[];
+   static const u64 inv_sizes32[];
    static const std::size_t inv_sizes32_size;
    #endif
 
@@ -183,23 +183,23 @@ struct prime_list_holder
    #if BOOST_INTRUSIVE_64_BIT_SIZE_T
    // https://github.com/lemire/fastmod
 
-   BOOST_INTRUSIVE_FORCEINLINE static uint64_t mul128_u32(uint64_t lowbits, uint32_t d)
+   BOOST_INTRUSIVE_FORCEINLINE static u64 mul128_u32(u64 lowbits, uint32_t d)
    {
       #if defined(_MSC_VER)
          return __umulh(lowbits, d);
       #elif defined(BOOST_HAS_INT128)
-         return static_cast<uint64_t>((uint128_type(lowbits) * d) >> 64);
+         return static_cast<u64>((uint128_type(lowbits) * d) >> 64);
       #else
-         uint64_t r1 = (lowbits & UINT32_MAX) * d;
-         uint64_t r2 = (lowbits >> 32) * d;
+         u64 r1 = (lowbits & UINT32_MAX) * d;
+         u64 r2 = (lowbits >> 32) * d;
          r2 += r1 >> 32;
          return r2 >> 32;
       #endif
    }
 
-   BOOST_INTRUSIVE_FORCEINLINE static uint32_t fastmod_u32(uint32_t a, uint64_t M, uint32_t d)
+   BOOST_INTRUSIVE_FORCEINLINE static uint32_t fastmod_u32(uint32_t a, u64 M, uint32_t d)
    {
-      uint64_t lowbits = M * a;
+      u64 lowbits = M * a;
       return (uint32_t)(mul128_u32(lowbits, d));
    }
    #endif // BOOST_INTRUSIVE_64_BIT_SIZE_T
@@ -315,7 +315,7 @@ const std::size_t prime_list_holder<Dummy>::prime_list_size
 #if BOOST_INTRUSIVE_64_BIT_SIZE_T
 
 template<int Dummy>
-const uint64_t prime_list_holder<Dummy>::inv_sizes32[] = {
+const u64 prime_list_holder<Dummy>::inv_sizes32[] = {
    BOOST_INTRUSIVE_SIZE_C(6148914691236517206), //3
    BOOST_INTRUSIVE_SIZE_C(2635249153387078803), //7
    BOOST_INTRUSIVE_SIZE_C(1676976733973595602), //11
@@ -352,7 +352,7 @@ const uint64_t prime_list_holder<Dummy>::inv_sizes32[] = {
 
 template<int Dummy>
 const std::size_t prime_list_holder<Dummy>::inv_sizes32_size
-   = sizeof(inv_sizes32) / sizeof(uint64_t);
+   = sizeof(inv_sizes32) / sizeof(u64);
 
 #endif // BOOST_INTRUSIVE_64_BIT_SIZE_T
 

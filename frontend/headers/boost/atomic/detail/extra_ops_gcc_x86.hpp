@@ -1710,7 +1710,7 @@ struct extra_operations< Base, 8u, Signed, true > :
         (
             "lock; btsq %[bit_number], %[storage]\n\t"
             : [storage] "+m" (storage), [result] "=@ccc" (res)
-            : [bit_number] "Kr" ((uint64_t)bit_number)
+            : [bit_number] "Kr" ((u64)bit_number)
             : "memory"
         );
 #else
@@ -1719,7 +1719,7 @@ struct extra_operations< Base, 8u, Signed, true > :
             "lock; btsq %[bit_number], %[storage]\n\t"
             "setc %[result]\n\t"
             : [storage] "+m" (storage), [result] "=q" (res)
-            : [bit_number] "Kr" ((uint64_t)bit_number)
+            : [bit_number] "Kr" ((u64)bit_number)
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 #endif
@@ -1734,7 +1734,7 @@ struct extra_operations< Base, 8u, Signed, true > :
         (
             "lock; btrq %[bit_number], %[storage]\n\t"
             : [storage] "+m" (storage), [result] "=@ccc" (res)
-            : [bit_number] "Kr" ((uint64_t)bit_number)
+            : [bit_number] "Kr" ((u64)bit_number)
             : "memory"
         );
 #else
@@ -1743,7 +1743,7 @@ struct extra_operations< Base, 8u, Signed, true > :
             "lock; btrq %[bit_number], %[storage]\n\t"
             "setc %[result]\n\t"
             : [storage] "+m" (storage), [result] "=q" (res)
-            : [bit_number] "Kr" ((uint64_t)bit_number)
+            : [bit_number] "Kr" ((u64)bit_number)
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 #endif
@@ -1758,7 +1758,7 @@ struct extra_operations< Base, 8u, Signed, true > :
         (
             "lock; btcq %[bit_number], %[storage]\n\t"
             : [storage] "+m" (storage), [result] "=@ccc" (res)
-            : [bit_number] "Kr" ((uint64_t)bit_number)
+            : [bit_number] "Kr" ((u64)bit_number)
             : "memory"
         );
 #else
@@ -1767,7 +1767,7 @@ struct extra_operations< Base, 8u, Signed, true > :
             "lock; btcq %[bit_number], %[storage]\n\t"
             "setc %[result]\n\t"
             : [storage] "+m" (storage), [result] "=q" (res)
-            : [bit_number] "Kr" ((uint64_t)bit_number)
+            : [bit_number] "Kr" ((u64)bit_number)
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 #endif

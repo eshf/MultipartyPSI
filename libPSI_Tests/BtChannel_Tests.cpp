@@ -351,7 +351,7 @@ using namespace osuCrypto;
         void BtNetwork_ManyEndpoints_Test()
         {
             u64 nodeCount = 20;
-            u32 basePort = 1712;
+            uint32_t basePort = 1712;
             std::string ip("127.0.0.1");
             //InitDebugPrinting();
 
@@ -366,7 +366,7 @@ using namespace osuCrypto;
                     setThreadName("node" + std::to_string(i));
 
 
-                    u32 port;// = basePort + i;
+                    uint32_t port;// = basePort + i;
                     BtIOService ioService(0);
                     std::list<BtEndpoint> endpoints;
                     std::vector<Channel*> channels;
@@ -380,12 +380,12 @@ using namespace osuCrypto;
                             if (host)
                             {
                                 name += std::to_string(i) + "->" + std::to_string(j);
-                                port = basePort + (u32)i;
+                                port = basePort + (uint32_t)i;
                             }
                             else
                             {
                                 name += std::to_string(j) + "->" + std::to_string(i);
-                                port = basePort + (u32)j;
+                                port = basePort + (uint32_t)j;
                             }
 
                             endpoints.emplace_back(ioService, ip, port, host, name);

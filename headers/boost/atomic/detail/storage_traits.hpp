@@ -107,9 +107,9 @@ struct storage_traits< 4u >
 template< >
 struct storage_traits< 8u >
 {
-    typedef boost::uint64_t BOOST_ATOMIC_DETAIL_MAY_ALIAS type;
+    typedef boost::u64 BOOST_ATOMIC_DETAIL_MAY_ALIAS type;
 
-    static BOOST_CONSTEXPR_OR_CONST std::size_t native_alignment = atomics::detail::alignment_of< boost::uint64_t >::value;
+    static BOOST_CONSTEXPR_OR_CONST std::size_t native_alignment = atomics::detail::alignment_of< boost::u64 >::value;
     static BOOST_CONSTEXPR_OR_CONST std::size_t alignment = 8u;
 };
 

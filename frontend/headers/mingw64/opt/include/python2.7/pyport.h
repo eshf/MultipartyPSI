@@ -121,13 +121,13 @@ Used in:  PY_LONG_LONG
 /* Macros for a 64-bit unsigned integer type; used for type 'twodigits' in the
  * long integer implementation, when 30-bit digits are enabled.
  */
-#ifdef uint64_t
-#define HAVE_UINT64_T 1
+#ifdef u64
+#define HAVE_u64 1
 #endif
 
-#ifdef HAVE_UINT64_T
-#ifndef PY_UINT64_T
-#define PY_UINT64_T uint64_t
+#ifdef HAVE_u64
+#ifndef PY_u64
+#define PY_u64 u64
 #endif
 #endif
 
@@ -157,7 +157,7 @@ Used in:  PY_LONG_LONG
    (as determined by SIZEOF_VOID_P); otherwise we use 15-bit digits. */
 
 #ifndef PYLONG_BITS_IN_DIGIT
-#if (defined HAVE_UINT64_T && defined HAVE_INT64_T && \
+#if (defined HAVE_u64 && defined HAVE_INT64_T && \
      defined HAVE_UINT32_T && defined HAVE_INT32_T && SIZEOF_VOID_P >= 8)
 #define PYLONG_BITS_IN_DIGIT 30
 #else

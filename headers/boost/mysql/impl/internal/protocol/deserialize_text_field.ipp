@@ -81,7 +81,7 @@ deserialize_text_value_int_impl(string_view from, field_view& to) noexcept
 BOOST_MYSQL_STATIC_OR_INLINE deserialize_errc
 deserialize_text_value_int(string_view from, field_view& to, const metadata& meta) noexcept
 {
-    return meta.is_unsigned() ? deserialize_text_value_int_impl<std::uint64_t>(from, to)
+    return meta.is_unsigned() ? deserialize_text_value_int_impl<std::u64>(from, to)
                               : deserialize_text_value_int_impl<std::int64_t>(from, to);
 }
 

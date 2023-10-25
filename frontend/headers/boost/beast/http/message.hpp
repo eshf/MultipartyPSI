@@ -766,7 +766,7 @@ public:
         @param value The value to set for Content-Length.
     */
     void
-    content_length(boost::optional<std::uint64_t> const& value);
+    content_length(boost::optional<std::u64> const& value);
 
     /** Returns `true` if the message semantics indicate keep-alive
 
@@ -836,7 +836,7 @@ public:
         @note The value of the Content-Length field in the message
         is not inspected.
     */
-    boost::optional<std::uint64_t>
+    boost::optional<std::u64>
     payload_size() const;
 
     /** Prepare the message payload fields for the body.
@@ -946,13 +946,13 @@ private:
     bool
     need_eof(std::false_type) const;
 
-    boost::optional<std::uint64_t>
+    boost::optional<std::u64>
     payload_size(std::true_type) const
     {
         return Body::size(this->body());
     }
 
-    boost::optional<std::uint64_t>
+    boost::optional<std::u64>
     payload_size(std::false_type) const
     {
         return boost::none;

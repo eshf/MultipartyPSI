@@ -59,23 +59,23 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> // MIXMAX T
 class mixmax_engine{
 public:
     // Interfaces required by C++11 std::random and boost::random
-    typedef boost::uint64_t result_type ;
-    BOOST_STATIC_CONSTANT(boost::uint64_t,mixmax_min=0);
-    BOOST_STATIC_CONSTANT(boost::uint64_t,mixmax_max=((1ULL<<61)-1));
+    typedef boost::u64 result_type ;
+    BOOST_STATIC_CONSTANT(boost::u64,mixmax_min=0);
+    BOOST_STATIC_CONSTANT(boost::u64,mixmax_max=((1ULL<<61)-1));
     BOOST_STATIC_CONSTEXPR result_type min BOOST_PREVENT_MACRO_SUBSTITUTION() {return mixmax_min;}
     BOOST_STATIC_CONSTEXPR result_type max BOOST_PREVENT_MACRO_SUBSTITUTION() {return mixmax_max;}
     static const bool has_fixed_range = false;
     BOOST_STATIC_CONSTANT(int,N=Ndim);     ///< The main internal parameter, size of the defining MIXMAX matrix
     // CONSTRUCTORS:
     explicit mixmax_engine();                       ///< Constructor, unit vector as initial state, acted on by A^2^512
-    explicit mixmax_engine(boost::uint64_t);          ///< Constructor, one 64-bit seed
+    explicit mixmax_engine(boost::u64);          ///< Constructor, one 64-bit seed
     explicit mixmax_engine(uint32_t clusterID, uint32_t machineID, uint32_t runID, uint32_t  streamID );  ///< Constructor, four 32-bit seeds for 128-bit seeding flexibility
-    void seed(boost::uint64_t seedval=default_seed){seed_uniquestream( &S, 0, 0, (uint32_t)(seedval>>32), (uint32_t)seedval );} ///< seed with one 64-bit seed
+    void seed(boost::u64 seedval=default_seed){seed_uniquestream( &S, 0, 0, (uint32_t)(seedval>>32), (uint32_t)seedval );} ///< seed with one 64-bit seed
     
 private: // DATATYPES
     struct rng_state_st{
-        boost::array<boost::uint64_t, Ndim> V;
-        boost::uint64_t sumtot;
+        boost::array<boost::u64, Ndim> V;
+        boost::u64 sumtot;
         int counter;
     };
     
@@ -101,7 +101,7 @@ public: // SEEDING FUNCTIONS
     }
     
     /** return one uint64 between min=0 and max=2^61-1 */
-    boost::uint64_t operator()(){
+    boost::u64 operator()(){
         if (S.counter<=(Ndim-1) ){
             return S.V[S.counter++];
         }else{
@@ -115,7 +115,7 @@ public: // SEEDING FUNCTIONS
     template<class Iter>
     void generate(Iter first, Iter last) { detail::generate_from_int(*this, first, last); }
     
-    void discard(boost::uint64_t nsteps) { for(boost::uint64_t j = 0; j < nsteps; ++j)  (*this)(); } ///< discard n steps, required in boost::random
+    void discard(boost::u64 nsteps) { for(boost::u64 j = 0; j < nsteps; ++j)  (*this)(); } ///< discard n steps, required in boost::random
     
     /** save the state of the RNG to a stream */
     template<class CharT, class Traits>
@@ -123,7 +123,7 @@ public: // SEEDING FUNCTIONS
     operator<< (std::basic_ostream<CharT,Traits>& ost, const mixmax_engine& me){
         ost << Ndim << " " << me.S.counter << " " << me.S.sumtot << " ";
         for (int j=0; (j< (Ndim) ); j++) {
-        ost <<  (boost::uint64_t)me.S.V[j] << " ";
+        ost <<  (boost::u64)me.S.V[j] << " ";
         }
         ost << "\n";
         ost.flush();
@@ -135,8 +135,8 @@ public: // SEEDING FUNCTIONS
     friend std::basic_istream<CharT,Traits>&
     operator>> (std::basic_istream<CharT,Traits> &in, mixmax_engine& me){
         // will set std::ios::failbit if the input format is not right
-        boost::array<boost::uint64_t, Ndim> vec;
-        boost::uint64_t sum=0, savedsum=0, counter=0;
+        boost::array<boost::u64, Ndim> vec;
+        boost::u64 sum=0, savedsum=0, counter=0;
         in >> counter >> std::ws;
         BOOST_ASSERT(counter==Ndim);
         in >> counter >> std::ws;
@@ -161,16 +161,16 @@ friend bool operator!=(const mixmax_engine & x,
 
 private:
 BOOST_STATIC_CONSTANT(int, BITS=61);
-BOOST_STATIC_CONSTANT(boost::uint64_t, M61=2305843009213693951ULL);
-BOOST_STATIC_CONSTANT(boost::uint64_t, default_seed=1);
-inline boost::uint64_t MOD_MERSENNE(boost::uint64_t k) {return ((((k)) & M61) + (((k)) >> BITS) );}
-inline boost::uint64_t MULWU(boost::uint64_t k);
+BOOST_STATIC_CONSTANT(boost::u64, M61=2305843009213693951ULL);
+BOOST_STATIC_CONSTANT(boost::u64, default_seed=1);
+inline boost::u64 MOD_MERSENNE(boost::u64 k) {return ((((k)) & M61) + (((k)) >> BITS) );}
+inline boost::u64 MULWU(boost::u64 k);
 inline void seed_vielbein(rng_state_t* X, unsigned int i); // seeds with the i-th unit vector, i = 0..Ndim-1,  for testing only
 inline void seed_uniquestream( rng_state_t* Xin, uint32_t clusterID, uint32_t machineID, uint32_t runID, uint32_t  streamID );
-inline boost::uint64_t iterate_raw_vec(boost::uint64_t* Y, boost::uint64_t sumtotOld);
-inline boost::uint64_t apply_bigskip(boost::uint64_t* Vout, boost::uint64_t* Vin, uint32_t clusterID, uint32_t machineID, uint32_t runID, uint32_t  streamID );
-inline boost::uint64_t modadd(boost::uint64_t foo, boost::uint64_t bar);
-inline boost::uint64_t fmodmulM61(boost::uint64_t cum, boost::uint64_t s, boost::uint64_t a);
+inline boost::u64 iterate_raw_vec(boost::u64* Y, boost::u64 sumtotOld);
+inline boost::u64 apply_bigskip(boost::u64* Vout, boost::u64* Vin, uint32_t clusterID, uint32_t machineID, uint32_t runID, uint32_t  streamID );
+inline boost::u64 modadd(boost::u64 foo, boost::u64 bar);
+inline boost::u64 fmodmulM61(boost::u64 cum, boost::u64 s, boost::u64 a);
 };
 
 template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::mixmax_engine()
@@ -179,8 +179,8 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> mixmax_engi
     seed_uniquestream( &S, 0,  0, 0, default_seed);
 }
 
-template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::mixmax_engine(boost::uint64_t seedval){
-    ///< constructor, one uint64_t seed, random numbers are statistically independent from any two distinct seeds, e.g. consecutive seeds are ok
+template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::mixmax_engine(boost::u64 seedval){
+    ///< constructor, one u64 seed, random numbers are statistically independent from any two distinct seeds, e.g. consecutive seeds are ok
     seed_uniquestream( &S, 0,  0,  (uint32_t)(seedval>>32), (uint32_t)seedval );
 }
 
@@ -189,15 +189,15 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> mixmax_engi
     seed_uniquestream( &S, clusterID,  machineID,  runID,  streamID );
 }
 
-template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> uint64_t mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::MULWU (uint64_t k){ return (( (k)<<(SPECIALMUL) & M61) ^ ( (k) >> (BITS-SPECIALMUL))  )  ;}
+template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> u64 mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::MULWU (u64 k){ return (( (k)<<(SPECIALMUL) & M61) ^ ( (k) >> (BITS-SPECIALMUL))  )  ;}
 
-template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::uint64_t mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::iterate_raw_vec(boost::uint64_t* Y, boost::uint64_t sumtotOld){
+template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::u64 mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::iterate_raw_vec(boost::u64* Y, boost::u64 sumtotOld){
     // operates with a raw vector, uses known sum of elements of Y
-    boost::uint64_t  tempP=0, tempV=sumtotOld;
+    boost::u64  tempP=0, tempV=sumtotOld;
     Y[0] = tempV;
-    boost::uint64_t sumtot = Y[0], ovflow = 0; // will keep a running sum of all new elements
+    boost::u64 sumtot = Y[0], ovflow = 0; // will keep a running sum of all new elements
     for (int i=1; i<Ndim; i++){
-        boost::uint64_t tempPO = MULWU(tempP);
+        boost::u64 tempPO = MULWU(tempP);
         tempV = (tempV+tempPO);
         tempP = modadd(tempP, Y[i]);
         tempV = modadd(tempV, tempP); // new Y[i] = old Y[i] + old partial * m
@@ -224,7 +224,7 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> void mixmax
 }
 
 
-template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::uint64_t mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::apply_bigskip( boost::uint64_t* Vout, boost::uint64_t* Vin, uint32_t clusterID, uint32_t machineID, uint32_t runID, uint32_t  streamID ){
+template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::u64 mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::apply_bigskip( boost::u64* Vout, boost::u64* Vin, uint32_t clusterID, uint32_t machineID, uint32_t runID, uint32_t  streamID ){
     /*
      makes a derived state vector, Vout, from the mother state vector Vin
      by skipping a large number of steps, determined by the given seeding ID's
@@ -246,17 +246,17 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::uint
      */
     
     
-    const    boost::uint64_t skipMat17[128][17] =
+    const    boost::u64 skipMat17[128][17] =
 #include "boost/random/detail/mixmax_skip_N17.ipp"
     ;
     
-    const boost::uint64_t* skipMat[128];
+    const boost::u64* skipMat[128];
     BOOST_ASSERT(Ndim==17);
     for (int i=0; i<128; i++) { skipMat[i] = skipMat17[i];}
     
     uint32_t IDvec[4] = {streamID, runID, machineID, clusterID};
-    boost::uint64_t Y[Ndim], cum[Ndim];
-    boost::uint64_t sumtot=0;
+    boost::u64 Y[Ndim], cum[Ndim];
+    boost::u64 sumtot=0;
     
     for (int i=0; i<Ndim; i++) { Y[i] = Vin[i]; sumtot = modadd( sumtot, Vin[i]); } ;
     for (int IDindex=0; IDindex<4; IDindex++) { // go from lower order to higher order ID
@@ -264,11 +264,11 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::uint
         int r = 0;
         while (id){
             if (id & 1) {
-                boost::uint64_t* rowPtr = (boost::uint64_t*)skipMat[r + IDindex*8*sizeof(uint32_t)];
+                boost::u64* rowPtr = (boost::u64*)skipMat[r + IDindex*8*sizeof(uint32_t)];
                 for (int i=0; i<Ndim; i++){ cum[i] = 0; }
                 for (int j=0; j<Ndim; j++){              // j is lag, enumerates terms of the poly
                     // for zero lag Y is already given
-                    boost::uint64_t coeff = rowPtr[j]; // same coeff for all i
+                    boost::u64 coeff = rowPtr[j]; // same coeff for all i
                     for (int i =0; i<Ndim; i++){
                         cum[i] =  fmodmulM61( cum[i], coeff ,  Y[i] ) ;
                     }
@@ -285,10 +285,10 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::uint
     return (sumtot) ;
 }
 
-template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> inline boost::uint64_t mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::fmodmulM61(boost::uint64_t cum, boost::uint64_t s, boost::uint64_t a){
+template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> inline boost::u64 mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::fmodmulM61(boost::u64 cum, boost::u64 s, boost::u64 a){
     // works on all platforms, including 32-bit linux, PPC and PPC64, ARM and Windows
-    const boost::uint64_t MASK32=0xFFFFFFFFULL;
-    boost::uint64_t o,ph,pl,ah,al;
+    const boost::u64 MASK32=0xFFFFFFFFULL;
+    boost::u64 o,ph,pl,ah,al;
     o=(s)*a;
     ph = ((s)>>32);
     pl = (s) & MASK32;
@@ -300,7 +300,7 @@ template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> inline boos
     return o;
 }
 
-template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::uint64_t mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::modadd(boost::uint64_t foo, boost::uint64_t bar){
+template <int Ndim, unsigned int SPECIALMUL, boost::int64_t SPECIAL> boost::u64 mixmax_engine  <Ndim, SPECIALMUL, SPECIAL> ::modadd(boost::u64 foo, boost::u64 bar){
     return MOD_MERSENNE(foo+bar);
 }
 

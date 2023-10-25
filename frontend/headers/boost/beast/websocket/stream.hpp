@@ -519,7 +519,7 @@ public:
         message size over this limit will cause a protocol failure.
 
         The default setting is 16 megabytes. A value of zero indicates
-        a limit of the maximum value of a `std::uint64_t`.
+        a limit of the maximum value of a `std::u64`.
 
         @par Example
         Setting the maximum read message size.

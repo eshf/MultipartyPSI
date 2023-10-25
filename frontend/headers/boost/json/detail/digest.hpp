@@ -23,8 +23,8 @@ digest(
     std::size_t salt) noexcept
 {
 #if BOOST_JSON_ARCH == 64
-    std::uint64_t const prime = 0x100000001B3ULL;
-    std::uint64_t hash  = 0xcbf29ce484222325ULL;
+    std::u64 const prime = 0x100000001B3ULL;
+    std::u64 hash  = 0xcbf29ce484222325ULL;
 #else
     std::uint32_t const prime = 0x01000193UL;
     std::uint32_t hash  = 0x811C9DC5UL;

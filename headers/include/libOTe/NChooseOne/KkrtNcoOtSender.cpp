@@ -53,7 +53,7 @@ namespace osuCrypto
     void KkrtNcoOtSender::init(
         u64 numOTExt)
     {
-        static const u8 superBlkSize(8);
+        static const uint8_t superBlkSize(8);
 
         // round up
         numOTExt = ((numOTExt + 127) / 128) * 128;
@@ -170,9 +170,9 @@ namespace osuCrypto
 #ifdef KKRT_SHA_HASH
 
         SHA1  sha1;
-        u8 hashBuff[SHA1::HashSize];
+        uint8_t hashBuff[SHA1::HashSize];
         // hash it all to get rid of the correlation.
-        sha1.Update((u8*)codeword.data(), sizeof(block) * mT.size()[1]);
+        sha1.Update((uint8_t*)codeword.data(), sizeof(block) * mT.size()[1]);
         sha1.Final(hashBuff);
         val = toBlock(hashBuff);
 #else

@@ -251,7 +251,7 @@
 
 // VC7 isn't able to compile the flex_string class, fall back to std::string
 // CW up to 8.3 chokes as well *sigh*
-// Truint64_t/CXX has linker problems when using flex_string
+// Tru64/CXX has linker problems when using flex_string
 #if BOOST_WORKAROUND(__MWERKS__, < 0x3200) || \
     (defined(__DECCXX) && defined(__alpha)) || \
     defined(BOOST_WAVE_STRINGTYPE_USE_STDSTRING)

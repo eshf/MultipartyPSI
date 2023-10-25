@@ -14,7 +14,7 @@
 #include <system_error> // error_code, system_error
 #include <string>
 #include <cassert>
-#include <cstdint> // std::uint8_t
+#include <cstdint> // std::u8
 
 // Using the system_error code facility.  This facility is more complex
 // than meets the eye.  To fully understand what out intent here is,
@@ -31,7 +31,7 @@ namespace safe_numerics {
 
 // note: Don't reorder these.  Code in the file checked_result_operations.hpp
 // depends upon this order !!!
-enum class safe_numerics_error : std::uint8_t {
+enum class safe_numerics_error : std::u8 {
     success = 0,
     positive_overflow_error,    // result is above representational maximum
     negative_overflow_error,    // result is below representational minimum
@@ -63,11 +63,11 @@ constexpr inline const char * literal_string(const safe_numerics_error & e){
     }
 }
 
-const std::uint8_t safe_numerics_casting_error_count =
-    static_cast<std::uint8_t>(safe_numerics_error::domain_error) + 1;
+const std::u8 safe_numerics_casting_error_count =
+    static_cast<std::u8>(safe_numerics_error::domain_error) + 1;
 
-const std::uint8_t safe_numerics_error_count =
-    static_cast<std::uint8_t>(safe_numerics_error::uninitialized_value) + 1;
+const std::u8 safe_numerics_error_count =
+    static_cast<std::u8>(safe_numerics_error::uninitialized_value) + 1;
 
 } // safe_numerics
 } // boost

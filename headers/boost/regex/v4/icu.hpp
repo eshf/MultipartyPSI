@@ -70,7 +70,7 @@ namespace boost {
          string_type do_transform(const char_type* p1, const char_type* p2, const U_NAMESPACE_QUALIFIER Collator* pcoll) const
          {
             // TODO make thread safe!!!! :
-            typedef u32_to_u16_iterator<const char_type*, ::UChar> itt;
+            typedef uint32_t_to_u16_iterator<const char_type*, ::UChar> itt;
             itt i(p1), j(p2);
 #ifndef BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS
             std::vector< ::UChar> t(i, j);
@@ -79,7 +79,7 @@ namespace boost {
             while (i != j)
                t.push_back(*i++);
 #endif
-            ::uint8_t result[100];
+            ::u8 result[100];
             ::int32_t len;
             if (!t.empty())
                len = pcoll->getSortKey(&*t.begin(), static_cast< ::int32_t>(t.size()), result, sizeof(result));
@@ -87,7 +87,7 @@ namespace boost {
                len = pcoll->getSortKey(static_cast<UChar const*>(0), static_cast< ::int32_t>(0), result, sizeof(result));
             if (std::size_t(len) > sizeof(result))
             {
-               scoped_array< ::uint8_t> presult(new ::uint8_t[len + 1]);
+               scoped_array< ::u8> presult(new ::u8[len + 1]);
                if (!t.empty())
                   len = pcoll->getSortKey(&*t.begin(), static_cast< ::int32_t>(t.size()), presult.get(), len + 1);
                else
@@ -98,8 +98,8 @@ namespace boost {
                return string_type(presult.get(), presult.get() + len);
 #else
                string_type sresult;
-               ::uint8_t const* ia = presult.get();
-               ::uint8_t const* ib = presult.get() + len;
+               ::u8 const* ia = presult.get();
+               ::u8 const* ib = presult.get() + len;
                while (ia != ib)
                   sresult.push_back(*ia++);
                return sresult;
@@ -111,8 +111,8 @@ namespace boost {
             return string_type(result, result + len);
 #else
             string_type sresult;
-            ::uint8_t const* ia = result;
-            ::uint8_t const* ib = result + len;
+            ::u8 const* ia = result;
+            ::u8 const* ib = result + len;
             while (ia != ib)
                sresult.push_back(*ia++);
             return sresult;
@@ -154,7 +154,7 @@ namespace boost {
 #ifdef BOOST_NO_INT64_T
       typedef std::bitset<64>              char_class_type;
 #else
-      typedef boost::uint64_t              char_class_type;
+      typedef boost::u64              char_class_type;
 #endif
 
       struct boost_extensions_tag {};
@@ -683,8 +683,8 @@ namespace boost {
 namespace boost {
 
    // types:
-   typedef basic_regex< ::UChar32, icu_regex_traits> u32regex;
-   typedef match_results<const ::UChar32*> u32match;
+   typedef basic_regex< ::UChar32, icu_regex_traits> uint32_tregex;
+   typedef match_results<const ::UChar32*> uint32_tmatch;
    typedef match_results<const ::UChar*> u16match;
 
    //
@@ -694,41 +694,41 @@ namespace boost {
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(__IBMCPP__)
       template <class InputIterator>
-      inline u32regex do_make_u32regex(InputIterator i,
+      inline uint32_tregex do_make_uint32_tregex(InputIterator i,
          InputIterator j,
          boost::regex_constants::syntax_option_type opt,
          const boost::mpl::int_<1>*)
       {
-         typedef boost::u8_to_u32_iterator<InputIterator, UChar32> conv_type;
-         return u32regex(conv_type(i, i, j), conv_type(j, i, j), opt);
+         typedef boost::u8_to_uint32_t_iterator<InputIterator, UChar32> conv_type;
+         return uint32_tregex(conv_type(i, i, j), conv_type(j, i, j), opt);
       }
 
       template <class InputIterator>
-      inline u32regex do_make_u32regex(InputIterator i,
+      inline uint32_tregex do_make_uint32_tregex(InputIterator i,
          InputIterator j,
          boost::regex_constants::syntax_option_type opt,
          const boost::mpl::int_<2>*)
       {
-         typedef boost::u16_to_u32_iterator<InputIterator, UChar32> conv_type;
-         return u32regex(conv_type(i, i, j), conv_type(j, i, j), opt);
+         typedef boost::u16_to_uint32_t_iterator<InputIterator, UChar32> conv_type;
+         return uint32_tregex(conv_type(i, i, j), conv_type(j, i, j), opt);
       }
 
       template <class InputIterator>
-      inline u32regex do_make_u32regex(InputIterator i,
+      inline uint32_tregex do_make_uint32_tregex(InputIterator i,
          InputIterator j,
          boost::regex_constants::syntax_option_type opt,
          const boost::mpl::int_<4>*)
       {
-         return u32regex(i, j, opt);
+         return uint32_tregex(i, j, opt);
       }
 #else
       template <class InputIterator>
-      inline u32regex do_make_u32regex(InputIterator i,
+      inline uint32_tregex do_make_uint32_tregex(InputIterator i,
          InputIterator j,
          boost::regex_constants::syntax_option_type opt,
          const boost::mpl::int_<1>*)
       {
-         typedef boost::u8_to_u32_iterator<InputIterator, UChar32> conv_type;
+         typedef boost::u8_to_uint32_t_iterator<InputIterator, UChar32> conv_type;
          typedef std::vector<UChar32> vector_type;
          vector_type v;
          conv_type a(i, i, j), b(j, i, j);
@@ -738,17 +738,17 @@ namespace boost {
             ++a;
          }
          if (v.size())
-            return u32regex(&*v.begin(), v.size(), opt);
-         return u32regex(static_cast<UChar32 const*>(0), static_cast<u32regex::size_type>(0), opt);
+            return uint32_tregex(&*v.begin(), v.size(), opt);
+         return uint32_tregex(static_cast<UChar32 const*>(0), static_cast<uint32_tregex::size_type>(0), opt);
       }
 
       template <class InputIterator>
-      inline u32regex do_make_u32regex(InputIterator i,
+      inline uint32_tregex do_make_uint32_tregex(InputIterator i,
          InputIterator j,
          boost::regex_constants::syntax_option_type opt,
          const boost::mpl::int_<2>*)
       {
-         typedef boost::u16_to_u32_iterator<InputIterator, UChar32> conv_type;
+         typedef boost::u16_to_uint32_t_iterator<InputIterator, UChar32> conv_type;
          typedef std::vector<UChar32> vector_type;
          vector_type v;
          conv_type a(i, i, j), b(j, i, j);
@@ -758,12 +758,12 @@ namespace boost {
             ++a;
          }
          if (v.size())
-            return u32regex(&*v.begin(), v.size(), opt);
-         return u32regex(static_cast<UChar32 const*>(0), static_cast<u32regex::size_type>(0), opt);
+            return uint32_tregex(&*v.begin(), v.size(), opt);
+         return uint32_tregex(static_cast<UChar32 const*>(0), static_cast<uint32_tregex::size_type>(0), opt);
       }
 
       template <class InputIterator>
-      inline u32regex do_make_u32regex(InputIterator i,
+      inline uint32_tregex do_make_uint32_tregex(InputIterator i,
          InputIterator j,
          boost::regex_constants::syntax_option_type opt,
          const boost::mpl::int_<4>*)
@@ -776,8 +776,8 @@ namespace boost {
             ++i;
          }
          if (v.size())
-            return u32regex(&*v.begin(), v.size(), opt);
-         return u32regex(static_cast<UChar32 const*>(0), static_cast<u32regex::size_type>(0), opt);
+            return uint32_tregex(&*v.begin(), v.size(), opt);
+         return uint32_tregex(static_cast<UChar32 const*>(0), static_cast<uint32_tregex::size_type>(0), opt);
       }
 #endif
    }
@@ -814,52 +814,52 @@ namespace boost {
    // Construction from an iterator pair:
    //
    template <class InputIterator>
-   inline u32regex make_u32regex(InputIterator i,
+   inline uint32_tregex make_uint32_tregex(InputIterator i,
       InputIterator j,
       boost::regex_constants::syntax_option_type opt)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(i, j, opt, static_cast<boost::mpl::int_<sizeof(*i)> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(i, j, opt, static_cast<boost::mpl::int_<sizeof(*i)> const*>(0));
    }
    //
    // construction from UTF-8 nul-terminated strings:
    //
-   inline u32regex make_u32regex(const char* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
+   inline uint32_tregex make_uint32_tregex(const char* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(p, p + std::strlen(p), opt, static_cast<boost::mpl::int_<1> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(p, p + std::strlen(p), opt, static_cast<boost::mpl::int_<1> const*>(0));
    }
-   inline u32regex make_u32regex(const unsigned char* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
+   inline uint32_tregex make_uint32_tregex(const unsigned char* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(p, p + std::strlen(reinterpret_cast<const char*>(p)), opt, static_cast<boost::mpl::int_<1> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(p, p + std::strlen(reinterpret_cast<const char*>(p)), opt, static_cast<boost::mpl::int_<1> const*>(0));
    }
    //
    // construction from UTF-16 nul-terminated strings:
    //
 #ifndef BOOST_NO_WREGEX
-   inline u32regex make_u32regex(const wchar_t* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
+   inline uint32_tregex make_uint32_tregex(const wchar_t* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(p, p + std::wcslen(p), opt, static_cast<boost::mpl::int_<sizeof(wchar_t)> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(p, p + std::wcslen(p), opt, static_cast<boost::mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
 #if !BOOST_REGEX_UCHAR_IS_WCHAR_T
-   inline u32regex make_u32regex(const UChar* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
+   inline uint32_tregex make_uint32_tregex(const UChar* p, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(p, p + u_strlen(p), opt, static_cast<boost::mpl::int_<2> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(p, p + u_strlen(p), opt, static_cast<boost::mpl::int_<2> const*>(0));
    }
 #endif
    //
    // construction from basic_string class-template:
    //
    template<class C, class T, class A>
-   inline u32regex make_u32regex(const std::basic_string<C, T, A>& s, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
+   inline uint32_tregex make_uint32_tregex(const std::basic_string<C, T, A>& s, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(s.begin(), s.end(), opt, static_cast<boost::mpl::int_<sizeof(C)> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(s.begin(), s.end(), opt, static_cast<boost::mpl::int_<sizeof(C)> const*>(0));
    }
    //
    // Construction from ICU string type:
    //
-   inline u32regex make_u32regex(const U_NAMESPACE_QUALIFIER UnicodeString& s, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
+   inline uint32_tregex make_uint32_tregex(const U_NAMESPACE_QUALIFIER UnicodeString& s, boost::regex_constants::syntax_option_type opt = boost::regex_constants::perl)
    {
-      return BOOST_REGEX_DETAIL_NS::do_make_u32regex(s.getBuffer(), s.getBuffer() + s.length(), opt, static_cast<boost::mpl::int_<2> const*>(0));
+      return BOOST_REGEX_DETAIL_NS::do_make_uint32_tregex(s.getBuffer(), s.getBuffer() + s.length(), opt, static_cast<boost::mpl::int_<2> const*>(0));
    }
 
    //
@@ -902,7 +902,7 @@ namespace boost {
       template <class BidiIterator, class Allocator>
       inline bool do_regex_match(BidiIterator first, BidiIterator last,
          match_results<BidiIterator, Allocator>& m,
-         const u32regex& e,
+         const uint32_tregex& e,
          match_flag_type flags,
          boost::mpl::int_<4> const*)
       {
@@ -911,11 +911,11 @@ namespace boost {
       template <class BidiIterator, class Allocator>
       bool do_regex_match(BidiIterator first, BidiIterator last,
          match_results<BidiIterator, Allocator>& m,
-         const u32regex& e,
+         const uint32_tregex& e,
          match_flag_type flags,
          boost::mpl::int_<2> const*)
       {
-         typedef u16_to_u32_iterator<BidiIterator, UChar32> conv_type;
+         typedef u16_to_uint32_t_iterator<BidiIterator, UChar32> conv_type;
          typedef match_results<conv_type>                   match_type;
          //typedef typename match_type::allocator_type        alloc_type;
          match_type what;
@@ -927,11 +927,11 @@ namespace boost {
       template <class BidiIterator, class Allocator>
       bool do_regex_match(BidiIterator first, BidiIterator last,
          match_results<BidiIterator, Allocator>& m,
-         const u32regex& e,
+         const uint32_tregex& e,
          match_flag_type flags,
          boost::mpl::int_<1> const*)
       {
-         typedef u8_to_u32_iterator<BidiIterator, UChar32>  conv_type;
+         typedef u8_to_uint32_t_iterator<BidiIterator, UChar32>  conv_type;
          typedef match_results<conv_type>                   match_type;
          //typedef typename match_type::allocator_type        alloc_type;
          match_type what;
@@ -943,62 +943,62 @@ namespace boost {
    } // namespace BOOST_REGEX_DETAIL_NS
 
    template <class BidiIterator, class Allocator>
-   inline bool u32regex_match(BidiIterator first, BidiIterator last,
+   inline bool uint32_tregex_match(BidiIterator first, BidiIterator last,
       match_results<BidiIterator, Allocator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(first, last, m, e, flags, static_cast<mpl::int_<sizeof(*first)> const*>(0));
    }
-   inline bool u32regex_match(const UChar* p,
+   inline bool uint32_tregex_match(const UChar* p,
       match_results<const UChar*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + u_strlen(p), m, e, flags, static_cast<mpl::int_<2> const*>(0));
    }
 #if !BOOST_REGEX_UCHAR_IS_WCHAR_T && !defined(BOOST_NO_WREGEX)
-   inline bool u32regex_match(const wchar_t* p,
+   inline bool uint32_tregex_match(const wchar_t* p,
       match_results<const wchar_t*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + std::wcslen(p), m, e, flags, static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_match(const char* p,
+   inline bool uint32_tregex_match(const char* p,
       match_results<const char*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + std::strlen(p), m, e, flags, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_match(const unsigned char* p,
+   inline bool uint32_tregex_match(const unsigned char* p,
       match_results<const unsigned char*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + std::strlen((const char*)p), m, e, flags, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_match(const std::string& s,
+   inline bool uint32_tregex_match(const std::string& s,
       match_results<std::string::const_iterator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(s.begin(), s.end(), m, e, flags, static_cast<mpl::int_<1> const*>(0));
    }
 #ifndef BOOST_NO_STD_WSTRING
-   inline bool u32regex_match(const std::wstring& s,
+   inline bool uint32_tregex_match(const std::wstring& s,
       match_results<std::wstring::const_iterator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(s.begin(), s.end(), m, e, flags, static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_match(const U_NAMESPACE_QUALIFIER UnicodeString& s,
+   inline bool uint32_tregex_match(const U_NAMESPACE_QUALIFIER UnicodeString& s,
       match_results<const UChar*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_match(s.getBuffer(), s.getBuffer() + s.length(), m, e, flags, static_cast<mpl::int_<2> const*>(0));
@@ -1007,61 +1007,61 @@ namespace boost {
    // regex_match overloads that do not return what matched:
    //
    template <class BidiIterator>
-   inline bool u32regex_match(BidiIterator first, BidiIterator last,
-      const u32regex& e,
+   inline bool uint32_tregex_match(BidiIterator first, BidiIterator last,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<BidiIterator> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(first, last, m, e, flags, static_cast<mpl::int_<sizeof(*first)> const*>(0));
    }
-   inline bool u32regex_match(const UChar* p,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const UChar* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const UChar*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + u_strlen(p), m, e, flags, static_cast<mpl::int_<2> const*>(0));
    }
 #if !BOOST_REGEX_UCHAR_IS_WCHAR_T && !defined(BOOST_NO_WREGEX)
-   inline bool u32regex_match(const wchar_t* p,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const wchar_t* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const wchar_t*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + std::wcslen(p), m, e, flags, static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_match(const char* p,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const char* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const char*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + std::strlen(p), m, e, flags, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_match(const unsigned char* p,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const unsigned char* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const unsigned char*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(p, p + std::strlen((const char*)p), m, e, flags, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_match(const std::string& s,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const std::string& s,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<std::string::const_iterator> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(s.begin(), s.end(), m, e, flags, static_cast<mpl::int_<1> const*>(0));
    }
 #ifndef BOOST_NO_STD_WSTRING
-   inline bool u32regex_match(const std::wstring& s,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const std::wstring& s,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<std::wstring::const_iterator> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_match(s.begin(), s.end(), m, e, flags, static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_match(const U_NAMESPACE_QUALIFIER UnicodeString& s,
-      const u32regex& e,
+   inline bool uint32_tregex_match(const U_NAMESPACE_QUALIFIER UnicodeString& s,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const UChar*> m;
@@ -1075,7 +1075,7 @@ namespace boost {
       template <class BidiIterator, class Allocator>
       inline bool do_regex_search(BidiIterator first, BidiIterator last,
          match_results<BidiIterator, Allocator>& m,
-         const u32regex& e,
+         const uint32_tregex& e,
          match_flag_type flags,
          BidiIterator base,
          boost::mpl::int_<4> const*)
@@ -1085,12 +1085,12 @@ namespace boost {
       template <class BidiIterator, class Allocator>
       bool do_regex_search(BidiIterator first, BidiIterator last,
          match_results<BidiIterator, Allocator>& m,
-         const u32regex& e,
+         const uint32_tregex& e,
          match_flag_type flags,
          BidiIterator base,
          boost::mpl::int_<2> const*)
       {
-         typedef u16_to_u32_iterator<BidiIterator, UChar32> conv_type;
+         typedef u16_to_uint32_t_iterator<BidiIterator, UChar32> conv_type;
          typedef match_results<conv_type>                   match_type;
          //typedef typename match_type::allocator_type        alloc_type;
          match_type what;
@@ -1102,12 +1102,12 @@ namespace boost {
       template <class BidiIterator, class Allocator>
       bool do_regex_search(BidiIterator first, BidiIterator last,
          match_results<BidiIterator, Allocator>& m,
-         const u32regex& e,
+         const uint32_tregex& e,
          match_flag_type flags,
          BidiIterator base,
          boost::mpl::int_<1> const*)
       {
-         typedef u8_to_u32_iterator<BidiIterator, UChar32>  conv_type;
+         typedef u8_to_uint32_t_iterator<BidiIterator, UChar32>  conv_type;
          typedef match_results<conv_type>                   match_type;
          //typedef typename match_type::allocator_type        alloc_type;
          match_type what;
@@ -1119,131 +1119,131 @@ namespace boost {
    }
 
    template <class BidiIterator, class Allocator>
-   inline bool u32regex_search(BidiIterator first, BidiIterator last,
+   inline bool uint32_tregex_search(BidiIterator first, BidiIterator last,
       match_results<BidiIterator, Allocator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(first, last, m, e, flags, first, static_cast<mpl::int_<sizeof(*first)> const*>(0));
    }
    template <class BidiIterator, class Allocator>
-   inline bool u32regex_search(BidiIterator first, BidiIterator last,
+   inline bool uint32_tregex_search(BidiIterator first, BidiIterator last,
       match_results<BidiIterator, Allocator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags,
       BidiIterator base)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(first, last, m, e, flags, base, static_cast<mpl::int_<sizeof(*first)> const*>(0));
    }
-   inline bool u32regex_search(const UChar* p,
+   inline bool uint32_tregex_search(const UChar* p,
       match_results<const UChar*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + u_strlen(p), m, e, flags, p, static_cast<mpl::int_<2> const*>(0));
    }
 #if !BOOST_REGEX_UCHAR_IS_WCHAR_T && !defined(BOOST_NO_WREGEX)
-   inline bool u32regex_search(const wchar_t* p,
+   inline bool uint32_tregex_search(const wchar_t* p,
       match_results<const wchar_t*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + std::wcslen(p), m, e, flags, p, static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_search(const char* p,
+   inline bool uint32_tregex_search(const char* p,
       match_results<const char*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + std::strlen(p), m, e, flags, p, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_search(const unsigned char* p,
+   inline bool uint32_tregex_search(const unsigned char* p,
       match_results<const unsigned char*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + std::strlen((const char*)p), m, e, flags, p, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_search(const std::string& s,
+   inline bool uint32_tregex_search(const std::string& s,
       match_results<std::string::const_iterator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(s.begin(), s.end(), m, e, flags, s.begin(), static_cast<mpl::int_<1> const*>(0));
    }
 #ifndef BOOST_NO_STD_WSTRING
-   inline bool u32regex_search(const std::wstring& s,
+   inline bool uint32_tregex_search(const std::wstring& s,
       match_results<std::wstring::const_iterator>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(s.begin(), s.end(), m, e, flags, s.begin(), static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_search(const U_NAMESPACE_QUALIFIER UnicodeString& s,
+   inline bool uint32_tregex_search(const U_NAMESPACE_QUALIFIER UnicodeString& s,
       match_results<const UChar*>& m,
-      const u32regex& e,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       return BOOST_REGEX_DETAIL_NS::do_regex_search(s.getBuffer(), s.getBuffer() + s.length(), m, e, flags, s.getBuffer(), static_cast<mpl::int_<2> const*>(0));
    }
    template <class BidiIterator>
-   inline bool u32regex_search(BidiIterator first, BidiIterator last,
-      const u32regex& e,
+   inline bool uint32_tregex_search(BidiIterator first, BidiIterator last,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<BidiIterator> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(first, last, m, e, flags, first, static_cast<mpl::int_<sizeof(*first)> const*>(0));
    }
-   inline bool u32regex_search(const UChar* p,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const UChar* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const UChar*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + u_strlen(p), m, e, flags, p, static_cast<mpl::int_<2> const*>(0));
    }
 #if !BOOST_REGEX_UCHAR_IS_WCHAR_T && !defined(BOOST_NO_WREGEX)
-   inline bool u32regex_search(const wchar_t* p,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const wchar_t* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const wchar_t*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + std::wcslen(p), m, e, flags, p, static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_search(const char* p,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const char* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const char*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + std::strlen(p), m, e, flags, p, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_search(const unsigned char* p,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const unsigned char* p,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const unsigned char*> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(p, p + std::strlen((const char*)p), m, e, flags, p, static_cast<mpl::int_<1> const*>(0));
    }
-   inline bool u32regex_search(const std::string& s,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const std::string& s,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<std::string::const_iterator> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(s.begin(), s.end(), m, e, flags, s.begin(), static_cast<mpl::int_<1> const*>(0));
    }
 #ifndef BOOST_NO_STD_WSTRING
-   inline bool u32regex_search(const std::wstring& s,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const std::wstring& s,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<std::wstring::const_iterator> m;
       return BOOST_REGEX_DETAIL_NS::do_regex_search(s.begin(), s.end(), m, e, flags, s.begin(), static_cast<mpl::int_<sizeof(wchar_t)> const*>(0));
    }
 #endif
-   inline bool u32regex_search(const U_NAMESPACE_QUALIFIER UnicodeString& s,
-      const u32regex& e,
+   inline bool uint32_tregex_search(const U_NAMESPACE_QUALIFIER UnicodeString& s,
+      const uint32_tregex& e,
       match_flag_type flags = match_default)
    {
       match_results<const UChar*> m;
@@ -1255,16 +1255,16 @@ namespace boost {
    //
    namespace BOOST_REGEX_DETAIL_NS {
       template <class I>
-      inline std::pair< boost::u8_to_u32_iterator<I>, boost::u8_to_u32_iterator<I> >
+      inline std::pair< boost::u8_to_uint32_t_iterator<I>, boost::u8_to_uint32_t_iterator<I> >
          make_utf32_seq(I i, I j, mpl::int_<1> const*)
       {
-         return std::pair< boost::u8_to_u32_iterator<I>, boost::u8_to_u32_iterator<I> >(boost::u8_to_u32_iterator<I>(i, i, j), boost::u8_to_u32_iterator<I>(j, i, j));
+         return std::pair< boost::u8_to_uint32_t_iterator<I>, boost::u8_to_uint32_t_iterator<I> >(boost::u8_to_uint32_t_iterator<I>(i, i, j), boost::u8_to_uint32_t_iterator<I>(j, i, j));
       }
       template <class I>
-      inline std::pair< boost::u16_to_u32_iterator<I>, boost::u16_to_u32_iterator<I> >
+      inline std::pair< boost::u16_to_uint32_t_iterator<I>, boost::u16_to_uint32_t_iterator<I> >
          make_utf32_seq(I i, I j, mpl::int_<2> const*)
       {
-         return std::pair< boost::u16_to_u32_iterator<I>, boost::u16_to_u32_iterator<I> >(boost::u16_to_u32_iterator<I>(i, i, j), boost::u16_to_u32_iterator<I>(j, i, j));
+         return std::pair< boost::u16_to_uint32_t_iterator<I>, boost::u16_to_uint32_t_iterator<I> >(boost::u16_to_uint32_t_iterator<I>(i, i, j), boost::u16_to_uint32_t_iterator<I>(j, i, j));
       }
       template <class I>
       inline std::pair< I, I >
@@ -1273,18 +1273,18 @@ namespace boost {
          return std::pair< I, I >(i, j);
       }
       template <class charT>
-      inline std::pair< boost::u8_to_u32_iterator<const charT*>, boost::u8_to_u32_iterator<const charT*> >
+      inline std::pair< boost::u8_to_uint32_t_iterator<const charT*>, boost::u8_to_uint32_t_iterator<const charT*> >
          make_utf32_seq(const charT* p, mpl::int_<1> const*)
       {
          std::size_t len = std::strlen((const char*)p);
-         return std::pair< boost::u8_to_u32_iterator<const charT*>, boost::u8_to_u32_iterator<const charT*> >(boost::u8_to_u32_iterator<const charT*>(p, p, p + len), boost::u8_to_u32_iterator<const charT*>(p + len, p, p + len));
+         return std::pair< boost::uint8_t_to_uint32_t_iterator<const charT*>, boost::uint8_t_to_uint32_t_iterator<const charT*> >(boost::uint8_t_to_uint32_t_iterator<const charT*>(p, p, p + len), boost::uint8_t_to_uint32_t_iterator<const charT*>(p + len, p, p + len));
       }
       template <class charT>
-      inline std::pair< boost::u16_to_u32_iterator<const charT*>, boost::u16_to_u32_iterator<const charT*> >
+      inline std::pair< boost::u16_to_uint32_t_iterator<const charT*>, boost::u16_to_uint32_t_iterator<const charT*> >
          make_utf32_seq(const charT* p, mpl::int_<2> const*)
       {
          std::size_t len = u_strlen((const UChar*)p);
-         return std::pair< boost::u16_to_u32_iterator<const charT*>, boost::u16_to_u32_iterator<const charT*> >(boost::u16_to_u32_iterator<const charT*>(p, p, p + len), boost::u16_to_u32_iterator<const charT*>(p + len, p, p + len));
+         return std::pair< boost::u16_to_uint32_t_iterator<const charT*>, boost::u16_to_uint32_t_iterator<const charT*> >(boost::u16_to_uint32_t_iterator<const charT*>(p, p, p + len), boost::u16_to_uint32_t_iterator<const charT*>(p + len, p, p + len));
       }
       template <class charT>
       inline std::pair< const charT*, const charT* >
@@ -1311,7 +1311,7 @@ namespace boost {
       template <class OutputIterator, class I1, class I2>
       OutputIterator do_regex_replace(OutputIterator out,
          std::pair<I1, I1> const& in,
-         const u32regex& e,
+         const uint32_tregex& e,
          const std::pair<I2, I2>& fmt,
          match_flag_type flags
       )
@@ -1373,10 +1373,10 @@ namespace boost {
    }  // BOOST_REGEX_DETAIL_NS
 
    template <class OutputIterator, class BidirectionalIterator, class charT>
-   inline OutputIterator u32regex_replace(OutputIterator out,
+   inline OutputIterator uint32_tregex_replace(OutputIterator out,
       BidirectionalIterator first,
       BidirectionalIterator last,
-      const u32regex& e,
+      const uint32_tregex& e,
       const charT* fmt,
       match_flag_type flags = match_default)
    {
@@ -1392,10 +1392,10 @@ namespace boost {
    }
 
    template <class OutputIterator, class Iterator, class charT>
-   inline OutputIterator u32regex_replace(OutputIterator out,
+   inline OutputIterator uint32_tregex_replace(OutputIterator out,
       Iterator first,
       Iterator last,
-      const u32regex& e,
+      const uint32_tregex& e,
       const std::basic_string<charT>& fmt,
       match_flag_type flags = match_default)
    {
@@ -1411,10 +1411,10 @@ namespace boost {
    }
 
    template <class OutputIterator, class Iterator>
-   inline OutputIterator u32regex_replace(OutputIterator out,
+   inline OutputIterator uint32_tregex_replace(OutputIterator out,
       Iterator first,
       Iterator last,
-      const u32regex& e,
+      const uint32_tregex& e,
       const U_NAMESPACE_QUALIFIER UnicodeString& fmt,
       match_flag_type flags = match_default)
    {
@@ -1430,26 +1430,26 @@ namespace boost {
    }
 
    template <class charT>
-   std::basic_string<charT> u32regex_replace(const std::basic_string<charT>& s,
-      const u32regex& e,
+   std::basic_string<charT> uint32_tregex_replace(const std::basic_string<charT>& s,
+      const uint32_tregex& e,
       const charT* fmt,
       match_flag_type flags = match_default)
    {
       std::basic_string<charT> result;
       BOOST_REGEX_DETAIL_NS::string_out_iterator<std::basic_string<charT> > i(result);
-      u32regex_replace(i, s.begin(), s.end(), e, fmt, flags);
+      uint32_tregex_replace(i, s.begin(), s.end(), e, fmt, flags);
       return result;
    }
 
    template <class charT>
-   std::basic_string<charT> u32regex_replace(const std::basic_string<charT>& s,
-      const u32regex& e,
+   std::basic_string<charT> uint32_tregex_replace(const std::basic_string<charT>& s,
+      const uint32_tregex& e,
       const std::basic_string<charT>& fmt,
       match_flag_type flags = match_default)
    {
       std::basic_string<charT> result;
       BOOST_REGEX_DETAIL_NS::string_out_iterator<std::basic_string<charT> > i(result);
-      u32regex_replace(i, s.begin(), s.end(), e, fmt.c_str(), flags);
+      uint32_tregex_replace(i, s.begin(), s.end(), e, fmt.c_str(), flags);
       return result;
    }
 
@@ -1477,19 +1477,19 @@ namespace boost {
 
    }
 
-   inline U_NAMESPACE_QUALIFIER UnicodeString u32regex_replace(const U_NAMESPACE_QUALIFIER UnicodeString& s,
-      const u32regex& e,
+   inline U_NAMESPACE_QUALIFIER UnicodeString uint32_tregex_replace(const U_NAMESPACE_QUALIFIER UnicodeString& s,
+      const uint32_tregex& e,
       const UChar* fmt,
       match_flag_type flags = match_default)
    {
       U_NAMESPACE_QUALIFIER UnicodeString result;
       BOOST_REGEX_DETAIL_NS::unicode_string_out_iterator i(result);
-      u32regex_replace(i, s.getBuffer(), s.getBuffer() + s.length(), e, fmt, flags);
+      uint32_tregex_replace(i, s.getBuffer(), s.getBuffer() + s.length(), e, fmt, flags);
       return result;
    }
 
-   inline U_NAMESPACE_QUALIFIER UnicodeString u32regex_replace(const U_NAMESPACE_QUALIFIER UnicodeString& s,
-      const u32regex& e,
+   inline U_NAMESPACE_QUALIFIER UnicodeString uint32_tregex_replace(const U_NAMESPACE_QUALIFIER UnicodeString& s,
+      const uint32_tregex& e,
       const U_NAMESPACE_QUALIFIER UnicodeString& fmt,
       match_flag_type flags = match_default)
    {
@@ -1510,7 +1510,7 @@ namespace boost {
 #pragma warning (pop)
 #endif
 
-#include <boost/regex/v4/u32regex_iterator.hpp>
-#include <boost/regex/v4/u32regex_token_iterator.hpp>
+#include <boost/regex/v4/uint32_tregex_iterator.hpp>
+#include <boost/regex/v4/uint32_tregex_token_iterator.hpp>
 
 #endif

@@ -337,7 +337,7 @@ struct _LIBCPP_TEMPLATE_VIS char_traits<char8_t>
     using char_type           = char8_t;
     using int_type            = unsigned int;
     using off_type            = streamoff;
-    using pos_type            = u8streampos;
+    using pos_type            = uint8_tstreampos;
     using state_type          = mbstate_t;
 #if _LIBCPP_STD_VER > 17
     using comparison_category = strong_ordering;

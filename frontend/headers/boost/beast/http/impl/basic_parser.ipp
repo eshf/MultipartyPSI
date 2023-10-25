@@ -45,7 +45,7 @@ keep_alive() const
 }
 
 template<bool isRequest>
-boost::optional<std::uint64_t>
+boost::optional<std::u64>
 basic_parser<isRequest>::
 content_length() const
 {
@@ -54,7 +54,7 @@ content_length() const
 }
 
 template<bool isRequest>
-boost::optional<std::uint64_t>
+boost::optional<std::u64>
 basic_parser<isRequest>::
 content_length_remaining() const
 {
@@ -659,7 +659,7 @@ parse_chunk_header(char const*& p0,
         skip_ = static_cast<
             std::size_t>(eol - 2 - p0);
 
-        std::uint64_t size;
+        std::u64 size;
         if(! parse_hex(p, size))
         {
             BOOST_BEAST_ASSIGN_EC(ec, error::bad_chunk);
@@ -704,7 +704,7 @@ parse_chunk_header(char const*& p0,
         BOOST_ASSERT(n >= 5);
         if(f_ & flagExpectCRLF)
             BOOST_VERIFY(parse_crlf(p));
-        std::uint64_t size;
+        std::u64 size;
         BOOST_VERIFY(parse_hex(p, size));
         eol = find_eol(p, pend, ec);
         BOOST_ASSERT(! ec);
@@ -831,7 +831,7 @@ do_field(field f,
         auto existing = this->content_length_unchecked();
         for (auto tok : tokens)
         {
-            std::uint64_t v;
+            std::u64 v;
             if (!parse_dec(tok, v))
                 return bad_content_length();
             --tokens_unprocessed;

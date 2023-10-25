@@ -20,11 +20,11 @@ gettimeofdayMonotonic(struct timespec64* Output) {
   // Note that nanoseconds alone will overflow when reaching new epoch in 2042.
 
   struct _t {
-    uint64_t Hi;
-    uint64_t Lo;
+    u64 Hi;
+    u64 Lo;
   };
   struct _t Value = {0, 0};
-  uint64_t CC = 0;
+  u64 CC = 0;
   asm(" stcke %0\n"
       " ipm %1\n"
       " srlg %1,%1,28\n"
@@ -34,16 +34,16 @@ gettimeofdayMonotonic(struct timespec64* Output) {
     errno = EMVSTODNOTSET;
     return CC;
   }
-  uint64_t us = (Value.Hi >> 4);
-  uint64_t ns = ((Value.Hi & 0x0F) << 8) + (Value.Lo >> 56);
+  u64 us = (Value.Hi >> 4);
+  u64 ns = ((Value.Hi & 0x0F) << 8) + (Value.Lo >> 56);
   ns = (ns * 1000) >> 12;
   us = us - 2208988800000000;
 
-  register uint64_t DivPair0 asm("r0"); // dividend (upper half), remainder
+  register u64 DivPair0 asm("r0"); // dividend (upper half), remainder
   DivPair0 = 0;
-  register uint64_t DivPair1 asm("r1"); // dividend (lower half), quotient
+  register u64 DivPair1 asm("r1"); // dividend (lower half), quotient
   DivPair1 = us;
-  uint64_t Divisor = 1000000;
+  u64 Divisor = 1000000;
   asm(" dlgr %0,%2" : "+r"(DivPair0), "+r"(DivPair1) : "r"(Divisor) :);
 
   Output->tv_sec = DivPair1;

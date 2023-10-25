@@ -18,7 +18,7 @@ namespace osuCrypto
 
         mGens.resize(baseRecvOts.size());
 
-        for (uint64_t i = 0; i < mGens.size(); i++)
+        for (u64 i = 0; i < mGens.size(); i++)
         {
             mGens[i][0].SetSeed(baseRecvOts[i][0]);
             mGens[i][1].SetSeed(baseRecvOts[i][1]);
@@ -27,13 +27,13 @@ namespace osuCrypto
     }
 
 
-    void KkrtNcoOtReceiver::init(uint64_t numOtExt)
+    void KkrtNcoOtReceiver::init(u64 numOtExt)
     {
 
         if (mHasBase == false)
             throw std::runtime_error("rt error at " LOCATION);
 
-        static const uint64_t superBlkSize(8);
+        static const u64 superBlkSize(8);
 
         // this will be used as temporary buffers of 128 columns, 
         // each containing 1024 bits. Once transposed, they will be copied
@@ -42,8 +42,8 @@ namespace osuCrypto
         std::array<std::array<block, superBlkSize>, 128> t1;
 
         // we are going to process OTs in blocks of 128 * superblkSize messages.
-        uint64_t numSuperBlocks = ((numOtExt + 127) / 128 + superBlkSize - 1) / superBlkSize;
-        uint64_t numCols = mGens.size();
+        u64 numSuperBlocks = ((numOtExt + 127) / 128 + superBlkSize - 1) / superBlkSize;
+        u64 numCols = mGens.size();
 
         // We need two matrices, T0 and T1. These will hold the expanded and transposed
         // rows that we got the using the base OTs as PRNG seed.
@@ -55,7 +55,7 @@ namespace osuCrypto
         mCorrectionIdx = 0;
 
         // the index of the OT that has been completed.
-        uint64_t doneIdx = 0;
+        u64 doneIdx = 0;
 
         // NOTE: We do not transpose a bit-matrix of size numCol * numCol.
         //   Instead we break it down into smaller chunks. We do 128 columns 
@@ -63,20 +63,20 @@ namespace osuCrypto
         //   performance reasons. The reason for 8 is that most CPUs have 8 AES vector  
         //   lanes, and so its more efficient to encrypt (aka prng) 8 blocks at a time.
         //   So that's what we do. 
-        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
             // compute at what row does the user want us to stop.
             // The code will still compute the transpose for these
             // extra rows, but it is thrown away.
-            uint64_t stopIdx
+            u64 stopIdx
                 = doneIdx
-                + std::min(uint64_t(128) * superBlkSize, numOtExt - doneIdx);
+                + std::min(u64(128) * superBlkSize, numOtExt - doneIdx);
 
 
-            for (uint64_t i = 0; i < numCols / 128; ++i)
+            for (u64 i = 0; i < numCols / 128; ++i)
             {
 
-                for (uint64_t tIdx = 0, colIdx = i * 128; tIdx < 128; ++tIdx, ++colIdx)
+                for (u64 tIdx = 0, colIdx = i * 128; tIdx < 128; ++tIdx, ++colIdx)
                 {
                     // generate the column indexed by colIdx. This is done with
                     // AES in counter mode acting as a PRNG. We don't use the normal
@@ -102,7 +102,7 @@ namespace osuCrypto
                 block* __restrict mT0Iter = mT0.data() + mT0.size()[1] * doneIdx + i;
                 block* __restrict mT1Iter = mT1.data() + mT1.size()[1] * doneIdx + i;
 
-                for (uint64_t rowIdx = doneIdx, j = 0; rowIdx < stopIdx; ++j)
+                for (u64 rowIdx = doneIdx, j = 0; rowIdx < stopIdx; ++j)
                 {
                     // because we transposed 1024 rows, the indexing gets a bit weird. But this
                     // is the location of the next row that we want. Keep in mind that we had long
@@ -111,7 +111,7 @@ namespace osuCrypto
                     block* __restrict t1Iter = ((block*)t1.data()) + j;
 
                     // do the copy!
-                    for (uint64_t k = 0; rowIdx < stopIdx && k < 128; ++rowIdx, ++k)
+                    for (u64 k = 0; rowIdx < stopIdx && k < 128; ++rowIdx, ++k)
                     {
                         *mT0Iter = *(t0Iter);
                         *mT1Iter = *(t1Iter);
@@ -137,7 +137,7 @@ namespace osuCrypto
 
         std::vector<std::array<block, 2>> base(mGens.size());
 
-        for (uint64_t i = 0; i < base.size(); ++i)
+        for (u64 i = 0; i < base.size(); ++i)
         {
             base[i][0] = mGens[i][0].get<block>();
             base[i][1] = mGens[i][1].get<block>();
@@ -148,7 +148,7 @@ namespace osuCrypto
     }
 
     void KkrtNcoOtReceiver::encode(
-        uint64_t otIdx,
+        u64 otIdx,
         const ArrayView<block> choice, 
         block & val)
     {
@@ -167,7 +167,7 @@ namespace osuCrypto
         block* t1Val = mT1.data() + mT0.size()[1] * otIdx;
 
         // encode the correction value as u = T0 + T1 + c(w), there c(w) is a pseudo-random codeword.
-        for (uint64_t i = 0; i < mT0.size()[1]; ++i)
+        for (u64 i = 0; i < mT0.size()[1]; ++i)
         {
             // reuse mT1 as the place we store the correlated value. 
             // this will later get sent to the sender.
@@ -192,7 +192,7 @@ namespace osuCrypto
         mAesFixedKey.ecbEncBlocks(t0Val, mT0.size()[1], aesBuff.data());
 
         val = ZeroBlock;
-        for (uint64_t i = 0; i < mT0.size()[1]; ++i)
+        for (u64 i = 0; i < mT0.size()[1]; ++i)
             val = val ^ aesBuff[i] ^ t0Val[i];
 #endif
 #ifndef NDEBUG
@@ -202,7 +202,7 @@ namespace osuCrypto
 
     }
 
-    void KkrtNcoOtReceiver::zeroEncode(uint64_t otIdx)
+    void KkrtNcoOtReceiver::zeroEncode(u64 otIdx)
     {
 #ifndef NDEBUG
         if (eq(mT0[otIdx][0], ZeroBlock))
@@ -217,7 +217,7 @@ namespace osuCrypto
 
         // This is here in the case that you done want to encode a message.
         // It s more efficient since we don't call SHA.
-        for (uint64_t i = 0; i < mT0.size()[1]; ++i)
+        for (u64 i = 0; i < mT0.size()[1]; ++i)
         {
             // reuse mT1 as the place we store the correlated value. 
             // this will later get sent to the sender.
@@ -234,12 +234,12 @@ namespace osuCrypto
 
     void KkrtNcoOtReceiver::getParams(
         bool maliciousSecure,
-        uint64_t compSecParm,
-        uint64_t statSecParam,
-        uint64_t inputBitCount,
-        uint64_t inputCount,
-        uint64_t & inputBlkSize,
-        uint64_t & baseOtCount)
+        u64 compSecParm,
+        u64 statSecParam,
+        u64 inputBitCount,
+        u64 inputCount,
+        u64 & inputBlkSize,
+        u64 & baseOtCount)
     {
         //if (maliciousSecure) throw std::runtime_error("");
 
@@ -247,11 +247,11 @@ namespace osuCrypto
         inputBlkSize = baseOtCount / 128;
     }
 
-    void KkrtNcoOtReceiver::sendCorrection(Channel & chl, uint64_t sendCount)
+    void KkrtNcoOtReceiver::sendCorrection(Channel & chl, u64 sendCount)
     {
 #ifndef NDEBUG
         // make sure these OTs all contain valid correction values, aka encode has been called.
-        for (uint64_t i = mCorrectionIdx; i < mCorrectionIdx + sendCount; ++i)
+        for (u64 i = mCorrectionIdx; i < mCorrectionIdx + sendCount; ++i)
             if (neq(mT0[i][0], AllOneBlock))
                 throw std::runtime_error("This send request contains uninitialized OT. Call encode first...");
 #endif

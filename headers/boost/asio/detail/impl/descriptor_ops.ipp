@@ -515,7 +515,7 @@ bool non_blocking_write1(int d, const void* data, std::size_t size,
 
 #if defined(BOOST_ASIO_HAS_FILE)
 
-std::size_t sync_read_at(int d, state_type state, uint64_t offset,
+std::size_t sync_read_at(int d, state_type state, u64 offset,
     buf* bufs, std::size_t count, bool all_empty, boost::system::error_code& ec)
 {
   if (d == -1)
@@ -561,7 +561,7 @@ std::size_t sync_read_at(int d, state_type state, uint64_t offset,
   }
 }
 
-std::size_t sync_read_at1(int d, state_type state, uint64_t offset,
+std::size_t sync_read_at1(int d, state_type state, u64 offset,
     void* data, std::size_t size, boost::system::error_code& ec)
 {
   if (d == -1)
@@ -607,7 +607,7 @@ std::size_t sync_read_at1(int d, state_type state, uint64_t offset,
   }
 }
 
-bool non_blocking_read_at(int d, uint64_t offset, buf* bufs, std::size_t count,
+bool non_blocking_read_at(int d, u64 offset, buf* bufs, std::size_t count,
     boost::system::error_code& ec, std::size_t& bytes_transferred)
 {
   for (;;)
@@ -645,7 +645,7 @@ bool non_blocking_read_at(int d, uint64_t offset, buf* bufs, std::size_t count,
   }
 }
 
-bool non_blocking_read_at1(int d, uint64_t offset, void* data, std::size_t size,
+bool non_blocking_read_at1(int d, u64 offset, void* data, std::size_t size,
     boost::system::error_code& ec, std::size_t& bytes_transferred)
 {
   for (;;)
@@ -683,7 +683,7 @@ bool non_blocking_read_at1(int d, uint64_t offset, void* data, std::size_t size,
   }
 }
 
-std::size_t sync_write_at(int d, state_type state, uint64_t offset,
+std::size_t sync_write_at(int d, state_type state, u64 offset,
     const buf* bufs, std::size_t count, bool all_empty,
     boost::system::error_code& ec)
 {
@@ -724,7 +724,7 @@ std::size_t sync_write_at(int d, state_type state, uint64_t offset,
   }
 }
 
-std::size_t sync_write_at1(int d, state_type state, uint64_t offset,
+std::size_t sync_write_at1(int d, state_type state, u64 offset,
     const void* data, std::size_t size, boost::system::error_code& ec)
 {
   if (d == -1)
@@ -763,7 +763,7 @@ std::size_t sync_write_at1(int d, state_type state, uint64_t offset,
   }
 }
 
-bool non_blocking_write_at(int d, uint64_t offset,
+bool non_blocking_write_at(int d, u64 offset,
     const buf* bufs, std::size_t count,
     boost::system::error_code& ec, std::size_t& bytes_transferred)
 {
@@ -796,7 +796,7 @@ bool non_blocking_write_at(int d, uint64_t offset,
   }
 }
 
-bool non_blocking_write_at1(int d, uint64_t offset,
+bool non_blocking_write_at1(int d, u64 offset,
     const void* data, std::size_t size,
     boost::system::error_code& ec, std::size_t& bytes_transferred)
 {

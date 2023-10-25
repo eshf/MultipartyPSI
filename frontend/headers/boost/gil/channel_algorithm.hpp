@@ -68,7 +68,7 @@ struct unsigned_integral_max_value<packed_channel_value<K>>
     : std::integral_constant
     <
         typename packed_channel_value<K>::integer_t,
-        (uint64_t(1)<<K)-1
+        (u64(1)<<K)-1
     >
 {};
 

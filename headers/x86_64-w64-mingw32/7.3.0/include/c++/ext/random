@@ -58,10 +58,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     class simd_fast_mersenne_twister_engine
     {
       static_assert(std::is_unsigned<_UIntType>::value, "template argument "
@@ -133,10 +133,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       template<typename _UIntType_2, size_t __m_2,
 	       size_t __pos1_2, size_t __sl1_2, size_t __sl2_2,
 	       size_t __sr1_2, size_t __sr2_2,
-	       uint32_t __msk1_2, uint32_t __msk2_2,
-	       uint32_t __msk3_2, uint32_t __msk4_2,
-	       uint32_t __parity1_2, uint32_t __parity2_2,
-	       uint32_t __parity3_2, uint32_t __parity4_2>
+	       u32 __msk1_2, u32 __msk2_2,
+	       u32 __msk3_2, u32 __msk4_2,
+	       u32 __parity1_2, u32 __parity2_2,
+	       u32 __parity3_2, u32 __parity4_2>
 	friend bool
 	operator==(const simd_fast_mersenne_twister_engine<_UIntType_2,
 		   __m_2, __pos1_2, __sl1_2, __sl2_2, __sr1_2, __sr2_2,
@@ -150,10 +150,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       template<typename _UIntType_2, size_t __m_2,
 	       size_t __pos1_2, size_t __sl1_2, size_t __sl2_2,
 	       size_t __sr1_2, size_t __sr2_2,
-	       uint32_t __msk1_2, uint32_t __msk2_2,
-	       uint32_t __msk3_2, uint32_t __msk4_2,
-	       uint32_t __parity1_2, uint32_t __parity2_2,
-	       uint32_t __parity3_2, uint32_t __parity4_2,
+	       u32 __msk1_2, u32 __msk2_2,
+	       u32 __msk3_2, u32 __msk4_2,
+	       u32 __parity1_2, u32 __parity2_2,
+	       u32 __parity3_2, u32 __parity4_2,
 	       typename _CharT, typename _Traits>
 	friend std::basic_ostream<_CharT, _Traits>&
 	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
@@ -166,10 +166,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       template<typename _UIntType_2, size_t __m_2,
 	       size_t __pos1_2, size_t __sl1_2, size_t __sl2_2,
 	       size_t __sr1_2, size_t __sr2_2,
-	       uint32_t __msk1_2, uint32_t __msk2_2,
-	       uint32_t __msk3_2, uint32_t __msk4_2,
-	       uint32_t __parity1_2, uint32_t __parity2_2,
-	       uint32_t __parity3_2, uint32_t __parity4_2,
+	       u32 __msk1_2, u32 __msk2_2,
+	       u32 __msk3_2, u32 __msk4_2,
+	       u32 __parity1_2, u32 __parity2_2,
+	       u32 __parity3_2, u32 __parity4_2,
 	       typename _CharT, typename _Traits>
 	friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is,
@@ -184,7 +184,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #ifdef __SSE2__
 	__m128i _M_state[_M_nstate];
 #endif
-	uint32_t _M_state32[_M_nstate32];
+	u32 _M_state32[_M_nstate32];
 	result_type _M_stateT[state_size];
       } __attribute__ ((__aligned__ (16)));
       size_t _M_pos;
@@ -197,10 +197,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     inline bool
     operator!=(const __gnu_cxx::simd_fast_mersenne_twister_engine<_UIntType,
 	       __m, __pos1, __sl1, __sl2, __sr1, __sr2, __msk1, __msk2, __msk3,
@@ -215,7 +215,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    * in the C implementation by Daito and Matsumoto, as both a 32-bit
    * and 64-bit version.
    */
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 607, 2,
+  typedef simd_fast_mersenne_twister_engine<u32, 607, 2,
 					    15, 3, 13, 3,
 					    0xfdff37ffU, 0xef7f3f7dU,
 					    0xff777b7dU, 0x7ff7fb2fU,
@@ -223,7 +223,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0x00000000U, 0x5986f054U>
     sfmt607;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 607, 2,
+  typedef simd_fast_mersenne_twister_engine<u64, 607, 2,
 					    15, 3, 13, 3,
 					    0xfdff37ffU, 0xef7f3f7dU,
 					    0xff777b7dU, 0x7ff7fb2fU,
@@ -232,7 +232,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt607_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 1279, 7,
+  typedef simd_fast_mersenne_twister_engine<u32, 1279, 7,
 					    14, 3, 5, 1,
 					    0xf7fefffdU, 0x7fefcfffU,
 					    0xaff3ef3fU, 0xb5ffff7fU,
@@ -240,7 +240,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0x00000000U, 0x20000000U>
     sfmt1279;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 1279, 7,
+  typedef simd_fast_mersenne_twister_engine<u64, 1279, 7,
 					    14, 3, 5, 1,
 					    0xf7fefffdU, 0x7fefcfffU,
 					    0xaff3ef3fU, 0xb5ffff7fU,
@@ -249,7 +249,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt1279_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 2281, 12,
+  typedef simd_fast_mersenne_twister_engine<u32, 2281, 12,
 					    19, 1, 5, 1,
 					    0xbff7ffbfU, 0xfdfffffeU,
 					    0xf7ffef7fU, 0xf2f7cbbfU,
@@ -257,7 +257,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0x00000000U, 0x41dfa600U>
     sfmt2281;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 2281, 12,
+  typedef simd_fast_mersenne_twister_engine<u64, 2281, 12,
 					    19, 1, 5, 1,
 					    0xbff7ffbfU, 0xfdfffffeU,
 					    0xf7ffef7fU, 0xf2f7cbbfU,
@@ -266,7 +266,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt2281_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 4253, 17,
+  typedef simd_fast_mersenne_twister_engine<u32, 4253, 17,
 					    20, 1, 7, 1,
 					    0x9f7bffffU, 0x9fffff5fU,
 					    0x3efffffbU, 0xfffff7bbU,
@@ -274,7 +274,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0xb740b3f8U, 0x6c11486dU>
     sfmt4253;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 4253, 17,
+  typedef simd_fast_mersenne_twister_engine<u64, 4253, 17,
 					    20, 1, 7, 1,
 					    0x9f7bffffU, 0x9fffff5fU,
 					    0x3efffffbU, 0xfffff7bbU,
@@ -283,7 +283,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt4253_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 11213, 68,
+  typedef simd_fast_mersenne_twister_engine<u32, 11213, 68,
 					    14, 3, 7, 3,
 					    0xeffff7fbU, 0xffffffefU,
 					    0xdfdfbfffU, 0x7fffdbfdU,
@@ -291,7 +291,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0xe8148000U, 0xd0c7afa3U>
     sfmt11213;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 11213, 68,
+  typedef simd_fast_mersenne_twister_engine<u64, 11213, 68,
 					    14, 3, 7, 3,
 					    0xeffff7fbU, 0xffffffefU,
 					    0xdfdfbfffU, 0x7fffdbfdU,
@@ -300,7 +300,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt11213_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 19937, 122,
+  typedef simd_fast_mersenne_twister_engine<u32, 19937, 122,
 					    18, 1, 11, 1,
 					    0xdfffffefU, 0xddfecb7fU,
 					    0xbffaffffU, 0xbffffff6U,
@@ -308,7 +308,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0x00000000U, 0x13c9e684U>
     sfmt19937;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 19937, 122,
+  typedef simd_fast_mersenne_twister_engine<u64, 19937, 122,
 					    18, 1, 11, 1,
 					    0xdfffffefU, 0xddfecb7fU,
 					    0xbffaffffU, 0xbffffff6U,
@@ -317,7 +317,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt19937_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 44497, 330,
+  typedef simd_fast_mersenne_twister_engine<u32, 44497, 330,
 					    5, 3, 9, 3,
 					    0xeffffffbU, 0xdfbebfffU,
 					    0xbfbf7befU, 0x9ffd7bffU,
@@ -325,7 +325,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0xa3ac4000U, 0xecc1327aU>
     sfmt44497;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 44497, 330,
+  typedef simd_fast_mersenne_twister_engine<u64, 44497, 330,
 					    5, 3, 9, 3,
 					    0xeffffffbU, 0xdfbebfffU,
 					    0xbfbf7befU, 0x9ffd7bffU,
@@ -334,7 +334,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt44497_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 86243, 366,
+  typedef simd_fast_mersenne_twister_engine<u32, 86243, 366,
 					    6, 7, 19, 1,
 					    0xfdbffbffU, 0xbff7ff3fU,
 					    0xfd77efffU, 0xbf9ff3ffU,
@@ -342,7 +342,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0x00000000U, 0xe9528d85U>
     sfmt86243;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 86243, 366,
+  typedef simd_fast_mersenne_twister_engine<u64, 86243, 366,
 					    6, 7, 19, 1,
 					    0xfdbffbffU, 0xbff7ff3fU,
 					    0xfd77efffU, 0xbf9ff3ffU,
@@ -351,7 +351,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt86243_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 132049, 110,
+  typedef simd_fast_mersenne_twister_engine<u32, 132049, 110,
 					    19, 1, 21, 1,
 					    0xffffbb5fU, 0xfb6ebf95U,
 					    0xfffefffaU, 0xcff77fffU,
@@ -359,7 +359,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0xcb520000U, 0xc7e91c7dU>
     sfmt132049;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 132049, 110,
+  typedef simd_fast_mersenne_twister_engine<u64, 132049, 110,
 					    19, 1, 21, 1,
 					    0xffffbb5fU, 0xfb6ebf95U,
 					    0xfffefffaU, 0xcff77fffU,
@@ -368,7 +368,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     sfmt132049_64;
 
 
-  typedef simd_fast_mersenne_twister_engine<uint32_t, 216091, 627,
+  typedef simd_fast_mersenne_twister_engine<u32, 216091, 627,
 					    11, 3, 10, 1,
 					    0xbff7bff7U, 0xbfffffffU,
 					    0xbffffa7fU, 0xffddfbfbU,
@@ -376,7 +376,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					    0x3bd2b64bU, 0x0c64b1e4U>
     sfmt216091;
 
-  typedef simd_fast_mersenne_twister_engine<uint64_t, 216091, 627,
+  typedef simd_fast_mersenne_twister_engine<u64, 216091, 627,
 					    11, 3, 10, 1,
 					    0xbff7bff7U, 0xbfffffffU,
 					    0xbffffa7fU, 0xffddfbfbU,

@@ -20,8 +20,8 @@ namespace detail {
 
 struct ok_view
 {
-    std::uint64_t affected_rows;
-    std::uint64_t last_insert_id;
+    std::u64 affected_rows;
+    std::u64 last_insert_id;
     std::uint16_t status_flags;
     std::uint16_t warnings;
     string_view info;

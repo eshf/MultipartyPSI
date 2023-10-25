@@ -1944,7 +1944,7 @@ _mm512_maskz_cvtepi32_epi64 (__mmask8 __U, __m256i __X)
 
 extern __inline __m512i
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_mm512_cvtepu8_epi32 (__m128i __A)
+_mm512_cvtepuint8_t_epi32 (__m128i __A)
 {
   return (__m512i) __builtin_ia32_pmovzxbd512_mask ((__v16qi) __A,
 						    (__v16si)
@@ -1954,7 +1954,7 @@ _mm512_cvtepu8_epi32 (__m128i __A)
 
 extern __inline __m512i
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_mm512_mask_cvtepu8_epi32 (__m512i __W, __mmask16 __U, __m128i __A)
+_mm512_mask_cvtepuint8_t_epi32 (__m512i __W, __mmask16 __U, __m128i __A)
 {
   return (__m512i) __builtin_ia32_pmovzxbd512_mask ((__v16qi) __A,
 						    (__v16si) __W,
@@ -1963,7 +1963,7 @@ _mm512_mask_cvtepu8_epi32 (__m512i __W, __mmask16 __U, __m128i __A)
 
 extern __inline __m512i
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_mm512_maskz_cvtepu8_epi32 (__mmask16 __U, __m128i __A)
+_mm512_maskz_cvtepuint8_t_epi32 (__mmask16 __U, __m128i __A)
 {
   return (__m512i) __builtin_ia32_pmovzxbd512_mask ((__v16qi) __A,
 						    (__v16si)
@@ -1973,7 +1973,7 @@ _mm512_maskz_cvtepu8_epi32 (__mmask16 __U, __m128i __A)
 
 extern __inline __m512i
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_mm512_cvtepu8_epi64 (__m128i __A)
+_mm512_cvtepuint8_t_epi64 (__m128i __A)
 {
   return (__m512i) __builtin_ia32_pmovzxbq512_mask ((__v16qi) __A,
 						    (__v8di)
@@ -1983,7 +1983,7 @@ _mm512_cvtepu8_epi64 (__m128i __A)
 
 extern __inline __m512i
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_mm512_mask_cvtepu8_epi64 (__m512i __W, __mmask8 __U, __m128i __A)
+_mm512_mask_cvtepuint8_t_epi64 (__m512i __W, __mmask8 __U, __m128i __A)
 {
   return (__m512i) __builtin_ia32_pmovzxbq512_mask ((__v16qi) __A,
 						    (__v8di) __W,
@@ -1992,7 +1992,7 @@ _mm512_mask_cvtepu8_epi64 (__m512i __W, __mmask8 __U, __m128i __A)
 
 extern __inline __m512i
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_mm512_maskz_cvtepu8_epi64 (__mmask8 __U, __m128i __A)
+_mm512_maskz_cvtepuint8_t_epi64 (__mmask8 __U, __m128i __A)
 {
   return (__m512i) __builtin_ia32_pmovzxbq512_mask ((__v16qi) __A,
 						    (__v8di)
@@ -10057,7 +10057,7 @@ _mm512_maskz_expandloadu_epi32 (__mmask16 __U, void const *__P)
 
 extern __inline unsigned char
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_kortest_mask16_u8  (__mmask16 __A,  __mmask16 __B, unsigned char *__CF)
+_kortest_mask16_uint8_t  (__mmask16 __A,  __mmask16 __B, unsigned char *__CF)
 {
   *__CF = (unsigned char) __builtin_ia32_kortestchi (__A, __B);
   return (unsigned char) __builtin_ia32_kortestzhi (__A, __B);
@@ -10065,7 +10065,7 @@ _kortest_mask16_u8  (__mmask16 __A,  __mmask16 __B, unsigned char *__CF)
 
 extern __inline unsigned char
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_kortestz_mask16_u8 (__mmask16 __A, __mmask16 __B)
+_kortestz_mask16_uint8_t (__mmask16 __A, __mmask16 __B)
 {
   return (unsigned char) __builtin_ia32_kortestzhi ((__mmask16) __A,
 						    (__mmask16) __B);
@@ -10073,7 +10073,7 @@ _kortestz_mask16_u8 (__mmask16 __A, __mmask16 __B)
 
 extern __inline unsigned char
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
-_kortestc_mask16_u8 (__mmask16 __A, __mmask16 __B)
+_kortestc_mask16_uint8_t (__mmask16 __A, __mmask16 __B)
 {
   return (unsigned char) __builtin_ia32_kortestchi ((__mmask16) __A,
 						    (__mmask16) __B);

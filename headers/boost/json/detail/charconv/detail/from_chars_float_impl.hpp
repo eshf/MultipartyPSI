@@ -101,7 +101,7 @@ template <typename T>
 from_chars_result from_chars_float_impl(const char* first, const char* last, T& value, chars_format fmt) noexcept
 {
     bool sign {};
-    std::uint64_t significand {};
+    std::u64 significand {};
     std::int64_t  exponent {};
 
     auto r = charconv::detail::parser(first, last, sign, significand, exponent, fmt);

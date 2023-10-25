@@ -154,7 +154,7 @@ namespace boost {
 #ifdef BOOST_NO_INT64_T
       typedef std::bitset<64>              char_class_type;
 #else
-      typedef boost::uint64_t              char_class_type;
+      typedef boost::u64              char_class_type;
 #endif
 
       struct boost_extensions_tag {};

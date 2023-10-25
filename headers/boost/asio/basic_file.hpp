@@ -690,10 +690,10 @@ public:
    *
    * @throws boost::system::system_error Thrown on failure.
    */
-  uint64_t size() const
+  u64 size() const
   {
     boost::system::error_code ec;
-    uint64_t s = impl_.get_service().size(impl_.get_implementation(), ec);
+    u64 s = impl_.get_service().size(impl_.get_implementation(), ec);
     boost::asio::detail::throw_error(ec, "size");
     return s;
   }
@@ -704,7 +704,7 @@ public:
    *
    * @param ec Set to indicate what error occurred, if any.
    */
-  uint64_t size(boost::system::error_code& ec) const
+  u64 size(boost::system::error_code& ec) const
   {
     return impl_.get_service().size(impl_.get_implementation(), ec);
   }
@@ -720,7 +720,7 @@ public:
    *
    * @throws boost::system::system_error Thrown on failure.
    */
-  void resize(uint64_t n)
+  void resize(u64 n)
   {
     boost::system::error_code ec;
     impl_.get_service().resize(impl_.get_implementation(), n, ec);
@@ -738,7 +738,7 @@ public:
    *
    * @param ec Set to indicate what error occurred, if any.
    */
-  BOOST_ASIO_SYNC_OP_VOID resize(uint64_t n, boost::system::error_code& ec)
+  BOOST_ASIO_SYNC_OP_VOID resize(u64 n, boost::system::error_code& ec)
   {
     impl_.get_service().resize(impl_.get_implementation(), n, ec);
     BOOST_ASIO_SYNC_OP_VOID_RETURN(ec);

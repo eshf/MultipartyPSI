@@ -25,16 +25,16 @@ namespace boost { namespace json { namespace detail { namespace charconv { names
 //
 template <int bit_precision>
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-value128 compute_product_approximation(int64_t q, uint64_t w) {
+value128 compute_product_approximation(int64_t q, u64 w) {
   const int index = 2 * int(q - powers::smallest_power_of_five);
   // For small values of q, e.g., q in [0,27], the answer is always exact because
   // The line value128 firstproduct = full_multiplication(w, power_of_five_128[index]);
   // gives the exact answer.
   value128 firstproduct = full_multiplication(w, powers::power_of_five_128[index]);
   static_assert((bit_precision >= 0) && (bit_precision <= 64), " precision should  be in (0,64]");
-  constexpr uint64_t precision_mask = (bit_precision < 64) ?
-               (uint64_t(0xFFFFFFFFFFFFFFFF) >> bit_precision)
-               : uint64_t(0xFFFFFFFFFFFFFFFF);
+  constexpr u64 precision_mask = (bit_precision < 64) ?
+               (u64(0xFFFFFFFFFFFFFFFF) >> bit_precision)
+               : u64(0xFFFFFFFFFFFFFFFF);
   if((firstproduct.high & precision_mask) == precision_mask) { // could further guard with  (lower + w < lower)
     // regarding the second product, we only need secondproduct.high, but our expectation is that the compiler will optimize this extra work away if needed.
     value128 secondproduct = full_multiplication(w, powers::power_of_five_128[index + 1]);
@@ -71,7 +71,7 @@ namespace detail {
 // for significant digits already multiplied by 10 ** q.
 template <typename binary>
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
-adjusted_mantissa compute_error_scaled(int64_t q, uint64_t w, int lz) noexcept  {
+adjusted_mantissa compute_error_scaled(int64_t q, u64 w, int lz) noexcept  {
   int hilz = int(w >> 63) ^ 1;
   adjusted_mantissa answer;
   answer.mantissa = w << hilz;
@@ -84,7 +84,7 @@ adjusted_mantissa compute_error_scaled(int64_t q, uint64_t w, int lz) noexcept  
 // the power2 in the exponent will be adjusted by invalid_am_bias.
 template <typename binary>
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-adjusted_mantissa compute_error(int64_t q, uint64_t w)  noexcept  {
+adjusted_mantissa compute_error(int64_t q, u64 w)  noexcept  {
   int lz = leading_zeroes(w);
   w <<= lz;
   value128 product = compute_product_approximation<binary::mantissa_explicit_bits() + 3>(q, w);
@@ -98,7 +98,7 @@ adjusted_mantissa compute_error(int64_t q, uint64_t w)  noexcept  {
 // in such cases.
 template <typename binary>
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-adjusted_mantissa compute_float(int64_t q, uint64_t w)  noexcept  {
+adjusted_mantissa compute_float(int64_t q, u64 w)  noexcept  {
   adjusted_mantissa answer;
   if ((w == 0) || (q < binary::smallest_power_of_ten())) {
     answer.power2 = 0;
@@ -159,7 +159,7 @@ adjusted_mantissa compute_float(int64_t q, uint64_t w)  noexcept  {
     // up 0x3fffffffffffff x 2^-1023-53  and once we do, we are no longer
     // subnormal, but we can only know this after rounding.
     // So we only declare a subnormal if we are smaller than the threshold.
-    answer.power2 = (answer.mantissa < (uint64_t(1) << binary::mantissa_explicit_bits())) ? 0 : 1;
+    answer.power2 = (answer.mantissa < (u64(1) << binary::mantissa_explicit_bits())) ? 0 : 1;
     return answer;
   }
 
@@ -172,18 +172,18 @@ adjusted_mantissa compute_float(int64_t q, uint64_t w)  noexcept  {
     //   answer.mantissa = product.high >> (upperbit + 64 - binary::mantissa_explicit_bits() - 3);
     // ... we dropped out only zeroes. But if this happened, then we can go back!!!
     if((answer.mantissa  << (upperbit + 64 - binary::mantissa_explicit_bits() - 3)) ==  product.high) {
-      answer.mantissa &= ~uint64_t(1);          // flip it so that we do not round up
+      answer.mantissa &= ~u64(1);          // flip it so that we do not round up
     }
   }
 
   answer.mantissa += (answer.mantissa & 1); // round up
   answer.mantissa >>= 1;
-  if (answer.mantissa >= (uint64_t(2) << binary::mantissa_explicit_bits())) {
-    answer.mantissa = (uint64_t(1) << binary::mantissa_explicit_bits());
+  if (answer.mantissa >= (u64(2) << binary::mantissa_explicit_bits())) {
+    answer.mantissa = (u64(1) << binary::mantissa_explicit_bits());
     answer.power2++; // undo previous addition
   }
 
-  answer.mantissa &= ~(uint64_t(1) << binary::mantissa_explicit_bits());
+  answer.mantissa &= ~(u64(1) << binary::mantissa_explicit_bits());
   if (answer.power2 >= binary::infinite_power()) { // infinity
     answer.power2 = binary::infinite_power();
     answer.mantissa = 0;

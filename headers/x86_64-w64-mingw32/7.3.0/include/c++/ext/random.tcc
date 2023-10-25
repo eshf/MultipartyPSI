@@ -41,10 +41,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     void simd_fast_mersenne_twister_engine<_UIntType, __m,
 					   __pos1, __sl1, __sl2, __sr1, __sr2,
 					   __msk1, __msk2, __msk3, __msk4,
@@ -52,7 +52,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					   __parity4>::
     seed(_UIntType __seed)
     {
-      _M_state32[0] = static_cast<uint32_t>(__seed);
+      _M_state32[0] = static_cast<u32>(__seed);
       for (size_t __i = 1; __i < _M_nstate32; ++__i)
 	_M_state32[__i] = (1812433253UL
 			   * (_M_state32[__i - 1] ^ (_M_state32[__i - 1] >> 30))
@@ -64,12 +64,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   namespace {
 
-    inline uint32_t _Func1(uint32_t __x)
+    inline u32 _Func1(u32 __x)
     {
       return (__x ^ (__x >> 27)) * UINT32_C(1664525);
     }
 
-    inline uint32_t _Func2(uint32_t __x)
+    inline u32 _Func2(u32 __x)
     {
       return (__x ^ (__x >> 27)) * UINT32_C(1566083941);
     }
@@ -80,10 +80,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     template<typename _Sseq>
       typename std::enable_if<std::is_class<_Sseq>::value>::type
       simd_fast_mersenne_twister_engine<_UIntType, __m,
@@ -106,10 +106,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	const size_t __mid = (_M_nstate32 - __lag) / 2;
 
 	std::fill(_M_state32, _M_state32 + _M_nstate32, UINT32_C(0x8b8b8b8b));
-	uint32_t __arr[_M_nstate32];
+	u32 __arr[_M_nstate32];
 	__q.generate(__arr + 0, __arr + _M_nstate32);
 
-	uint32_t __r = _Func1(_M_state32[0] ^ _M_state32[__mid]
+	u32 __r = _Func1(_M_state32[0] ^ _M_state32[__mid]
 			      ^ _M_state32[_M_nstate32  - 1]);
 	_M_state32[__mid] += __r;
 	__r += _M_nstate32;
@@ -147,10 +147,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     void simd_fast_mersenne_twister_engine<_UIntType, __m,
 					   __pos1, __sl1, __sl2, __sr1, __sr2,
 					   __msk1, __msk2, __msk3, __msk4,
@@ -158,9 +158,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					   __parity4>::
     _M_period_certification(void)
     {
-      static const uint32_t __parity[4] = { __parity1, __parity2,
+      static const u32 __parity[4] = { __parity1, __parity2,
 					    __parity3, __parity4 };
-      uint32_t __inner = 0;
+      u32 __inner = 0;
       for (size_t __i = 0; __i < 4; ++__i)
 	if (__parity[__i] != 0)
 	  __inner ^= _M_state32[__i] & __parity[__i];
@@ -180,10 +180,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     void simd_fast_mersenne_twister_engine<_UIntType, __m,
 					   __pos1, __sl1, __sl2, __sr1, __sr2,
 					   __msk1, __msk2, __msk3, __msk4,
@@ -207,49 +207,49 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   namespace {
 
     template<size_t __shift>
-      inline void __rshift(uint32_t *__out, const uint32_t *__in)
+      inline void __rshift(u32 *__out, const u32 *__in)
       {
-	uint64_t __th = ((static_cast<uint64_t>(__in[3]) << 32)
-			 | static_cast<uint64_t>(__in[2]));
-	uint64_t __tl = ((static_cast<uint64_t>(__in[1]) << 32)
-			 | static_cast<uint64_t>(__in[0]));
+	u64 __th = ((static_cast<u64>(__in[3]) << 32)
+			 | static_cast<u64>(__in[2]));
+	u64 __tl = ((static_cast<u64>(__in[1]) << 32)
+			 | static_cast<u64>(__in[0]));
 
-	uint64_t __oh = __th >> (__shift * 8);
-	uint64_t __ol = __tl >> (__shift * 8);
+	u64 __oh = __th >> (__shift * 8);
+	u64 __ol = __tl >> (__shift * 8);
 	__ol |= __th << (64 - __shift * 8);
-	__out[1] = static_cast<uint32_t>(__ol >> 32);
-	__out[0] = static_cast<uint32_t>(__ol);
-	__out[3] = static_cast<uint32_t>(__oh >> 32);
-	__out[2] = static_cast<uint32_t>(__oh);
+	__out[1] = static_cast<u32>(__ol >> 32);
+	__out[0] = static_cast<u32>(__ol);
+	__out[3] = static_cast<u32>(__oh >> 32);
+	__out[2] = static_cast<u32>(__oh);
       }
 
 
     template<size_t __shift>
-      inline void __lshift(uint32_t *__out, const uint32_t *__in)
+      inline void __lshift(u32 *__out, const u32 *__in)
       {
-	uint64_t __th = ((static_cast<uint64_t>(__in[3]) << 32)
-			 | static_cast<uint64_t>(__in[2]));
-	uint64_t __tl = ((static_cast<uint64_t>(__in[1]) << 32)
-			 | static_cast<uint64_t>(__in[0]));
+	u64 __th = ((static_cast<u64>(__in[3]) << 32)
+			 | static_cast<u64>(__in[2]));
+	u64 __tl = ((static_cast<u64>(__in[1]) << 32)
+			 | static_cast<u64>(__in[0]));
 
-	uint64_t __oh = __th << (__shift * 8);
-	uint64_t __ol = __tl << (__shift * 8);
+	u64 __oh = __th << (__shift * 8);
+	u64 __ol = __tl << (__shift * 8);
 	__oh |= __tl >> (64 - __shift * 8);
-	__out[1] = static_cast<uint32_t>(__ol >> 32);
-	__out[0] = static_cast<uint32_t>(__ol);
-	__out[3] = static_cast<uint32_t>(__oh >> 32);
-	__out[2] = static_cast<uint32_t>(__oh);
+	__out[1] = static_cast<u32>(__ol >> 32);
+	__out[0] = static_cast<u32>(__ol);
+	__out[3] = static_cast<u32>(__oh >> 32);
+	__out[2] = static_cast<u32>(__oh);
       }
 
 
     template<size_t __sl1, size_t __sl2, size_t __sr1, size_t __sr2,
-	     uint32_t __msk1, uint32_t __msk2, uint32_t __msk3, uint32_t __msk4>
-      inline void __recursion(uint32_t *__r,
-			      const uint32_t *__a, const uint32_t *__b,
-			      const uint32_t *__c, const uint32_t *__d)
+	     u32 __msk1, u32 __msk2, u32 __msk3, u32 __msk4>
+      inline void __recursion(u32 *__r,
+			      const u32 *__a, const u32 *__b,
+			      const u32 *__c, const u32 *__d)
       {
-	uint32_t __x[4];
-	uint32_t __y[4];
+	u32 __x[4];
+	u32 __y[4];
 
 	__lshift<__sl2>(__x, __a);
 	__rshift<__sr2>(__y, __c);
@@ -269,10 +269,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     void simd_fast_mersenne_twister_engine<_UIntType, __m,
 					   __pos1, __sl1, __sl2, __sr1, __sr2,
 					   __msk1, __msk2, __msk3, __msk4,
@@ -280,8 +280,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 					   __parity4>::
     _M_gen_rand(void)
     {
-      const uint32_t *__r1 = &_M_state32[_M_nstate32 - 8];
-      const uint32_t *__r2 = &_M_state32[_M_nstate32 - 4];
+      const u32 *__r1 = &_M_state32[_M_nstate32 - 8];
+      const u32 *__r2 = &_M_state32[_M_nstate32 - 4];
       static constexpr size_t __pos1_32 = __pos1 * 4;
 
       size_t __i;
@@ -314,10 +314,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     bool
     operator==(const __gnu_cxx::simd_fast_mersenne_twister_engine<_UIntType,
 	       __m, __pos1, __sl1, __sl2, __sr1, __sr2,
@@ -342,10 +342,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4,
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4,
 	   typename _CharT, typename _Traits>
     std::basic_ostream<_CharT, _Traits>&
     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
@@ -376,10 +376,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4,
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4,
 	   typename _CharT, typename _Traits>
     std::basic_istream<_CharT, _Traits>&
     operator>>(std::basic_istream<_CharT, _Traits>& __is,

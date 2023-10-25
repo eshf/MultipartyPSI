@@ -45,7 +45,7 @@ class chacha
 {
     alignas(16) std::uint32_t block_[16];
     std::uint32_t keysetup_[8];
-    std::uint64_t ctr_ = 0;
+    std::u64 ctr_ = 0;
     int idx_ = 16;
 
     void generate_block()
@@ -98,7 +98,7 @@ public:
 
     using result_type = std::uint32_t;
 
-    chacha(std::uint32_t const* v, std::uint64_t stream)
+    chacha(std::uint32_t const* v, std::u64 stream)
     {
         for (int i = 0; i < 6; ++i)
             keysetup_[i] = v[i];

@@ -126,7 +126,7 @@ namespace osuCrypto {
             ss << mName << char('`') << localName << char('`') << remoteName;
 
             auto str = ss.str();
-            std::unique_ptr<ByteStream> buff(new ByteStream((u8*)str.data(), str.size()));
+            std::unique_ptr<ByteStream> buff(new ByteStream((uint8_t*)str.data(), str.size()));
 
 
             chl.asyncSend(std::move(buff));

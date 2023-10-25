@@ -27,7 +27,7 @@ namespace boost { namespace math {
       typedef RealType value_type;
       typedef Policy policy_type;
 
-      hypergeometric_distribution(std::uint64_t r, std::uint64_t n, std::uint64_t N) // Constructor. r=defective/failures/success, n=trials/draws, N=total population.
+      hypergeometric_distribution(std::u64 r, std::u64 n, std::u64 N) // Constructor. r=defective/failures/success, n=trials/draws, N=total population.
          : m_n(n), m_N(N), m_r(r)
       {
          static const char* function = "boost::math::hypergeometric_distribution<%1%>::hypergeometric_distribution";
@@ -35,17 +35,17 @@ namespace boost { namespace math {
          check_params(function, &ret);
       }
       // Accessor functions.
-      std::uint64_t total() const
+      std::u64 total() const
       {
          return m_N;
       }
 
-      std::uint64_t defective() const // successes/failures/events
+      std::u64 defective() const // successes/failures/events
       {
          return m_r;
       }
 
-      std::uint64_t sample_count()const
+      std::u64 sample_count()const
       {
          return m_n;
       }
@@ -66,9 +66,9 @@ namespace boost { namespace math {
          }
          return true;
       }
-      bool check_x(std::uint64_t x, const char* function, RealType* result)const
+      bool check_x(std::u64 x, const char* function, RealType* result)const
       {
-         if(x < static_cast<std::uint64_t>((std::max)(INT64_C(0), static_cast<std::int64_t>(m_n + m_r) - static_cast<std::int64_t>(m_N))))
+         if(x < static_cast<std::u64>((std::max)(INT64_C(0), static_cast<std::int64_t>(m_n + m_r) - static_cast<std::int64_t>(m_N))))
          {
             *result = boost::math::policies::raise_domain_error<RealType>(
                function, "Random variable out of range: must be > 0 and > m + r - N but got %1%", static_cast<RealType>(x), Policy());
@@ -85,16 +85,16 @@ namespace boost { namespace math {
 
    private:
       // Data members:
-      std::uint64_t m_n;  // number of items picked or drawn.
-      std::uint64_t m_N; // number of "total" items.
-      std::uint64_t m_r; // number of "defective/successes/failures/events items.
+      std::u64 m_n;  // number of items picked or drawn.
+      std::u64 m_N; // number of "total" items.
+      std::u64 m_r; // number of "defective/successes/failures/events items.
 
    }; // class hypergeometric_distribution
 
    typedef hypergeometric_distribution<double> hypergeometric;
 
    template <class RealType, class Policy>
-   inline const std::pair<std::uint64_t, std::uint64_t> range(const hypergeometric_distribution<RealType, Policy>& dist)
+   inline const std::pair<std::u64, std::u64> range(const hypergeometric_distribution<RealType, Policy>& dist)
    { // Range of permissible values for random variable x.
 #ifdef _MSC_VER
 #  pragma warning(push)
@@ -103,7 +103,7 @@ namespace boost { namespace math {
       const auto r = dist.defective();
       const auto n = dist.sample_count();
       const auto N = dist.total();
-      const auto l = static_cast<std::uint64_t>((std::max)(INT64_C(0), static_cast<std::int64_t>(n + r) - static_cast<std::int64_t>(N)));
+      const auto l = static_cast<std::u64>((std::max)(INT64_C(0), static_cast<std::int64_t>(n + r) - static_cast<std::int64_t>(N)));
       const auto u = (std::min)(r, n);
       return std::make_pair(l, u);
 #ifdef _MSC_VER
@@ -112,13 +112,13 @@ namespace boost { namespace math {
    }
 
    template <class RealType, class Policy>
-   inline const std::pair<std::uint64_t, std::uint64_t> support(const hypergeometric_distribution<RealType, Policy>& d)
+   inline const std::pair<std::u64, std::u64> support(const hypergeometric_distribution<RealType, Policy>& d)
    {
       return range(d);
    }
 
    template <class RealType, class Policy>
-   inline RealType pdf(const hypergeometric_distribution<RealType, Policy>& dist, const std::uint64_t& x)
+   inline RealType pdf(const hypergeometric_distribution<RealType, Policy>& dist, const std::u64& x)
    {
       static const char* function = "boost::math::pdf(const hypergeometric_distribution<%1%>&, const %1%&)";
       RealType result = 0;
@@ -137,7 +137,7 @@ namespace boost { namespace math {
       BOOST_MATH_STD_USING
       static const char* function = "boost::math::pdf(const hypergeometric_distribution<%1%>&, const %1%&)";
       RealType r = static_cast<RealType>(x);
-      auto u = static_cast<std::uint64_t>(lltrunc(r, typename policies::normalise<Policy, policies::rounding_error<policies::ignore_error> >::type()));
+      auto u = static_cast<std::u64>(lltrunc(r, typename policies::normalise<Policy, policies::rounding_error<policies::ignore_error> >::type()));
       if(u != r)
       {
          return boost::math::policies::raise_domain_error<RealType>(
@@ -147,7 +147,7 @@ namespace boost { namespace math {
    }
 
    template <class RealType, class Policy>
-   inline RealType cdf(const hypergeometric_distribution<RealType, Policy>& dist, const std::uint64_t& x)
+   inline RealType cdf(const hypergeometric_distribution<RealType, Policy>& dist, const std::u64& x)
    {
       static const char* function = "boost::math::cdf(const hypergeometric_distribution<%1%>&, const %1%&)";
       RealType result = 0;
@@ -166,7 +166,7 @@ namespace boost { namespace math {
       BOOST_MATH_STD_USING
       static const char* function = "boost::math::cdf(const hypergeometric_distribution<%1%>&, const %1%&)";
       RealType r = static_cast<RealType>(x);
-      auto u = static_cast<std::uint64_t>(lltrunc(r, typename policies::normalise<Policy, policies::rounding_error<policies::ignore_error> >::type()));
+      auto u = static_cast<std::u64>(lltrunc(r, typename policies::normalise<Policy, policies::rounding_error<policies::ignore_error> >::type()));
       if(u != r)
       {
          return boost::math::policies::raise_domain_error<RealType>(
@@ -176,7 +176,7 @@ namespace boost { namespace math {
    }
 
    template <class RealType, class Policy>
-   inline RealType cdf(const complemented2_type<hypergeometric_distribution<RealType, Policy>, std::uint64_t>& c)
+   inline RealType cdf(const complemented2_type<hypergeometric_distribution<RealType, Policy>, std::u64>& c)
    {
       static const char* function = "boost::math::cdf(const hypergeometric_distribution<%1%>&, const %1%&)";
       RealType result = 0;
@@ -195,7 +195,7 @@ namespace boost { namespace math {
       BOOST_MATH_STD_USING
       static const char* function = "boost::math::cdf(const hypergeometric_distribution<%1%>&, const %1%&)";
       RealType r = static_cast<RealType>(c.param);
-      auto u = static_cast<std::uint64_t>(lltrunc(r, typename policies::normalise<Policy, policies::rounding_error<policies::ignore_error> >::type()));
+      auto u = static_cast<std::u64>(lltrunc(r, typename policies::normalise<Policy, policies::rounding_error<policies::ignore_error> >::type()));
       if(u != r)
       {
          return boost::math::policies::raise_domain_error<RealType>(

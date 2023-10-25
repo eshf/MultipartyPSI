@@ -474,7 +474,7 @@ erase_if(basic_string<charT, traits, Allocator>& c, Predicate pred); // C++20
 
 typedef basic_string<char>    string;
 typedef basic_string<wchar_t> wstring;
-typedef basic_string<char8_t> u8string; // C++20
+typedef basic_string<char8_t> uint8_tstring; // C++20
 typedef basic_string<char16_t> u16string;
 typedef basic_string<char32_t> u32string;
 
@@ -519,7 +519,7 @@ wstring to_wstring(double val);
 wstring to_wstring(long double val);
 
 template <> struct hash<string>;
-template <> struct hash<u8string>; // C++20
+template <> struct hash<uint8_tstring>; // C++20
 template <> struct hash<u16string>;
 template <> struct hash<u32string>;
 template <> struct hash<wstring>;

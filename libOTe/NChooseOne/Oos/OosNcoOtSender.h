@@ -34,7 +34,7 @@ namespace osuCrypto {
         BitVector mBaseChoiceBits;
         std::vector<block> mChoiceBlks;
         MatrixView<block> mT, mCorrectionVals;
-        uint64_t mCorrectionIdx;
+        u64 mCorrectionIdx;
 
 
 
@@ -51,20 +51,20 @@ namespace osuCrypto {
         std::unique_ptr<NcoOtExtSender> split() override;
 
 
-        void init(uint64_t numOtExt) override;
+        void init(u64 numOtExt) override;
 
 
         void encode(
-            uint64_t otIdx,
+            u64 otIdx,
             const ArrayView<block> codeWord,
             block& val) override;
 
         void getParams(
             bool maliciousSecure,
-            uint64_t compSecParm, uint64_t statSecParam, uint64_t inputBitCount, uint64_t inputCount,
-            uint64_t& inputBlkSize, uint64_t& baseOtCount) override;
+            u64 compSecParm, u64 statSecParam, u64 inputBitCount, u64 inputCount,
+            u64& inputBlkSize, u64& baseOtCount) override;
 
-        void recvCorrection(Channel& chl, uint64_t recvCount) override;
+        void recvCorrection(Channel& chl, u64 recvCount) override;
 
         void check(Channel& chl) override;
     };

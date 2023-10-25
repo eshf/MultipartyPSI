@@ -19,8 +19,8 @@
 #  if ! defined BOOST_NO_CXX11_U16STRING
 #    define BOOST_NO_CXX11_U16STRING
 #  endif
-#  if ! defined BOOST_NO_CXX11_U32STRING
-#    define BOOST_NO_CXX11_U32STRING
+#  if ! defined BOOST_NO_CXX11_uint32_tSTRING
+#    define BOOST_NO_CXX11_uint32_tSTRING
 #  endif
 #endif
 

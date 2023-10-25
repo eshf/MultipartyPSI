@@ -66,9 +66,9 @@ template<std::size_t Bits> struct hash_mix_impl;
 
 template<> struct hash_mix_impl<64>
 {
-    inline static boost::uint64_t fn( boost::uint64_t x )
+    inline static boost::u64 fn( boost::u64 x )
     {
-        boost::uint64_t const m = (boost::uint64_t(0xe9846af) << 32) + 0x9b1a615d;
+        boost::u64 const m = (boost::u64(0xe9846af) << 32) + 0x9b1a615d;
 
         x ^= x >> 32;
         x *= m;

@@ -71,7 +71,7 @@ do_test (void)
 #ifndef UINT64_WIDTH
 # error "missing UINT64_WIDTH"
 #endif
-  CHECK_WIDTH (uint64_t, UINT64_MAX, UINT64_WIDTH);
+  CHECK_WIDTH (u64, UINT64_MAX, UINT64_WIDTH);
 
 #ifndef INT_LEAST8_WIDTH
 # error "missing INT_LEAST8_WIDTH"

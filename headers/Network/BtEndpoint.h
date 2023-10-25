@@ -23,7 +23,7 @@ namespace osuCrypto {
         BtEndpoint(const BtEndpoint&) = delete;
 
         std::string mIP;
-        u32 mPort;
+        uint32_t mPort;
         bool mHost, mStopped;
         BtIOService* mIOService;
         BtAcceptor* mAcceptor;
@@ -35,7 +35,7 @@ namespace osuCrypto {
         boost::asio::ip::tcp::endpoint mRemoteAddr;
     public:
 
-        void start(BtIOService& ioService, std::string remoteIp, u32 port, bool host, std::string name);
+        void start(BtIOService& ioService, std::string remoteIp, uint32_t port, bool host, std::string name);
         void start(BtIOService& ioService, std::string address, bool host, std::string name);
 
         BtEndpoint(BtIOService & ioService, std::string address, bool host, std::string name)
@@ -45,7 +45,7 @@ namespace osuCrypto {
             start(ioService, address, host, name);
         }
 
-        BtEndpoint(BtIOService & ioService, std::string remoteIP, u32 port, bool host, std::string name)
+        BtEndpoint(BtIOService & ioService, std::string remoteIP, uint32_t port, bool host, std::string name)
             : mPort(0), mHost(false), mStopped(true), mIOService(nullptr), mAcceptor(nullptr),
             mDoneFuture(mDoneProm.get_future().share())
         {
@@ -78,7 +78,7 @@ namespace osuCrypto {
         /// <summary> Removes the channel with chlName. (deallocates it)</summary>
         void removeChannel(std::string  chlName);
 
-        u32 port() const { return mPort; };
+        uint32_t port() const { return mPort; };
 
         std::string IP() const { return mIP;  }
 

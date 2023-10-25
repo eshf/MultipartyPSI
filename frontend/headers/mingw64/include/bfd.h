@@ -95,7 +95,7 @@ extern "C" {
 #define BFD_HOST_64_BIT long long
 #define BFD_HOST_U_64_BIT unsigned long long
 typedef BFD_HOST_64_BIT bfd_int64_t;
-typedef BFD_HOST_U_64_BIT bfd_uint64_t;
+typedef BFD_HOST_U_64_BIT bfd_u64;
 #endif
 
 #if BFD_ARCH_SIZE >= 64
@@ -188,7 +188,7 @@ typedef unsigned long bfd_size_type;
    BFD_HOST_64_BIT is undefined such a function should abort or
    otherwise signal an error.  */
 typedef bfd_signed_vma bfd_int64_t;
-typedef bfd_vma bfd_uint64_t;
+typedef bfd_vma bfd_u64;
 #endif
 
 /* An offset into a file.  BFD always uses the largest possible offset
@@ -554,8 +554,8 @@ extern bfd_boolean bfd_record_phdr
 
 /* Byte swapping routines.  */
 
-bfd_uint64_t bfd_getb64 (const void *);
-bfd_uint64_t bfd_getl64 (const void *);
+bfd_u64 bfd_getb64 (const void *);
+bfd_u64 bfd_getl64 (const void *);
 bfd_int64_t bfd_getb_signed_64 (const void *);
 bfd_int64_t bfd_getl_signed_64 (const void *);
 bfd_vma bfd_getb32 (const void *);
@@ -566,8 +566,8 @@ bfd_vma bfd_getb16 (const void *);
 bfd_vma bfd_getl16 (const void *);
 bfd_signed_vma bfd_getb_signed_16 (const void *);
 bfd_signed_vma bfd_getl_signed_16 (const void *);
-void bfd_putb64 (bfd_uint64_t, void *);
-void bfd_putl64 (bfd_uint64_t, void *);
+void bfd_putb64 (bfd_u64, void *);
+void bfd_putl64 (bfd_u64, void *);
 void bfd_putb32 (bfd_vma, void *);
 void bfd_putl32 (bfd_vma, void *);
 void bfd_putb16 (bfd_vma, void *);
@@ -575,8 +575,8 @@ void bfd_putl16 (bfd_vma, void *);
 
 /* Byte swapping routines which take size and endiannes as arguments.  */
 
-bfd_uint64_t bfd_get_bits (const void *, int, bfd_boolean);
-void bfd_put_bits (bfd_uint64_t, void *, int, bfd_boolean);
+bfd_u64 bfd_get_bits (const void *, int, bfd_boolean);
+void bfd_put_bits (bfd_u64, void *, int, bfd_boolean);
 
 #if defined(__STDC__) || defined(ALMOST_STDC)
 struct ecoff_debug_info;
@@ -7372,9 +7372,9 @@ typedef struct bfd_target
   /* Entries for byte swapping for data. These are different from the
      other entry points, since they don't take a BFD as the first argument.
      Certain other handlers could do the same.  */
-  bfd_uint64_t   (*bfd_getx64) (const void *);
+  bfd_u64   (*bfd_getx64) (const void *);
   bfd_int64_t    (*bfd_getx_signed_64) (const void *);
-  void           (*bfd_putx64) (bfd_uint64_t, void *);
+  void           (*bfd_putx64) (bfd_u64, void *);
   bfd_vma        (*bfd_getx32) (const void *);
   bfd_signed_vma (*bfd_getx_signed_32) (const void *);
   void           (*bfd_putx32) (bfd_vma, void *);
@@ -7383,9 +7383,9 @@ typedef struct bfd_target
   void           (*bfd_putx16) (bfd_vma, void *);
 
   /* Byte swapping for the headers.  */
-  bfd_uint64_t   (*bfd_h_getx64) (const void *);
+  bfd_u64   (*bfd_h_getx64) (const void *);
   bfd_int64_t    (*bfd_h_getx_signed_64) (const void *);
-  void           (*bfd_h_putx64) (bfd_uint64_t, void *);
+  void           (*bfd_h_putx64) (bfd_u64, void *);
   bfd_vma        (*bfd_h_getx32) (const void *);
   bfd_signed_vma (*bfd_h_getx_signed_32) (const void *);
   void           (*bfd_h_putx32) (bfd_vma, void *);

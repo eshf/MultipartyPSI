@@ -33,8 +33,8 @@
 #endif
 #include <sys/types.h>
 #if !defined(HAVE_STDINT_H) && !defined(HAVE_INTTYPES_H) && \
-    !defined(UINT64_MAX) && !defined(uint64_t)
-#error can not find uint64_t type
+    !defined(UINT64_MAX) && !defined(u64)
+#error can not find u64 type
 #endif
 
 #ifdef __cplusplus
@@ -89,7 +89,7 @@ struct ld_plugin_symbol
   char *version;
   int def;
   int visibility;
-  uint64_t size;
+  u64 size;
   char *comdat_key;
   int resolution;
 };
@@ -340,8 +340,8 @@ typedef
 enum ld_plugin_status
 (*ld_plugin_unique_segment_for_sections) (
     const char* segment_name,
-    uint64_t segment_flags,
-    uint64_t segment_alignment,
+    u64 segment_flags,
+    u64 segment_alignment,
     const struct ld_plugin_section * section_list,
     unsigned int num_sections);
 
@@ -363,7 +363,7 @@ enum ld_plugin_status
 typedef
 enum ld_plugin_status
 (*ld_plugin_get_input_section_size) (const struct ld_plugin_section section,
-                                     uint64_t *secsize);
+                                     u64 *secsize);
 
 typedef
 enum ld_plugin_status

@@ -26,7 +26,7 @@ __uint16_t = c_ushort
 __int32_t = c_int
 __uint32_t = c_uint
 __int64_t = c_longlong
-__uint64_t = c_ulonglong
+__u64 = c_ulonglong
 __darwin_intptr_t = c_long
 __darwin_natural_t = c_uint
 __darwin_ct_rune_t = c_int
@@ -2481,7 +2481,7 @@ int16_t = c_short
 uint8_t = c_ubyte
 uint16_t = c_ushort
 uint32_t = c_uint
-uint64_t = c_ulonglong
+u64 = c_ulonglong
 int_least8_t = int8_t
 int_least16_t = int16_t
 int_least32_t = int32_t
@@ -2489,7 +2489,7 @@ int_least64_t = int64_t
 uint_least8_t = uint8_t
 uint_least16_t = uint16_t
 uint_least32_t = uint32_t
-uint_least64_t = uint64_t
+uint_least64_t = u64
 int_fast8_t = int8_t
 int_fast16_t = int16_t
 int_fast32_t = int32_t
@@ -2497,7 +2497,7 @@ int_fast64_t = int64_t
 uint_fast8_t = uint8_t
 uint_fast16_t = uint16_t
 uint_fast32_t = uint32_t
-uint_fast64_t = uint64_t
+uint_fast64_t = u64
 intptr_t = c_long
 uintptr_t = c_ulong
 intmax_t = c_longlong
@@ -2513,7 +2513,7 @@ __all__ = ['ENGINE', 'pkcs7_enc_content_st', '__int16_t',
            'X509_SIG', '__darwin_ssize_t', '__darwin_sigset_t',
            'wait', 'uint_fast16_t', 'N12asn1_type_st4DOLLAR_11E',
            'uint_least8_t', 'pthread_rwlock_t', 'ASN1_IA5STRING',
-           'fsfilcnt_t', 'ucontext', '__uint64_t', 'timespec',
+           'fsfilcnt_t', 'ucontext', '__u64', 'timespec',
            'x509_cinf_st', 'COMP_METHOD', 'MD5_CTX', 'buf_mem_st',
            'ASN1_ENCODING_st', 'PBEPARAM', 'X509_NAME_ENTRY',
            '__darwin_va_list', 'ucontext_t', 'lhash_st',
@@ -2576,7 +2576,7 @@ __all__ = ['ENGINE', 'pkcs7_enc_content_st', '__int16_t',
            'stack_st', 'bio_info_cb', 'div_t', 'UIT_VERIFY',
            'PBEPARAM_st', 'N4wait3DOLLAR_3E', 'quad_t', '__siginfo',
            '__darwin_mbstate_t', 'rsa_st', 'ASN1_UNIVERSALSTRING',
-           'uint64_t', 'ssl_comp_st', 'X509_OBJECT', 'pthread_cond_t',
+           'u64', 'ssl_comp_st', 'X509_OBJECT', 'pthread_cond_t',
            'DH', '__darwin_wctype_t', 'PKCS7_ENVELOPE', 'ASN1_TLC_st',
            'sig_atomic_t', 'BIO', 'nlink_t', 'BUF_MEM', 'SSL3_RECORD',
            'bio_method_st', 'timeval', 'UI_string_types', 'BIO_dummy',

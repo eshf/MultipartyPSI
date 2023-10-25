@@ -211,9 +211,9 @@ typedef unsigned int    uint32_t;
 #define __DEFINED_uint32_t
 #endif
 
-#if defined(__NEED_uint64_t) && !defined(__DEFINED_uint64_t)
-typedef unsigned _Int64 uint64_t;
-#define __DEFINED_uint64_t
+#if defined(__NEED_u64) && !defined(__DEFINED_u64)
+typedef unsigned _Int64 u64;
+#define __DEFINED_u64
 #endif
 
 #if defined(__NEED_u_int64_t) && !defined(__DEFINED_u_int64_t)

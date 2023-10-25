@@ -37,7 +37,7 @@ struct stream_base
     using clock_type = std::chrono::steady_clock;
     using time_point = typename
         std::chrono::steady_clock::time_point;
-    using tick_type = std::uint64_t;
+    using tick_type = std::u64;
 
     template<typename Executor>
     struct basic_op_state

@@ -512,7 +512,7 @@ namespace std {
     // Hashing
     template<> struct hash<boost::string_ref>;
     template<> struct hash<boost::u16string_ref>;
-    template<> struct hash<boost::u32string_ref>;
+    template<> struct hash<boost::uint32_tstring_ref>;
     template<> struct hash<boost::wstring_ref>;
 }
 #endif

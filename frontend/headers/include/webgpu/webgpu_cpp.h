@@ -137,10 +137,10 @@ namespace wgpu {
     static constexpr uint32_t kArrayLayerCountUndefined = WGPU_ARRAY_LAYER_COUNT_UNDEFINED;
     static constexpr uint32_t kCopyStrideUndefined = WGPU_COPY_STRIDE_UNDEFINED;
     static constexpr uint32_t kLimitU32Undefined = WGPU_LIMIT_U32_UNDEFINED;
-    static constexpr uint64_t kLimitU64Undefined = WGPU_LIMIT_U64_UNDEFINED;
+    static constexpr u64 kLimitU64Undefined = WGPU_LIMIT_U64_UNDEFINED;
     static constexpr uint32_t kMipLevelCountUndefined = WGPU_MIP_LEVEL_COUNT_UNDEFINED;
     static constexpr size_t kWholeMapSize = WGPU_WHOLE_MAP_SIZE;
-    static constexpr uint64_t kWholeSize = WGPU_WHOLE_SIZE;
+    static constexpr u64 kWholeSize = WGPU_WHOLE_SIZE;
 
     enum class AdapterType : uint32_t {
         DiscreteGPU = 0x00000000,
@@ -871,7 +871,7 @@ namespace wgpu {
         void const * GetConstMappedRange(size_t offset = 0, size_t size = WGPU_WHOLE_MAP_SIZE) const;
         BufferMapState GetMapState() const;
         void * GetMappedRange(size_t offset = 0, size_t size = WGPU_WHOLE_MAP_SIZE) const;
-        uint64_t GetSize() const;
+        u64 GetSize() const;
         BufferUsage GetUsage() const;
         void MapAsync(MapMode mode, size_t offset, size_t size, BufferMapCallback callback, void * userdata) const;
         void SetLabel(char const * label) const;
@@ -903,8 +903,8 @@ namespace wgpu {
 
         ComputePassEncoder BeginComputePass(ComputePassDescriptor const * descriptor = nullptr) const;
         RenderPassEncoder BeginRenderPass(RenderPassDescriptor const * descriptor) const;
-        void ClearBuffer(Buffer const& buffer, uint64_t offset = 0, uint64_t size = WGPU_WHOLE_SIZE) const;
-        void CopyBufferToBuffer(Buffer const& source, uint64_t sourceOffset, Buffer const& destination, uint64_t destinationOffset, uint64_t size) const;
+        void ClearBuffer(Buffer const& buffer, u64 offset = 0, u64 size = WGPU_WHOLE_SIZE) const;
+        void CopyBufferToBuffer(Buffer const& source, u64 sourceOffset, Buffer const& destination, u64 destinationOffset, u64 size) const;
         void CopyBufferToTexture(ImageCopyBuffer const * source, ImageCopyTexture const * destination, Extent3D const * copySize) const;
         void CopyTextureToBuffer(ImageCopyTexture const * source, ImageCopyBuffer const * destination, Extent3D const * copySize) const;
         void CopyTextureToTexture(ImageCopyTexture const * source, ImageCopyTexture const * destination, Extent3D const * copySize) const;
@@ -912,7 +912,7 @@ namespace wgpu {
         void InsertDebugMarker(char const * markerLabel) const;
         void PopDebugGroup() const;
         void PushDebugGroup(char const * groupLabel) const;
-        void ResolveQuerySet(QuerySet const& querySet, uint32_t firstQuery, uint32_t queryCount, Buffer const& destination, uint64_t destinationOffset) const;
+        void ResolveQuerySet(QuerySet const& querySet, uint32_t firstQuery, uint32_t queryCount, Buffer const& destination, u64 destinationOffset) const;
         void SetLabel(char const * label) const;
         void WriteTimestamp(QuerySet const& querySet, uint32_t queryIndex) const;
 
@@ -929,7 +929,7 @@ namespace wgpu {
 
         void BeginPipelineStatisticsQuery(QuerySet const& querySet, uint32_t queryIndex) const;
         void DispatchWorkgroups(uint32_t workgroupCountX, uint32_t workgroupCountY = 1, uint32_t workgroupCountZ = 1) const;
-        void DispatchWorkgroupsIndirect(Buffer const& indirectBuffer, uint64_t indirectOffset) const;
+        void DispatchWorkgroupsIndirect(Buffer const& indirectBuffer, u64 indirectOffset) const;
         void End() const;
         void EndPipelineStatisticsQuery() const;
         void InsertDebugMarker(char const * markerLabel) const;
@@ -1045,10 +1045,10 @@ namespace wgpu {
         using ObjectBase::ObjectBase;
         using ObjectBase::operator=;
 
-        void OnSubmittedWorkDone(uint64_t signalValue, QueueWorkDoneCallback callback, void * userdata) const;
+        void OnSubmittedWorkDone(u64 signalValue, QueueWorkDoneCallback callback, void * userdata) const;
         void SetLabel(char const * label) const;
         void Submit(size_t commandCount, CommandBuffer const * commands) const;
-        void WriteBuffer(Buffer const& buffer, uint64_t bufferOffset, void const * data, size_t size) const;
+        void WriteBuffer(Buffer const& buffer, u64 bufferOffset, void const * data, size_t size) const;
         void WriteTexture(ImageCopyTexture const * destination, void const * data, size_t dataSize, TextureDataLayout const * dataLayout, Extent3D const * writeSize) const;
 
       private:
@@ -1077,17 +1077,17 @@ namespace wgpu {
 
         void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0, uint32_t firstInstance = 0) const;
         void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t firstIndex = 0, int32_t baseVertex = 0, uint32_t firstInstance = 0) const;
-        void DrawIndexedIndirect(Buffer const& indirectBuffer, uint64_t indirectOffset) const;
-        void DrawIndirect(Buffer const& indirectBuffer, uint64_t indirectOffset) const;
+        void DrawIndexedIndirect(Buffer const& indirectBuffer, u64 indirectOffset) const;
+        void DrawIndirect(Buffer const& indirectBuffer, u64 indirectOffset) const;
         RenderBundle Finish(RenderBundleDescriptor const * descriptor = nullptr) const;
         void InsertDebugMarker(char const * markerLabel) const;
         void PopDebugGroup() const;
         void PushDebugGroup(char const * groupLabel) const;
         void SetBindGroup(uint32_t groupIndex, BindGroup const& group, size_t dynamicOffsetCount = 0, uint32_t const * dynamicOffsets = nullptr) const;
-        void SetIndexBuffer(Buffer const& buffer, IndexFormat format, uint64_t offset = 0, uint64_t size = WGPU_WHOLE_SIZE) const;
+        void SetIndexBuffer(Buffer const& buffer, IndexFormat format, u64 offset = 0, u64 size = WGPU_WHOLE_SIZE) const;
         void SetLabel(char const * label) const;
         void SetPipeline(RenderPipeline const& pipeline) const;
-        void SetVertexBuffer(uint32_t slot, Buffer const& buffer, uint64_t offset = 0, uint64_t size = WGPU_WHOLE_SIZE) const;
+        void SetVertexBuffer(uint32_t slot, Buffer const& buffer, u64 offset = 0, u64 size = WGPU_WHOLE_SIZE) const;
 
       private:
         friend ObjectBase<RenderBundleEncoder, WGPURenderBundleEncoder>;
@@ -1104,8 +1104,8 @@ namespace wgpu {
         void BeginPipelineStatisticsQuery(QuerySet const& querySet, uint32_t queryIndex) const;
         void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0, uint32_t firstInstance = 0) const;
         void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t firstIndex = 0, int32_t baseVertex = 0, uint32_t firstInstance = 0) const;
-        void DrawIndexedIndirect(Buffer const& indirectBuffer, uint64_t indirectOffset) const;
-        void DrawIndirect(Buffer const& indirectBuffer, uint64_t indirectOffset) const;
+        void DrawIndexedIndirect(Buffer const& indirectBuffer, u64 indirectOffset) const;
+        void DrawIndirect(Buffer const& indirectBuffer, u64 indirectOffset) const;
         void End() const;
         void EndOcclusionQuery() const;
         void EndPipelineStatisticsQuery() const;
@@ -1115,12 +1115,12 @@ namespace wgpu {
         void PushDebugGroup(char const * groupLabel) const;
         void SetBindGroup(uint32_t groupIndex, BindGroup const& group, size_t dynamicOffsetCount = 0, uint32_t const * dynamicOffsets = nullptr) const;
         void SetBlendConstant(Color const * color) const;
-        void SetIndexBuffer(Buffer const& buffer, IndexFormat format, uint64_t offset = 0, uint64_t size = WGPU_WHOLE_SIZE) const;
+        void SetIndexBuffer(Buffer const& buffer, IndexFormat format, u64 offset = 0, u64 size = WGPU_WHOLE_SIZE) const;
         void SetLabel(char const * label) const;
         void SetPipeline(RenderPipeline const& pipeline) const;
         void SetScissorRect(uint32_t x, uint32_t y, uint32_t width, uint32_t height) const;
         void SetStencilReference(uint32_t reference) const;
-        void SetVertexBuffer(uint32_t slot, Buffer const& buffer, uint64_t offset = 0, uint64_t size = WGPU_WHOLE_SIZE) const;
+        void SetVertexBuffer(uint32_t slot, Buffer const& buffer, u64 offset = 0, u64 size = WGPU_WHOLE_SIZE) const;
         void SetViewport(float x, float y, float width, float height, float minDepth, float maxDepth) const;
         void WriteTimestamp(QuerySet const& querySet, uint32_t queryIndex) const;
 
@@ -1265,8 +1265,8 @@ namespace wgpu {
         ChainedStruct const * nextInChain = nullptr;
         uint32_t binding;
         Buffer buffer = nullptr;
-        uint64_t offset = 0;
-        uint64_t size = WGPU_WHOLE_SIZE;
+        u64 offset = 0;
+        u64 size = WGPU_WHOLE_SIZE;
         Sampler sampler = nullptr;
         TextureView textureView = nullptr;
     };
@@ -1281,14 +1281,14 @@ namespace wgpu {
         ChainedStruct const * nextInChain = nullptr;
         BufferBindingType type = BufferBindingType::Undefined;
         bool hasDynamicOffset = false;
-        uint64_t minBindingSize = 0;
+        u64 minBindingSize = 0;
     };
 
     struct BufferDescriptor {
         ChainedStruct const * nextInChain = nullptr;
         char const * label = nullptr;
         BufferUsage usage;
-        uint64_t size;
+        u64 size;
         bool mappedAtCreation = false;
     };
 
@@ -1313,13 +1313,13 @@ namespace wgpu {
         ChainedStruct const * nextInChain = nullptr;
         char const * message = nullptr;
         CompilationMessageType type;
-        uint64_t lineNum;
-        uint64_t linePos;
-        uint64_t offset;
-        uint64_t length;
-        uint64_t utf16LinePos;
-        uint64_t utf16Offset;
-        uint64_t utf16Length;
+        u64 lineNum;
+        u64 linePos;
+        u64 offset;
+        u64 length;
+        u64 utf16LinePos;
+        u64 utf16Offset;
+        u64 utf16Length;
     };
 
     struct ComputePassTimestampWrite {
@@ -1359,12 +1359,12 @@ namespace wgpu {
         uint32_t maxStorageBuffersPerShaderStage = WGPU_LIMIT_U32_UNDEFINED;
         uint32_t maxStorageTexturesPerShaderStage = WGPU_LIMIT_U32_UNDEFINED;
         uint32_t maxUniformBuffersPerShaderStage = WGPU_LIMIT_U32_UNDEFINED;
-        uint64_t maxUniformBufferBindingSize = WGPU_LIMIT_U64_UNDEFINED;
-        uint64_t maxStorageBufferBindingSize = WGPU_LIMIT_U64_UNDEFINED;
+        u64 maxUniformBufferBindingSize = WGPU_LIMIT_U64_UNDEFINED;
+        u64 maxStorageBufferBindingSize = WGPU_LIMIT_U64_UNDEFINED;
         uint32_t minUniformBufferOffsetAlignment = WGPU_LIMIT_U32_UNDEFINED;
         uint32_t minStorageBufferOffsetAlignment = WGPU_LIMIT_U32_UNDEFINED;
         uint32_t maxVertexBuffers = WGPU_LIMIT_U32_UNDEFINED;
-        uint64_t maxBufferSize = WGPU_LIMIT_U64_UNDEFINED;
+        u64 maxBufferSize = WGPU_LIMIT_U64_UNDEFINED;
         uint32_t maxVertexAttributes = WGPU_LIMIT_U32_UNDEFINED;
         uint32_t maxVertexBufferArrayStride = WGPU_LIMIT_U32_UNDEFINED;
         uint32_t maxInterStageShaderComponents = WGPU_LIMIT_U32_UNDEFINED;
@@ -1463,8 +1463,8 @@ namespace wgpu {
         RenderPassDescriptorMaxDrawCount() {
             sType = SType::RenderPassDescriptorMaxDrawCount;
         }
-        static constexpr size_t kFirstMemberAlignment = detail::ConstexprMax(alignof(ChainedStruct), alignof(uint64_t ));
-        alignas(kFirstMemberAlignment) uint64_t maxDrawCount = 50000000;
+        static constexpr size_t kFirstMemberAlignment = detail::ConstexprMax(alignof(ChainedStruct), alignof(u64 ));
+        alignas(kFirstMemberAlignment) u64 maxDrawCount = 50000000;
     };
 
     struct RenderPassTimestampWrite {
@@ -1573,7 +1573,7 @@ namespace wgpu {
 
     struct TextureDataLayout {
         ChainedStruct const * nextInChain = nullptr;
-        uint64_t offset = 0;
+        u64 offset = 0;
         uint32_t bytesPerRow = WGPU_COPY_STRIDE_UNDEFINED;
         uint32_t rowsPerImage = WGPU_COPY_STRIDE_UNDEFINED;
     };
@@ -1592,7 +1592,7 @@ namespace wgpu {
 
     struct VertexAttribute {
         VertexFormat format;
-        uint64_t offset;
+        u64 offset;
         uint32_t shaderLocation;
     };
 
@@ -1701,7 +1701,7 @@ namespace wgpu {
     };
 
     struct VertexBufferLayout {
-        uint64_t arrayStride;
+        u64 arrayStride;
         VertexStepMode stepMode = VertexStepMode::Vertex;
         size_t attributeCount;
         VertexAttribute const * attributes;

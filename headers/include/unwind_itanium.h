@@ -16,7 +16,7 @@
 struct _Unwind_Context;   // opaque
 struct _Unwind_Exception; // forward declaration
 typedef struct _Unwind_Exception _Unwind_Exception;
-typedef uint64_t _Unwind_Exception_Class;
+typedef u64 _Unwind_Exception_Class;
 
 struct _Unwind_Exception {
   _Unwind_Exception_Class exception_class;
@@ -41,7 +41,7 @@ struct _Unwind_Exception {
 } __attribute__((__aligned__));
 
 typedef _Unwind_Reason_Code (*_Unwind_Personality_Fn)(
-    int version, _Unwind_Action actions, uint64_t exceptionClass,
+    int version, _Unwind_Action actions, u64 exceptionClass,
     _Unwind_Exception *exceptionObject, struct _Unwind_Context *context);
 
 #ifdef __cplusplus

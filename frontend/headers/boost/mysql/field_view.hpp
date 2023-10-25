@@ -116,19 +116,19 @@ public:
      * \par Object lifetimes
      * Results in a `field_view` with value semantics (always valid).
      */
-    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned char v) noexcept : impl_{std::uint64_t(v)} {}
+    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned char v) noexcept : impl_{std::u64(v)} {}
 
     /// \copydoc field_view(unsigned char)
-    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned short v) noexcept : impl_{std::uint64_t(v)} {}
+    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned short v) noexcept : impl_{std::u64(v)} {}
 
     /// \copydoc field_view(unsigned char)
-    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned int v) noexcept : impl_{std::uint64_t(v)} {}
+    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned int v) noexcept : impl_{std::u64(v)} {}
 
     /// \copydoc field_view(unsigned char)
-    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned long v) noexcept : impl_{std::uint64_t(v)} {}
+    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned long v) noexcept : impl_{std::u64(v)} {}
 
     /// \copydoc field_view(unsigned char)
-    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned long long v) noexcept : impl_{std::uint64_t(v)} {}
+    BOOST_CXX14_CONSTEXPR explicit field_view(unsigned long long v) noexcept : impl_{std::u64(v)} {}
 
     /**
      * \brief (EXPERIMENTAL) Constructs a `field_view` holding a string.
@@ -293,7 +293,7 @@ public:
      * Strong guarantee. Throws on type mismatch.
      * \throws bad_field_access If `!this->is_uint64()`
      */
-    BOOST_CXX14_CONSTEXPR inline std::uint64_t as_uint64() const;
+    BOOST_CXX14_CONSTEXPR inline std::u64 as_uint64() const;
 
     /**
      * \brief Retrieves the underlying value as a string or throws an exception.
@@ -376,9 +376,9 @@ public:
      * \par Exception safety
      * No-throw guarantee.
      */
-    BOOST_CXX14_CONSTEXPR inline std::uint64_t get_uint64() const noexcept
+    BOOST_CXX14_CONSTEXPR inline std::u64 get_uint64() const noexcept
     {
-        return is_field_ptr() ? impl_.repr.field_ptr->get<std::uint64_t>() : impl_.repr.uint64;
+        return is_field_ptr() ? impl_.repr.field_ptr->get<std::u64>() : impl_.repr.uint64;
     }
 
     /**
@@ -526,7 +526,7 @@ private:
     union repr_t
     {
         std::int64_t int64;
-        std::uint64_t uint64;
+        std::u64 uint64;
         string_view string;
         blob_view blob;
         float float_;
@@ -539,7 +539,7 @@ private:
 
         BOOST_CXX14_CONSTEXPR repr_t() noexcept : int64{} {}
         BOOST_CXX14_CONSTEXPR repr_t(std::int64_t v) noexcept : int64(v) {}
-        BOOST_CXX14_CONSTEXPR repr_t(std::uint64_t v) noexcept : uint64(v) {}
+        BOOST_CXX14_CONSTEXPR repr_t(std::u64 v) noexcept : uint64(v) {}
         BOOST_CXX14_CONSTEXPR repr_t(string_view v) noexcept : string{v} {}
         BOOST_CXX14_CONSTEXPR repr_t(blob_view v) noexcept : blob{v} {}
         BOOST_CXX14_CONSTEXPR repr_t(float v) noexcept : float_(v) {}
@@ -562,7 +562,7 @@ private:
 
         BOOST_CXX14_CONSTEXPR impl_t() = default;
         BOOST_CXX14_CONSTEXPR impl_t(std::int64_t v) noexcept : ikind(internal_kind::int64), repr(v) {}
-        BOOST_CXX14_CONSTEXPR impl_t(std::uint64_t v) noexcept : ikind(internal_kind::uint64), repr(v) {}
+        BOOST_CXX14_CONSTEXPR impl_t(std::u64 v) noexcept : ikind(internal_kind::uint64), repr(v) {}
         BOOST_CXX14_CONSTEXPR impl_t(string_view v) noexcept : ikind(internal_kind::string), repr{v} {}
         BOOST_CXX14_CONSTEXPR impl_t(blob_view v) noexcept : ikind(internal_kind::blob), repr{v} {}
         BOOST_CXX14_CONSTEXPR impl_t(float v) noexcept : ikind(internal_kind::float_), repr(v) {}

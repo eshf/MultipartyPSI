@@ -62,10 +62,10 @@ void EQ_EmptrySet_Test_Impl()
 
 	PRNG prng(_mm_set_epi32(4253465, 34354565, 234435, 23987045));
 
-	std::vector<u32> sendSet(setSize), recvSet(setSize);
+	std::vector<uint32_t> sendSet(setSize), recvSet(setSize);
 	for (u64 i = 0; i < setSize; ++i)
 	{
-		sendSet[i] = prng.get<u32>();
+		sendSet[i] = prng.get<uint32_t>();
 		recvSet[i] = sendSet[i];
 	}
 	

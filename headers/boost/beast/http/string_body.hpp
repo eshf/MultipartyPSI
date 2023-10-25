@@ -63,7 +63,7 @@ public:
         any chunked Transfer-Encoding will be removed.
     */
     static
-    std::uint64_t
+    std::u64
     size(value_type const& body)
     {
         return body.size();
@@ -90,7 +90,7 @@ public:
 
         void
         init(boost::optional<
-            std::uint64_t> const& length, error_code& ec)
+            std::u64> const& length, error_code& ec)
         {
             if(length)
             {

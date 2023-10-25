@@ -222,7 +222,7 @@ open(char const* path, file_mode mode, error_code& ec)
     ec = {};
 }
 
-std::uint64_t
+std::u64
 file_win32::
 size(error_code& ec) const
 {
@@ -242,7 +242,7 @@ size(error_code& ec) const
     return fileSize.QuadPart;
 }
 
-std::uint64_t
+std::u64
 file_win32::
 pos(error_code& ec)
 {
@@ -267,7 +267,7 @@ pos(error_code& ec)
 
 void
 file_win32::
-seek(std::uint64_t offset, error_code& ec)
+seek(std::u64 offset, error_code& ec)
 {
     if(h_ == boost::winapi::INVALID_HANDLE_VALUE_)
     {

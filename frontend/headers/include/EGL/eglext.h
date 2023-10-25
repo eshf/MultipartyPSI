@@ -329,7 +329,7 @@ EGLAPI EGLBoolean EGLAPIENTRY eglSignalSyncKHR (EGLDisplay dpy, EGLSyncKHR sync,
 #ifndef EGL_KHR_stream
 #define EGL_KHR_stream 1
 typedef void *EGLStreamKHR;
-typedef khronos_uint64_t EGLuint64KHR;
+typedef khronos_u64 EGLuint64KHR;
 #ifdef KHRONOS_SUPPORT_INT64
 #define EGL_NO_STREAM_KHR                 EGL_CAST(EGLStreamKHR,0)
 #define EGL_CONSUMER_LATENCY_USEC_KHR     0x3210

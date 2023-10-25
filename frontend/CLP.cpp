@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-
+extern "C" {
 void CLP::parse(int argc, char** argv)
 {
     if (argc > 0)
@@ -193,3 +193,4 @@ std::string CLP::getString(std::vector<std::string> names, std::string failMessa
     throw CommandLineParserError();
 }
 
+}

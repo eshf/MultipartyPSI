@@ -25,7 +25,7 @@
 using namespace osuCrypto;
 #define PRINT
 
-u32 opt = 0;
+uint32_t opt = 0;
 void nOPPRF2_EmptrySet_Test_Impl()
 {
     u64 setSize = 1<<5, psiSecParam = 40, bitSize = 128 , numParties=2;
@@ -666,12 +666,12 @@ void nParty(u64 myIdx)
 		dummy[i] = myIdx * 10 + i;
 		if (i < myIdx)
 		{
-			u32 port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i >myIdx)
 		{
-			u32 port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -858,12 +858,12 @@ void nChannel_party_test(u64 myIdx)
 		dummy[i] = myIdx * 10 + i;
 		if (i < myIdx)
 		{
-			u32 port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			uint32_t port = i * 10 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i >myIdx)
 		{
-			u32 port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			uint32_t port = myIdx * 10 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}

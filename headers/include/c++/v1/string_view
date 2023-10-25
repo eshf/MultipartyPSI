@@ -61,7 +61,7 @@ namespace std {
 
     // basic_string_view typedef names
     typedef basic_string_view<char> string_view;
-    typedef basic_string_view<char8_t> u8string_view; // C++20
+    typedef basic_string_view<char8_t> uint8_tstring_view; // C++20
     typedef basic_string_view<char16_t> u16string_view;
     typedef basic_string_view<char32_t> u32string_view;
     typedef basic_string_view<wchar_t> wstring_view;
@@ -186,7 +186,7 @@ namespace std {
   // 7.11, Hash support
   template <class T> struct hash;
   template <> struct hash<string_view>;
-  template <> struct hash<u8string_view>; // C++20
+  template <> struct hash<uint8_tstring_view>; // C++20
   template <> struct hash<u16string_view>;
   template <> struct hash<u32string_view>;
   template <> struct hash<wstring_view>;

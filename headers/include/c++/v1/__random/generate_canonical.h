@@ -33,9 +33,9 @@ generate_canonical(_URNG& __g)
     const size_t _Dt = numeric_limits<_RealType>::digits;
     const size_t __b = _Dt < __bits ? _Dt : __bits;
 #ifdef _LIBCPP_CXX03_LANG
-    const size_t __logR = __log2<uint64_t, _URNG::_Max - _URNG::_Min + uint64_t(1)>::value;
+    const size_t __logR = __log2<u64, _URNG::_Max - _URNG::_Min + u64(1)>::value;
 #else
-    const size_t __logR = __log2<uint64_t, _URNG::max() - _URNG::min() + uint64_t(1)>::value;
+    const size_t __logR = __log2<u64, _URNG::max() - _URNG::min() + u64(1)>::value;
 #endif
     const size_t __k = __b / __logR + (__b % __logR != 0) + (__b == 0);
     const _RealType _Rp = static_cast<_RealType>(_URNG::max() - _URNG::min()) + _RealType(1);

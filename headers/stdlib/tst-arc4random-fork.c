@@ -63,9 +63,9 @@ static struct shared_data
 static void
 generate_arc4random (unsigned char *bytes)
 {
-  for (int i = 0; i < random_size / sizeof (uint32_t); i++)
+  for (int i = 0; i < random_size / sizeof (u32); i++)
     {
-      uint32_t x = arc4random ();
+      u32 x = arc4random ();
       memcpy (&bytes[4 * i], &x, sizeof x);
     }
 }

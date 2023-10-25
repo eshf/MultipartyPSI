@@ -21,11 +21,8 @@ using namespace std;
 #include <emscripten/emscripten.h>
 #include <wasm_simd128.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-EMSCRIPTEN_KEEPALIVE void Bit_Position_Test()
+extern "C"{
+void Bit_Position_Test()
 {
 	u64 setSize = 32;
 	std::vector<block> testSet(setSize);
@@ -278,6 +275,5 @@ EMSCRIPTEN_KEEPALIVE void Channel_Test() {
 	ios.stop();
 }
 
-#ifdef __cplusplus
+
 }
-#endif

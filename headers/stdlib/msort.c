@@ -63,17 +63,17 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 	{
 	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
-	      *(uint32_t *) tmp = *(uint32_t *) b1;
-	      b1 += sizeof (uint32_t);
+	      *(u32 *) tmp = *(u32 *) b1;
+	      b1 += sizeof (u32);
 	      --n1;
 	    }
 	  else
 	    {
-	      *(uint32_t *) tmp = *(uint32_t *) b2;
-	      b2 += sizeof (uint32_t);
+	      *(u32 *) tmp = *(u32 *) b2;
+	      b2 += sizeof (u32);
 	      --n2;
 	    }
-	  tmp += sizeof (uint32_t);
+	  tmp += sizeof (u32);
 	}
       break;
     case 1:
@@ -81,17 +81,17 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 	{
 	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
-	      *(uint64_t *) tmp = *(uint64_t *) b1;
-	      b1 += sizeof (uint64_t);
+	      *(u64 *) tmp = *(u64 *) b1;
+	      b1 += sizeof (u64);
 	      --n1;
 	    }
 	  else
 	    {
-	      *(uint64_t *) tmp = *(uint64_t *) b2;
-	      b2 += sizeof (uint64_t);
+	      *(u64 *) tmp = *(u64 *) b2;
+	      b2 += sizeof (u64);
 	      --n2;
 	    }
-	  tmp += sizeof (uint64_t);
+	  tmp += sizeof (u64);
 	}
       break;
     case 2:
@@ -280,13 +280,13 @@ __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
     }
   else
     {
-      if ((s & (sizeof (uint32_t) - 1)) == 0
-	  && ((char *) b - (char *) 0) % __alignof__ (uint32_t) == 0)
+      if ((s & (sizeof (u32) - 1)) == 0
+	  && ((char *) b - (char *) 0) % __alignof__ (u32) == 0)
 	{
-	  if (s == sizeof (uint32_t))
+	  if (s == sizeof (u32))
 	    p.var = 0;
-	  else if (s == sizeof (uint64_t)
-		   && ((char *) b - (char *) 0) % __alignof__ (uint64_t) == 0)
+	  else if (s == sizeof (u64)
+		   && ((char *) b - (char *) 0) % __alignof__ (u64) == 0)
 	    p.var = 1;
 	  else if ((s & (sizeof (unsigned long) - 1)) == 0
 		   && ((char *) b - (char *) 0)

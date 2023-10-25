@@ -40,7 +40,7 @@ __cxa_finalize (void *d)
       for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
 	if ((d == NULL || d == f->func.cxa.dso_handle) && f->flavor == ef_cxa)
 	  {
-	    const uint64_t check = __new_exitfn_called;
+	    const u64 check = __new_exitfn_called;
 	    void (*cxafn) (void *arg, int status) = f->func.cxa.fn;
 	    void *cxaarg = f->func.cxa.arg;
 

@@ -245,7 +245,7 @@ namespace osuCrypto
         block ti, ti2;
 
         SHA1 sha;
-        u8 hashBuff[20];
+        uint8_t hashBuff[20];
         u64 doneIdx = (0);
         //std::cout << IoStream::lock;
 
@@ -253,7 +253,7 @@ namespace osuCrypto
         std::array<block, 128> challenges;
 
         std::array<block, 8> expendedChoiceBlk;
-        std::array<std::array<u8, 16>, 8>& expendedChoice = *reinterpret_cast<std::array<std::array<u8, 16>, 8>*>(&expendedChoiceBlk);
+        std::array<std::array<uint8_t, 16>, 8>& expendedChoice = *reinterpret_cast<std::array<std::array<uint8_t, 16>, 8>*>(&expendedChoiceBlk);
 
         block mask = _mm_set_epi8(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
@@ -275,7 +275,7 @@ namespace osuCrypto
 
             for (u64 i = 0; doneIdx < stop; ++doneIdx, ++i)
             {
-                u8 choiceBit = expendedChoice[i % 8][i / 8];
+                uint8_t choiceBit = expendedChoice[i % 8][i / 8];
 
                 x = x ^ (challenges[i] & zeroOneBlk[choiceBit]);
 
@@ -289,7 +289,7 @@ namespace osuCrypto
                 {
                     // hash it
                     sha.Reset();
-                    sha.Update((u8*)&messages[doneIdx], sizeof(block));
+                    sha.Update((uint8_t*)&messages[doneIdx], sizeof(block));
                     sha.Final(hashBuff);
                     messages[doneIdx] = *(block*)hashBuff;
                 }

@@ -147,19 +147,19 @@ _mm_haddq_epi32(__m128i __A)
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_haddw_epu8(__m128i __A)
+_mm_haddw_epuint8_t(__m128i __A)
 {
   return  (__m128i) __builtin_ia32_vphaddubw ((__v16qi)__A);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_haddd_epu8(__m128i __A)
+_mm_haddd_epuint8_t(__m128i __A)
 {
   return  (__m128i) __builtin_ia32_vphaddubd ((__v16qi)__A);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_haddq_epu8(__m128i __A)
+_mm_haddq_epuint8_t(__m128i __A)
 {
   return  (__m128i) __builtin_ia32_vphaddubq ((__v16qi)__A);
 }
@@ -333,49 +333,49 @@ _mm_sha_epi64(__m128i __A,  __m128i __B)
    pcom (integer, unsigned bytes) */
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comlt_epu8(__m128i __A, __m128i __B)
+_mm_comlt_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomltub ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comle_epu8(__m128i __A, __m128i __B)
+_mm_comle_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomleub ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comgt_epu8(__m128i __A, __m128i __B)
+_mm_comgt_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomgtub ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comge_epu8(__m128i __A, __m128i __B)
+_mm_comge_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomgeub ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comeq_epu8(__m128i __A, __m128i __B)
+_mm_comeq_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomequb ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comneq_epu8(__m128i __A, __m128i __B)
+_mm_comneq_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomnequb ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comfalse_epu8(__m128i __A, __m128i __B)
+_mm_comfalse_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomfalseub ((__v16qi)__A, (__v16qi)__B);
 }
 
 extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))
-_mm_comtrue_epu8(__m128i __A, __m128i __B)
+_mm_comtrue_epuint8_t(__m128i __A, __m128i __B)
 {
   return (__m128i) __builtin_ia32_vpcomtrueub ((__v16qi)__A, (__v16qi)__B);
 }

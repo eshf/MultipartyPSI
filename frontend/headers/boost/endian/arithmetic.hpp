@@ -83,7 +83,7 @@ namespace endian
   typedef endian_arithmetic<order::big, uint8_t, 8, align::yes>       big_uint8_at;
   typedef endian_arithmetic<order::big, uint16_t, 16, align::yes>     big_uint16_at;
   typedef endian_arithmetic<order::big, uint32_t, 32, align::yes>     big_uint32_at;
-  typedef endian_arithmetic<order::big, uint64_t, 64, align::yes>     big_uint64_at;
+  typedef endian_arithmetic<order::big, u64, 64, align::yes>     big_uint64_at;
 
   // little endian signed integer aligned types
   typedef endian_arithmetic<order::little, int8_t, 8, align::yes>     little_int8_at;
@@ -95,7 +95,7 @@ namespace endian
   typedef endian_arithmetic<order::little, uint8_t, 8, align::yes>    little_uint8_at;
   typedef endian_arithmetic<order::little, uint16_t, 16, align::yes>  little_uint16_at;
   typedef endian_arithmetic<order::little, uint32_t, 32, align::yes>  little_uint32_at;
-  typedef endian_arithmetic<order::little, uint64_t, 64, align::yes>  little_uint64_at;
+  typedef endian_arithmetic<order::little, u64, 64, align::yes>  little_uint64_at;
 
   // aligned floating point types
   typedef endian_arithmetic<order::big, float, 32, align::yes>        big_float32_at;
@@ -124,7 +124,7 @@ namespace endian
   typedef endian_arithmetic<order::big, uint_least64_t, 40>     big_uint40_t;
   typedef endian_arithmetic<order::big, uint_least64_t, 48>     big_uint48_t;
   typedef endian_arithmetic<order::big, uint_least64_t, 56>     big_uint56_t;
-  typedef endian_arithmetic<order::big, uint_least64_t, 64>     big_uint64_t;
+  typedef endian_arithmetic<order::big, uint_least64_t, 64>     big_u64;
 
   // little endian signed integer unaligned types
   typedef endian_arithmetic<order::little, int_least8_t, 8>     little_int8_t;
@@ -144,7 +144,7 @@ namespace endian
   typedef endian_arithmetic<order::little, uint_least64_t, 40>  little_uint40_t;
   typedef endian_arithmetic<order::little, uint_least64_t, 48>  little_uint48_t;
   typedef endian_arithmetic<order::little, uint_least64_t, 56>  little_uint56_t;
-  typedef endian_arithmetic<order::little, uint_least64_t, 64>  little_uint64_t;
+  typedef endian_arithmetic<order::little, uint_least64_t, 64>  little_u64;
 
   // native endian signed integer unaligned types
   typedef endian_arithmetic<order::native, int_least8_t, 8>     native_int8_t;
@@ -164,7 +164,7 @@ namespace endian
   typedef endian_arithmetic<order::native, uint_least64_t, 40>  native_uint40_t;
   typedef endian_arithmetic<order::native, uint_least64_t, 48>  native_uint48_t;
   typedef endian_arithmetic<order::native, uint_least64_t, 56>  native_uint56_t;
-  typedef endian_arithmetic<order::native, uint_least64_t, 64>  native_uint64_t;
+  typedef endian_arithmetic<order::native, uint_least64_t, 64>  native_u64;
 
   // unaligned floating point types
   typedef endian_arithmetic<order::big, float, 32, align::no>        big_float32_t;

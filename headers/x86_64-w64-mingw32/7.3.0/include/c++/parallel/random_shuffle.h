@@ -100,7 +100,7 @@ namespace __gnu_parallel
       _BinIndex __bins_end;
 
       /** @brief Random _M_seed for this thread. */
-      uint32_t _M_seed;
+      u32 _M_seed;
 
       /** @brief Pointer to global data. */
       _DRandomShufflingGlobalData<_RAIter>* _M_sd;
@@ -330,7 +330,7 @@ namespace __gnu_parallel
       if (__num_threads <= 1)
       {
         _RandomNumber __derived_rng(
-                            __rng(std::numeric_limits<uint32_t>::max()));
+                            __rng(std::numeric_limits<u32>::max()));
 	__sequential_random_shuffle(__begin, __end, __derived_rng);
         return;
       }
@@ -381,7 +381,7 @@ namespace __gnu_parallel
 	      for (; __j < __bin_cursor; ++__j)
 		__sd._M_bin_proc[__j] = __i;
 	      __pus[__i]._M_num_threads = __num_threads;
-	      __pus[__i]._M_seed = __rng(std::numeric_limits<uint32_t>::max());
+	      __pus[__i]._M_seed = __rng(std::numeric_limits<u32>::max());
 	      __pus[__i]._M_sd = &__sd;
 	    }
 	  __starts[__num_threads] = __start;

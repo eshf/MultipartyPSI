@@ -867,9 +867,9 @@ template< bool Signed, bool Interprocess >
 struct gcc_dcas_x86_64
 {
     typedef typename storage_traits< 16u >::type storage_type;
-    typedef uint64_t BOOST_ATOMIC_DETAIL_MAY_ALIAS aliasing_uint64_t;
+    typedef u64 BOOST_ATOMIC_DETAIL_MAY_ALIAS aliasing_u64;
 #if defined(__AVX__)
-    typedef uint64_t __attribute__((__vector_size__(16))) xmm_t;
+    typedef u64 __attribute__((__vector_size__(16))) xmm_t;
 #endif
 
     static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = 16u;
@@ -887,7 +887,7 @@ struct gcc_dcas_x86_64
             // According to SDM Volume 3, 8.1.1 Guaranteed Atomic Operations, processors supporting AVX guarantee
             // aligned vector moves to be atomic.
 #if defined(BOOST_HAS_INT128)
-            xmm_t value = { static_cast< uint64_t >(v), static_cast< uint64_t >(v >> 64u) };
+            xmm_t value = { static_cast< u64 >(v), static_cast< u64 >(v >> 64u) };
 #else
             xmm_t value;
             BOOST_ATOMIC_DETAIL_MEMCPY(&value, &v, sizeof(v));
@@ -911,8 +911,8 @@ struct gcc_dcas_x86_64
             ".align 16\n\t"
             "1: lock; cmpxchg16b %[dest_lo]\n\t"
             "jne 1b\n\t"
-            : [dest_lo] "=m" (storage), [dest_hi] "=m" (reinterpret_cast< volatile aliasing_uint64_t* >(&storage)[1])
-            : "b" (reinterpret_cast< const aliasing_uint64_t* >(&v)[0]), "c" (reinterpret_cast< const aliasing_uint64_t* >(&v)[1])
+            : [dest_lo] "=m" (storage), [dest_hi] "=m" (reinterpret_cast< volatile aliasing_u64* >(&storage)[1])
+            : "b" (reinterpret_cast< const aliasing_u64* >(&v)[0]), "c" (reinterpret_cast< const aliasing_u64* >(&v)[1])
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "rax", "rdx", "memory"
         );
     }
@@ -949,7 +949,7 @@ struct gcc_dcas_x86_64
 
 #if defined(BOOST_ATOMIC_DETAIL_X86_NO_ASM_AX_DX_PAIRS)
 
-        uint64_t value_bits[2];
+        u64 value_bits[2];
 
         // We don't care for comparison result here; the previous value will be stored into value anyway.
         // Also we don't care for rbx and rcx values, they just have to be equal to rax and rdx before cmpxchg16b.
@@ -1010,8 +1010,8 @@ struct gcc_dcas_x86_64
         (
             "lock; cmpxchg16b %[dest]\n\t"
             "sete %[success]\n\t"
-            : [dest] "+m" (storage), "+a" (reinterpret_cast< aliasing_uint64_t* >(&expected)[0]), "+d" (reinterpret_cast< aliasing_uint64_t* >(&expected)[1]), [success] "=q" (success)
-            : "b" (reinterpret_cast< const aliasing_uint64_t* >(&desired)[0]), "c" (reinterpret_cast< const aliasing_uint64_t* >(&desired)[1])
+            : [dest] "+m" (storage), "+a" (reinterpret_cast< aliasing_u64* >(&expected)[0]), "+d" (reinterpret_cast< aliasing_u64* >(&expected)[1]), [success] "=q" (success)
+            : "b" (reinterpret_cast< const aliasing_u64* >(&desired)[0]), "c" (reinterpret_cast< const aliasing_u64* >(&desired)[1])
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 
@@ -1026,7 +1026,7 @@ struct gcc_dcas_x86_64
         (
             "lock; cmpxchg16b %[dest]\n\t"
             : "+A" (expected), [dest] "+m" (storage), "=@ccz" (success)
-            : "b" (reinterpret_cast< const aliasing_uint64_t* >(&desired)[0]), "c" (reinterpret_cast< const aliasing_uint64_t* >(&desired)[1])
+            : "b" (reinterpret_cast< const aliasing_u64* >(&desired)[0]), "c" (reinterpret_cast< const aliasing_u64* >(&desired)[1])
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 #else // defined(BOOST_ATOMIC_DETAIL_ASM_HAS_FLAG_OUTPUTS)
@@ -1035,7 +1035,7 @@ struct gcc_dcas_x86_64
             "lock; cmpxchg16b %[dest]\n\t"
             "sete %[success]\n\t"
             : "+A" (expected), [dest] "+m" (storage), [success] "=qm" (success)
-            : "b" (reinterpret_cast< const aliasing_uint64_t* >(&desired)[0]), "c" (reinterpret_cast< const aliasing_uint64_t* >(&desired)[1])
+            : "b" (reinterpret_cast< const aliasing_u64* >(&desired)[0]), "c" (reinterpret_cast< const aliasing_u64* >(&desired)[1])
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 #endif // defined(BOOST_ATOMIC_DETAIL_ASM_HAS_FLAG_OUTPUTS)
@@ -1054,7 +1054,7 @@ struct gcc_dcas_x86_64
     static BOOST_FORCEINLINE storage_type exchange(storage_type volatile& storage, storage_type v, memory_order) BOOST_NOEXCEPT
     {
 #if defined(BOOST_ATOMIC_DETAIL_X86_NO_ASM_AX_DX_PAIRS)
-        uint64_t old_bits[2];
+        u64 old_bits[2];
         __asm__ __volatile__
         (
             "movq %[dest_lo], %%rax\n\t"
@@ -1062,8 +1062,8 @@ struct gcc_dcas_x86_64
             ".align 16\n\t"
             "1: lock; cmpxchg16b %[dest_lo]\n\t"
             "jne 1b\n\t"
-            : [dest_lo] "+m" (storage), [dest_hi] "+m" (reinterpret_cast< volatile aliasing_uint64_t* >(&storage)[1]), "=&a" (old_bits[0]), "=&d" (old_bits[1])
-            : "b" (reinterpret_cast< const aliasing_uint64_t* >(&v)[0]), "c" (reinterpret_cast< const aliasing_uint64_t* >(&v)[1])
+            : [dest_lo] "+m" (storage), [dest_hi] "+m" (reinterpret_cast< volatile aliasing_u64* >(&storage)[1]), "=&a" (old_bits[0]), "=&d" (old_bits[1])
+            : "b" (reinterpret_cast< const aliasing_u64* >(&v)[0]), "c" (reinterpret_cast< const aliasing_u64* >(&v)[1])
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 
@@ -1083,8 +1083,8 @@ struct gcc_dcas_x86_64
             ".align 16\n\t"
             "1: lock; cmpxchg16b %[dest_lo]\n\t"
             "jne 1b\n\t"
-            : "=&A" (old_value), [dest_lo] "+m" (storage), [dest_hi] "+m" (reinterpret_cast< volatile aliasing_uint64_t* >(&storage)[1])
-            : "b" (reinterpret_cast< const aliasing_uint64_t* >(&v)[0]), "c" (reinterpret_cast< const aliasing_uint64_t* >(&v)[1])
+            : "=&A" (old_value), [dest_lo] "+m" (storage), [dest_hi] "+m" (reinterpret_cast< volatile aliasing_u64* >(&storage)[1])
+            : "b" (reinterpret_cast< const aliasing_u64* >(&v)[0]), "c" (reinterpret_cast< const aliasing_u64* >(&v)[1])
             : BOOST_ATOMIC_DETAIL_ASM_CLOBBER_CC_COMMA "memory"
         );
 

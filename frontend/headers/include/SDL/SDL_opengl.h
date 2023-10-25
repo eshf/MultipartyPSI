@@ -5140,7 +5140,7 @@ typedef unsigned short GLhalfNV;
 #ifndef GLEXT_64_TYPES_DEFINED
 /* This code block is duplicated in glxext.h, so must be protected */
 #define GLEXT_64_TYPES_DEFINED
-/* Define int32_t, int64_t, and uint64_t types for UST/MSC */
+/* Define int32_t, int64_t, and u64 types for UST/MSC */
 /* (as used in the GL_EXT_timer_query extension). */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #include <inttypes.h>
@@ -5149,10 +5149,10 @@ typedef unsigned short GLhalfNV;
 #if defined(__STDC__)
 #if defined(__arch64__) || defined(_LP64)
 typedef long int int64_t;
-typedef unsigned long int uint64_t;
+typedef unsigned long int u64;
 #else
 typedef long long int int64_t;
-typedef unsigned long long int uint64_t;
+typedef unsigned long long int u64;
 #endif /* __arch64__ */
 #endif /* __STDC__ */
 #elif defined( __VMS ) || defined(__sgi)
@@ -5162,13 +5162,13 @@ typedef unsigned long long int uint64_t;
 #elif defined(__UNIXOS2__) || defined(__SOL64__)
 typedef long int int32_t;
 typedef long long int int64_t;
-typedef unsigned long long int uint64_t;
+typedef unsigned long long int u64;
 #elif defined(_WIN32) && defined(__GNUC__)
 #include <stdint.h>
 #elif defined(_WIN32)
 typedef __int32 int32_t;
 typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
+typedef unsigned __int64 u64;
 #else
 /* Fallback if nothing above works */
 #include <inttypes.h>
@@ -5177,12 +5177,12 @@ typedef unsigned __int64 uint64_t;
 
 #ifndef GL_EXT_timer_query
 typedef int64_t GLint64EXT;
-typedef uint64_t GLuint64EXT;
+typedef u64 GLuint64EXT;
 #endif
 
 #ifndef GL_ARB_sync
 typedef int64_t GLint64;
-typedef uint64_t GLuint64;
+typedef u64 GLuint64;
 typedef struct __GLsync *GLsync;
 #endif
 

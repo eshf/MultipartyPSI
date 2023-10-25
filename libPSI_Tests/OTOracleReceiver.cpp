@@ -35,7 +35,7 @@ void OTOracleReceiver::receive(
 
         messages[doneIdx] =  ss[choices[doneIdx]]; 
 
-        //std::cout << " idx  " << doneIdx << "   " << messages[doneIdx] << "   " << (u32)choices[doneIdx] << std::endl;
+        //std::cout << " idx  " << doneIdx << "   " << messages[doneIdx] << "   " << (uint32_t)choices[doneIdx] << std::endl;
     }
     block test2;
     chl.recv((u8*)&test2, sizeof(block));

@@ -287,7 +287,7 @@ namespace osuCrypto
         std::array<block, 128> challenges;
 
         std::array<block, 8> expendedChoiceBlk;
-        std::array<std::array<u8, 16>, 8>& expendedChoice = *reinterpret_cast<std::array<std::array<u8, 16>, 8>*>(&expendedChoiceBlk);
+        std::array<std::array<uint8_t, 16>, 8>& expendedChoice = *reinterpret_cast<std::array<std::array<uint8_t, 16>, 8>*>(&expendedChoiceBlk);
 
         block mask = _mm_set_epi8(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 

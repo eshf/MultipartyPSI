@@ -380,7 +380,7 @@ mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b,
     __q.generate(__ar, __ar + __n * __k);
     for (size_t __i = 0; __i < __n; ++__i)
         __x_[__i] = static_cast<result_type>(
-            (__ar[2 * __i] + ((uint64_t)__ar[2 * __i + 1] << 32)) & _Max);
+            (__ar[2 * __i] + ((u64)__ar[2 * __i + 1] << 32)) & _Max);
     const result_type __mask = __r == _Dt ? result_type(~0) :
                                        (result_type(1) << __r) - result_type(1);
     __i_ = 0;

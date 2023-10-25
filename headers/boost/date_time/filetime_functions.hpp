@@ -53,8 +53,8 @@ TimeT time_from_ftime(const FileTimeT& ft)
     // avoid integer wrapping for dates before 1970-Jan-01.
 
     // 100-nanos since 1601-Jan-01
-    uint64_t ft_as_integer = (static_cast< uint64_t >(ft.dwHighDateTime) << 32) | static_cast< uint64_t >(ft.dwLowDateTime);
-    uint64_t sec = ft_as_integer / 10000000UL;
+    u64 ft_as_integer = (static_cast< u64 >(ft.dwHighDateTime) << 32) | static_cast< u64 >(ft.dwLowDateTime);
+    u64 sec = ft_as_integer / 10000000UL;
     uint32_t sub_sec = static_cast< uint32_t >(ft_as_integer % 10000000UL) // 100-nanoseconds since the last second
 #if !defined(BOOST_DATE_TIME_POSIX_TIME_STD_CONFIG)
         / 10U; // microseconds since the last second

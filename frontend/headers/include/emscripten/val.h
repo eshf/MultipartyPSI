@@ -73,7 +73,7 @@ EM_VAL _emval_get_property(EM_VAL object, EM_VAL key);
 void _emval_set_property(EM_VAL object, EM_VAL key, EM_VAL value);
 EM_GENERIC_WIRE_TYPE _emval_as(EM_VAL value, TYPEID returnType, EM_DESTRUCTORS* destructors);
 int64_t _emval_as_int64(EM_VAL value, TYPEID returnType);
-uint64_t _emval_as_uint64(EM_VAL value, TYPEID returnType);
+u64 _emval_as_uint64(EM_VAL value, TYPEID returnType);
 
 bool _emval_equals(EM_VAL first, EM_VAL second);
 bool _emval_strictly_equals(EM_VAL first, EM_VAL second);
@@ -196,7 +196,7 @@ union GenericWireType {
     void* p;
   } w[2];
   double d;
-  uint64_t u;
+  u64 u;
 };
 static_assert(sizeof(GenericWireType) == 2*sizeof(void*), "GenericWireType must be size of 2 pointers");
 static_assert(alignof(GenericWireType) == 8, "GenericWireType must be 8-byte-aligned");
@@ -216,7 +216,7 @@ inline void writeGenericWireType(GenericWireType*& cursor, int64_t wt) {
   ++cursor;
 }
 
-inline void writeGenericWireType(GenericWireType*& cursor, uint64_t wt) {
+inline void writeGenericWireType(GenericWireType*& cursor, u64 wt) {
   cursor->u = wt;
   ++cursor;
 }
@@ -556,11 +556,11 @@ public:
   }
 
   template<>
-  uint64_t as<uint64_t>() const {
+  u64 as<u64>() const {
     using namespace internal;
 
-    typedef BindingType<uint64_t> BT;
-    typename WithPolicies<>::template ArgTypeList<uint64_t> targetType;
+    typedef BindingType<u64> BT;
+    typename WithPolicies<>::template ArgTypeList<u64> targetType;
 
     return  _emval_as_uint64(handle, targetType.getTypes()[0]);
   }

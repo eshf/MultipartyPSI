@@ -107,7 +107,7 @@ _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI inline char* __base_10_u32(c
   return __itoa::__append10(__first, __value);
 }
 
-_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI inline char* __base_10_u64(char* __buffer, uint64_t __value) noexcept {
+_LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI inline char* __base_10_u64(char* __buffer, u64 __value) noexcept {
   if (__value <= UINT32_MAX)
     return __itoa::__base_10_u32(__buffer, static_cast<uint32_t>(__value));
 
@@ -136,7 +136,7 @@ _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI inline __uint128_t __pow_10(
 
 _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI inline char* __base_10_u128(char* __buffer, __uint128_t __value) noexcept {
   _LIBCPP_ASSERT(
-      __value > numeric_limits<uint64_t>::max(), "The optimizations for this algorithm fail when this isn't true.");
+      __value > numeric_limits<u64>::max(), "The optimizations for this algorithm fail when this isn't true.");
 
   // Unlike the 64 to 32 bit case the 128 bit case the "upper half" can't be
   // stored in the "lower half". Instead we first need to handle the top most
@@ -157,19 +157,19 @@ _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI inline char* __base_10_u128(
     // They are handled here since leading zeros need to be appended to the buffer,
     __buffer = __itoa::__append9(__buffer, static_cast<uint32_t>(__value / __itoa::__pow_10(29)));
     __value %= __itoa::__pow_10(29);
-    __buffer = __itoa::__append10(__buffer, static_cast<uint64_t>(__value / __itoa::__pow_10(19)));
+    __buffer = __itoa::__append10(__buffer, static_cast<u64>(__value / __itoa::__pow_10(19)));
     __value %= __itoa::__pow_10(19);
   }
   else {
     // step 2
     // This version needs to determine the position of the leading non-zero digit.
-    __buffer = __base_10_u64(__buffer, static_cast<uint64_t>(__value / __itoa::__pow_10(19)));
+    __buffer = __base_10_u64(__buffer, static_cast<u64>(__value / __itoa::__pow_10(19)));
     __value %= __itoa::__pow_10(19);
   }
 
   // Step 3
   __buffer = __itoa::__append9(__buffer, static_cast<uint32_t>(__value / 10000000000));
-  __buffer = __itoa::__append10(__buffer, static_cast<uint64_t>(__value % 10000000000));
+  __buffer = __itoa::__append10(__buffer, static_cast<u64>(__value % 10000000000));
 
   return __buffer;
 }

@@ -88,7 +88,7 @@ typedef Uint16 SDL_AudioFormat;
  *  Defaults to LSB byte order.
  */
 /*@{*/
-#define AUDIO_U8	0x0008  /**< Unsigned 8-bit samples */
+#define AUDIO_uint8_t	0x0008  /**< Unsigned 8-bit samples */
 #define AUDIO_S8	0x8008  /**< Signed 8-bit samples */
 #define AUDIO_U16LSB	0x0010  /**< Unsigned 16-bit samples */
 #define AUDIO_S16LSB	0x8010  /**< Signed 16-bit samples */

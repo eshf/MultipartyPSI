@@ -52,8 +52,8 @@ struct static_per_resultset_data
     std::size_t info_offset{};
     std::size_t info_size{};
     bool has_ok_packet_data{false};  // The OK packet information is default constructed, or actual data?
-    std::uint64_t affected_rows{};   // OK packet data
-    std::uint64_t last_insert_id{};  // OK packet data
+    std::u64 affected_rows{};   // OK packet data
+    std::u64 last_insert_id{};  // OK packet data
     std::uint16_t warnings{};        // OK packet data
     bool is_out_params{false};       // Does this resultset contain OUT param information?
 };
@@ -131,12 +131,12 @@ public:
         return metadata_collection_view(meta_.data() + resultset_data.meta_offset, resultset_data.meta_size);
     }
 
-    std::uint64_t get_affected_rows(std::size_t index) const noexcept
+    std::u64 get_affected_rows(std::size_t index) const noexcept
     {
         return ext_.per_result(index).affected_rows;
     }
 
-    std::uint64_t get_last_insert_id(std::size_t index) const noexcept
+    std::u64 get_last_insert_id(std::size_t index) const noexcept
     {
         return ext_.per_result(index).last_insert_id;
     }

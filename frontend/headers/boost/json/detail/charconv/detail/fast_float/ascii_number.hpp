@@ -23,7 +23,7 @@ BOOST_FORCEINLINE constexpr bool is_integer(UC c) noexcept {
   return !(c > UC('9') || c < UC('0'));
 }
 
-BOOST_FORCEINLINE constexpr uint64_t byteswap(uint64_t val) {
+BOOST_FORCEINLINE constexpr u64 byteswap(u64 val) {
   return (val & 0xFF00000000000000) >> 56
     | (val & 0x00FF000000000000) >> 40
     | (val & 0x0000FF0000000000) >> 24
@@ -35,17 +35,17 @@ BOOST_FORCEINLINE constexpr uint64_t byteswap(uint64_t val) {
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-uint64_t read_u64(const char *chars) {
+u64 read_u64(const char *chars) {
   if (cpp20_and_in_constexpr()) {
-    uint64_t val = 0;
+    u64 val = 0;
     for(int i = 0; i < 8; ++i) {
-      val |= uint64_t(*chars) << (i*8);
+      val |= u64(*chars) << (i*8);
       ++chars;
     }
     return val;
   }
-  uint64_t val;
-  ::memcpy(&val, chars, sizeof(uint64_t));
+  u64 val;
+  ::memcpy(&val, chars, sizeof(u64));
 #ifdef BOOST_JSON_BIG_ENDIAN
   // Need to read as-if the number was in little-endian order.
   val = byteswap(val);
@@ -54,7 +54,7 @@ uint64_t read_u64(const char *chars) {
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-void write_u64(uint8_t *chars, uint64_t val) {
+void write_u64(uint8_t *chars, u64 val) {
   if (cpp20_and_in_constexpr()) {
     for(int i = 0; i < 8; ++i) {
       *chars = uint8_t(val);
@@ -67,15 +67,15 @@ void write_u64(uint8_t *chars, uint64_t val) {
   // Need to read as-if the number was in little-endian order.
   val = byteswap(val);
 #endif
-  ::memcpy(chars, &val, sizeof(uint64_t));
+  ::memcpy(chars, &val, sizeof(u64));
 }
 
 // credit  @aqrit
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
-uint32_t parse_eight_digits_unrolled(uint64_t val) {
-  constexpr uint64_t mask = 0x000000FF000000FF;
-  constexpr uint64_t mul1 = 0x000F424000000064; // 100 + (1000000ULL << 32)
-  constexpr uint64_t mul2 = 0x0000271000000001; // 1 + (10000ULL << 32)
+uint32_t parse_eight_digits_unrolled(u64 val) {
+  constexpr u64 mask = 0x000000FF000000FF;
+  constexpr u64 mul1 = 0x000F424000000064; // 100 + (1000000ULL << 32)
+  constexpr u64 mul2 = 0x0000271000000001; // 1 + (10000ULL << 32)
   val -= 0x3030303030303030;
   val = (val * 10) + (val >> 8); // val = (val * 2561) >> 8;
   val = (((val & mask) * mul1) + (((val >> 16) & mask) * mul2)) >> 32;
@@ -98,7 +98,7 @@ uint32_t parse_eight_digits_unrolled(const char *chars)  noexcept  {
 }
 
 // credit @aqrit
-BOOST_FORCEINLINE constexpr bool is_made_of_eight_digits_fast(uint64_t val)  noexcept  {
+BOOST_FORCEINLINE constexpr bool is_made_of_eight_digits_fast(u64 val)  noexcept  {
   return !((((val + 0x4646464646464646) | (val - 0x3030303030303030)) & 0x8080808080808080));
 }
 
@@ -120,7 +120,7 @@ bool is_made_of_eight_digits_fast(const char *chars)  noexcept  {
 template <typename UC>
 struct parsed_number_string_t {
   int64_t exponent{0};
-  uint64_t mantissa{0};
+  u64 mantissa{0};
   UC const * lastmatch{nullptr};
   bool negative{false};
   bool valid{false};
@@ -155,13 +155,13 @@ parsed_number_string_t<UC> parse_number_string(UC const *p, UC const * pend, par
   }
   UC const * const start_digits = p;
 
-  uint64_t i = 0; // an unsigned int avoids signed overflows (which are bad)
+  u64 i = 0; // an unsigned int avoids signed overflows (which are bad)
 
   while ((p != pend) && is_integer(*p)) {
     // a multiplication by 10 is cheaper than an arbitrary integer
     // multiplication
     i = 10 * i +
-        uint64_t(*p - UC('0')); // might overflow, we will handle the overflow later
+        u64(*p - UC('0')); // might overflow, we will handle the overflow later
     ++p;
   }
   UC const * const end_of_integer_part = p;
@@ -254,9 +254,9 @@ parsed_number_string_t<UC> parse_number_string(UC const *p, UC const * pend, par
       i = 0;
       p = answer.integer.ptr;
       UC const * int_end = p + answer.integer.len();
-      constexpr uint64_t minimal_nineteen_digit_integer{1000000000000000000};
+      constexpr u64 minimal_nineteen_digit_integer{1000000000000000000};
       while((i < minimal_nineteen_digit_integer) && (p != int_end)) {
-        i = i * 10 + uint64_t(*p - UC('0'));
+        i = i * 10 + u64(*p - UC('0'));
         ++p;
       }
       if (i >= minimal_nineteen_digit_integer) { // We have a big integers
@@ -265,7 +265,7 @@ parsed_number_string_t<UC> parse_number_string(UC const *p, UC const * pend, par
           p = answer.fraction.ptr;
           UC const * frac_end = p + answer.fraction.len();
           while((i < minimal_nineteen_digit_integer) && (p != frac_end)) {
-            i = i * 10 + uint64_t(*p - UC('0'));
+            i = i * 10 + u64(*p - UC('0'));
             ++p;
           }
           exponent = answer.fraction.ptr - p + exp_number;

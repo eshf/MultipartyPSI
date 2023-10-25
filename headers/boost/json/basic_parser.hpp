@@ -208,7 +208,7 @@ namespace json {
         /// @param s The remaining characters
         /// @param ec Set to the error, if any occurred.
         ///
-        bool on_uint64( uint64_t u, string_view s, error_code& ec );
+        bool on_uint64( u64 u, string_view s, error_code& ec );
 
         /// Called when a double is parsed.
         ///
@@ -285,7 +285,7 @@ class basic_parser
 
     struct number
     {
-        uint64_t mant;
+        u64 mant;
         int bias;
         int exp;
         bool frac;

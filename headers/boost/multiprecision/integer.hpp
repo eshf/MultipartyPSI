@@ -219,9 +219,9 @@ BOOST_MP_CXX14_CONSTEXPR Integer karatsuba_sqrt(const Integer& x, Integer& r, si
    // Type which can hold at least "cutoff" bits:
    // 
 #ifdef BOOST_HAS_INT128
-   using cutoff_t = typename std::conditional<(cutoff > 64), uint128_type, std::uint64_t>::type;
+   using cutoff_t = typename std::conditional<(cutoff > 64), uint128_type, std::u64>::type;
 #else
-   using cutoff_t = std::uint64_t;
+   using cutoff_t = std::u64;
 #endif
    //
    // See if we can take the fast path:

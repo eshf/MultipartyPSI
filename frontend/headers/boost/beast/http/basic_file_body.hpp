@@ -64,7 +64,7 @@ struct basic_file_body
         @param body The file body to use
     */
     static
-    std::uint64_t
+    std::u64
     size(value_type const& body);
 };
 
@@ -95,7 +95,7 @@ class basic_file_body<File>::value_type
     File file_;
 
     // The cached file size
-    std::uint64_t file_size_ = 0;
+    std::u64 file_size_ = 0;
 
 public:
     /** Destructor.
@@ -127,7 +127,7 @@ public:
     }
 
     /// Returns the size of the file if open
-    std::uint64_t
+    std::u64
     size() const
     {
         return file_size_;
@@ -172,7 +172,7 @@ public:
         @param ec Set to the error, if any occurred
     */
 
-    void seek(std::uint64_t offset, error_code& ec);
+    void seek(std::u64 offset, error_code& ec);
 };
 
 template<class File>
@@ -233,7 +233,7 @@ template<class File>
 void
 basic_file_body<File>::
 value_type::
-seek(std::uint64_t offset, error_code& ec)
+seek(std::u64 offset, error_code& ec)
 {
     file_.seek(offset, ec);
     // Cache the size
@@ -248,7 +248,7 @@ seek(std::uint64_t offset, error_code& ec)
 
 // This is called from message::payload_size
 template<class File>
-std::uint64_t
+std::u64
 basic_file_body<File>::
 size(value_type const& body)
 {
@@ -269,7 +269,7 @@ template<class File>
 class basic_file_body<File>::writer
 {
     value_type& body_;                       // The body we are reading from
-    std::uint64_t remain_;                   // The number of unread bytes
+    std::u64 remain_;                   // The number of unread bytes
     char buf_[BOOST_BEAST_FILE_BUFFER_SIZE]; // Small buffer for reading
 
 public:
@@ -462,7 +462,7 @@ public:
     // optionally use for optimization.
     //
     void
-    init(boost::optional<std::uint64_t> const&, error_code& ec);
+    init(boost::optional<std::u64> const&, error_code& ec);
 
     // This function is called one or more times to store
     // buffer sequences corresponding to the incoming body.
@@ -505,7 +505,7 @@ void
 basic_file_body<File>::
 reader::
 init(
-    boost::optional<std::uint64_t> const& content_length,
+    boost::optional<std::u64> const& content_length,
     error_code& ec)
 {
     // The file must already be open for writing

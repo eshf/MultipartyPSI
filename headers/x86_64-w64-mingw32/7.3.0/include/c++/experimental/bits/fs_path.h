@@ -318,7 +318,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 #if _GLIBCXX_USE_WCHAR_T
     std::wstring   wstring() const;
 #endif
-    std::string    u8string() const;
+    std::string    uint8_tstring() const;
     std::u16string u16string() const;
     std::u32string u32string() const;
 
@@ -332,7 +332,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 #if _GLIBCXX_USE_WCHAR_T
     std::wstring   generic_wstring() const;
 #endif
-    std::string    generic_u8string() const;
+    std::string    generic_uint8_tstring() const;
     std::u16string generic_u16string() const;
     std::u32string generic_u32string() const;
 
@@ -539,7 +539,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
   // TODO constrain with _Path<Source> and __value_type_is_char
   template<typename _Source>
     inline path
-    u8path(const _Source& __source)
+    uint8_tpath(const _Source& __source)
     {
 #ifdef _GLIBCXX_FILESYSTEM_IS_WINDOWS
       return path{ path::string_type{__source} };
@@ -551,7 +551,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
   // TODO constrain with _Path<InputIterator, InputIterator> and __value_type_is_char
   template<typename _InputIterator>
     inline path
-    u8path(_InputIterator __first, _InputIterator __last)
+    uint8_tpath(_InputIterator __first, _InputIterator __last)
     {
 #ifdef _GLIBCXX_FILESYSTEM_IS_WINDOWS
       return path{ path::string_type{__first, __last} };
@@ -854,8 +854,8 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 
       // use codecvt_utf8<wchar_t> to convert native string to UTF-8
       codecvt_utf8<value_type> __cvt;
-      _String __u8str{_CharAlloc{__a}};
-      if (__str_codecvt_out(__first, __last, __u8str, __cvt))
+      _String __uint8_tstr{_CharAlloc{__a}};
+      if (__str_codecvt_out(__first, __last, __uint8_tstr, __cvt))
 	{
 	  struct
 	  {
@@ -876,7 +876,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 	    }
 	  } __dispatch;
 	  _WString __wstr;
-	  if (auto* __p = __dispatch(__u8str, __wstr, is_same<_CharT, char>{}))
+	  if (auto* __p = __dispatch(__uint8_tstr, __wstr, is_same<_CharT, char>{}))
 	    return *__p;
 	}
 #else
@@ -899,7 +899,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 #endif
 
   inline std::string
-  path::u8string() const
+  path::uint8_tstring() const
   {
 #ifdef _GLIBCXX_FILESYSTEM_IS_WINDOWS
     std::string __str;
@@ -938,7 +938,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 #endif
 
   inline std::string
-  path::generic_u8string() const { return u8string(); }
+  path::generic_uint8_tstring() const { return uint8_tstring(); }
 
   inline std::u16string
   path::generic_u16string() const { return u16string(); }

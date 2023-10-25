@@ -275,12 +275,12 @@ struct min_fast_uint :
 
 template <int NumBits>
 struct num_value_fn
-    : std::conditional<NumBits < 32, std::uint32_t, std::uint64_t>
+    : std::conditional<NumBits < 32, std::uint32_t, std::u64>
 {};
 
 template <int NumBits>
 struct max_value_fn
-    : std::conditional<NumBits <= 32, std::uint32_t, std::uint64_t>
+    : std::conditional<NumBits <= 32, std::uint32_t, std::u64>
 {};
 
 } // namespace detail

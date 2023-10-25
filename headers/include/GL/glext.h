@@ -1384,7 +1384,7 @@ GLAPI void APIENTRY glUniformBlockBinding (GLuint program, GLuint uniformBlockIn
 #ifndef GL_VERSION_3_2
 #define GL_VERSION_3_2 1
 typedef struct __GLsync *GLsync;
-typedef khronos_uint64_t GLuint64;
+typedef khronos_u64 GLuint64;
 typedef khronos_int64_t GLint64;
 #define GL_CONTEXT_CORE_PROFILE_BIT       0x00000001
 #define GL_CONTEXT_COMPATIBILITY_PROFILE_BIT 0x00000002
@@ -2900,7 +2900,7 @@ GLAPI void APIENTRY glPrimitiveBoundingBoxARB (GLfloat minX, GLfloat minY, GLflo
 
 #ifndef GL_ARB_bindless_texture
 #define GL_ARB_bindless_texture 1
-typedef khronos_uint64_t GLuint64EXT;
+typedef khronos_u64 GLuint64EXT;
 #define GL_UNSIGNED_INT64_ARB             0x140F
 typedef GLuint64 (APIENTRYP PFNGLGETTEXTUREHANDLEARBPROC) (GLuint texture);
 typedef GLuint64 (APIENTRYP PFNGLGETTEXTURESAMPLERHANDLEARBPROC) (GLuint texture, GLuint sampler);
@@ -6073,7 +6073,7 @@ GLAPI void APIENTRY glDrawRangeElementArrayATI (GLenum mode, GLuint start, GLuin
 #define GL_BUMP_NUM_TEX_UNITS_ATI         0x8777
 #define GL_BUMP_TEX_UNITS_ATI             0x8778
 #define GL_DUDV_ATI                       0x8779
-#define GL_DU8DV8_ATI                     0x877A
+#define GL_Duint8_tDV8_ATI                     0x877A
 #define GL_BUMP_ENVMAP_ATI                0x877B
 #define GL_BUMP_TARGET_ATI                0x877C
 typedef void (APIENTRYP PFNGLTEXBUMPPARAMETERIVATIPROC) (GLenum pname, const GLint *param);

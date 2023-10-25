@@ -31,15 +31,15 @@ namespace osuCrypto {
         return mLocalName;
     }
 
-    void BtChannel::asyncSend(const void * buff, uint64_t size)
+    void BtChannel::asyncSend(const void * buff, u64 size)
     {
         if (mSocket->mStopped)
             throw std::runtime_error("rt error at " LOCATION);
 
         BoostIOOperation op;
 
-        op.mSize = (u32)size;
-        op.mBuffs[1] = boost::asio::buffer((char*)buff, (u32)size);
+        op.mSize = (uint32_t)size;
+        op.mBuffs[1] = boost::asio::buffer((char*)buff, (uint32_t)size);
 
         op.mType = BoostIOOperation::Type::SendData;
 
@@ -53,10 +53,10 @@ namespace osuCrypto {
 
         BoostIOOperation op;
 
-        op.mSize = (u32)buff->ChannelBufferSize();
+        op.mSize = (uint32_t)buff->ChannelBufferSize();
 
 
-        op.mBuffs[1] = boost::asio::buffer((char*)buff->ChannelBufferData(), (u32)buff->ChannelBufferSize());
+        op.mBuffs[1] = boost::asio::buffer((char*)buff->ChannelBufferData(), (uint32_t)buff->ChannelBufferSize());
         op.mType = BoostIOOperation::Type::SendData;
 
         op.mOther = buff.release();
@@ -64,7 +64,7 @@ namespace osuCrypto {
         mEndpoint.getIOService().dispatch(mSocket.get(), op);
     }
 
-    void BtChannel::send(const void * buff, uint64_t size)
+    void BtChannel::send(const void * buff, u64 size)
     {
         if (mSocket->mStopped)
             throw std::runtime_error("rt error at " LOCATION);
@@ -72,8 +72,8 @@ namespace osuCrypto {
         BoostIOOperation op;
         op.clear();
 
-        op.mSize = (u32)size;
-        op.mBuffs[1] = boost::asio::buffer((char*)buff, (u32)size);
+        op.mSize = (uint32_t)size;
+        op.mBuffs[1] = boost::asio::buffer((char*)buff, (uint32_t)size);
 
 
         op.mType = BoostIOOperation::Type::SendData;
@@ -86,7 +86,7 @@ namespace osuCrypto {
         prom.get_future().get();
     }
 
-    std::future<void> BtChannel::asyncRecv(void * buff, uint64_t size)
+    std::future<void> BtChannel::asyncRecv(void * buff, u64 size)
     {
         if (mSocket->mStopped)
             throw std::runtime_error("rt error at " LOCATION);
@@ -94,8 +94,8 @@ namespace osuCrypto {
         BoostIOOperation op;
         op.clear();
 
-        op.mSize = (u32)size;
-        op.mBuffs[1] = boost::asio::buffer((char*)buff, (u32)size);
+        op.mSize = (uint32_t)size;
+        op.mBuffs[1] = boost::asio::buffer((char*)buff, (uint32_t)size);
 
         op.mType = BoostIOOperation::Type::RecvData;
 
@@ -130,7 +130,7 @@ namespace osuCrypto {
         return future;
     }
 
-    void BtChannel::recv(void * dest, uint64_t length)
+    void BtChannel::recv(void * dest, u64 length)
     {
         try {
             // schedule the recv.
@@ -210,18 +210,18 @@ namespace osuCrypto {
         }
     }
 
-    uint64_t BtChannel::getTotalDataSent() const
+    u64 BtChannel::getTotalDataSent() const
     {
-        return (mSocket) ? (uint64_t)mSocket->mTotalSentData : 0;
+        return (mSocket) ? (u64)mSocket->mTotalSentData : 0;
     }
 
-    uint64_t BtChannel::getTotalDataRecv() const
+    u64 BtChannel::getTotalDataRecv() const
     {
-        return (mSocket) ? (uint64_t)mSocket->mTotalRecvData : 0;
+        return (mSocket) ? (u64)mSocket->mTotalRecvData : 0;
     }
 
-    uint64_t BtChannel::getMaxOutstandingSendData() const
+    u64 BtChannel::getMaxOutstandingSendData() const
     {
-        return (mSocket) ? (uint64_t)mSocket->mMaxOutstandingSendData : 0;
+        return (mSocket) ? (u64)mSocket->mMaxOutstandingSendData : 0;
     }
 }

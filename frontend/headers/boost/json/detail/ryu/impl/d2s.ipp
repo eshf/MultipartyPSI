@@ -103,25 +103,25 @@ namespace detail {
 
 // Best case: use 128-bit type.
 inline
-std::uint64_t
+std::u64
     mulShift(
-    const std::uint64_t m,
-    const std::uint64_t* const mul,
+    const std::u64 m,
+    const std::u64* const mul,
     const std::int32_t j) noexcept
 {
     const uint128_t b0 = ((uint128_t) m) * mul[0];
     const uint128_t b2 = ((uint128_t) m) * mul[1];
-    return (std::uint64_t) (((b0 >> 64) + b2) >> (j - 64));
+    return (std::u64) (((b0 >> 64) + b2) >> (j - 64));
 }
 
 inline
-uint64_t
+u64
 mulShiftAll(
-    const std::uint64_t m,
-    const std::uint64_t* const mul,
+    const std::u64 m,
+    const std::u64* const mul,
     std::int32_t const j,
-    std::uint64_t* const vp,
-    std::uint64_t* const vm,
+    std::u64* const vp,
+    std::u64* const vm,
     const std::uint32_t mmShift) noexcept
 {
 //  m <<= 2;
@@ -132,10 +132,10 @@ mulShiftAll(
 //  uint128_t lo = b0 & 0xffffffffffffffffull;
 //  uint128_t factor = (((uint128_t) mul[1]) << 64) + mul[0];
 //  uint128_t vpLo = lo + (factor << 1);
-//  *vp = (std::uint64_t) ((hi + (vpLo >> 64)) >> (j - 64));
+//  *vp = (std::u64) ((hi + (vpLo >> 64)) >> (j - 64));
 //  uint128_t vmLo = lo - (factor << mmShift);
-//  *vm = (std::uint64_t) ((hi + (vmLo >> 64) - (((uint128_t) 1ull) << 64)) >> (j - 64));
-//  return (std::uint64_t) (hi >> (j - 64));
+//  *vm = (std::u64) ((hi + (vmLo >> 64) - (((uint128_t) 1ull) << 64)) >> (j - 64));
+//  return (std::u64) (hi >> (j - 64));
     *vp = mulShift(4 * m + 2, mul, j);
     *vm = mulShift(4 * m - 1 - mmShift, mul, j);
     return mulShift(4 * m, mul, j);
@@ -144,31 +144,31 @@ mulShiftAll(
 #elif defined(BOOST_JSON_RYU_HAS_64_BIT_INTRINSICS)
 
 inline
-std::uint64_t
+std::u64
 mulShift(
-    const std::uint64_t m,
-    const std::uint64_t* const mul,
+    const std::u64 m,
+    const std::u64* const mul,
     const std::int32_t j) noexcept
 {
     // m is maximum 55 bits
-    std::uint64_t high1;                                   // 128
-    std::uint64_t const low1 = umul128(m, mul[1], &high1); // 64
-    std::uint64_t high0;                                   // 64
+    std::u64 high1;                                   // 128
+    std::u64 const low1 = umul128(m, mul[1], &high1); // 64
+    std::u64 high0;                                   // 64
     umul128(m, mul[0], &high0);                            // 0
-    std::uint64_t const sum = high0 + low1;
+    std::u64 const sum = high0 + low1;
     if (sum < high0)
         ++high1; // overflow into high1
     return shiftright128(sum, high1, j - 64);
 }
 
 inline
-std::uint64_t
+std::u64
 mulShiftAll(
-    const std::uint64_t m,
-    const std::uint64_t* const mul,
+    const std::u64 m,
+    const std::u64* const mul,
     const std::int32_t j,
-    std::uint64_t* const vp,
-    std::uint64_t* const vm,
+    std::u64* const vp,
+    std::u64* const vm,
     const std::uint32_t mmShift) noexcept
 {
     *vp = mulShift(4 * m + 2, mul, j);
@@ -179,43 +179,43 @@ mulShiftAll(
 #else // !defined(BOOST_JSON_RYU_HAS_UINT128) && !defined(BOOST_JSON_RYU_HAS_64_BIT_INTRINSICS)
 
 inline
-std::uint64_t
+std::u64
 mulShiftAll(
-    std::uint64_t m,
-    const std::uint64_t* const mul,
+    std::u64 m,
+    const std::u64* const mul,
     const std::int32_t j,
-    std::uint64_t* const vp,
-    std::uint64_t* const vm,
+    std::u64* const vp,
+    std::u64* const vm,
     const std::uint32_t mmShift)
 {
     m <<= 1;
     // m is maximum 55 bits
-    std::uint64_t tmp;
-    std::uint64_t const lo = umul128(m, mul[0], &tmp);
-    std::uint64_t hi;
-    std::uint64_t const mid = tmp + umul128(m, mul[1], &hi);
+    std::u64 tmp;
+    std::u64 const lo = umul128(m, mul[0], &tmp);
+    std::u64 hi;
+    std::u64 const mid = tmp + umul128(m, mul[1], &hi);
     hi += mid < tmp; // overflow into hi
 
-    const std::uint64_t lo2 = lo + mul[0];
-    const std::uint64_t mid2 = mid + mul[1] + (lo2 < lo);
-    const std::uint64_t hi2 = hi + (mid2 < mid);
+    const std::u64 lo2 = lo + mul[0];
+    const std::u64 mid2 = mid + mul[1] + (lo2 < lo);
+    const std::u64 hi2 = hi + (mid2 < mid);
     *vp = shiftright128(mid2, hi2, (std::uint32_t)(j - 64 - 1));
 
     if (mmShift == 1)
     {
-        const std::uint64_t lo3 = lo - mul[0];
-        const std::uint64_t mid3 = mid - mul[1] - (lo3 > lo);
-        const std::uint64_t hi3 = hi - (mid3 > mid);
+        const std::u64 lo3 = lo - mul[0];
+        const std::u64 mid3 = mid - mul[1] - (lo3 > lo);
+        const std::u64 hi3 = hi - (mid3 > mid);
         *vm = shiftright128(mid3, hi3, (std::uint32_t)(j - 64 - 1));
     }
     else
     {
-        const std::uint64_t lo3 = lo + lo;
-        const std::uint64_t mid3 = mid + mid + (lo3 < lo);
-        const std::uint64_t hi3 = hi + hi + (mid3 < mid);
-        const std::uint64_t lo4 = lo3 - mul[0];
-        const std::uint64_t mid4 = mid3 - mul[1] - (lo4 > lo3);
-        const std::uint64_t hi4 = hi3 - (mid4 > mid3);
+        const std::u64 lo3 = lo + lo;
+        const std::u64 mid3 = mid + mid + (lo3 < lo);
+        const std::u64 hi3 = hi + hi + (mid3 < mid);
+        const std::u64 lo4 = lo3 - mul[0];
+        const std::u64 mid4 = mid3 - mul[1] - (lo4 > lo3);
+        const std::u64 hi4 = hi3 - (mid4 > mid3);
         *vm = shiftright128(mid4, hi4, (std::uint32_t)(j - 64));
     }
 
@@ -227,7 +227,7 @@ mulShiftAll(
 inline
 std::uint32_t
 decimalLength17(
-    const std::uint64_t v)
+    const std::u64 v)
 {
     // This is slightly faster than a loop.
     // The average output length is 16.38 digits, so we check high-to-low.
@@ -256,7 +256,7 @@ decimalLength17(
 // A floating decimal representing m * 10^e.
 struct floating_decimal_64
 {
-    std::uint64_t mantissa;
+    std::u64 mantissa;
     // Decimal exponent's range is -324 to 308
     // inclusive, and can fit in a short if needed.
     std::int32_t exponent;
@@ -265,11 +265,11 @@ struct floating_decimal_64
 inline
 floating_decimal_64
 d2d(
-    const std::uint64_t ieeeMantissa,
+    const std::u64 ieeeMantissa,
     const std::uint32_t ieeeExponent)
 {
     std::int32_t e2;
-    std::uint64_t m2;
+    std::u64 m2;
     if (ieeeExponent == 0)
     {
         // We subtract 2 so that the bounds computation has 2 additional bits.
@@ -289,15 +289,15 @@ d2d(
 #endif
 
     // Step 2: Determine the interval of valid decimal representations.
-    const std::uint64_t mv = 4 * m2;
+    const std::u64 mv = 4 * m2;
     // Implicit bool -> int conversion. True is 1, false is 0.
     const std::uint32_t mmShift = ieeeMantissa != 0 || ieeeExponent <= 1;
     // We would compute mp and mm like this:
-    // uint64_t mp = 4 * m2 + 2;
-    // uint64_t mm = mv - 1 - mmShift;
+    // u64 mp = 4 * m2 + 2;
+    // u64 mm = mv - 1 - mmShift;
 
     // Step 3: Convert to a decimal power base using 128-bit arithmetic.
-    std::uint64_t vr, vp, vm;
+    std::u64 vr, vp, vm;
     std::int32_t e10;
     bool vmIsTrailingZeros = false;
     bool vrIsTrailingZeros = false;
@@ -309,7 +309,7 @@ d2d(
         const std::int32_t k = DOUBLE_POW5_INV_BITCOUNT + pow5bits((int32_t)q) - 1;
         const std::int32_t i = -e2 + (std::int32_t)q + k;
 #if defined(BOOST_JSON_RYU_OPTIMIZE_SIZE)
-        uint64_t pow5[2];
+        u64 pow5[2];
         double_computeInvPow5(q, pow5);
         vr = mulShiftAll(m2, pow5, i, &vp, &vm, mmShift);
 #else
@@ -352,7 +352,7 @@ d2d(
         const std::int32_t k = pow5bits(i) - DOUBLE_POW5_BITCOUNT;
         const std::int32_t j = (std::int32_t)q - k;
 #if defined(BOOST_JSON_RYU_OPTIMIZE_SIZE)
-        std::uint64_t pow5[2];
+        std::u64 pow5[2];
         double_computePow5(i, pow5);
         vr = mulShiftAll(m2, pow5, j, &vp, &vm, mmShift);
 #else
@@ -402,19 +402,19 @@ d2d(
     // Step 4: Find the shortest decimal representation in the interval of valid representations.
     std::int32_t removed = 0;
     std::uint8_t lastRemovedDigit = 0;
-    std::uint64_t output;
+    std::u64 output;
     // On average, we remove ~2 digits.
     if (vmIsTrailingZeros || vrIsTrailingZeros)
     {
         // General case, which happens rarely (~0.7%).
         for (;;)
         {
-            const std::uint64_t vpDiv10 = div10(vp);
-            const std::uint64_t vmDiv10 = div10(vm);
+            const std::u64 vpDiv10 = div10(vp);
+            const std::u64 vmDiv10 = div10(vm);
             if (vpDiv10 <= vmDiv10)
                 break;
             const std::uint32_t vmMod10 = ((std::uint32_t)vm) - 10 * ((std::uint32_t)vmDiv10);
-            const std::uint64_t vrDiv10 = div10(vr);
+            const std::u64 vrDiv10 = div10(vr);
             const std::uint32_t vrMod10 = ((std::uint32_t)vr) - 10 * ((std::uint32_t)vrDiv10);
             vmIsTrailingZeros &= vmMod10 == 0;
             vrIsTrailingZeros &= lastRemovedDigit == 0;
@@ -432,12 +432,12 @@ d2d(
         {
             for (;;)
             {
-                const std::uint64_t vmDiv10 = div10(vm);
+                const std::u64 vmDiv10 = div10(vm);
                 const std::uint32_t vmMod10 = ((std::uint32_t)vm) - 10 * ((std::uint32_t)vmDiv10);
                 if (vmMod10 != 0)
                     break;
-                const std::uint64_t vpDiv10 = div10(vp);
-                const std::uint64_t vrDiv10 = div10(vr);
+                const std::u64 vpDiv10 = div10(vp);
+                const std::u64 vrDiv10 = div10(vr);
                 const std::uint32_t vrMod10 = ((std::uint32_t)vr) - 10 * ((std::uint32_t)vrDiv10);
                 vrIsTrailingZeros &= lastRemovedDigit == 0;
                 lastRemovedDigit = (uint8_t)vrMod10;
@@ -463,12 +463,12 @@ d2d(
     {
         // Specialized for the common case (~99.3%). Percentages below are relative to this.
         bool roundUp = false;
-        const std::uint64_t vpDiv100 = div100(vp);
-        const std::uint64_t vmDiv100 = div100(vm);
+        const std::u64 vpDiv100 = div100(vp);
+        const std::u64 vmDiv100 = div100(vm);
         if (vpDiv100 > vmDiv100)
         {
             // Optimization: remove two digits at a time (~86.2%).
-            const std::uint64_t vrDiv100 = div100(vr);
+            const std::u64 vrDiv100 = div100(vr);
             const std::uint32_t vrMod100 = ((std::uint32_t)vr) - 100 * ((std::uint32_t)vrDiv100);
             roundUp = vrMod100 >= 50;
             vr = vrDiv100;
@@ -482,11 +482,11 @@ d2d(
         // 0: 70.6%, 1: 27.8%, 2: 1.40%, 3: 0.14%, 4+: 0.02%
         for (;;)
         {
-            const std::uint64_t vpDiv10 = div10(vp);
-            const std::uint64_t vmDiv10 = div10(vm);
+            const std::u64 vpDiv10 = div10(vp);
+            const std::u64 vmDiv10 = div10(vm);
             if (vpDiv10 <= vmDiv10)
                 break;
-            const std::uint64_t vrDiv10 = div10(vr);
+            const std::u64 vrDiv10 = div10(vr);
             const std::uint32_t vrMod10 = ((std::uint32_t)vr) - 10 * ((std::uint32_t)vrDiv10);
             roundUp = vrMod10 >= 5;
             vr = vrDiv10;
@@ -527,7 +527,7 @@ to_chars(
     if (sign)
         result[index++] = '-';
 
-    std::uint64_t output = v.mantissa;
+    std::u64 output = v.mantissa;
     std::uint32_t const olength = decimalLength17(output);
 
 #ifdef RYU_DEBUG
@@ -552,7 +552,7 @@ to_chars(
     if ((output >> 32) != 0)
     {
         // Expensive 64-bit division.
-        std::uint64_t const q = div1e8(output);
+        std::u64 const q = div1e8(output);
         std::uint32_t output2 = ((std::uint32_t)output) - 100000000 * ((std::uint32_t)q);
         output = q;
 
@@ -634,9 +634,9 @@ to_chars(
     return index;
 }
 
-static inline bool d2d_small_int(const uint64_t ieeeMantissa, const uint32_t ieeeExponent,
+static inline bool d2d_small_int(const u64 ieeeMantissa, const uint32_t ieeeExponent,
   floating_decimal_64* const v) {
-  const uint64_t m2 = (1ull << DOUBLE_MANTISSA_BITS) | ieeeMantissa;
+  const u64 m2 = (1ull << DOUBLE_MANTISSA_BITS) | ieeeMantissa;
   const int32_t e2 = (int32_t) ieeeExponent - DOUBLE_BIAS - DOUBLE_MANTISSA_BITS;
 
   if (e2 > 0) {
@@ -652,8 +652,8 @@ static inline bool d2d_small_int(const uint64_t ieeeMantissa, const uint32_t iee
 
   // Since 2^52 <= m2 < 2^53 and 0 <= -e2 <= 52: 1 <= f = m2 / 2^-e2 < 2^53.
   // Test if the lower -e2 bits of the significand are 0, i.e. whether the fraction is 0.
-  const uint64_t mask = (1ull << -e2) - 1;
-  const uint64_t fraction = m2 & mask;
+  const u64 mask = (1ull << -e2) - 1;
+  const u64 fraction = m2 & mask;
   if (fraction != 0) {
     return false;
   }
@@ -676,7 +676,7 @@ d2s_buffered_n(
 {
     using namespace detail;
     // Step 1: Decode the floating-point number, and unify normalized and subnormal cases.
-    std::uint64_t const bits = double_to_bits(f);
+    std::u64 const bits = double_to_bits(f);
 
 #ifdef RYU_DEBUG
     printf("IN=");
@@ -688,7 +688,7 @@ d2s_buffered_n(
 
     // Decode bits into sign, mantissa, and exponent.
     const bool ieeeSign = ((bits >> (DOUBLE_MANTISSA_BITS + DOUBLE_EXPONENT_BITS)) & 1) != 0;
-    const std::uint64_t ieeeMantissa = bits & ((1ull << DOUBLE_MANTISSA_BITS) - 1);
+    const std::u64 ieeeMantissa = bits & ((1ull << DOUBLE_MANTISSA_BITS) - 1);
     const std::uint32_t ieeeExponent = (std::uint32_t)((bits >> DOUBLE_MANTISSA_BITS) & ((1u << DOUBLE_EXPONENT_BITS) - 1));
     // Case distinction; exit early for the easy cases.
     if (ieeeExponent == ((1u << DOUBLE_EXPONENT_BITS) - 1u) || (ieeeExponent == 0 && ieeeMantissa == 0)) {
@@ -708,7 +708,7 @@ d2s_buffered_n(
         // (This is not needed for fixed-point notation, so it might be beneficial to trim
         // trailing zeros in to_chars only if needed - once fixed-point notation output is implemented.)
         for (;;) {
-            std::uint64_t const q = div10(v.mantissa);
+            std::u64 const q = div10(v.mantissa);
             std::uint32_t const r = ((std::uint32_t) v.mantissa) - 10 * ((std::uint32_t) q);
             if (r != 0)
                 break;

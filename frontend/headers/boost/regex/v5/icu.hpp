@@ -128,7 +128,7 @@ public:
    typedef std::size_t                  size_type;
    typedef std::vector<char_type>       string_type;
    typedef U_NAMESPACE_QUALIFIER Locale locale_type;
-   typedef std::uint64_t                char_class_type;
+   typedef std::u64                char_class_type;
 
    struct boost_extensions_tag{};
 

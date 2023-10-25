@@ -27,21 +27,21 @@ namespace BOOST_REGEX_DETAIL_NS{
 
 class indexed_bit_flag
 {
-   boost::uint64_t low_mask;
+   boost::u64 low_mask;
    std::set<std::size_t> mask_set;
 public:
    indexed_bit_flag() : low_mask(0) {}
    void set(std::size_t i)
    {
-      if (i < std::numeric_limits<boost::uint64_t>::digits - 1)
-         low_mask |= static_cast<boost::uint64_t>(1u) << i;
+      if (i < std::numeric_limits<boost::u64>::digits - 1)
+         low_mask |= static_cast<boost::u64>(1u) << i;
       else
          mask_set.insert(i);
    }
    bool test(std::size_t i)
    {
-      if (i < std::numeric_limits<boost::uint64_t>::digits - 1)
-         return low_mask & static_cast<boost::uint64_t>(1u) << i ? true : false;
+      if (i < std::numeric_limits<boost::u64>::digits - 1)
+         return low_mask & static_cast<boost::u64>(1u) << i ? true : false;
       else
          return mask_set.find(i) != mask_set.end();
    }

@@ -6,14 +6,8 @@
 #include <iostream>
 #include "emscripten/emscripten.h"
 
-
 using namespace std;
-
-void EMSCRIPTEN_KEEPALIVE OPPRFnt_EmptrySet_Test_Imp (int iVal) {
-  printf("TestFunction called...value passed in was: %i\n", iVal);
-}
-
-
+extern "C" {
 
 void usage(const char* argv0)
 {
@@ -25,12 +19,12 @@ void usage(const char* argv0)
 }
 int main(int argc, char** argv)
 {
-	uint64_t trials = 1;
-	uint64_t pSetSize = 5, psiSecParam = 40, bitSize = 128;
+	u64 trials = 1;
+	u64 pSetSize = 5, psiSecParam = 40, bitSize = 128;
 
-	uint64_t nParties, tParties, opt_basedOPPRF, setSize, isAug;
+	u64 nParties, tParties, opt_basedOPPRF, setSize, isAug;
 
-	uint64_t roundOPPRF;
+	u64 roundOPPRF;
 
 
 	switch (argc) {
@@ -57,7 +51,7 @@ int main(int argc, char** argv)
 		}
 
 		if (argv[5][0] == '-' && argv[5][1] == 'p') {
-			uint64_t pIdx = atoi(argv[6]);
+			u64 pIdx = atoi(argv[6]);
 			if (nParties == 2)
 				party2(pIdx, setSize);
 			else
@@ -107,7 +101,7 @@ int main(int argc, char** argv)
 		}
 
 		if (argv[7][0] == '-' && argv[7][1] == 'p') {
-			uint64_t pIdx = atoi(argv[8]);
+			u64 pIdx = atoi(argv[8]);
 			if (roundOPPRF == 1 && nParties == 3)
 			{
 				//cout << nParties  << " " << roundOPPRF << " " << setSize << " " << pIdx << "\n";
@@ -133,4 +127,5 @@ int main(int argc, char** argv)
 	}
 
 	return 0;
+}
 }

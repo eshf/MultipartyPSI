@@ -22,13 +22,13 @@ namespace osuCrypto
         mBaseChoiceBits = choices;
         mGens.resize(choices.size());
 
-        for (uint64_t i = 0; i < baseRecvOts.size(); i++)
+        for (u64 i = 0; i < baseRecvOts.size(); i++)
         {
             mGens[i].SetSeed(baseRecvOts[i]);
         }
 
         mChoiceBlks.resize(choices.size() / (sizeof(block) * 8));
-        for (uint64_t i = 0; i < mChoiceBlks.size(); ++i)
+        for (u64 i = 0; i < mChoiceBlks.size(); ++i)
         {
             mChoiceBlks[i] = toBlock(mBaseChoiceBits.data() + (i * sizeof(block)));
         }
@@ -41,7 +41,7 @@ namespace osuCrypto
         std::vector<block> base(mGens.size());
 
         // use some of the OT extension PRNG to new base OTs
-        for (uint64_t i = 0; i < base.size(); ++i)
+        for (u64 i = 0; i < base.size(); ++i)
         {
             base[i] = mGens[i].get<block>();
         }
@@ -51,7 +51,7 @@ namespace osuCrypto
     }
 
     void KkrtNcoOtSender::init(
-        uint64_t numOTExt)
+        u64 numOTExt)
     {
         static const u8 superBlkSize(8);
 
@@ -69,30 +69,30 @@ namespace osuCrypto
         mCorrectionIdx = 0;
 
         // we are going to process OTs in blocks of 128 * superblkSize messages.
-        uint64_t numSuperBlocks = (numOTExt / 128 + superBlkSize - 1) / superBlkSize;
+        u64 numSuperBlocks = (numOTExt / 128 + superBlkSize - 1) / superBlkSize;
 
         // the index of the last OT that we have completed.
-        uint64_t doneIdx = 0;
+        u64 doneIdx = 0;
 
         // a temp that will be used to transpose the sender's matrix
         std::array<std::array<block, superBlkSize>, 128> t;
 
-        uint64_t numCols = mGens.size();
+        u64 numCols = mGens.size();
 
-        for (uint64_t superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
+        for (u64 superBlkIdx = 0; superBlkIdx < numSuperBlocks; ++superBlkIdx)
         {
             // compute at what row does the user want use to stop.
             // the code will still compute the transpose for these
             // extra rows, but it is thrown away.
-            uint64_t stopIdx
+            u64 stopIdx
                 = doneIdx
-                + std::min(uint64_t(128) * superBlkSize, mT.size()[0] - doneIdx);
+                + std::min(u64(128) * superBlkSize, mT.size()[0] - doneIdx);
 
             // transpose 128 columns at at time. Each column will be 128 * superBlkSize = 1024 bits long.
-            for (uint64_t i = 0; i < numCols / 128; ++i)
+            for (u64 i = 0; i < numCols / 128; ++i)
             {
                 // generate the columns using AES-NI in counter mode.
-                for (uint64_t tIdx = 0, colIdx = i * 128; tIdx < 128; ++tIdx, ++colIdx)
+                for (u64 tIdx = 0, colIdx = i * 128; tIdx < 128; ++tIdx, ++colIdx)
                 {
                     mGens[colIdx].mAes.ecbEncCounterMode(mGens[colIdx].mBlockIdx, superBlkSize, ((block*)t.data() + superBlkSize * tIdx));
                     mGens[colIdx].mBlockIdx += superBlkSize;
@@ -108,7 +108,7 @@ namespace osuCrypto
                 // is unique and it shouldn't worry about pointer aliasing. 
                 block* __restrict mTIter = mT.data() + doneIdx * mT.size()[1] + i;
 
-                for (uint64_t rowIdx = doneIdx, j = 0; rowIdx < stopIdx; ++j)
+                for (u64 rowIdx = doneIdx, j = 0; rowIdx < stopIdx; ++j)
                 {
                     // because we transposed 1024 rows, the indexing gets a bit weird. But this
                     // is the location of the next row that we want. Keep in mind that we had long
@@ -116,7 +116,7 @@ namespace osuCrypto
                     block* __restrict tIter = (((block*)t.data()) + j);
 
                     // do the copy!
-                    for (uint64_t k = 0; rowIdx < stopIdx && k < 128; ++rowIdx, ++k)
+                    for (u64 k = 0; rowIdx < stopIdx && k < 128; ++rowIdx, ++k)
                     {
                         *mTIter = *tIter;
 
@@ -132,13 +132,13 @@ namespace osuCrypto
     }
 
     void KkrtNcoOtSender::encode(
-        uint64_t otIdx,
+        u64 otIdx,
         const ArrayView<block> inputword,
         block& val)
     {
 
 #ifndef NDEBUG
-        uint64_t expectedSize = mGens.size() / (sizeof(block) * 8);
+        u64 expectedSize = mGens.size() / (sizeof(block) * 8);
 
         if (inputword.size() != expectedSize)
             throw std::invalid_argument("Bad input word" LOCATION);
@@ -157,7 +157,7 @@ namespace osuCrypto
 
         // This is the hashing phase. Here we are using pseudo-random codewords.
         // That means we assume inputword is a hash of some sort.
-        for (uint64_t i = 0; i < mT.size()[1]; ++i)
+        for (u64 i = 0; i < mT.size()[1]; ++i)
         {
             block t0 = corVal[i] ^ inputword[i];
             block t1 = t0 & mChoiceBlks[i];
@@ -180,7 +180,7 @@ namespace osuCrypto
         mAesFixedKey.ecbEncBlocks(codeword.data(), mT.size()[1], aesBuff.data());
 
         val = ZeroBlock;
-        for (uint64_t i = 0; i < mT.size()[1]; ++i)
+        for (u64 i = 0; i < mT.size()[1]; ++i)
             val = val ^ codeword[i] ^ aesBuff[i];
 #endif
 
@@ -189,12 +189,12 @@ namespace osuCrypto
 
     void KkrtNcoOtSender::getParams(
         bool maliciousSecure,
-        uint64_t compSecParm,
-        uint64_t statSecParam,
-        uint64_t inputBitCount,
-        uint64_t inputCount,
-        uint64_t & inputBlkSize,
-        uint64_t & baseOtCount)
+        u64 compSecParm,
+        u64 statSecParam,
+        u64 inputBitCount,
+        u64 inputCount,
+        u64 & inputBlkSize,
+        u64 & baseOtCount)
     {
 
         //if (maliciousSecure) throw std::runtime_error("");
@@ -202,7 +202,7 @@ namespace osuCrypto
         inputBlkSize = baseOtCount / 128;
     }
 
-    void KkrtNcoOtSender::recvCorrection(Channel & chl, uint64_t recvCount)
+    void KkrtNcoOtSender::recvCorrection(Channel & chl, u64 recvCount)
     {
 
 #ifndef NDEBUG

@@ -132,19 +132,19 @@ public:
      * \par Exception safety
      * No-throw guarantee.
      */
-    explicit field(unsigned char v) noexcept : repr_(std::uint64_t(v)) {}
+    explicit field(unsigned char v) noexcept : repr_(std::u64(v)) {}
 
     /// \copydoc field(unsigned char)
-    explicit field(unsigned short v) noexcept : repr_(std::uint64_t(v)) {}
+    explicit field(unsigned short v) noexcept : repr_(std::u64(v)) {}
 
     /// \copydoc field(unsigned char)
-    explicit field(unsigned int v) noexcept : repr_(std::uint64_t(v)) {}
+    explicit field(unsigned int v) noexcept : repr_(std::u64(v)) {}
 
     /// \copydoc field(unsigned char)
-    explicit field(unsigned long v) noexcept : repr_(std::uint64_t(v)) {}
+    explicit field(unsigned long v) noexcept : repr_(std::u64(v)) {}
 
     /// \copydoc field(unsigned char)
-    explicit field(unsigned long long v) noexcept : repr_(std::uint64_t(v)) {}
+    explicit field(unsigned long long v) noexcept : repr_(std::u64(v)) {}
 
     /**
      * \brief Constructs a `field` holding a string.
@@ -302,35 +302,35 @@ public:
      */
     field& operator=(unsigned char v) noexcept
     {
-        repr_.data.emplace<std::uint64_t>(v);
+        repr_.data.emplace<std::u64>(v);
         return *this;
     }
 
     /// \copydoc operator=(unsigned char)
     field& operator=(unsigned short v) noexcept
     {
-        repr_.data.emplace<std::uint64_t>(v);
+        repr_.data.emplace<std::u64>(v);
         return *this;
     }
 
     /// \copydoc operator=(unsigned char)
     field& operator=(unsigned int v) noexcept
     {
-        repr_.data.emplace<std::uint64_t>(v);
+        repr_.data.emplace<std::u64>(v);
         return *this;
     }
 
     /// \copydoc operator=(unsigned char)
     field& operator=(unsigned long v) noexcept
     {
-        repr_.data.emplace<std::uint64_t>(v);
+        repr_.data.emplace<std::u64>(v);
         return *this;
     }
 
     /// \copydoc operator=(unsigned char)
     field& operator=(unsigned long long v) noexcept
     {
-        repr_.data.emplace<std::uint64_t>(v);
+        repr_.data.emplace<std::u64>(v);
         return *this;
     }
 
@@ -591,7 +591,7 @@ public:
     const std::int64_t& as_int64() const { return repr_.as<std::int64_t>(); }
 
     /**
-     * \brief Retrieves a reference to the underlying `std::uint64_t` value or throws an exception.
+     * \brief Retrieves a reference to the underlying `std::u64` value or throws an exception.
      * \par Exception safety
      * Strong guarantee. Throws on type mismatch.
      * \throws bad_field_access If `!this->is_uint64()`
@@ -600,7 +600,7 @@ public:
      * The returned reference is valid as long as `*this` is alive and no function that invalidates
      * references is called on `*this`.
      */
-    const std::uint64_t& as_uint64() const { return repr_.as<std::uint64_t>(); }
+    const std::u64& as_uint64() const { return repr_.as<std::u64>(); }
 
     /**
      * \brief Retrieves a reference to the underlying `std::string` value or throws an exception.
@@ -690,7 +690,7 @@ public:
     std::int64_t& as_int64() { return repr_.as<std::int64_t>(); }
 
     /// \copydoc as_uint64
-    std::uint64_t& as_uint64() { return repr_.as<std::uint64_t>(); }
+    std::u64& as_uint64() { return repr_.as<std::u64>(); }
 
     /// \copydoc as_string
     std::string& as_string() { return repr_.as<std::string>(); }
@@ -728,7 +728,7 @@ public:
     const std::int64_t& get_int64() const noexcept { return repr_.get<std::int64_t>(); }
 
     /**
-     * \brief Retrieves a reference to the underlying `std::uint64_t` value (unchecked access).
+     * \brief Retrieves a reference to the underlying `std::u64` value (unchecked access).
      * \par Preconditions
      * `this->is_uint64() == true` (if violated, results in undefined behavior).
      *
@@ -739,7 +739,7 @@ public:
      * The returned reference is valid as long as `*this` is alive and no function that invalidates
      * references is called on `*this`.
      */
-    const std::uint64_t& get_uint64() const noexcept { return repr_.get<std::uint64_t>(); }
+    const std::u64& get_uint64() const noexcept { return repr_.get<std::u64>(); }
 
     /**
      * \brief Retrieves a reference to the underlying `std::string` value (unchecked access).
@@ -843,7 +843,7 @@ public:
     std::int64_t& get_int64() noexcept { return repr_.get<std::int64_t>(); }
 
     /// \copydoc get_uint64
-    std::uint64_t& get_uint64() noexcept { return repr_.get<std::uint64_t>(); }
+    std::u64& get_uint64() noexcept { return repr_.get<std::u64>(); }
 
     /// \copydoc get_string
     std::string& get_string() noexcept { return repr_.get<std::string>(); }

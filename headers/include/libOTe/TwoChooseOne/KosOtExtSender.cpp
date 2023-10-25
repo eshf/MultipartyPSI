@@ -248,7 +248,7 @@ namespace osuCrypto
 
 #ifdef KOS_SHA_HASH
         SHA1 sha;
-        u8 hashBuff[20];
+        uint8_t hashBuff[20];
 #else
         std::array<block, 8> aesHashTemp;
 #endif
@@ -274,13 +274,13 @@ namespace osuCrypto
 #ifdef KOS_SHA_HASH
                 // hash the message without delta
                 sha.Reset();
-                sha.Update((u8*)&messages[dd][0], sizeof(block));
+                sha.Update((uint8_t*)&messages[dd][0], sizeof(block));
                 sha.Final(hashBuff);
                 messages[dd][0] = *(block*)hashBuff;
 
                 // hash the message with delta
                 sha.Reset();
-                sha.Update((u8*)&messages[dd][1], sizeof(block));
+                sha.Update((uint8_t*)&messages[dd][1], sizeof(block));
                 sha.Final(hashBuff);
                 messages[dd][1] = *(block*)hashBuff;
 #endif

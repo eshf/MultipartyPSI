@@ -835,7 +835,7 @@ module std [system] {
       module perms                        { private header "__filesystem/perms.h" }
       module recursive_directory_iterator { private header "__filesystem/recursive_directory_iterator.h" }
       module space_info                   { private header "__filesystem/space_info.h" }
-      module u8path                       { private header "__filesystem/u8path.h" }
+      module uint8_tpath                       { private header "__filesystem/uint8_tpath.h" }
     }
   }
   module format {

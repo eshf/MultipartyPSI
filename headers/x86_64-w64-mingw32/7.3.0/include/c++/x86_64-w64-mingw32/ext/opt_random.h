@@ -43,7 +43,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   namespace {
 
     template<size_t __sl1, size_t __sl2, size_t __sr1, size_t __sr2,
-	     uint32_t __msk1, uint32_t __msk2, uint32_t __msk3, uint32_t __msk4>
+	     u32 __msk1, u32 __msk2, u32 __msk3, u32 __msk4>
       inline __m128i __sse2_recursion(__m128i __a, __m128i __b,
 				      __m128i __c, __m128i __d)
       {
@@ -65,10 +65,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     void simd_fast_mersenne_twister_engine<_UIntType, __m,
 					   __pos1, __sl1, __sl2, __sr1, __sr2,
 					   __msk1, __msk2, __msk3, __msk4,
@@ -107,10 +107,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType, size_t __m,
 	   size_t __pos1, size_t __sl1, size_t __sl2,
 	   size_t __sr1, size_t __sr2,
-	   uint32_t __msk1, uint32_t __msk2,
-	   uint32_t __msk3, uint32_t __msk4,
-	   uint32_t __parity1, uint32_t __parity2,
-	   uint32_t __parity3, uint32_t __parity4>
+	   u32 __msk1, u32 __msk2,
+	   u32 __msk3, u32 __msk4,
+	   u32 __parity1, u32 __parity2,
+	   u32 __parity3, u32 __parity4>
     bool
     operator==(const __gnu_cxx::simd_fast_mersenne_twister_engine<_UIntType,
 	       __m, __pos1, __sl1, __sl2, __sr1, __sr2,

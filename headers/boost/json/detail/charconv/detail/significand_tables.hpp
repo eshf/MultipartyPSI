@@ -19,7 +19,7 @@ namespace boost { namespace json { namespace detail { namespace charconv { names
     // 10^BOOST_CHARCONV_FASTFLOAT_LARGEST_POWER (inclusively).
     // The significand is truncated, and never rounded up.
     // Uses about 5KB.
-static constexpr std::uint64_t significand_64[] = {
+static constexpr std::u64 significand_64[] = {
     0xa5ced43b7e3e9188, 0xcf42894a5dce35ea,
     0x818995ce7aa0e1b2, 0xa1ebfb4219491a1f,
     0xca66fa129f9b60a6, 0xfd00b897478238d0,
@@ -342,7 +342,7 @@ static constexpr std::uint64_t significand_64[] = {
     // A complement to significand_64
     // complete to a 128-bit significand.
     // Uses about 5KB but is rarely accessed.
-static constexpr std::uint64_t significand_128[] = {
+static constexpr std::u64 significand_128[] = {
     0x419ea3bd35385e2d, 0x52064cac828675b9,
     0x7343efebd1940993, 0x1014ebe6c5f90bf8,
     0xd41a26e077774ef6, 0x8920b098955522b4,

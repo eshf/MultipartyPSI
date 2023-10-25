@@ -196,7 +196,7 @@ public:
      * \par Complexity
      * Constant.
      */
-    std::uint64_t affected_rows() const noexcept
+    std::u64 affected_rows() const noexcept
     {
         BOOST_ASSERT(has_value_);
         return affected_rows_;
@@ -213,7 +213,7 @@ public:
      * \par Complexity
      * Constant.
      */
-    std::uint64_t last_insert_id() const noexcept
+    std::u64 last_insert_id() const noexcept
     {
         BOOST_ASSERT(has_value_);
         return last_insert_id_;
@@ -284,8 +284,8 @@ private:
     bool has_value_{false};
     std::vector<metadata> meta_;
     ::boost::mysql::rows rws_;
-    std::uint64_t affected_rows_{};
-    std::uint64_t last_insert_id_{};
+    std::u64 affected_rows_{};
+    std::u64 last_insert_id_{};
     std::uint16_t warnings_{};
     std::vector<char> info_;
     bool is_out_params_{false};

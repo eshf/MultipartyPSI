@@ -127,12 +127,12 @@ struct basic_parser_base
     BOOST_BEAST_DECL
     static
     bool
-    parse_dec(string_view s, std::uint64_t& v);
+    parse_dec(string_view s, std::u64& v);
 
     BOOST_BEAST_DECL
     static
     bool
-    parse_hex(char const*& it, std::uint64_t& v);
+    parse_hex(char const*& it, std::u64& v);
 
     BOOST_BEAST_DECL
     static

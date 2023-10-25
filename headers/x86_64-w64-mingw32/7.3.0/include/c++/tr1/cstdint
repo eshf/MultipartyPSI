@@ -80,8 +80,8 @@ namespace tr1
   
   using ::uint8_t;
   using ::uint16_t;
-  using ::uint32_t;
-  using ::uint64_t;
+  using ::u32;
+  using ::u64;
 
   using ::uint_fast8_t;
   using ::uint_fast16_t;

@@ -361,8 +361,8 @@ namespace __gnu_parallel
     public:
       typedef _DifferenceTp _DifferenceType;
 
-      // Better cast down to uint64_t, than up to _DifferenceTp.
-      typedef _PseudoSequenceIterator<_Tp, uint64_t> iterator;
+      // Better cast down to u64, than up to _DifferenceTp.
+      typedef _PseudoSequenceIterator<_Tp, u64> iterator;
 
       /** @brief Constructor.
        *  @param __val Element of the sequence.

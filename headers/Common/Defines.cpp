@@ -8,14 +8,14 @@ namespace osuCrypto {
     Timer gTimer(true);
     const block ZeroBlock = _mm_set_epi64x(0, 0);
     const block OneBlock = _mm_set_epi64x(0, 1);
-    const block AllOneBlock = _mm_set_epi64x(uint64_t(-1), uint64_t(-1));
+    const block AllOneBlock = _mm_set_epi64x(u64(-1), u64(-1));
     const block CCBlock = ([]() {block cc; memset(&cc, 0xcc, sizeof(block)); return cc; })();
 
 
     std::ostream& operator<<(std::ostream& out, const block& blk)
     {
         out << std::hex;
-        uint64_t* data = (uint64_t*)&blk;
+        u64* data = (u64*)&blk;
 
         out << std::setw(16) << std::setfill('0') << data[1] 
             << std::setw(16) << std::setfill('0') << data[0];
@@ -29,7 +29,7 @@ namespace osuCrypto {
     std::ostream& operator<<(std::ostream& out, const MultiBlock<N>& blk)
     {
         out << std::hex;
-        uint64_t* data = (uint64_t*)&blk;
+        u64* data = (u64*)&blk;
 
         out << std::setw(16) << std::setfill('0') << data[0] << "..."
             //<< std::setw(16) << std::setfill('0') << data[1]
@@ -53,7 +53,7 @@ namespace osuCrypto {
     {
         out << std::hex;
 
-        u32* data = (u32*)comm.data();
+        uint32_t* data = (uint32_t*)comm.data();
 
         out << std::setw(8) << std::setfill('0') << data[0]
             << std::setw(8) << std::setfill('0') << data[1]
@@ -65,7 +65,7 @@ namespace osuCrypto {
 
         return out;
     }
-    block PRF(const block& b, uint64_t i)
+    block PRF(const block& b, u64 i)
     {
         //TODO("REMOVE THIS!!");
         //return b;
@@ -110,7 +110,7 @@ namespace osuCrypto {
         44, 24, 15,  8, 23,  7,  6,  5 };
 
 
-    uint64_t log2floor(uint64_t value)
+    u64 log2floor(u64 value)
     {
         value |= value >> 1;
         value |= value >> 2;
@@ -118,12 +118,12 @@ namespace osuCrypto {
         value |= value >> 8;
         value |= value >> 16;
         value |= value >> 32;
-        return tab64[((uint64_t)((value - (value >> 1)) * 0x07EDD5E59A4E28C2)) >> 58];
+        return tab64[((u64)((value - (value >> 1)) * 0x07EDD5E59A4E28C2)) >> 58];
     }
 
-    uint64_t log2ceil(uint64_t value)
+    u64 log2ceil(u64 value)
     {
-        return uint64_t(std::ceil(std::log2(value)));
+        return u64(std::ceil(std::log2(value)));
     }
 }
 

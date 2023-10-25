@@ -72,7 +72,7 @@ libc_hidden_def (__cxa_atexit)
 
 static struct exit_function_list initial;
 struct exit_function_list *__exit_funcs = &initial;
-uint64_t __new_exitfn_called;
+u64 __new_exitfn_called;
 
 /* Must be called with __exit_funcs_lock held.  */
 struct exit_function *

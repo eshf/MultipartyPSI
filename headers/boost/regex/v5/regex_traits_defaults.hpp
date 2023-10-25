@@ -877,7 +877,7 @@ inline wchar_t  do_global_upper(wchar_t c)
 //
 // This sucks: declare template specialisations of global_lower/global_upper
 // that just forward to the non-template implementation functions.  We do
-// this because there is one compiler (Compaq Truint64_t C++) that doesn't seem
+// this because there is one compiler (Compaq Tru64 C++) that doesn't seem
 // to differentiate between templates and non-template overloads....
 // what's more, the primary template, plus all overloads have to be
 // defined in the same translation unit (if one is inline they all must be)

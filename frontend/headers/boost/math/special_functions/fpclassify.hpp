@@ -63,7 +63,7 @@ at compile time, then the following algorithm is used:
         It is 0 (Motorola 68K) or 1 (Intel) for infinity.
 
     To get the bits, the four or eight most significant bytes are copied
-    into an uint32_t or uint64_t and bit masks are applied.
+    into an uint32_t or u64 and bit masks are applied.
     This covers all the exponent bits and the flag bit (if there is one),
     but not always all the significand bits.
     Some of the functions below have two implementations,

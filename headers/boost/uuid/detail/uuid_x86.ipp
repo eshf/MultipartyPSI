@@ -43,7 +43,7 @@ namespace boost {
 namespace uuids {
 namespace detail {
 
-BOOST_FORCEINLINE __m128i load_unaligned_si128(const uint8_t* p) BOOST_NOEXCEPT
+BOOST_FORCEINLINE __m128i load_unaligned_si128(const u8* p) BOOST_NOEXCEPT
 {
 #if !defined(BOOST_UUID_DETAIL_MSVC_BUG981648) || defined(BOOST_UUID_USE_AVX)
     return _mm_loadu_si128(reinterpret_cast< const __m128i* >(p));

@@ -49,7 +49,7 @@ namespace util
 //
 // static inline uint32_t nbits32 (uint32_t num) noexcept
 //
-// static inline uint32_t nbits64 (uint64_t num)
+// static inline uint32_t nbits64 (u64 num)
 //
 // template < class Value_t, class... Args >
 // inline void construct_object (Value_t *ptr, Args &&... args)
@@ -125,7 +125,7 @@ static inline uint32_t nbits32 (uint32_t num) noexcept
 /// @exception none
 /// @return Number of bits
 //---------------------------------------------------------------------------
-static inline uint32_t nbits64(uint64_t num)noexcept
+static inline uint32_t nbits64(u64 num)noexcept
 {
     uint32_t Pos = (num & 0xffffffff00000000ULL) ? 32 : 0;
     if ((num >> Pos) & 0xffff0000ULL) Pos += 16;

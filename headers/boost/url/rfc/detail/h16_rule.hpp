@@ -37,8 +37,8 @@ struct h16_rule_t
 {
     struct value_type
     {
-        std::uint8_t hi;
-        std::uint8_t lo;
+        std::u8 hi;
+        std::u8 lo;
     };
 
     auto

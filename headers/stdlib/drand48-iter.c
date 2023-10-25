@@ -28,8 +28,8 @@ struct drand48_data __libc_drand48_data;
 int
 __drand48_iterate (unsigned short int xsubi[3], struct drand48_data *buffer)
 {
-  uint64_t X;
-  uint64_t result;
+  u64 X;
+  u64 result;
 
   /* Initialize buffer, if not yet done.  */
   if (__glibc_unlikely (!buffer->__init))
@@ -43,7 +43,7 @@ __drand48_iterate (unsigned short int xsubi[3], struct drand48_data *buffer)
      48 bits.  Because we compute the modulus it does not care how
      many bits really are computed.  */
 
-  X = (uint64_t) xsubi[2] << 32 | (uint32_t) xsubi[1] << 16 | xsubi[0];
+  X = (u64) xsubi[2] << 32 | (u32) xsubi[1] << 16 | xsubi[0];
 
   result = X * buffer->__a + buffer->__c;
 

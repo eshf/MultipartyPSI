@@ -122,7 +122,7 @@ struct tommath_int
       mp_zero(&m_data);
       while (i)
       {
-         detail::check_tommath_result(mp_set_u64(&t, static_cast<std::uint64_t>(i & mask)));
+         detail::check_tommath_result(mp_set_u64(&t, static_cast<std::u64>(i & mask)));
          if (shift)
             detail::check_tommath_result(mp_mul_2d(&t, shift, &t));
          detail::check_tommath_result((mp_add(&m_data, &t, &m_data)));
@@ -165,10 +165,10 @@ struct tommath_int
       mp_zero(&m_data);
       while (i)
       {
-#ifndef mp_get_u32
-         detail::check_tommath_result(mp_set_long_long(&t, static_cast<std::uint64_t>(i & mask)));
+#ifndef mp_get_uint32_t
+         detail::check_tommath_result(mp_set_long_long(&t, static_cast<std::u64>(i & mask)));
 #else
-         mp_set_u64(&t, static_cast<std::uint64_t>(i & mask));
+         mp_set_u64(&t, static_cast<std::u64>(i & mask));
 #endif
          if (shift)
             detail::check_tommath_result(mp_mul_2d(&t, shift, &t));
@@ -199,10 +199,10 @@ struct tommath_int
    {
       if (m_data.dp == nullptr)
          detail::check_tommath_result(mp_init(&m_data));
-#ifndef mp_get_u32
+#ifndef mp_get_uint32_t
       detail::check_tommath_result((mp_set_int(&m_data, i)));
 #else
-      mp_set_u32(&m_data, i);
+      mp_set_uint32_t(&m_data, i);
 #endif
       return *this;
    }
@@ -226,7 +226,7 @@ struct tommath_int
 
       if (a == 0)
       {
-#ifndef mp_get_u32
+#ifndef mp_get_uint32_t
          detail::check_tommath_result(mp_set_int(&m_data, 0));
 #else
          mp_set_i32(&m_data, 0);
@@ -236,7 +236,7 @@ struct tommath_int
 
       if (a == 1)
       {
-#ifndef mp_get_u32
+#ifndef mp_get_uint32_t
          detail::check_tommath_result(mp_set_int(&m_data, 1));
 #else
          mp_set_i32(&m_data, 1);

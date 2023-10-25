@@ -47,7 +47,7 @@ main (void)
       int size32 = 2 + (exp_p + 31) / 32;
       int size64 = 1 + (exp_p + 63) / 64;
       uint32_t data32[size32];
-      uint64_t data64[size64];
+      u64 data64[size64];
       memset (data32, 0, sizeof data32);
       memset (data64, 0, sizeof data64);
       mpz_export (data32 + 2, NULL, -1, 4, 0, 0, p);

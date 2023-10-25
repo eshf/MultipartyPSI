@@ -71,7 +71,7 @@ void _embind_register_bigint(
     const char* name,
     size_t size,
     int64_t minRange,
-    uint64_t maxRange);
+    u64 maxRange);
 
 void _embind_register_float(
     TYPEID floatType,

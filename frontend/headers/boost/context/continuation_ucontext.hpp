@@ -66,7 +66,7 @@ template <typename Record>
 static void entry_func(std::uint32_t data_high,
                        std::uint32_t data_low) noexcept {
   auto data =
-      reinterpret_cast<void *>(std::uint64_t(data_high) << 32 | data_low);
+      reinterpret_cast<void *>(std::u64(data_high) << 32 | data_low);
 #else
 static void entry_func(void *data) noexcept {
 #endif
@@ -307,7 +307,7 @@ static activation_record * create_context1( StackAlloc && salloc, Fn && fn) {
             reinterpret_cast< uintptr_t >( stack_bottom) - static_cast< uintptr_t >( 64);
     record->uctx.uc_link = nullptr;
 #ifdef BOOST_OS_MACOS
-    const auto integer = std::uint64_t(record);
+    const auto integer = std::u64(record);
     ::makecontext(&record->uctx, (void (*)()) & entry_func<capture_t>, 2,
                   std::uint32_t((integer >> 32) & 0xFFFFFFFF),
                   std::uint32_t(integer));
@@ -350,7 +350,7 @@ static activation_record * create_context2( preallocated palloc, StackAlloc && s
             reinterpret_cast< uintptr_t >( stack_bottom) - static_cast< uintptr_t >( 64);
     record->uctx.uc_link = nullptr;
 #ifdef BOOST_OS_MACOS
-    const auto integer = std::uint64_t(record);
+    const auto integer = std::u64(record);
     ::makecontext(&record->uctx, (void (*)()) & entry_func<capture_t>, 2,
                   std::uint32_t((integer >> 32) & 0xFFFFFFFF),
                   std::uint32_t(integer));

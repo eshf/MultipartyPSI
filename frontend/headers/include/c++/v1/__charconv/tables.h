@@ -65,7 +65,7 @@ inline constexpr uint32_t __pow10_32[10] = {
     UINT32_C(0),      UINT32_C(10),      UINT32_C(100),      UINT32_C(1000),      UINT32_C(10000),
     UINT32_C(100000), UINT32_C(1000000), UINT32_C(10000000), UINT32_C(100000000), UINT32_C(1000000000)};
 
-inline constexpr uint64_t __pow10_64[20] = {UINT64_C(0),
+inline constexpr u64 __pow10_64[20] = {UINT64_C(0),
                                                UINT64_C(10),
                                                UINT64_C(100),
                                                UINT64_C(1000),

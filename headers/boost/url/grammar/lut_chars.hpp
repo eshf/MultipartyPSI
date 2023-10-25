@@ -63,11 +63,11 @@ struct is_pred<T, void_t<
 */
 class lut_chars
 {
-    std::uint64_t mask_[4] = {};
+    std::u64 mask_[4] = {};
 
     constexpr
     static
-    std::uint64_t
+    std::u64
     lo(char c) noexcept
     {
         return static_cast<
@@ -76,7 +76,7 @@ class lut_chars
 
     constexpr
     static
-    std::uint64_t
+    std::u64
     hi(char c) noexcept
     {
         return 1ULL << (static_cast<
@@ -126,10 +126,10 @@ class lut_chars
 
     constexpr
     lut_chars(
-        std::uint64_t m0,
-        std::uint64_t m1,
-        std::uint64_t m2,
-        std::uint64_t m3) noexcept
+        std::u64 m0,
+        std::u64 m1,
+        std::u64 m2,
+        std::u64 m3) noexcept
         : mask_{ m0, m1, m2, m3 }
     {
     }

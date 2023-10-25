@@ -350,9 +350,9 @@ inline boost::int64_t load_little_s40( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 5, order::little>( p );
 }
 
-inline boost::uint64_t load_little_u40( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_little_u40( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 5, order::little>( p );
+    return boost::endian::endian_load<boost::u64, 5, order::little>( p );
 }
 
 inline boost::int64_t load_big_s40( unsigned char const * p ) BOOST_NOEXCEPT
@@ -360,9 +360,9 @@ inline boost::int64_t load_big_s40( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 5, order::big>( p );
 }
 
-inline boost::uint64_t load_big_u40( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_big_u40( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 5, order::big>( p );
+    return boost::endian::endian_load<boost::u64, 5, order::big>( p );
 }
 
 // load 48
@@ -372,9 +372,9 @@ inline boost::int64_t load_little_s48( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 6, order::little>( p );
 }
 
-inline boost::uint64_t load_little_u48( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_little_u48( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 6, order::little>( p );
+    return boost::endian::endian_load<boost::u64, 6, order::little>( p );
 }
 
 inline boost::int64_t load_big_s48( unsigned char const * p ) BOOST_NOEXCEPT
@@ -382,9 +382,9 @@ inline boost::int64_t load_big_s48( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 6, order::big>( p );
 }
 
-inline boost::uint64_t load_big_u48( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_big_u48( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 6, order::big>( p );
+    return boost::endian::endian_load<boost::u64, 6, order::big>( p );
 }
 
 // load 56
@@ -394,9 +394,9 @@ inline boost::int64_t load_little_s56( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 7, order::little>( p );
 }
 
-inline boost::uint64_t load_little_u56( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_little_u56( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 7, order::little>( p );
+    return boost::endian::endian_load<boost::u64, 7, order::little>( p );
 }
 
 inline boost::int64_t load_big_s56( unsigned char const * p ) BOOST_NOEXCEPT
@@ -404,9 +404,9 @@ inline boost::int64_t load_big_s56( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 7, order::big>( p );
 }
 
-inline boost::uint64_t load_big_u56( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_big_u56( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 7, order::big>( p );
+    return boost::endian::endian_load<boost::u64, 7, order::big>( p );
 }
 
 // load 64
@@ -416,9 +416,9 @@ inline boost::int64_t load_little_s64( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 8, order::little>( p );
 }
 
-inline boost::uint64_t load_little_u64( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_little_u64( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 8, order::little>( p );
+    return boost::endian::endian_load<boost::u64, 8, order::little>( p );
 }
 
 inline boost::int64_t load_big_s64( unsigned char const * p ) BOOST_NOEXCEPT
@@ -426,9 +426,9 @@ inline boost::int64_t load_big_s64( unsigned char const * p ) BOOST_NOEXCEPT
     return boost::endian::endian_load<boost::int64_t, 8, order::big>( p );
 }
 
-inline boost::uint64_t load_big_u64( unsigned char const * p ) BOOST_NOEXCEPT
+inline boost::u64 load_big_u64( unsigned char const * p ) BOOST_NOEXCEPT
 {
-    return boost::endian::endian_load<boost::uint64_t, 8, order::big>( p );
+    return boost::endian::endian_load<boost::u64, 8, order::big>( p );
 }
 
 // store 16
@@ -504,9 +504,9 @@ inline void store_little_s40( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 5, order::little>( p, v );
 }
 
-inline void store_little_u40( unsigned char * p, boost::uint64_t v )
+inline void store_little_u40( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 5, order::little>( p, v );
+    boost::endian::endian_store<boost::u64, 5, order::little>( p, v );
 }
 
 inline void store_big_s40( unsigned char * p, boost::int64_t v )
@@ -514,9 +514,9 @@ inline void store_big_s40( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 5, order::big>( p, v );
 }
 
-inline void store_big_u40( unsigned char * p, boost::uint64_t v )
+inline void store_big_u40( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 5, order::big>( p, v );
+    boost::endian::endian_store<boost::u64, 5, order::big>( p, v );
 }
 
 // store 48
@@ -526,9 +526,9 @@ inline void store_little_s48( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 6, order::little>( p, v );
 }
 
-inline void store_little_u48( unsigned char * p, boost::uint64_t v )
+inline void store_little_u48( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 6, order::little>( p, v );
+    boost::endian::endian_store<boost::u64, 6, order::little>( p, v );
 }
 
 inline void store_big_s48( unsigned char * p, boost::int64_t v )
@@ -536,9 +536,9 @@ inline void store_big_s48( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 6, order::big>( p, v );
 }
 
-inline void store_big_u48( unsigned char * p, boost::uint64_t v )
+inline void store_big_u48( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 6, order::big>( p, v );
+    boost::endian::endian_store<boost::u64, 6, order::big>( p, v );
 }
 
 // store 56
@@ -548,9 +548,9 @@ inline void store_little_s56( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 7, order::little>( p, v );
 }
 
-inline void store_little_u56( unsigned char * p, boost::uint64_t v )
+inline void store_little_u56( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 7, order::little>( p, v );
+    boost::endian::endian_store<boost::u64, 7, order::little>( p, v );
 }
 
 inline void store_big_s56( unsigned char * p, boost::int64_t v )
@@ -558,9 +558,9 @@ inline void store_big_s56( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 7, order::big>( p, v );
 }
 
-inline void store_big_u56( unsigned char * p, boost::uint64_t v )
+inline void store_big_u56( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 7, order::big>( p, v );
+    boost::endian::endian_store<boost::u64, 7, order::big>( p, v );
 }
 
 // store 64
@@ -570,9 +570,9 @@ inline void store_little_s64( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 8, order::little>( p, v );
 }
 
-inline void store_little_u64( unsigned char * p, boost::uint64_t v )
+inline void store_little_u64( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 8, order::little>( p, v );
+    boost::endian::endian_store<boost::u64, 8, order::little>( p, v );
 }
 
 inline void store_big_s64( unsigned char * p, boost::int64_t v )
@@ -580,9 +580,9 @@ inline void store_big_s64( unsigned char * p, boost::int64_t v )
     boost::endian::endian_store<boost::int64_t, 8, order::big>( p, v );
 }
 
-inline void store_big_u64( unsigned char * p, boost::uint64_t v )
+inline void store_big_u64( unsigned char * p, boost::u64 v )
 {
-    boost::endian::endian_store<boost::uint64_t, 8, order::big>( p, v );
+    boost::endian::endian_store<boost::u64, 8, order::big>( p, v );
 }
 
 }  // namespace endian

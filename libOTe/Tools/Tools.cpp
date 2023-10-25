@@ -34,7 +34,7 @@ namespace osuCrypto {
 
     void eklundh_transpose128(array<block, 128>& inOut)
     {
-        const static uint64_t TRANSPOSE_MASKS128[7][2] = {
+        const static u64 TRANSPOSE_MASKS128[7][2] = {
             { 0x0000000000000000, 0xFFFFFFFFFFFFFFFF },
             { 0x00000000FFFFFFFF, 0x00000000FFFFFFFF },
             { 0x0000FFFF0000FFFF, 0x0000FFFF0000FFFF },
@@ -55,8 +55,8 @@ namespace osuCrypto {
         // now transpose output in-place
         for (u32 i = 0; i < logn; i++)
         {
-            uint64_t mask1 = TRANSPOSE_MASKS128[i][1], mask2 = TRANSPOSE_MASKS128[i][0];
-            uint64_t inv_mask1 = ~mask1, inv_mask2 = ~mask2;
+            u64 mask1 = TRANSPOSE_MASKS128[i][1], mask2 = TRANSPOSE_MASKS128[i][0];
+            u64 inv_mask1 = ~mask1, inv_mask2 = ~mask2;
 
             // for width >= 64, shift is undefined so treat as x special case
             // (and avoid branching in inner loop)
@@ -71,17 +71,17 @@ namespace osuCrypto {
 
                         // t1 is lower 64 bits, t2 is upper 64 bits
                         // (remember we're transposing in little-endian format)
-                        uint64_t& d1 = ((uint64_t*)&inOut[i1])[0];
-                        uint64_t& d2 = ((uint64_t*)&inOut[i1])[1];
+                        u64& d1 = ((u64*)&inOut[i1])[0];
+                        u64& d2 = ((u64*)&inOut[i1])[1];
 
-                        uint64_t& dd1 = ((uint64_t*)&inOut[i2])[0];
-                        uint64_t& dd2 = ((uint64_t*)&inOut[i2])[1];
+                        u64& dd1 = ((u64*)&inOut[i2])[0];
+                        u64& dd2 = ((u64*)&inOut[i2])[1];
 
-                        uint64_t t1 = d1;
-                        uint64_t t2 = d2;
+                        u64 t1 = d1;
+                        u64 t2 = d2;
 
-                        uint64_t tt1 = dd1;
-                        uint64_t tt2 = dd2;
+                        u64 tt1 = dd1;
+                        u64 tt2 = dd2;
 
                         // swap operations due to little endian-ness
                         d1 = (t1 & mask1) ^ ((tt1 & mask1) << width);
@@ -110,17 +110,17 @@ namespace osuCrypto {
 
                         // t1 is lower 64 bits, t2 is upper 64 bits
                         // (remember we're transposing in little-endian format)
-                        uint64_t& d1 = ((uint64_t*)&inOut[i1])[0];
-                        uint64_t& d2 = ((uint64_t*)&inOut[i1])[1];
+                        u64& d1 = ((u64*)&inOut[i1])[0];
+                        u64& d2 = ((u64*)&inOut[i1])[1];
 
-                        uint64_t& dd1 = ((uint64_t*)&inOut[i2])[0];
-                        uint64_t& dd2 = ((uint64_t*)&inOut[i2])[1];
+                        u64& dd1 = ((u64*)&inOut[i2])[0];
+                        u64& dd2 = ((u64*)&inOut[i2])[1];
 
-                        //uint64_t t1 = d1;
-                        uint64_t t2 = d2;
+                        //u64 t1 = d1;
+                        u64 t2 = d2;
 
-                        //uint64_t tt1 = dd1;
-                        //uint64_t tt2 = dd2;
+                        //u64 tt1 = dd1;
+                        //u64 tt2 = dd2;
 
                         d1 &= mask1;
                         d2 = (t2 & mask2) ^
@@ -177,7 +177,7 @@ namespace osuCrypto {
     // note: out is a 16x16 bit matrix = 16 rows of 2 bytes each.
     //       out[0] stores the first column of 16 bytes,
     //       out[1] stores the second column of 16 bytes.
-    void sse_loadSubSquare(array<block, 128>& in, array<block, 2>& out, uint64_t x, uint64_t y)
+    void sse_loadSubSquare(array<block, 128>& in, array<block, 2>& out, u64 x, u64 y)
     {
         static_assert(sizeof(array<array<u8, 16>, 2>) == sizeof(array<block, 2>), "");
         static_assert(sizeof(array<array<u8, 16>, 128>) == sizeof(array<block, 128>), "");
@@ -196,7 +196,7 @@ namespace osuCrypto {
 
     // given a 16x16 sub square, place its transpose into out at 
     // rows  16*x, ..., 16 *(x+1)  in byte  columns y, y+1. 
-    void sse_transposeSubSquare(array<block, 128>& out, array<block, 2>& in, uint64_t x, uint64_t y)
+    void sse_transposeSubSquare(array<block, 128>& out, array<block, 2>& in, u64 x, u64 y)
     {
         static_assert(sizeof(array<array<u16, 8>, 128>) == sizeof(array<block, 128>), "");
 
@@ -217,7 +217,7 @@ namespace osuCrypto {
     {
         BitVector temp(128);
 
-        for (uint64_t i = 0; i < 128; ++i)
+        for (u64 i = 0; i < 128; ++i)
         {
 
             temp.assign(inOut[i]);
@@ -226,7 +226,7 @@ namespace osuCrypto {
         std::cout << std::endl;
     }
     
-    u8 getBit(array<block, 128>& inOut, uint64_t i, uint64_t j)
+    u8 getBit(array<block, 128>& inOut, u64 i, u64 j)
     {
         BitVector temp(128);
         temp.assign(inOut[i]);
@@ -259,7 +259,7 @@ namespace osuCrypto {
 
 
 
-    inline void sse_loadSubSquarex(array<array<block, 8>, 128>& in, array<block, 2>& out, uint64_t x, uint64_t y, uint64_t i)
+    inline void sse_loadSubSquarex(array<array<block, 8>, 128>& in, array<block, 2>& out, u64 x, u64 y, u64 i)
     {
         typedef array<array<u8, 16>, 2> OUT_t;
         typedef array<array<u8, 128>, 128> IN_t;
@@ -313,7 +313,7 @@ namespace osuCrypto {
 
 
 
-    inline void sse_transposeSubSquarex(array<array<block, 8>, 128>& out, array<block, 2>& in, uint64_t x, uint64_t y, uint64_t i)
+    inline void sse_transposeSubSquarex(array<array<block, 8>, 128>& out, array<block, 2>& in, u64 x, u64 y, u64 i)
     {
         static_assert(sizeof(array<array<u16, 64>, 128>) == sizeof(array<array<block, 8>, 128>), "");
 

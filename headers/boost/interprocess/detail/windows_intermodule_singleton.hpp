@@ -90,13 +90,13 @@ class windows_semaphore_based_map
          BOOST_ASSERT((caster.addr_uint32 & boost::uint32_t(3)) == 0);
          max_count = caster.addr_uint32 >> 2;
       }
-      else if(sizeof(void*) == sizeof(boost::uint64_t)){
+      else if(sizeof(void*) == sizeof(boost::u64)){
          //Relying in UB with a cast through union, but all known windows compilers
          //accept this (C11 accepts this).
          union caster_union
          {
             void *addr;
-            boost::uint64_t addr_uint64;
+            boost::u64 addr_uint64;
          } caster;
          caster.addr = m;
          //We'll encode the address using 30 bits in each 32 bit high and low parts.
@@ -113,7 +113,7 @@ class windows_semaphore_based_map
          //   and less than 1 ExbiBytes ( 2^60 bytes, ~1 ExaByte). User-level address space in Windows 64
          //   is much less than this (8TB, 2^43 bytes): "1 EByte (or it was 640K?) ought to be enough for anybody" ;-).
          caster.addr = m;
-         BOOST_ASSERT((caster.addr_uint64 & boost::uint64_t(3)) == 0);
+         BOOST_ASSERT((caster.addr_uint64 & boost::u64(3)) == 0);
          max_count = boost::uint32_t(caster.addr_uint64 >> 32);
          initial_count = boost::uint32_t(caster.addr_uint64);
          initial_count = initial_count/4;
@@ -171,7 +171,7 @@ class windows_semaphore_based_map
          union caster_union
          {
             void *addr;
-            boost::uint64_t addr_uint64;
+            boost::u64 addr_uint64;
          } caster;
          boost::uint32_t max_count(boost::uint32_t(m_sem_map.limit()))
                        , initial_count(boost::uint32_t(m_sem_map.value()));
@@ -179,7 +179,7 @@ class windows_semaphore_based_map
          max_count &= boost::uint32_t(0xBFFFFFFF);
          caster.addr_uint64 = max_count;
          caster.addr_uint64 =  caster.addr_uint64 << 32u;
-         caster.addr_uint64 |= boost::uint64_t(initial_count) << 2;
+         caster.addr_uint64 |= boost::u64(initial_count) << 2;
          return *static_cast<map_type*>(caster.addr);
       }
    }

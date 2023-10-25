@@ -143,7 +143,7 @@ pow10(int exp) noexcept
 inline
 double
 dec_to_float(
-    std::uint64_t m,
+    std::u64 m,
     std::int32_t e,
     bool neg) noexcept
 {

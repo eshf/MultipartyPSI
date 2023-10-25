@@ -115,7 +115,7 @@ struct QPFHolder
 template<int Dummy>
 const double QPFHolder<Dummy>::nanosecs_per_tic = get_nsec_per_tic();
 
-inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
+inline boost::u64 nsec_clock() BOOST_NOEXCEPT
 {
    double nanosecs_per_tic = QPFHolder<0>::nanosecs_per_tic;
    
@@ -123,7 +123,7 @@ inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
    //According to MS documentation:
    //"On systems that run Windows XP or later, the function will always succeed and will thus never return zero"
    (void)boost::move_detail::QueryPerformanceCounter( &pcount );
-   return static_cast<boost::uint64_t>(nanosecs_per_tic * double(pcount));
+   return static_cast<boost::u64>(nanosecs_per_tic * double(pcount));
 }
 
 }}  //namespace boost { namespace move_detail {
@@ -132,13 +132,13 @@ inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
 
 #include <mach/mach_time.h>  // mach_absolute_time, mach_timebase_info_data_t
 
-inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
+inline boost::u64 nsec_clock() BOOST_NOEXCEPT
 {
-   boost::uint64_t count = ::mach_absolute_time();
+   boost::u64 count = ::mach_absolute_time();
 
    mach_timebase_info_data_t info;
    mach_timebase_info(&info);
-   return static_cast<boost::uint64_t>
+   return static_cast<boost::u64>
       ( static_cast<double>(count)*(static_cast<double>(info.numer) / info.denom) );
 }
 
@@ -158,13 +158,13 @@ inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
 #     error "No high resolution steady clock in your system, please provide a patch"
 #  endif
 
-inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
+inline boost::u64 nsec_clock() BOOST_NOEXCEPT
 {
    struct timespec count;
    ::clock_gettime(BOOST_MOVE_DETAIL_CLOCK_MONOTONIC, &count);
-   boost::uint64_t r = static_cast<boost::uint64_t>(count.tv_sec);
+   boost::u64 r = static_cast<boost::u64>(count.tv_sec);
    r *= 1000000000U;
-   r += static_cast<boost::uint64_t>(count.tv_nsec);
+   r += static_cast<boost::u64>(count.tv_nsec);
    return r;
 }
 
@@ -172,7 +172,7 @@ inline boost::uint64_t nsec_clock() BOOST_NOEXCEPT
 
 namespace boost { namespace move_detail {
 
-typedef boost::uint64_t nanosecond_type;
+typedef boost::u64 nanosecond_type;
 
 struct cpu_times
 {

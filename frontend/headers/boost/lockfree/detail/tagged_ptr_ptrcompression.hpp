@@ -24,7 +24,7 @@ namespace detail {
 template <class T>
 class tagged_ptr
 {
-    typedef boost::uint64_t compressed_ptr_t;
+    typedef boost::u64 compressed_ptr_t;
 
 public:
     typedef boost::uint16_t tag_t;

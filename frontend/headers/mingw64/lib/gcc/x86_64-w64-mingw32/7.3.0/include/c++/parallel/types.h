@@ -114,7 +114,7 @@ namespace __gnu_parallel
    * @brief Unsigned integer to index __elements.
    * The total number of elements for each algorithm must fit into this type.
    */
-  typedef uint64_t _SequenceIndex;
+  typedef u64 _SequenceIndex;
 
   /**
    * @brief Unsigned integer to index a thread number.

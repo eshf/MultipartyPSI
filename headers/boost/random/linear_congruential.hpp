@@ -342,9 +342,9 @@ typedef linear_congruential_engine<uint32_t, 48271, 0, 2147483647> minstd_rand;
  * c = 0xB, m = 2**48. It delivers identical results to the @c lrand48()
  * function available on some systems (assuming lcong48 has not been called).
  *
- * It is only available on systems where @c uint64_t is provided as an
+ * It is only available on systems where @c u64 is provided as an
  * integral type, so that for example static in-class constants and/or
- * enum definitions with large @c uint64_t numbers work.
+ * enum definitions with large @c u64 numbers work.
  */
 class rand48 
 {
@@ -443,14 +443,14 @@ public:
     { return !(x == y); }
 private:
     /// \cond show_private
-    typedef random::linear_congruential_engine<uint64_t,
+    typedef random::linear_congruential_engine<u64,
         // xxxxULL is not portable
-        uint64_t(0xDEECE66DUL) | (uint64_t(0x5) << 32),
-        0xB, uint64_t(1)<<48> lcf_t;
+        u64(0xDEECE66DUL) | (u64(0x5) << 32),
+        0xB, u64(1)<<48> lcf_t;
     lcf_t lcf;
 
-    static boost::uint64_t cnv(boost::uint32_t x)
-    { return (static_cast<uint64_t>(x) << 16) | 0x330e; }
+    static boost::u64 cnv(boost::uint32_t x)
+    { return (static_cast<u64>(x) << 16) | 0x330e; }
     /// \endcond
 };
 #endif /* !BOOST_NO_INT64_T && !BOOST_NO_INTEGRAL_INT64_T */
