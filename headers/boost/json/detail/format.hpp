@@ -25,7 +25,7 @@ BOOST_JSON_DECL
 unsigned
 format_uint64(
     char* dest,
-    std::u64 value) noexcept;
+    std::uint64_t value) noexcept;
 
 BOOST_JSON_DECL
 unsigned

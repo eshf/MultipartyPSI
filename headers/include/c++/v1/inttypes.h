@@ -78,7 +78,7 @@ Macros:
     PRIoMAX
     PRIoPTR
 
-    PRIuint8_t
+    PRIu8
     PRIu16
     PRIu32
     PRIu64
@@ -186,7 +186,7 @@ Macros:
     SCNoMAX
     SCNoPTR
 
-    SCNuint8_t
+    SCNu8
     SCNu16
     SCNu32
     SCNu64

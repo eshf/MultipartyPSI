@@ -121,29 +121,29 @@ struct span {
 };
 
 struct value128 {
-  u64 low;
-  u64 high;
-  constexpr value128(u64 _low, u64 _high) : low(_low), high(_high) {}
+  uint64_t low;
+  uint64_t high;
+  constexpr value128(uint64_t _low, uint64_t _high) : low(_low), high(_high) {}
   constexpr value128() : low(0), high(0) {}
 };
 
 /* Helper C++11 constexpr generic implementation of leading_zeroes */
 BOOST_FORCEINLINE constexpr
-int leading_zeroes_generic(u64 input_num, int last_bit = 0) {
+int leading_zeroes_generic(uint64_t input_num, int last_bit = 0) {
   return (
-    ((input_num & u64(0xffffffff00000000)) && (input_num >>= 32, last_bit |= 32)),
-    ((input_num & u64(        0xffff0000)) && (input_num >>= 16, last_bit |= 16)),
-    ((input_num & u64(            0xff00)) && (input_num >>=  8, last_bit |=  8)),
-    ((input_num & u64(              0xf0)) && (input_num >>=  4, last_bit |=  4)),
-    ((input_num & u64(               0xc)) && (input_num >>=  2, last_bit |=  2)),
-    ((input_num & u64(               0x2)) && (input_num >>=  1, last_bit |=  1)),
+    ((input_num & uint64_t(0xffffffff00000000)) && (input_num >>= 32, last_bit |= 32)),
+    ((input_num & uint64_t(        0xffff0000)) && (input_num >>= 16, last_bit |= 16)),
+    ((input_num & uint64_t(            0xff00)) && (input_num >>=  8, last_bit |=  8)),
+    ((input_num & uint64_t(              0xf0)) && (input_num >>=  4, last_bit |=  4)),
+    ((input_num & uint64_t(               0xc)) && (input_num >>=  2, last_bit |=  2)),
+    ((input_num & uint64_t(               0x2)) && (input_num >>=  1, last_bit |=  1)),
     63 - last_bit
   );
 }
 
 /* result might be undefined when input_num is zero */
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-int leading_zeroes(u64 input_num) {
+int leading_zeroes(uint64_t input_num) {
   assert(input_num > 0);
   if (cpp20_and_in_constexpr()) {
     return leading_zeroes_generic(input_num);
@@ -164,17 +164,17 @@ int leading_zeroes(u64 input_num) {
 }
 
 // slow emulation routine for 32-bit
-BOOST_FORCEINLINE constexpr u64 emulu(uint32_t x, uint32_t y) {
-    return x * (u64)y;
+BOOST_FORCEINLINE constexpr uint64_t emulu(uint32_t x, uint32_t y) {
+    return x * (uint64_t)y;
 }
 
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
-u64 umul128_generic(u64 ab, u64 cd, u64 *hi) {
-  u64 ad = emulu((uint32_t)(ab >> 32), (uint32_t)cd);
-  u64 bd = emulu((uint32_t)ab, (uint32_t)cd);
-  u64 adbc = ad + emulu((uint32_t)ab, (uint32_t)(cd >> 32));
-  u64 adbc_carry = !!(adbc < ad);
-  u64 lo = bd + (adbc << 32);
+uint64_t umul128_generic(uint64_t ab, uint64_t cd, uint64_t *hi) {
+  uint64_t ad = emulu((uint32_t)(ab >> 32), (uint32_t)cd);
+  uint64_t bd = emulu((uint32_t)ab, (uint32_t)cd);
+  uint64_t adbc = ad + emulu((uint32_t)ab, (uint32_t)(cd >> 32));
+  uint64_t adbc_carry = !!(adbc < ad);
+  uint64_t lo = bd + (adbc << 32);
   *hi = emulu((uint32_t)(ab >> 32), (uint32_t)(cd >> 32)) + (adbc >> 32) +
         (adbc_carry << 32) + !!(lo < bd);
   return lo;
@@ -185,7 +185,7 @@ u64 umul128_generic(u64 ab, u64 cd, u64 *hi) {
 // slow emulation routine for 32-bit
 #if !defined(__MINGW64__)
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
-u64 _umul128(u64 ab, u64 cd, u64 *hi) {
+uint64_t _umul128(uint64_t ab, uint64_t cd, uint64_t *hi) {
   return umul128_generic(ab, cd, hi);
 }
 #endif // !__MINGW64__
@@ -195,7 +195,7 @@ u64 _umul128(u64 ab, u64 cd, u64 *hi) {
 
 // compute 64-bit a*b
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-value128 full_multiplication(u64 a, u64 b) {
+value128 full_multiplication(uint64_t a, uint64_t b) {
   if (cpp20_and_in_constexpr()) {
     value128 answer;
     answer.low = umul128_generic(a, b, &answer.high);
@@ -210,11 +210,11 @@ value128 full_multiplication(u64 a, u64 b) {
 #elif defined(BOOST_JSON_FASTFLOAT_32BIT) || (defined(_WIN64) && !defined(__clang__))
   unsigned long long high;
   answer.low = _umul128(a, b, &high); // _umul128 not available on ARM64
-  answer.high = static_cast<u64>(high);
+  answer.high = static_cast<uint64_t>(high);
 #elif defined(BOOST_JSON_FASTFLOAT_64BIT)
   __uint128_t r = ((__uint128_t)a) * b;
-  answer.low = u64(r);
-  answer.high = u64(r >> 64);
+  answer.low = uint64_t(r);
+  answer.high = uint64_t(r >> 64);
 #else
   answer.low = umul128_generic(a, b, &answer.high);
 #endif
@@ -222,7 +222,7 @@ value128 full_multiplication(u64 a, u64 b) {
 }
 
 struct adjusted_mantissa {
-  u64 mantissa{0};
+  uint64_t mantissa{0};
   int32_t power2{0}; // a negative value indicates an invalid result
   adjusted_mantissa() = default;
   constexpr bool operator==(const adjusted_mantissa &o) const {
@@ -237,13 +237,13 @@ struct adjusted_mantissa {
 constexpr static int32_t invalid_am_bias = -0x8000;
 
 // used for binary_format_lookup_tables<T>::max_mantissa
-constexpr u64 constant_55555 = 5 * 5 * 5 * 5 * 5;
+constexpr uint64_t constant_55555 = 5 * 5 * 5 * 5 * 5;
 
 template <typename T, typename U = void>
 struct binary_format_lookup_tables;
 
 template <typename T> struct binary_format : binary_format_lookup_tables<T> {
-  using equiv_uint = typename std::conditional<sizeof(T) == 4, uint32_t, u64>::type;
+  using equiv_uint = typename std::conditional<sizeof(T) == 4, uint32_t, uint64_t>::type;
 
   static inline constexpr int mantissa_explicit_bits();
   static inline constexpr int minimum_exponent();
@@ -253,8 +253,8 @@ template <typename T> struct binary_format : binary_format_lookup_tables<T> {
   static inline constexpr int max_exponent_fast_path();
   static inline constexpr int max_exponent_round_to_even();
   static inline constexpr int min_exponent_round_to_even();
-  static inline constexpr u64 max_mantissa_fast_path(int64_t power);
-  static inline constexpr u64 max_mantissa_fast_path(); // used when fegetround() == FE_TONEAREST
+  static inline constexpr uint64_t max_mantissa_fast_path(int64_t power);
+  static inline constexpr uint64_t max_mantissa_fast_path(); // used when fegetround() == FE_TONEAREST
   static inline constexpr int largest_power_of_ten();
   static inline constexpr int smallest_power_of_ten();
   static inline constexpr T exact_power_of_ten(int64_t power);
@@ -272,7 +272,7 @@ struct binary_format_lookup_tables<double, U> {
 
   // Largest integer value v so that (5**index * v) <= 1<<53.
   // 0x10000000000000 == 1 << 53
-  static constexpr std::u64 max_mantissa[] = {
+  static constexpr std::uint64_t max_mantissa[] = {
     UINT64_C(0x10000000000000),
     UINT64_C(0x10000000000000) / UINT64_C(5),
     UINT64_C(0x10000000000000) / (UINT64_C(5) * UINT64_C(5)),
@@ -303,7 +303,7 @@ template <typename U>
 constexpr double binary_format_lookup_tables<double, U>::powers_of_ten[];
 
 template <typename U>
-constexpr u64 binary_format_lookup_tables<double, U>::max_mantissa[];
+constexpr uint64_t binary_format_lookup_tables<double, U>::max_mantissa[];
 
 template <typename U>
 struct binary_format_lookup_tables<float, U> {
@@ -312,7 +312,7 @@ struct binary_format_lookup_tables<float, U> {
 
   // Largest integer value v so that (5**index * v) <= 1<<24.
   // 0x1000000 == 1<<24
-  static constexpr u64 max_mantissa[] = {
+  static constexpr uint64_t max_mantissa[] = {
     UINT64_C(0x1000000),
     UINT64_C(0x1000000) / UINT64_C(5),
     UINT64_C(0x1000000) / (UINT64_C(5) * UINT64_C(5)),
@@ -331,7 +331,7 @@ template <typename U>
 constexpr float binary_format_lookup_tables<float, U>::powers_of_ten[];
 
 template <typename U>
-constexpr u64 binary_format_lookup_tables<float, U>::max_mantissa[];
+constexpr uint64_t binary_format_lookup_tables<float, U>::max_mantissa[];
 
 template <> inline constexpr int binary_format<double>::min_exponent_fast_path() {
 #if (FLT_EVAL_METHOD != 1) && (FLT_EVAL_METHOD != 0)
@@ -396,20 +396,20 @@ template <> inline constexpr int binary_format<float>::max_exponent_fast_path() 
   return 10;
 }
 
-template <> inline constexpr u64 binary_format<double>::max_mantissa_fast_path() {
-  return u64(2) << mantissa_explicit_bits();
+template <> inline constexpr uint64_t binary_format<double>::max_mantissa_fast_path() {
+  return uint64_t(2) << mantissa_explicit_bits();
 }
-template <> inline constexpr u64 binary_format<double>::max_mantissa_fast_path(int64_t power) {
+template <> inline constexpr uint64_t binary_format<double>::max_mantissa_fast_path(int64_t power) {
   // caller is responsible to ensure that
   // power >= 0 && power <= 22
   //
   // Work around clang bug https://godbolt.org/z/zedh7rrhc
   return (void)max_mantissa[0], max_mantissa[power];
 }
-template <> inline constexpr u64 binary_format<float>::max_mantissa_fast_path() {
-  return u64(2) << mantissa_explicit_bits();
+template <> inline constexpr uint64_t binary_format<float>::max_mantissa_fast_path() {
+  return uint64_t(2) << mantissa_explicit_bits();
 }
-template <> inline constexpr u64 binary_format<float>::max_mantissa_fast_path(int64_t power) {
+template <> inline constexpr uint64_t binary_format<float>::max_mantissa_fast_path(int64_t power) {
   // caller is responsible to ensure that
   // power >= 0 && power <= 10
   //
@@ -496,15 +496,15 @@ void to_float(bool negative, adjusted_mantissa am, T &value) {
 }
 
 template<typename UC>
-static constexpr u64 int_cmp_zeros()
+static constexpr uint64_t int_cmp_zeros()
 {
     static_assert((sizeof(UC) == 1) || (sizeof(UC) == 2) || (sizeof(UC) == 4), "Unsupported character size");
-    return (sizeof(UC) == 1) ? 0x3030303030303030 : (sizeof(UC) == 2) ? (u64(UC('0')) << 48 | u64(UC('0')) << 32 | u64(UC('0')) << 16 | UC('0')) : (u64(UC('0')) << 32 | UC('0'));
+    return (sizeof(UC) == 1) ? 0x3030303030303030 : (sizeof(UC) == 2) ? (uint64_t(UC('0')) << 48 | uint64_t(UC('0')) << 32 | uint64_t(UC('0')) << 16 | UC('0')) : (uint64_t(UC('0')) << 32 | UC('0'));
 }
 template<typename UC>
 static constexpr int int_cmp_len()
 {
-    return sizeof(u64) / sizeof(UC);
+    return sizeof(uint64_t) / sizeof(UC);
 }
 template<typename UC>
 static constexpr UC const * str_const_nan()

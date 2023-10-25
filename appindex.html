@@ -15,20 +15,19 @@
             <hr>
           </h2>
         </div>
-        <form class="form" action="testnpsi.js" method="post">
+        <form class="form" method="post" name="npsiform" id="npsiform">
         <div class="labelTitle">No. of Parties
-        <input class="form-input" type="text" name="npsi" id="npsi" formaction="testnpsi.js" method="post">
-        <input type="radio" id="semiH" name="psimodel" value="semiH" formaction="testnpsi.js" method="post">
+        <input class="form-input" type="text" name="npsi" id="npsi">
+        <input type="radio" id="semiH" name="psimodel" value="semiH">
         <label for="semiH">Semi Honest</label>
-        <input type="radio" id="augmented" name="psimodel" value="augmented" formaction="testnpsi.js" method="post">
+        <input type="radio" id="augmented" name="psimodel" value="augmented">
         <label for="augmented">Augmented</label>
-        <input type="radio" id="leader" name="role" value="leader" formaction="testnpsi.js" method="post">
+        <input type="radio" id="leader" name="role" value="leader">
         <label for="leader">Leader</label>
-        <input type="radio" id="member" name="role" value="member"formaction="testnpsi.js" method="post">
-
+        <input type="radio" id="member" name="role" value="member">
         <label for="member">Member</label>
         </div>
-        <input type="submit" formaction="testnpsi.js" method="post"></button>
+        <button id="npsibutton" onclick="submitnpsi();">Submit</button>
         </form>
       </div>
   </body>

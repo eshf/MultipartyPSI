@@ -69,12 +69,12 @@ template<bool isRequest>
 class basic_parser
     : private detail::basic_parser_base
 {
-    boost::optional<std::u64>
+    boost::optional<std::uint64_t>
         body_limit_ =
-            boost::optional<std::u64>(
+            boost::optional<std::uint64_t>(
                 default_body_limit(is_request{}));   // max payload body
-    std::u64 len_ = 0;                 // size of chunk or body
-    std::u64 len0_ = 0;                // content length if known
+    std::uint64_t len_ = 0;                 // size of chunk or body
+    std::uint64_t len0_ = 0;                // content length if known
     std::unique_ptr<char[]> buf_;           // temp storage
     std::size_t buf_len_ = 0;               // size of buf_
     std::size_t skip_ = 0;                  // resume search here
@@ -112,7 +112,7 @@ class basic_parser
     static unsigned constexpr flagFinalChunk            = 1<< 13;
 
     static constexpr
-    std::u64
+    std::uint64_t
     default_body_limit(std::true_type)
     {
         // limit for requests
@@ -120,7 +120,7 @@ class basic_parser
     }
 
     static constexpr
-    std::u64
+    std::uint64_t
     default_body_limit(std::false_type)
     {
         // limit for responses
@@ -235,7 +235,7 @@ public:
         @note The return value is undefined unless
         @ref is_header_done would return `true`.
     */
-    boost::optional<std::u64>
+    boost::optional<std::uint64_t>
     content_length() const;
 
     /** Returns the remaining content length if known
@@ -247,7 +247,7 @@ public:
         @note The return value is undefined unless
               @ref is_header_done would return `true`.
     */
-    boost::optional<std::u64>
+    boost::optional<std::uint64_t>
     content_length_remaining() const;
 
     /** Returns `true` if the message semantics require an end of file.
@@ -297,7 +297,7 @@ public:
         If this is equal to `boost::none`, then the body limit is disabled.
     */
     void
-    body_limit(boost::optional<std::u64> v)
+    body_limit(boost::optional<std::uint64_t> v)
     {
         body_limit_ = v;
     }
@@ -544,7 +544,7 @@ protected:
     virtual
     void
     on_body_init_impl(
-        boost::optional<std::u64> const& content_length,
+        boost::optional<std::uint64_t> const& content_length,
         error_code& ec) = 0;
 
     /** Called each time additional data is received representing the content body.
@@ -583,7 +583,7 @@ protected:
     virtual
     void
     on_chunk_header_impl(
-        std::u64 size,
+        std::uint64_t size,
         string_view extensions,
         error_code& ec) = 0;
 
@@ -612,7 +612,7 @@ protected:
     virtual
     std::size_t
     on_chunk_body_impl(
-        std::u64 remain,
+        std::uint64_t remain,
         string_view body,
         error_code& ec) = 0;
 
@@ -630,7 +630,7 @@ protected:
 
 private:
 
-    boost::optional<std::u64>
+    boost::optional<std::uint64_t>
     content_length_unchecked() const;
 
     template<class ConstBufferSequence>

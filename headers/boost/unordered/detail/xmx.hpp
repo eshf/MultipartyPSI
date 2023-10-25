@@ -45,7 +45,7 @@ static inline std::size_t xmx(std::size_t x)noexcept
 {
 #if defined(BOOST_UNORDERED_64B_ARCHITECTURE)
 
-  boost::u64 z=(boost::u64)x;
+  boost::uint64_t z=(boost::uint64_t)x;
 
   z^=z>>23;
   z*=0xff51afd7ed558ccdull;

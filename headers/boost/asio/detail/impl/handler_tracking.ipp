@@ -49,8 +49,8 @@ namespace detail {
 
 struct handler_tracking_timestamp
 {
-  u64 seconds;
-  u64 microseconds;
+  uint64_t seconds;
+  uint64_t microseconds;
 
   handler_tracking_timestamp()
   {
@@ -64,15 +64,15 @@ struct handler_tracking_timestamp
     traits_helper::posix_time_duration now(
         chrono::system_clock::now().time_since_epoch());
 #endif
-    seconds = static_cast<u64>(now.total_seconds());
-    microseconds = static_cast<u64>(now.total_microseconds() % 1000000);
+    seconds = static_cast<uint64_t>(now.total_seconds());
+    microseconds = static_cast<uint64_t>(now.total_microseconds() % 1000000);
   }
 };
 
 struct handler_tracking::tracking_state
 {
   static_mutex mutex_;
-  u64 next_id_;
+  uint64_t next_id_;
   tss_ptr<completion>* current_completion_;
   tss_ptr<location>* current_location_;
 };
@@ -126,7 +126,7 @@ void handler_tracking::creation(execution_context&,
 
   handler_tracking_timestamp timestamp;
 
-  u64 current_id = 0;
+  uint64_t current_id = 0;
   if (completion* current_completion = *state->current_completion_)
     current_id = current_completion->id_;
 
@@ -231,7 +231,7 @@ void handler_tracking::completion::invocation_begin(
 #endif // defined(BOOST_ASIO_WINDOWS)
       timestamp.seconds, timestamp.microseconds,
       id_, ec.category().name(), ec.value(),
-      static_cast<u64>(bytes_transferred));
+      static_cast<uint64_t>(bytes_transferred));
 
   invoked_ = true;
 }
@@ -355,7 +355,7 @@ void handler_tracking::reactor_operation(
 #endif // defined(BOOST_ASIO_WINDOWS)
       timestamp.seconds, timestamp.microseconds,
       h.id_, op_name, ec.category().name(), ec.value(),
-      static_cast<u64>(bytes_transferred));
+      static_cast<uint64_t>(bytes_transferred));
 }
 
 void handler_tracking::write_line(const char* format, ...)

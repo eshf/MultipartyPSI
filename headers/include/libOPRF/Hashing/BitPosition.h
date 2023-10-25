@@ -31,13 +31,13 @@ namespace osuCrypto
 
 
 		u64 mRealBitSize, mMaxBitSize, mNumTrial;
-		std::vector<uint8_t> mPos; //key: bit location; value: index of 
-		std::vector<uint8_t> mMaps;
+		std::vector<u8> mPos; //key: bit location; value: index of 
+		std::vector<u8> mMaps;
 
 		void print() const;
 		void init(/*u64 numRealCodeWord,*/ u64 numMaxBitSize);
 		bool getMasks(std::vector<block>& codeword);
-		void getMask(block& codeword, uint8_t& mask);
+		void getMask(block& codeword, u8& mask);
 		void getPosHelper(std::vector<block>& codewords, int length);
 		void getPos(std::vector<block>& codewords, int length);
 		void getPos1(std::vector<block>& codewords, int length);

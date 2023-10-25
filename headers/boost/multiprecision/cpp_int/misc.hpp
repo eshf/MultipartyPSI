@@ -1249,16 +1249,16 @@ inline BOOST_MP_CXX14_CONSTEXPR void conversion_overflow(const std::integral_con
 //
 // clang-11 on Mingw segfaults on conversion of __int128 -> float.
 // See: https://bugs.llvm.org/show_bug.cgi?id=48941
-// These workarounds pass everything through an intermediate u64.
+// These workarounds pass everything through an intermediate uint64_t.
 //
 template <std::size_t MinBits1, std::size_t MaxBits1, cpp_integer_type SignType1, cpp_int_check_type Checked1, class Allocator1>
 inline BOOST_MP_CXX14_CONSTEXPR typename std::enable_if<
     is_trivial_cpp_int<cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1> >::value && is_signed_number<cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1> >::value && std::is_same<typename cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1>::local_limb_type, double_limb_type>::value>::type
 eval_convert_to(float* result, const cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1>& val)
 {
-   float f = static_cast<std::u64>((*val.limbs()) >> 64);
+   float f = static_cast<std::uint64_t>((*val.limbs()) >> 64);
    *result = std::ldexp(f, 64);
-   *result += static_cast<std::u64>((*val.limbs()));
+   *result += static_cast<std::uint64_t>((*val.limbs()));
    if(val.sign())
       *result = -*result;
 }
@@ -1267,9 +1267,9 @@ inline BOOST_MP_CXX14_CONSTEXPR typename std::enable_if<
     is_trivial_cpp_int<cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1> >::value && is_signed_number<cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1> >::value && std::is_same<typename cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1>::local_limb_type, double_limb_type>::value>::type
 eval_convert_to(double* result, const cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1>& val)
 {
-   float f = static_cast<std::u64>((*val.limbs()) >> 64);
+   float f = static_cast<std::uint64_t>((*val.limbs()) >> 64);
    *result = std::ldexp(f, 64);
-   *result += static_cast<std::u64>((*val.limbs()));
+   *result += static_cast<std::uint64_t>((*val.limbs()));
    if(val.sign())
       *result = -*result;
 }
@@ -1278,9 +1278,9 @@ inline BOOST_MP_CXX14_CONSTEXPR typename std::enable_if<
     is_trivial_cpp_int<cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1> >::value && is_signed_number<cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1> >::value && std::is_same<typename cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1>::local_limb_type, double_limb_type>::value>::type
 eval_convert_to(long double* result, const cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocator1>& val)
 {
-   float f = static_cast<std::u64>((*val.limbs()) >> 64);
+   float f = static_cast<std::uint64_t>((*val.limbs()) >> 64);
    *result = std::ldexp(f, 64);
-   *result += static_cast<std::u64>((*val.limbs()));
+   *result += static_cast<std::uint64_t>((*val.limbs()));
    if(val.sign())
       *result = -*result;
 }

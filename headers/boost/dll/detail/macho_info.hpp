@@ -40,7 +40,7 @@ struct mach_header_template {
 };
 
 typedef mach_header_template<boost::uint32_t> mach_header_32_;
-typedef mach_header_template<boost::u64> mach_header_64_;
+typedef mach_header_template<boost::uint64_t> mach_header_64_;
 
 struct load_command_ {
     boost::uint32_t        cmd;        /* type of command */
@@ -117,7 +117,7 @@ struct segment_command_template {
 };
 
 typedef segment_command_template<boost::uint32_t> segment_command_32_;
-typedef segment_command_template<boost::u64> segment_command_64_;
+typedef segment_command_template<boost::uint64_t> segment_command_64_;
 
 template <class AddressOffsetT>
 struct section_template {
@@ -134,7 +134,7 @@ struct section_template {
 };
 
 typedef section_template<boost::uint32_t> section_32_;
-typedef section_template<boost::u64> section_64_;
+typedef section_template<boost::uint64_t> section_64_;
 
 struct symtab_command_ {
     boost::uint32_t    cmd;        /* LC_SYMTAB_ */
@@ -155,7 +155,7 @@ struct nlist_template {
 };
 
 typedef nlist_template<boost::uint32_t> nlist_32_;
-typedef nlist_template<boost::u64> nlist_64_;
+typedef nlist_template<boost::uint64_t> nlist_64_;
 
 template <class AddressOffsetT>
 class macho_info {
@@ -312,7 +312,7 @@ public:
 };
 
 typedef macho_info<boost::uint32_t> macho_info32;
-typedef macho_info<boost::u64> macho_info64;
+typedef macho_info<boost::uint64_t> macho_info64;
 
 }}} // namespace boost::dll::detail
 

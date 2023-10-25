@@ -66,7 +66,7 @@ typedef discard_block_engine<ranlux64_base_01, 223, 24> ranlux64_3_01;
 typedef discard_block_engine<ranlux64_base_01, 389, 24> ranlux64_4_01;
 
 #if !defined(BOOST_NO_INT64_T) && !defined(BOOST_NO_INTEGRAL_INT64_T)
-typedef subtract_with_carry_engine<u64, 48, 10, 24> ranlux64_base;
+typedef subtract_with_carry_engine<uint64_t, 48, 10, 24> ranlux64_base;
 /** @copydoc boost::random::detail::ranlux_documentation */
 typedef discard_block_engine<ranlux64_base, 223, 24> ranlux64_3;
 /** @copydoc boost::random::detail::ranlux_documentation */
@@ -75,7 +75,7 @@ typedef discard_block_engine<ranlux64_base, 389, 24> ranlux64_4;
 
 
 typedef subtract_with_carry_engine<uint32_t, 24, 10, 24> ranlux24_base;
-typedef subtract_with_carry_engine<u64, 48, 5, 12> ranlux48_base;
+typedef subtract_with_carry_engine<uint64_t, 48, 5, 12> ranlux48_base;
 
 typedef discard_block_engine<ranlux24_base, 223, 23> ranlux24;
 #if !defined(BOOST_NO_INT64_T) && !defined(BOOST_NO_INTEGRAL_INT64_T)

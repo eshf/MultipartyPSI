@@ -62,10 +62,10 @@ BOOST_CXX14_CONSTEXPR std::int64_t boost::mysql::field_view::as_int64() const
     return impl_.repr.int64;
 }
 
-BOOST_CXX14_CONSTEXPR std::u64 boost::mysql::field_view::as_uint64() const
+BOOST_CXX14_CONSTEXPR std::uint64_t boost::mysql::field_view::as_uint64() const
 {
     if (is_field_ptr())
-        return impl_.repr.field_ptr->as<std::u64>();
+        return impl_.repr.field_ptr->as<std::uint64_t>();
     check_kind(internal_kind::uint64);
     return impl_.repr.uint64;
 }
@@ -153,7 +153,7 @@ BOOST_CXX14_CONSTEXPR bool boost::mysql::field_view::operator==(const field_view
             if (this_val < 0)
                 return false;
             else
-                return static_cast<std::u64>(this_val) == rhs.get_uint64();
+                return static_cast<std::uint64_t>(this_val) == rhs.get_uint64();
         }
         else
             return false;
@@ -166,7 +166,7 @@ BOOST_CXX14_CONSTEXPR bool boost::mysql::field_view::operator==(const field_view
             if (rhs_val < 0)
                 return false;
             else
-                return static_cast<std::u64>(rhs_val) == get_uint64();
+                return static_cast<std::uint64_t>(rhs_val) == get_uint64();
         }
         else
             return false;

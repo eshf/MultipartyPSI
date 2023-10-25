@@ -20,7 +20,7 @@ class splitmix64
 {
 private:
 
-    boost::u64 x_;
+    boost::uint64_t x_;
 
 public:
 
@@ -28,20 +28,20 @@ public:
     {
     }
 
-    explicit splitmix64( boost::u64 seed ): x_( seed )
+    explicit splitmix64( boost::uint64_t seed ): x_( seed )
     {
     }
 
-    boost::u64 operator()()
+    boost::uint64_t operator()()
     {
-        x_ += ( boost::u64(0x9e3779b9u) << 32 ) + 0x7f4a7c15u;
+        x_ += ( boost::uint64_t(0x9e3779b9u) << 32 ) + 0x7f4a7c15u;
 
-        boost::u64 z = x_;
+        boost::uint64_t z = x_;
 
         z ^= z >> 30;
-        z *= ( boost::u64(0xbf58476du) << 32 ) + 0x1ce4e5b9u;
+        z *= ( boost::uint64_t(0xbf58476du) << 32 ) + 0x1ce4e5b9u;
         z ^= z >> 27;
-        z *= ( boost::u64(0x94d049bbu) << 32 ) + 0x133111ebu;
+        z *= ( boost::uint64_t(0x94d049bbu) << 32 ) + 0x133111ebu;
         z ^= z >> 31;
 
         return z;

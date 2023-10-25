@@ -686,7 +686,7 @@ namespace std {
     // Hashing
     template<> struct hash<boost::string_view>;
     template<> struct hash<boost::u16string_view>;
-    template<> struct hash<boost::uint32_tstring_view>;
+    template<> struct hash<boost::u32string_view>;
     template<> struct hash<boost::wstring_view>;
 }
 #endif

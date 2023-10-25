@@ -1,7 +1,0 @@
-{
-    "C_Cpp.errorSquiggles": "disabled",
-    "files.associations": {
-        "*.tcc": "cpp"
-    },
-    "C_Cpp.default.compilerPath": "/usr/bin/gcc"
-}

@@ -57,7 +57,7 @@ put(ConstBufferSequence const& buffers,
 }
 
 template<bool isRequest>
-boost::optional<std::u64>
+boost::optional<std::uint64_t>
 basic_parser<isRequest>::
 content_length_unchecked() const
 {

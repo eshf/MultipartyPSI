@@ -52,7 +52,7 @@ struct basic_dynamic_body
         any chunked Transfer-Encoding will be removed.
     */
     static
-    std::u64
+    std::uint64_t
     size(value_type const& v)
     {
         return v.size();
@@ -79,7 +79,7 @@ struct basic_dynamic_body
 
         void
         init(boost::optional<
-            std::u64> const&, error_code& ec)
+            std::uint64_t> const&, error_code& ec)
         {
             ec = {};
         }

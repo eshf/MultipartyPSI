@@ -77,7 +77,7 @@ public:
     // Only the handler_tracking class will have access to the id.
     friend class handler_tracking;
     friend class completion;
-    u64 id_;
+    uint64_t id_;
 
   protected:
     // Constructor initialises with no id.
@@ -151,7 +151,7 @@ public:
 
   private:
     friend class handler_tracking;
-    u64 id_;
+    uint64_t id_;
     bool invoked_;
     completion* next_;
   };

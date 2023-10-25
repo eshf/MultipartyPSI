@@ -53,7 +53,7 @@ struct handler
     inline bool on_string(string_view s, std::size_t n, error_code& ec);
     inline bool on_number_part(string_view, error_code&);
     inline bool on_int64(std::int64_t i, string_view, error_code& ec);
-    inline bool on_uint64(std::u64 u, string_view, error_code& ec);
+    inline bool on_uint64(std::uint64_t u, string_view, error_code& ec);
     inline bool on_double(double d, string_view, error_code& ec);
     inline bool on_bool(bool b, error_code& ec);
     inline bool on_null(error_code& ec);

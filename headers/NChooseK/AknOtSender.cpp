@@ -70,14 +70,14 @@ namespace osuCrypto
 
         //otMessages.resize(totalOTCount);
 
-        std::atomic<uint32_t> extRemaining((uint32_t)chls.size());
+        std::atomic<u32> extRemaining((u32)chls.size());
         std::promise<void> extDoneProm;
         std::shared_future<void> extDoneFuture(extDoneProm.get_future());
 
         std::vector<std::unique_ptr<OtExtSender>> parOts(chls.size()-1);
         std::vector<std::thread> parThrds(chls.size()-1);
 
-        uint32_t px = (uint32_t)(uint32_t(-1) * p);
+        u32 px = (u32)(u32(-1) * p);
 
         std::mutex finalMtx;
         u64 totalOnesCount(0);
@@ -131,7 +131,7 @@ namespace osuCrypto
             //std::cout << IoStream::lock << "send " << end << "  " << px << std::endl;
             for (u64 i = start; i < end; ++i)
             {
-                auto vv = cncGens[t].get<uint32_t>();
+                auto vv = cncGens[t].get<u32>();
                 u8 c = (vv <= px);
                 *sampleIter = c;
                 ++sampleIter;
@@ -152,7 +152,7 @@ namespace osuCrypto
                     ++sampleCount;
 
                     u8 cc = *choiceIter;
-                    //std::cout << (uint32_t)cc;
+                    //std::cout << (u32)cc;
 
                     if (cc == 0 && dynamic_cast<LzKosOtExtSender*>(&ots))
                     {
@@ -167,7 +167,7 @@ namespace osuCrypto
                     }
 
                     partialSum = partialSum ^ mMessages[i][cc];
-                    //std::cout << mMessages[i][cc] << " " << partialSum << " " << "  " << i << "  " << (uint32_t)cc << "  " << vv << std::endl;
+                    //std::cout << mMessages[i][cc] << " " << partialSum << " " << "  " << i << "  " << (u32)cc << "  " << vv << std::endl;
 
 
 

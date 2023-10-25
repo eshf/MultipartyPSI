@@ -311,7 +311,7 @@ struct impl_base<true>
     read_size_hint_pmd(
         std::size_t initial_size,
         bool rd_done,
-        std::u64 rd_remain,
+        std::uint64_t rd_remain,
         detail::frame_header const& rd_fh) const
     {
         using beast::detail::clamp;
@@ -461,7 +461,7 @@ struct impl_base<false>
     read_size_hint_pmd(
         std::size_t initial_size,
         bool rd_done,
-        std::u64 rd_remain,
+        std::uint64_t rd_remain,
         frame_header const& rd_fh) const
     {
         using beast::detail::clamp;

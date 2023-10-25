@@ -63,17 +63,17 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 	{
 	  if ((*cmp) (b1, b2, arg) <= 0)
 	    {
-	      *(u32 *) tmp = *(u32 *) b1;
-	      b1 += sizeof (u32);
+	      *(uint32_t *) tmp = *(uint32_t *) b1;
+	      b1 += sizeof (uint32_t);
 	      --n1;
 	    }
 	  else
 	    {
-	      *(u32 *) tmp = *(u32 *) b2;
-	      b2 += sizeof (u32);
+	      *(uint32_t *) tmp = *(uint32_t *) b2;
+	      b2 += sizeof (uint32_t);
 	      --n2;
 	    }
-	  tmp += sizeof (u32);
+	  tmp += sizeof (uint32_t);
 	}
       break;
     case 1:
@@ -280,10 +280,10 @@ __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
     }
   else
     {
-      if ((s & (sizeof (u32) - 1)) == 0
-	  && ((char *) b - (char *) 0) % __alignof__ (u32) == 0)
+      if ((s & (sizeof (uint32_t) - 1)) == 0
+	  && ((char *) b - (char *) 0) % __alignof__ (uint32_t) == 0)
 	{
-	  if (s == sizeof (u32))
+	  if (s == sizeof (uint32_t))
 	    p.var = 0;
 	  else if (s == sizeof (u64)
 		   && ((char *) b - (char *) 0) % __alignof__ (u64) == 0)

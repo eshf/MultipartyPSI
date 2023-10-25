@@ -43,7 +43,7 @@ struct Elf_Ehdr_template {
 };
 
 typedef Elf_Ehdr_template<boost::uint32_t> Elf32_Ehdr_;
-typedef Elf_Ehdr_template<boost::u64> Elf64_Ehdr_;
+typedef Elf_Ehdr_template<boost::uint64_t> Elf64_Ehdr_;
 
 template <class AddressOffsetT>
 struct Elf_Shdr_template {
@@ -60,7 +60,7 @@ struct Elf_Shdr_template {
 };
 
 typedef Elf_Shdr_template<boost::uint32_t> Elf32_Shdr_;
-typedef Elf_Shdr_template<boost::u64> Elf64_Shdr_;
+typedef Elf_Shdr_template<boost::uint64_t> Elf64_Shdr_;
 
 template <class AddressOffsetT>
 struct Elf_Sym_template;
@@ -78,8 +78,8 @@ struct Elf_Sym_template<boost::uint32_t> {
 };
 
 template <>
-struct Elf_Sym_template<boost::u64> {
-  typedef boost::u64 AddressOffsetT;
+struct Elf_Sym_template<boost::uint64_t> {
+  typedef boost::uint64_t AddressOffsetT;
 
   boost::uint32_t   st_name;    /* Symbol name (string tbl index) */
   unsigned char     st_info;    /* Symbol type and binding */
@@ -91,7 +91,7 @@ struct Elf_Sym_template<boost::u64> {
 
 
 typedef Elf_Sym_template<boost::uint32_t> Elf32_Sym_;
-typedef Elf_Sym_template<boost::u64> Elf64_Sym_;
+typedef Elf_Sym_template<boost::uint64_t> Elf64_Sym_;
 
 template <class AddressOffsetT>
 class elf_info {
@@ -337,7 +337,7 @@ public:
 };
 
 typedef elf_info<boost::uint32_t> elf_info32;
-typedef elf_info<boost::u64> elf_info64;
+typedef elf_info<boost::uint64_t> elf_info64;
 
 }}} // namespace boost::dll::detail
 

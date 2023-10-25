@@ -1,12 +1,14 @@
 #include "naor-pinkas.h"
-
+#include "Common/Log.h"
 #include <memory>
 #include "Common/Timer.h"
-
+#include "Crypto/Curve.h"
 
 #define PARALLEL
 
+#include "Common/ByteStream.h"
 #include "Common/BitVector.h"
+#include "Crypto/sha1.h"
 
 namespace osuCrypto
 {
@@ -53,7 +55,7 @@ namespace osuCrypto
 
 
 
-        std::atomic<uint32_t> remainingPK0s((uint32_t)numThreads);
+        std::atomic<u32> remainingPK0s((u32)numThreads);
         std::promise<void>/* recvProm,*/ PK0Prom;
         //std::shared_future<void> recvFuture(recvProm.get_future());
         std::future<void> PK0Furture(PK0Prom.get_future());

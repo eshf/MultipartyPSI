@@ -11,20 +11,20 @@
 
  /*
   *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE         uint32_tregex_iterator.hpp
+  *   FILE         u32regex_iterator.hpp
   *   VERSION      see <boost/version.hpp>
-  *   DESCRIPTION: Provides uint32_tregex_iterator implementation.
+  *   DESCRIPTION: Provides u32regex_iterator implementation.
   */
 
-#ifndef BOOST_REGEX_V5_uint32_tREGEX_ITERATOR_HPP
-#define BOOST_REGEX_V5_uint32_tREGEX_ITERATOR_HPP
+#ifndef BOOST_REGEX_V5_U32REGEX_ITERATOR_HPP
+#define BOOST_REGEX_V5_U32REGEX_ITERATOR_HPP
 
 namespace boost{
 
 template <class BidirectionalIterator>
-class uint32_tregex_iterator_implementation 
+class u32regex_iterator_implementation 
 {
-   typedef uint32_tregex regex_type;
+   typedef u32regex regex_type;
 
    match_results<BidirectionalIterator> what;  // current match
    BidirectionalIterator                base;  // start of sequence
@@ -33,14 +33,14 @@ class uint32_tregex_iterator_implementation
    match_flag_type                      flags; // flags for matching
 
 public:
-   uint32_tregex_iterator_implementation(const regex_type* p, BidirectionalIterator last, match_flag_type f)
+   u32regex_iterator_implementation(const regex_type* p, BidirectionalIterator last, match_flag_type f)
       : base(), end(last), re(*p), flags(f){}
    bool init(BidirectionalIterator first)
    {
       base = first;
-      return uint32_tregex_search(first, end, what, re, flags, base);
+      return u32regex_search(first, end, what, re, flags, base);
    }
-   bool compare(const uint32_tregex_iterator_implementation& that)
+   bool compare(const u32regex_iterator_implementation& that)
    {
       if(this == &that) return true;
       return (&re.get_data() == &that.re.get_data()) && (end == that.end) && (flags == that.flags) && (what[0].first == that.what[0].first) && (what[0].second == that.what[0].second);
@@ -57,23 +57,23 @@ public:
          f |= regex_constants::match_not_initial_null;
       //if(base != next_start)
       //   f |= regex_constants::match_not_bob;
-      bool result = uint32_tregex_search(next_start, end, what, re, f, base);
+      bool result = u32regex_search(next_start, end, what, re, f, base);
       if(result)
          what.set_base(base);
       return result;
    }
 private:
-   uint32_tregex_iterator_implementation& operator=(const uint32_tregex_iterator_implementation&);
+   u32regex_iterator_implementation& operator=(const u32regex_iterator_implementation&);
 };
 
 template <class BidirectionalIterator>
-class uint32_tregex_iterator 
+class u32regex_iterator 
 {
 private:
-   typedef uint32_tregex_iterator_implementation<BidirectionalIterator> impl;
+   typedef u32regex_iterator_implementation<BidirectionalIterator> impl;
    typedef std::shared_ptr<impl> pimpl;
 public:
-   typedef          uint32_tregex                                                regex_type;
+   typedef          u32regex                                                regex_type;
    typedef          match_results<BidirectionalIterator>                    value_type;
    typedef typename std::iterator_traits<BidirectionalIterator>::difference_type 
                                                                             difference_type;
@@ -81,8 +81,8 @@ public:
    typedef          const value_type&                                       reference; 
    typedef          std::forward_iterator_tag                               iterator_category;
    
-   uint32_tregex_iterator(){}
-   uint32_tregex_iterator(BidirectionalIterator a, BidirectionalIterator b, 
+   u32regex_iterator(){}
+   u32regex_iterator(BidirectionalIterator a, BidirectionalIterator b, 
                   const regex_type& re, 
                   match_flag_type m = match_default)
                   : pdata(new impl(&re, b, m))
@@ -92,26 +92,26 @@ public:
          pdata.reset();
       }
    }
-   uint32_tregex_iterator(const uint32_tregex_iterator& that)
+   u32regex_iterator(const u32regex_iterator& that)
       : pdata(that.pdata) {}
-   uint32_tregex_iterator& operator=(const uint32_tregex_iterator& that)
+   u32regex_iterator& operator=(const u32regex_iterator& that)
    {
       pdata = that.pdata;
       return *this;
    }
-   bool operator==(const uint32_tregex_iterator& that)const
+   bool operator==(const u32regex_iterator& that)const
    { 
       if((pdata.get() == 0) || (that.pdata.get() == 0))
          return pdata.get() == that.pdata.get();
       return pdata->compare(*(that.pdata.get())); 
    }
-   bool operator!=(const uint32_tregex_iterator& that)const
+   bool operator!=(const u32regex_iterator& that)const
    { return !(*this == that); }
    const value_type& operator*()const
    { return pdata->get(); }
    const value_type* operator->()const
    { return &(pdata->get()); }
-   uint32_tregex_iterator& operator++()
+   u32regex_iterator& operator++()
    {
       cow();
       if(0 == pdata->next())
@@ -120,9 +120,9 @@ public:
       }
       return *this;
    }
-   uint32_tregex_iterator operator++(int)
+   u32regex_iterator operator++(int)
    {
-      uint32_tregex_iterator result(*this);
+      u32regex_iterator result(*this);
       ++(*this);
       return result;
    }
@@ -140,35 +140,35 @@ private:
    }
 };
 
-typedef uint32_tregex_iterator<const char*> utf8regex_iterator;
-typedef uint32_tregex_iterator<const UChar*> utf16regex_iterator;
-typedef uint32_tregex_iterator<const UChar32*> utf32regex_iterator;
+typedef u32regex_iterator<const char*> utf8regex_iterator;
+typedef u32regex_iterator<const UChar*> utf16regex_iterator;
+typedef u32regex_iterator<const UChar32*> utf32regex_iterator;
 
-inline uint32_tregex_iterator<const char*> make_uint32_tregex_iterator(const char* p, const uint32_tregex& e, regex_constants::match_flag_type m = regex_constants::match_default)
+inline u32regex_iterator<const char*> make_u32regex_iterator(const char* p, const u32regex& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
-   return uint32_tregex_iterator<const char*>(p, p+std::strlen(p), e, m);
+   return u32regex_iterator<const char*>(p, p+std::strlen(p), e, m);
 }
 #ifndef BOOST_NO_WREGEX
-inline uint32_tregex_iterator<const wchar_t*> make_uint32_tregex_iterator(const wchar_t* p, const uint32_tregex& e, regex_constants::match_flag_type m = regex_constants::match_default)
+inline u32regex_iterator<const wchar_t*> make_u32regex_iterator(const wchar_t* p, const u32regex& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
-   return uint32_tregex_iterator<const wchar_t*>(p, p+std::wcslen(p), e, m);
+   return u32regex_iterator<const wchar_t*>(p, p+std::wcslen(p), e, m);
 }
 #endif
 #if !defined(BOOST_REGEX_UCHAR_IS_WCHAR_T)
-inline uint32_tregex_iterator<const UChar*> make_uint32_tregex_iterator(const UChar* p, const uint32_tregex& e, regex_constants::match_flag_type m = regex_constants::match_default)
+inline u32regex_iterator<const UChar*> make_u32regex_iterator(const UChar* p, const u32regex& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
-   return uint32_tregex_iterator<const UChar*>(p, p+u_strlen(p), e, m);
+   return u32regex_iterator<const UChar*>(p, p+u_strlen(p), e, m);
 }
 #endif
 template <class charT, class Traits, class Alloc>
-inline uint32_tregex_iterator<typename std::basic_string<charT, Traits, Alloc>::const_iterator> make_uint32_tregex_iterator(const std::basic_string<charT, Traits, Alloc>& p, const uint32_tregex& e, regex_constants::match_flag_type m = regex_constants::match_default)
+inline u32regex_iterator<typename std::basic_string<charT, Traits, Alloc>::const_iterator> make_u32regex_iterator(const std::basic_string<charT, Traits, Alloc>& p, const u32regex& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
    typedef typename std::basic_string<charT, Traits, Alloc>::const_iterator iter_type;
-   return uint32_tregex_iterator<iter_type>(p.begin(), p.end(), e, m);
+   return u32regex_iterator<iter_type>(p.begin(), p.end(), e, m);
 }
-inline uint32_tregex_iterator<const UChar*> make_uint32_tregex_iterator(const U_NAMESPACE_QUALIFIER UnicodeString& s, const uint32_tregex& e, regex_constants::match_flag_type m = regex_constants::match_default)
+inline u32regex_iterator<const UChar*> make_u32regex_iterator(const U_NAMESPACE_QUALIFIER UnicodeString& s, const u32regex& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
-   return uint32_tregex_iterator<const UChar*>(s.getBuffer(), s.getBuffer() + s.length(), e, m);
+   return u32regex_iterator<const UChar*>(s.getBuffer(), s.getBuffer() + s.length(), e, m);
 }
 
 } // namespace boost

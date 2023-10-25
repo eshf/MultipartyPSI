@@ -113,35 +113,35 @@ BOOST_ASIO_DECL bool non_blocking_write1(int d,
 #if defined(BOOST_ASIO_HAS_FILE)
 
 BOOST_ASIO_DECL std::size_t sync_read_at(int d, state_type state,
-    u64 offset, buf* bufs, std::size_t count, bool all_empty,
+    uint64_t offset, buf* bufs, std::size_t count, bool all_empty,
     boost::system::error_code& ec);
 
 BOOST_ASIO_DECL std::size_t sync_read_at1(int d, state_type state,
-    u64 offset, void* data, std::size_t size,
+    uint64_t offset, void* data, std::size_t size,
     boost::system::error_code& ec);
 
-BOOST_ASIO_DECL bool non_blocking_read_at(int d, u64 offset,
+BOOST_ASIO_DECL bool non_blocking_read_at(int d, uint64_t offset,
     buf* bufs, std::size_t count, boost::system::error_code& ec,
     std::size_t& bytes_transferred);
 
-BOOST_ASIO_DECL bool non_blocking_read_at1(int d, u64 offset,
+BOOST_ASIO_DECL bool non_blocking_read_at1(int d, uint64_t offset,
     void* data, std::size_t size, boost::system::error_code& ec,
     std::size_t& bytes_transferred);
 
 BOOST_ASIO_DECL std::size_t sync_write_at(int d, state_type state,
-    u64 offset, const buf* bufs, std::size_t count, bool all_empty,
+    uint64_t offset, const buf* bufs, std::size_t count, bool all_empty,
     boost::system::error_code& ec);
 
 BOOST_ASIO_DECL std::size_t sync_write_at1(int d, state_type state,
-    u64 offset, const void* data, std::size_t size,
+    uint64_t offset, const void* data, std::size_t size,
     boost::system::error_code& ec);
 
 BOOST_ASIO_DECL bool non_blocking_write_at(int d,
-    u64 offset, const buf* bufs, std::size_t count,
+    uint64_t offset, const buf* bufs, std::size_t count,
     boost::system::error_code& ec, std::size_t& bytes_transferred);
 
 BOOST_ASIO_DECL bool non_blocking_write_at1(int d,
-    u64 offset, const void* data, std::size_t size,
+    uint64_t offset, const void* data, std::size_t size,
     boost::system::error_code& ec, std::size_t& bytes_transferred);
 
 #endif // defined(BOOST_ASIO_HAS_FILE)

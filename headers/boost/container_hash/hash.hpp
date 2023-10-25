@@ -211,7 +211,7 @@ namespace boost
         {
             static std::size_t fn( T v )
             {
-                boost::u64 w;
+                boost::uint64_t w;
                 std::memcpy( &w, &v, sizeof( v ) );
 
                 return hash_value( w );
@@ -223,7 +223,7 @@ namespace boost
         {
             static std::size_t fn( T v )
             {
-                boost::u64 w[ 2 ] = {};
+                boost::uint64_t w[ 2 ] = {};
                 std::memcpy( &w, &v, 80 / CHAR_BIT );
 
                 std::size_t seed = 0;
@@ -240,7 +240,7 @@ namespace boost
         {
             static std::size_t fn( T v )
             {
-                boost::u64 w[ 2 ] = {};
+                boost::uint64_t w[ 2 ] = {};
                 std::memcpy( &w, &v, 80 / CHAR_BIT );
 
                 std::size_t seed = 0;
@@ -257,7 +257,7 @@ namespace boost
         {
             static std::size_t fn( T v )
             {
-                boost::u64 w[ 2 ];
+                boost::uint64_t w[ 2 ];
                 std::memcpy( &w, &v, sizeof( v ) );
 
                 std::size_t seed = 0;

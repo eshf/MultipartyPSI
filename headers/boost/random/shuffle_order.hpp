@@ -144,7 +144,7 @@ public:
             // overflow
             j = k * off / (brange + 1);
         } else if(brange < (std::numeric_limits<uintmax_t>::max)() / k) {
-            // Otherwise try to use u64
+            // Otherwise try to use uint64_t
             j = static_cast<base_unsigned>(
                 static_cast<uintmax_t>(off) * k /
                 (static_cast<uintmax_t>(brange) + 1));

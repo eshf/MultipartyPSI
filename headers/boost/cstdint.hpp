@@ -140,7 +140,7 @@ namespace boost
   using ::int64_t;
   using ::int_least64_t;
   using ::int_fast64_t;
-  using ::u64;
+  using ::uint64_t;
   using ::uint_least64_t;
   using ::uint_fast64_t;
 
@@ -183,12 +183,12 @@ namespace boost {
   using ::int64_t;
   typedef int64_t int_least64_t;
   typedef int64_t int_fast64_t;
-  using ::u64;
-  typedef u64 uint_least64_t;
-  typedef u64 uint_fast64_t;
+  using ::uint64_t;
+  typedef uint64_t uint_least64_t;
+  typedef uint64_t uint_fast64_t;
 
   typedef int64_t intmax_t;
-  typedef u64 uintmax_t;
+  typedef uint64_t uintmax_t;
 
 # else
 
@@ -322,7 +322,7 @@ namespace boost
      typedef  ::boost::long_long_type            int64_t;
      typedef  ::boost::long_long_type            int_least64_t;
      typedef  ::boost::long_long_type            int_fast64_t;
-     typedef  ::boost::ulong_long_type   u64;
+     typedef  ::boost::ulong_long_type   uint64_t;
      typedef  ::boost::ulong_long_type   uint_least64_t;
      typedef  ::boost::ulong_long_type   uint_fast64_t;
 
@@ -334,7 +334,7 @@ namespace boost
      typedef long                 int64_t;
      typedef long                 int_least64_t;
      typedef long                 int_fast64_t;
-     typedef unsigned long        u64;
+     typedef unsigned long        uint64_t;
      typedef unsigned long        uint_least64_t;
      typedef unsigned long        uint_fast64_t;
 #    else
@@ -346,7 +346,7 @@ namespace boost
      __extension__ typedef long long            int64_t;
      __extension__ typedef long long            int_least64_t;
      __extension__ typedef long long            int_fast64_t;
-     __extension__ typedef unsigned long long   u64;
+     __extension__ typedef unsigned long long   uint64_t;
      __extension__ typedef unsigned long long   uint_least64_t;
      __extension__ typedef unsigned long long   uint_fast64_t;
 # elif defined(BOOST_HAS_MS_INT64)
@@ -358,7 +358,7 @@ namespace boost
      typedef __int64             int64_t;
      typedef __int64             int_least64_t;
      typedef __int64             int_fast64_t;
-     typedef unsigned __int64    u64;
+     typedef unsigned __int64    uint64_t;
      typedef unsigned __int64    uint_least64_t;
      typedef unsigned __int64    uint_fast64_t;
 # else // assume no 64-bit integers

@@ -43,7 +43,7 @@ __drand48_iterate (unsigned short int xsubi[3], struct drand48_data *buffer)
      48 bits.  Because we compute the modulus it does not care how
      many bits really are computed.  */
 
-  X = (u64) xsubi[2] << 32 | (u32) xsubi[1] << 16 | xsubi[0];
+  X = (u64) xsubi[2] << 32 | (uint32_t) xsubi[1] << 16 | xsubi[0];
 
   result = X * buffer->__a + buffer->__c;
 

@@ -382,10 +382,10 @@ public:
    *
    * @throws boost::system::system_error Thrown on failure.
    */
-  u64 seek(int64_t offset, file_base::seek_basis whence)
+  uint64_t seek(int64_t offset, file_base::seek_basis whence)
   {
     boost::system::error_code ec;
-    u64 n = this->impl_.get_service().seek(
+    uint64_t n = this->impl_.get_service().seek(
         this->impl_.get_implementation(), offset, whence, ec);
     boost::asio::detail::throw_error(ec, "seek");
     return n;
@@ -403,7 +403,7 @@ public:
    *
    * @returns The new position relative to the beginning of the file.
    */
-  u64 seek(int64_t offset, file_base::seek_basis whence,
+  uint64_t seek(int64_t offset, file_base::seek_basis whence,
       boost::system::error_code& ec)
   {
     return this->impl_.get_service().seek(

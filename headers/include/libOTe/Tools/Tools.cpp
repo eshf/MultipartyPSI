@@ -179,11 +179,11 @@ namespace osuCrypto {
     //       out[1] stores the second column of 16 bytes.
     void sse_loadSubSquare(array<block, 128>& in, array<block, 2>& out, u64 x, u64 y)
     {
-        static_assert(sizeof(array<array<uint8_t, 16>, 2>) == sizeof(array<block, 2>), "");
-        static_assert(sizeof(array<array<uint8_t, 16>, 128>) == sizeof(array<block, 128>), "");
+        static_assert(sizeof(array<array<u8, 16>, 2>) == sizeof(array<block, 2>), "");
+        static_assert(sizeof(array<array<u8, 16>, 128>) == sizeof(array<block, 128>), "");
 
-        array<array<uint8_t, 16>, 2>& outByteView = *(array<array<uint8_t, 16>, 2>*)&out;
-        array<array<uint8_t, 16>, 128>& inByteView = *(array<array<uint8_t, 16>, 128>*)&in;
+        array<array<u8, 16>, 2>& outByteView = *(array<array<u8, 16>, 2>*)&out;
+        array<array<u8, 16>, 128>& inByteView = *(array<array<u8, 16>, 128>*)&in;
 
         for (int l = 0; l < 16; l++)
         {
@@ -226,7 +226,7 @@ namespace osuCrypto {
         std::cout << std::endl;
     }
     
-    uint8_t getBit(array<block, 128>& inOut, u64 i, u64 j)
+    u8 getBit(array<block, 128>& inOut, u64 i, u64 j)
     {
         BitVector temp(128);
         temp.assign(inOut[i]);
@@ -261,8 +261,8 @@ namespace osuCrypto {
 
     inline void sse_loadSubSquarex(array<array<block, 8>, 128>& in, array<block, 2>& out, u64 x, u64 y, u64 i)
     {
-        typedef array<array<uint8_t, 16>, 2> OUT_t;
-        typedef array<array<uint8_t, 128>, 128> IN_t;
+        typedef array<array<u8, 16>, 2> OUT_t;
+        typedef array<array<u8, 128>, 128> IN_t;
 
         static_assert(sizeof(OUT_t) == sizeof(array<block, 2>), "");
         static_assert(sizeof(IN_t) == sizeof(array<array<block, 8>, 128>), "");

@@ -30,7 +30,7 @@ void boost::mysql::field::from_view(const field_view& fv)
     {
     case field_kind::null: repr_.data.emplace<detail::field_impl::null_t>(); break;
     case field_kind::int64: repr_.data.emplace<std::int64_t>(fv.get_int64()); break;
-    case field_kind::uint64: repr_.data.emplace<std::u64>(fv.get_uint64()); break;
+    case field_kind::uint64: repr_.data.emplace<std::uint64_t>(fv.get_uint64()); break;
     case field_kind::string: repr_.data.emplace<std::string>(fv.get_string()); break;
     case field_kind::blob: repr_.data.emplace<blob>(detail::to_blob(fv.get_blob())); break;
     case field_kind::float_: repr_.data.emplace<float>(fv.get_float()); break;

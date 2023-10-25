@@ -53,7 +53,7 @@ namespace osuCrypto {
     {
         out << std::hex;
 
-        uint32_t* data = (uint32_t*)comm.data();
+        u32* data = (u32*)comm.data();
 
         out << std::setw(8) << std::setfill('0') << data[0]
             << std::setw(8) << std::setfill('0') << data[1]

@@ -112,7 +112,7 @@ struct buffer_body
         }
 
         void
-        init(boost::optional<std::u64> const&, error_code& ec)
+        init(boost::optional<std::uint64_t> const&, error_code& ec)
         {
             ec = {};
         }

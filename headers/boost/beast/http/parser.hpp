@@ -64,12 +64,12 @@ class parser
     bool used_ = false;
 
     std::function<void(
-        std::u64,
+        std::uint64_t,
         string_view,
         error_code&)> cb_h_;
 
     std::function<std::size_t(
-        std::u64,
+        std::uint64_t,
         string_view,
         error_code&)> cb_b_;
 
@@ -214,7 +214,7 @@ public:
         @par Example
         @code
         auto callback =
-            [](std::u64 size, string_view extensions, error_code& ec)
+            [](std::uint64_t size, string_view extensions, error_code& ec)
             {
                 //...
             };
@@ -226,7 +226,7 @@ public:
         @code
         void
         on_chunk_header(
-            std::u64 size,         // Size of the chunk, zero for the last chunk
+            std::uint64_t size,         // Size of the chunk, zero for the last chunk
             string_view extensions,     // The chunk-extensions in raw form
             error_code& ec);            // May be set by the callback to indicate an error
         @endcode
@@ -262,7 +262,7 @@ public:
         @par Example
         @code
         auto callback =
-            [](std::u64 remain, string_view body, error_code& ec)
+            [](std::uint64_t remain, string_view body, error_code& ec)
             {
                 //...
             };
@@ -274,7 +274,7 @@ public:
         @code
         std::size_t
         on_chunk_header(
-            std::u64 remain,       // Octets remaining in this chunk, includes `body`
+            std::uint64_t remain,       // Octets remaining in this chunk, includes `body`
             string_view body,           // A buffer holding some or all of the remainder of the chunk body
             error_code& ec);            // May be set by the callback to indicate an error
         @endcode
@@ -442,7 +442,7 @@ private:
 
     void
     on_body_init_impl(
-        boost::optional<std::u64> const& content_length,
+        boost::optional<std::uint64_t> const& content_length,
         error_code& ec) override
     {
         rd_.init(content_length, ec);
@@ -460,7 +460,7 @@ private:
 
     void
     on_chunk_header_impl(
-        std::u64 size,
+        std::uint64_t size,
         string_view extensions,
         error_code& ec) override
     {
@@ -470,7 +470,7 @@ private:
 
     std::size_t
     on_chunk_body_impl(
-        std::u64 remain,
+        std::uint64_t remain,
         string_view body,
         error_code& ec) override
     {

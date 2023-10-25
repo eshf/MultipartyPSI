@@ -75,8 +75,8 @@ struct stream<NextLayer, deflateSupported>::impl_type
     control_cb_type         ctrl_cb;        // control callback
 
     std::size_t             rd_msg_max      /* max message size */ = 16 * 1024 * 1024;
-    std::u64           rd_size         /* total size of current message so far */ = 0;
-    std::u64           rd_remain       /* message frame bytes left in current frame */ = 0;
+    std::uint64_t           rd_size         /* total size of current message so far */ = 0;
+    std::uint64_t           rd_remain       /* message frame bytes left in current frame */ = 0;
     detail::frame_header    rd_fh;          // current frame header
     detail::prepared_key    rd_key;         // current stateful mask key
     detail::frame_buffer    rd_fb;          // to write control frames (during reads)
@@ -841,7 +841,7 @@ parse_fh(
     }
     case 127:
     {
-        std::u64 len_be;
+        std::uint64_t len_be;
         BOOST_ASSERT(buffer_bytes(cb) >= sizeof(len_be));
         cb.consume(net::buffer_copy(
             net::mutable_buffer(&len_be, sizeof(len_be)), cb));
@@ -879,7 +879,7 @@ parse_fh(
         else
         {
             if(rd_size > (std::numeric_limits<
-                std::u64>::max)() - fh.len)
+                std::uint64_t>::max)() - fh.len)
             {
                 // message size exceeds configured limit
                 BOOST_BEAST_ASSIGN_EC(ec, error::message_too_big);

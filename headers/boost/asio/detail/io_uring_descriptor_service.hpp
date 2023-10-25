@@ -368,7 +368,7 @@ public:
 
   // Write some data to the descriptor at the specified offset.
   template <typename ConstBufferSequence>
-  size_t write_some_at(implementation_type& impl, u64 offset,
+  size_t write_some_at(implementation_type& impl, uint64_t offset,
       const ConstBufferSequence& buffers, boost::system::error_code& ec)
   {
     typedef buffer_sequence_adapter<boost::asio::const_buffer,
@@ -394,7 +394,7 @@ public:
   }
 
   // Wait until data can be written without blocking.
-  size_t write_some_at(implementation_type& impl, u64,
+  size_t write_some_at(implementation_type& impl, uint64_t,
       const null_buffers& buffers, boost::system::error_code& ec)
   {
     return write_some(impl, buffers, ec);
@@ -403,7 +403,7 @@ public:
   // Start an asynchronous write at the specified offset. The data being sent
   // must be valid for the lifetime of the asynchronous operation.
   template <typename ConstBufferSequence, typename Handler, typename IoExecutor>
-  void async_write_some_at(implementation_type& impl, u64 offset,
+  void async_write_some_at(implementation_type& impl, uint64_t offset,
       const ConstBufferSequence& buffers, Handler& handler,
       const IoExecutor& io_ex)
   {
@@ -558,7 +558,7 @@ public:
 
   // Read some data at the specified offset. Returns the number of bytes read.
   template <typename MutableBufferSequence>
-  size_t read_some_at(implementation_type& impl, u64 offset,
+  size_t read_some_at(implementation_type& impl, uint64_t offset,
       const MutableBufferSequence& buffers, boost::system::error_code& ec)
   {
     typedef buffer_sequence_adapter<boost::asio::mutable_buffer,
@@ -580,7 +580,7 @@ public:
   }
 
   // Wait until data can be read without blocking.
-  size_t read_some_at(implementation_type& impl, u64,
+  size_t read_some_at(implementation_type& impl, uint64_t,
       const null_buffers& buffers, boost::system::error_code& ec)
   {
     return read_some(impl, buffers, ec);
@@ -591,7 +591,7 @@ public:
   template <typename MutableBufferSequence,
       typename Handler, typename IoExecutor>
   void async_read_some_at(implementation_type& impl,
-      u64 offset, const MutableBufferSequence& buffers,
+      uint64_t offset, const MutableBufferSequence& buffers,
       Handler& handler, const IoExecutor& io_ex)
   {
     bool is_continuation =
@@ -627,7 +627,7 @@ public:
 
   // Wait until data can be read without blocking.
   template <typename Handler, typename IoExecutor>
-  void async_read_some_at(implementation_type& impl, u64,
+  void async_read_some_at(implementation_type& impl, uint64_t,
       const null_buffers& buffers, Handler& handler, const IoExecutor& io_ex)
   {
     return async_read_some(impl, buffers, handler, io_ex);

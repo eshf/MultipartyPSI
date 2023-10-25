@@ -370,9 +370,9 @@ __random_r (struct random_data *buf, int32_t *result)
       int32_t *fptr = buf->fptr;
       int32_t *rptr = buf->rptr;
       int32_t *end_ptr = buf->end_ptr;
-      u32 val;
+      uint32_t val;
 
-      val = *fptr += (u32) *rptr;
+      val = *fptr += (uint32_t) *rptr;
       /* Chucking least random bit.  */
       *result = val >> 1;
       ++fptr;

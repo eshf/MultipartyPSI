@@ -107,10 +107,10 @@ private:
 
         uuid u;
         for (int i=0; i<4; ++i) {
-            *(u.begin() + i*4+0) = static_cast<u8>((digest[i] >> 24) & 0xFF);
-            *(u.begin() + i*4+1) = static_cast<u8>((digest[i] >> 16) & 0xFF);
-            *(u.begin() + i*4+2) = static_cast<u8>((digest[i] >> 8) & 0xFF);
-            *(u.begin() + i*4+3) = static_cast<u8>((digest[i] >> 0) & 0xFF);
+            *(u.begin() + i*4+0) = static_cast<uint8_t>((digest[i] >> 24) & 0xFF);
+            *(u.begin() + i*4+1) = static_cast<uint8_t>((digest[i] >> 16) & 0xFF);
+            *(u.begin() + i*4+2) = static_cast<uint8_t>((digest[i] >> 8) & 0xFF);
+            *(u.begin() + i*4+3) = static_cast<uint8_t>((digest[i] >> 0) & 0xFF);
         }
 
         // set variant: must be 0b10xxxxxx

@@ -442,7 +442,7 @@ push_int64(
 void
 value_stack::
 push_uint64(
-    u64 u)
+    uint64_t u)
 {
     st_.push(u, sp_);
 }

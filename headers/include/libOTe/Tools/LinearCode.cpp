@@ -242,7 +242,7 @@ namespace osuCrypto
 
         u64 codeSize = codewordBlkSize();
         u64 rowSize = 256 * codeSize;
-        uint8_t* byteView = (uint8_t*)plaintxt.data();
+        u8* byteView = (u8*)plaintxt.data();
 
         if (codeSize == 4)
         {

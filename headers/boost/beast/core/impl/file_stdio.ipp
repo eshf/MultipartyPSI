@@ -208,7 +208,7 @@ open(char const* path, file_mode mode, error_code& ec)
 #endif
 }
 
-std::u64
+std::uint64_t
 file_stdio::
 size(error_code& ec) const
 {
@@ -244,7 +244,7 @@ size(error_code& ec) const
     return size;
 }
 
-std::u64
+std::uint64_t
 file_stdio::
 pos(error_code& ec) const
 {
@@ -265,14 +265,14 @@ pos(error_code& ec) const
 
 void
 file_stdio::
-seek(std::u64 offset, error_code& ec)
+seek(std::uint64_t offset, error_code& ec)
 {
     if(! f_)
     {
         ec = make_error_code(errc::bad_file_descriptor);
         return;
     }
-    if(offset > static_cast<std::u64>((std::numeric_limits<long>::max)()))
+    if(offset > static_cast<std::uint64_t>((std::numeric_limits<long>::max)()))
     {
         ec = make_error_code(errc::invalid_seek);
         return;

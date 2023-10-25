@@ -50,7 +50,7 @@ namespace osuCrypto
             Bin(Bin&& b) : mVal(b.mVal) {}
             u64 mVal;
 			std::vector<block> mValOPRF;
-			std::vector<uint8_t> mValMap;
+			std::vector<u8> mValMap;
 
 			std::vector<std::vector<block>> mCoeffs;//mBits[IdxParty][mIdx]
 #endif

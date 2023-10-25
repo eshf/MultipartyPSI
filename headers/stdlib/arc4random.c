@@ -47,7 +47,7 @@ __arc4random_buf (void *p, size_t n)
 	{
 	  if ((size_t) l == n)
 	    return; /* Done reading, success.  */
-	  p = (u8 *) p + l;
+	  p = (uint8_t *) p + l;
 	  n -= l;
 	  continue; /* Interrupted by a signal; keep going.  */
 	}
@@ -82,7 +82,7 @@ __arc4random_buf (void *p, size_t n)
 	arc4random_getrandom_failure ();
       if ((size_t) l == n)
 	break; /* Done reading, success.  */
-      p = (u8 *) p + l;
+      p = (uint8_t *) p + l;
       n -= l;
     }
   if (__close_nocancel (fd) < 0)
@@ -91,10 +91,10 @@ __arc4random_buf (void *p, size_t n)
 libc_hidden_def (__arc4random_buf)
 weak_alias (__arc4random_buf, arc4random_buf)
 
-u32
+uint32_t
 __arc4random (void)
 {
-  u32 r;
+  uint32_t r;
   __arc4random_buf (&r, sizeof (r));
   return r;
 }

@@ -225,7 +225,7 @@ inline int countl_impl( boost::uint16_t x ) BOOST_NOEXCEPT
 
 #if defined(_MSC_VER) && defined(_M_X64) && defined(BOOST_CORE_HAS_BUILTIN_ISCONSTEVAL)
 
-BOOST_CXX14_CONSTEXPR inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline int countl_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     if( __builtin_is_constant_evaluated() )
     {
@@ -250,7 +250,7 @@ BOOST_CXX14_CONSTEXPR inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
 
 #elif defined(_MSC_VER) && defined(_M_X64)
 
-inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
+inline int countl_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     unsigned long r;
 
@@ -266,7 +266,7 @@ inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
 
 #elif defined(_MSC_VER) && defined(BOOST_CORE_HAS_BUILTIN_ISCONSTEVAL)
 
-BOOST_CXX14_CONSTEXPR inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline int countl_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     return static_cast<boost::uint32_t>( x >> 32 ) != 0?
         boost::core::detail::countl_impl( static_cast<boost::uint32_t>( x >> 32 ) ):
@@ -275,7 +275,7 @@ BOOST_CXX14_CONSTEXPR inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
 
 #else
 
-inline int countl_impl( boost::u64 x ) BOOST_NOEXCEPT
+inline int countl_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     return static_cast<boost::uint32_t>( x >> 32 ) != 0?
         boost::core::detail::countl_impl( static_cast<boost::uint32_t>( x >> 32 ) ):
@@ -291,7 +291,7 @@ BOOST_CXX14_CONSTEXPR int countl_zero( T x ) BOOST_NOEXCEPT
 {
     BOOST_STATIC_ASSERT( std::numeric_limits<T>::is_integer && !std::numeric_limits<T>::is_signed );
 
-    BOOST_STATIC_ASSERT( sizeof(T) == sizeof(boost::uint8_t) || sizeof(T) == sizeof(boost::uint16_t) || sizeof(T) == sizeof(boost::uint32_t) || sizeof(T) == sizeof(boost::u64) );
+    BOOST_STATIC_ASSERT( sizeof(T) == sizeof(boost::uint8_t) || sizeof(T) == sizeof(boost::uint16_t) || sizeof(T) == sizeof(boost::uint32_t) || sizeof(T) == sizeof(boost::uint64_t) );
 
     BOOST_IF_CONSTEXPR ( sizeof(T) == sizeof(boost::uint8_t) )
     {
@@ -307,7 +307,7 @@ BOOST_CXX14_CONSTEXPR int countl_zero( T x ) BOOST_NOEXCEPT
     }
     else
     {
-        return boost::core::detail::countl_impl( static_cast<boost::u64>( x ) );
+        return boost::core::detail::countl_impl( static_cast<boost::uint64_t>( x ) );
     }
 }
 
@@ -450,7 +450,7 @@ inline int countr_impl( boost::uint16_t x ) BOOST_NOEXCEPT
 
 #if defined(_MSC_VER) && defined(_M_X64) && defined(BOOST_CORE_HAS_BUILTIN_ISCONSTEVAL)
 
-BOOST_CXX14_CONSTEXPR inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline int countr_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     if( __builtin_is_constant_evaluated() )
     {
@@ -475,7 +475,7 @@ BOOST_CXX14_CONSTEXPR inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
 
 #elif defined(_MSC_VER) && defined(_M_X64)
 
-inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
+inline int countr_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     unsigned long r;
 
@@ -491,7 +491,7 @@ inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
 
 #elif defined(_MSC_VER) && defined(BOOST_CORE_HAS_BUILTIN_ISCONSTEVAL)
 
-BOOST_CXX14_CONSTEXPR inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline int countr_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     return static_cast<boost::uint32_t>( x ) != 0?
         boost::core::detail::countr_impl( static_cast<boost::uint32_t>( x ) ):
@@ -500,7 +500,7 @@ BOOST_CXX14_CONSTEXPR inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
 
 #else
 
-inline int countr_impl( boost::u64 x ) BOOST_NOEXCEPT
+inline int countr_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     return static_cast<boost::uint32_t>( x ) != 0?
         boost::core::detail::countr_impl( static_cast<boost::uint32_t>( x ) ):
@@ -516,7 +516,7 @@ BOOST_CXX14_CONSTEXPR int countr_zero( T x ) BOOST_NOEXCEPT
 {
     BOOST_STATIC_ASSERT( std::numeric_limits<T>::is_integer && !std::numeric_limits<T>::is_signed );
 
-    BOOST_STATIC_ASSERT( sizeof(T) == sizeof(boost::uint8_t) || sizeof(T) == sizeof(boost::uint16_t) || sizeof(T) == sizeof(boost::uint32_t) || sizeof(T) == sizeof(boost::u64) );
+    BOOST_STATIC_ASSERT( sizeof(T) == sizeof(boost::uint8_t) || sizeof(T) == sizeof(boost::uint16_t) || sizeof(T) == sizeof(boost::uint32_t) || sizeof(T) == sizeof(boost::uint64_t) );
 
     BOOST_IF_CONSTEXPR ( sizeof(T) == sizeof(boost::uint8_t) )
     {
@@ -532,7 +532,7 @@ BOOST_CXX14_CONSTEXPR int countr_zero( T x ) BOOST_NOEXCEPT
     }
     else
     {
-        return boost::core::detail::countr_impl( static_cast<boost::u64>( x ) );
+        return boost::core::detail::countr_impl( static_cast<boost::uint64_t>( x ) );
     }
 }
 
@@ -610,7 +610,7 @@ BOOST_CXX14_CONSTEXPR inline int popcount_impl( boost::uint32_t x ) BOOST_NOEXCE
     return static_cast<unsigned>( ( x * 0x01010101 ) >> 24 );
 }
 
-BOOST_CXX14_CONSTEXPR inline int popcount_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline int popcount_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     x = x - ( ( x >> 1 ) & 0x5555555555555555 );
     x = ( x & 0x3333333333333333 ) + ( ( x >> 2 ) & 0x3333333333333333 );
@@ -626,7 +626,7 @@ BOOST_CXX14_CONSTEXPR int popcount( T x ) BOOST_NOEXCEPT
 {
     BOOST_STATIC_ASSERT( std::numeric_limits<T>::is_integer && !std::numeric_limits<T>::is_signed );
 
-    BOOST_STATIC_ASSERT( sizeof(T) <= sizeof(boost::u64) );
+    BOOST_STATIC_ASSERT( sizeof(T) <= sizeof(boost::uint64_t) );
 
     BOOST_IF_CONSTEXPR ( sizeof(T) <= sizeof(boost::uint32_t) )
     {
@@ -634,7 +634,7 @@ BOOST_CXX14_CONSTEXPR int popcount( T x ) BOOST_NOEXCEPT
     }
     else
     {
-        return boost::core::detail::popcount_impl( static_cast<boost::u64>( x ) );
+        return boost::core::detail::popcount_impl( static_cast<boost::uint64_t>( x ) );
     }
 }
 
@@ -712,7 +712,7 @@ BOOST_CXX14_CONSTEXPR inline boost::uint32_t bit_ceil_impl( boost::uint32_t x ) 
     return x;
 }
 
-BOOST_CXX14_CONSTEXPR inline boost::u64 bit_ceil_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline boost::uint64_t bit_ceil_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     if( x == 0 )
     {
@@ -740,7 +740,7 @@ BOOST_CXX14_CONSTEXPR T bit_ceil( T x ) BOOST_NOEXCEPT
 {
     BOOST_STATIC_ASSERT( std::numeric_limits<T>::is_integer && !std::numeric_limits<T>::is_signed );
 
-    BOOST_STATIC_ASSERT( sizeof(T) <= sizeof(boost::u64) );
+    BOOST_STATIC_ASSERT( sizeof(T) <= sizeof(boost::uint64_t) );
 
     BOOST_IF_CONSTEXPR ( sizeof(T) <= sizeof(boost::uint32_t) )
     {
@@ -748,7 +748,7 @@ BOOST_CXX14_CONSTEXPR T bit_ceil( T x ) BOOST_NOEXCEPT
     }
     else
     {
-        return static_cast<T>( boost::core::detail::bit_ceil_impl( static_cast<boost::u64>( x ) ) );
+        return static_cast<T>( boost::core::detail::bit_ceil_impl( static_cast<boost::uint64_t>( x ) ) );
     }
 }
 
@@ -837,7 +837,7 @@ BOOST_CXX14_CONSTEXPR inline boost::uint32_t byteswap_impl( boost::uint32_t x ) 
     return __builtin_bswap32( x );
 }
 
-BOOST_CXX14_CONSTEXPR inline boost::u64 byteswap_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline boost::uint64_t byteswap_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     return __builtin_bswap64( x );
 }
@@ -857,12 +857,12 @@ BOOST_CXX14_CONSTEXPR inline boost::uint32_t byteswap_impl( boost::uint32_t x ) 
     }
 }
 
-BOOST_CXX14_CONSTEXPR inline boost::u64 byteswap_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline boost::uint64_t byteswap_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     if( __builtin_is_constant_evaluated() )
     {
-        boost::u64 step32 = x << 32 | x >> 32;
-        boost::u64 step16 = (step32 & 0x0000FFFF0000FFFFULL) << 16 | (step32 & 0xFFFF0000FFFF0000ULL) >> 16;
+        boost::uint64_t step32 = x << 32 | x >> 32;
+        boost::uint64_t step16 = (step32 & 0x0000FFFF0000FFFFULL) << 16 | (step32 & 0xFFFF0000FFFF0000ULL) >> 16;
         return (step16 & 0x00FF00FF00FF00FFULL) << 8 | (step16 & 0xFF00FF00FF00FF00ULL) >> 8;
     }
     else
@@ -878,7 +878,7 @@ inline boost::uint32_t byteswap_impl( boost::uint32_t x ) BOOST_NOEXCEPT
     return _byteswap_ulong( x );
 }
 
-inline boost::u64 byteswap_impl( boost::u64 x ) BOOST_NOEXCEPT
+inline boost::uint64_t byteswap_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
     return _byteswap_uint64( x );
 }
@@ -891,10 +891,10 @@ BOOST_CXX14_CONSTEXPR inline boost::uint32_t byteswap_impl( boost::uint32_t x ) 
     return ((step16 << 8) & 0xff00ff00) | ((step16 >> 8) & 0x00ff00ff);
 }
 
-BOOST_CXX14_CONSTEXPR inline boost::u64 byteswap_impl( boost::u64 x ) BOOST_NOEXCEPT
+BOOST_CXX14_CONSTEXPR inline boost::uint64_t byteswap_impl( boost::uint64_t x ) BOOST_NOEXCEPT
 {
-    boost::u64 step32 = x << 32 | x >> 32;
-    boost::u64 step16 = (step32 & 0x0000FFFF0000FFFFULL) << 16 | (step32 & 0xFFFF0000FFFF0000ULL) >> 16;
+    boost::uint64_t step32 = x << 32 | x >> 32;
+    boost::uint64_t step16 = (step32 & 0x0000FFFF0000FFFFULL) << 16 | (step32 & 0xFFFF0000FFFF0000ULL) >> 16;
     return (step16 & 0x00FF00FF00FF00FFULL) << 8 | (step16 & 0xFF00FF00FF00FF00ULL) >> 8;
 }
 
@@ -906,7 +906,7 @@ template<class T> BOOST_CXX14_CONSTEXPR T byteswap( T x ) BOOST_NOEXCEPT
 {
     BOOST_STATIC_ASSERT( std::numeric_limits<T>::is_integer );
 
-    BOOST_STATIC_ASSERT( sizeof(T) == sizeof(boost::uint8_t) || sizeof(T) == sizeof(boost::uint16_t) || sizeof(T) == sizeof(boost::uint32_t) || sizeof(T) == sizeof(boost::u64) );
+    BOOST_STATIC_ASSERT( sizeof(T) == sizeof(boost::uint8_t) || sizeof(T) == sizeof(boost::uint16_t) || sizeof(T) == sizeof(boost::uint32_t) || sizeof(T) == sizeof(boost::uint64_t) );
 
     BOOST_IF_CONSTEXPR ( sizeof(T) == sizeof(boost::uint8_t) )
     {
@@ -922,7 +922,7 @@ template<class T> BOOST_CXX14_CONSTEXPR T byteswap( T x ) BOOST_NOEXCEPT
     }
     else
     {
-        return static_cast<T>( boost::core::detail::byteswap_impl( static_cast<boost::u64>( x ) ) );
+        return static_cast<T>( boost::core::detail::byteswap_impl( static_cast<boost::uint64_t>( x ) ) );
     }
 }
 

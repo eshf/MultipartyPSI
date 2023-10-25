@@ -59,7 +59,7 @@ inline void format_digit( char * dest, unsigned v )
 unsigned
 format_uint64(
     char* dest,
-    std::u64 v) noexcept
+    std::uint64_t v) noexcept
 {
     if(v < 10)
     {
@@ -101,8 +101,8 @@ unsigned
 format_int64(
     char* dest, int64_t i) noexcept
 {
-    std::u64 ui = static_cast<
-        std::u64>(i);
+    std::uint64_t ui = static_cast<
+        std::uint64_t>(i);
     if(i >= 0)
         return format_uint64(dest, ui);
     *dest++ = '-';

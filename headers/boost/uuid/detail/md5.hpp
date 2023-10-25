@@ -71,13 +71,13 @@ public:
 private:
 
     /* Any 32-bit or wider unsigned integer data type will do */
-    typedef uint32_t MD5_uint32_tplus;
+    typedef uint32_t MD5_u32plus;
 
     typedef struct {
-        MD5_uint32_tplus lo, hi;
-        MD5_uint32_tplus a, b, c, d;
+        MD5_u32plus lo, hi;
+        MD5_u32plus a, b, c, d;
         unsigned char buffer[64];
-        MD5_uint32_tplus block[16];
+        MD5_u32plus block[16];
     } MD5_CTX;
 
     /*
@@ -87,11 +87,11 @@ private:
      * architectures that lack an AND-NOT instruction, just like in Colin Plumb's
      * implementation.
      */
-    BOOST_FORCEINLINE MD5_uint32_tplus BOOST_UUID_DETAIL_MD5_F(MD5_uint32_tplus x, MD5_uint32_tplus y, MD5_uint32_tplus z) { return ((z) ^ ((x) & ((y) ^ (z)))); }
-    BOOST_FORCEINLINE MD5_uint32_tplus BOOST_UUID_DETAIL_MD5_G(MD5_uint32_tplus x, MD5_uint32_tplus y, MD5_uint32_tplus z) { return ((y) ^ ((z) & ((x) ^ (y)))); }
-    BOOST_FORCEINLINE MD5_uint32_tplus BOOST_UUID_DETAIL_MD5_H(MD5_uint32_tplus x, MD5_uint32_tplus y, MD5_uint32_tplus z) { return (((x) ^ (y)) ^ (z)); }
-    BOOST_FORCEINLINE MD5_uint32_tplus BOOST_UUID_DETAIL_MD5_H2(MD5_uint32_tplus x, MD5_uint32_tplus y, MD5_uint32_tplus z) { return ((x) ^ ((y) ^ (z))); }
-    BOOST_FORCEINLINE MD5_uint32_tplus BOOST_UUID_DETAIL_MD5_I(MD5_uint32_tplus x, MD5_uint32_tplus y, MD5_uint32_tplus z) { return ((y) ^ ((x) | ~(z))); }
+    BOOST_FORCEINLINE MD5_u32plus BOOST_UUID_DETAIL_MD5_F(MD5_u32plus x, MD5_u32plus y, MD5_u32plus z) { return ((z) ^ ((x) & ((y) ^ (z)))); }
+    BOOST_FORCEINLINE MD5_u32plus BOOST_UUID_DETAIL_MD5_G(MD5_u32plus x, MD5_u32plus y, MD5_u32plus z) { return ((y) ^ ((z) & ((x) ^ (y)))); }
+    BOOST_FORCEINLINE MD5_u32plus BOOST_UUID_DETAIL_MD5_H(MD5_u32plus x, MD5_u32plus y, MD5_u32plus z) { return (((x) ^ (y)) ^ (z)); }
+    BOOST_FORCEINLINE MD5_u32plus BOOST_UUID_DETAIL_MD5_H2(MD5_u32plus x, MD5_u32plus y, MD5_u32plus z) { return ((x) ^ ((y) ^ (z))); }
+    BOOST_FORCEINLINE MD5_u32plus BOOST_UUID_DETAIL_MD5_I(MD5_u32plus x, MD5_u32plus y, MD5_u32plus z) { return ((y) ^ ((x) | ~(z))); }
 
     /*
      * The MD5 transformation for all four rounds.
@@ -111,23 +111,23 @@ private:
      *
      * Unfortunately, this optimization may be a C strict aliasing rules violation
      * if the caller's data buffer has effective type that cannot be aliased by
-     * MD5_uint32_tplus.  In practice, this problem may occur if these MD5 routines are
+     * MD5_u32plus.  In practice, this problem may occur if these MD5 routines are
      * inlined into a calling function, or with future and dangerously advanced
      * link-time optimizations.  For the time being, keeping these MD5 routines in
      * their own translation unit avoids the problem.
      */
     #if defined(__i386__) || defined(__x86_64__) || defined(__vax__)
     #define BOOST_UUID_DETAIL_MD5_SET(n) \
-        (*(MD5_uint32_tplus *)&ptr[(n) * 4])
+        (*(MD5_u32plus *)&ptr[(n) * 4])
     #define BOOST_UUID_DETAIL_MD5_GET(n) \
         BOOST_UUID_DETAIL_MD5_SET(n)
     #else
     #define BOOST_UUID_DETAIL_MD5_SET(n) \
         (ctx->block[(n)] = \
-        (MD5_uint32_tplus)ptr[(n) * 4] | \
-        ((MD5_uint32_tplus)ptr[(n) * 4 + 1] << 8) | \
-        ((MD5_uint32_tplus)ptr[(n) * 4 + 2] << 16) | \
-        ((MD5_uint32_tplus)ptr[(n) * 4 + 3] << 24))
+        (MD5_u32plus)ptr[(n) * 4] | \
+        ((MD5_u32plus)ptr[(n) * 4 + 1] << 8) | \
+        ((MD5_u32plus)ptr[(n) * 4 + 2] << 16) | \
+        ((MD5_u32plus)ptr[(n) * 4 + 3] << 24))
     #define BOOST_UUID_DETAIL_MD5_GET(n) \
         (ctx->block[(n)])
     #endif
@@ -139,8 +139,8 @@ private:
     const void *body(MD5_CTX *ctx, const void *data, unsigned long size)
     {
         const unsigned char *ptr;
-        MD5_uint32_tplus a, b, c, d;
-        MD5_uint32_tplus saved_a, saved_b, saved_c, saved_d;
+        MD5_u32plus a, b, c, d;
+        MD5_u32plus saved_a, saved_b, saved_c, saved_d;
 
         ptr = (const unsigned char *)data;
 
@@ -256,7 +256,7 @@ private:
 
     void MD5_Update(MD5_CTX *ctx, const void *data, unsigned long size)
     {
-        MD5_uint32_tplus saved_lo;
+        MD5_u32plus saved_lo;
         unsigned long used, available;
 
         saved_lo = ctx->lo;

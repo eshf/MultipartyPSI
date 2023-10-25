@@ -45,7 +45,7 @@ namespace osuCrypto {
         u64 mPort;
         boost::asio::ip::tcp::endpoint mAddress;
 
-        void bind(uint32_t port, std::string ip);
+        void bind(u32 port, std::string ip);
         void start();
         void stop();
         bool stopped() const;

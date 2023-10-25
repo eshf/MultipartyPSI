@@ -15,7 +15,7 @@
 namespace boost{ namespace math{ namespace detail{
 
    template <class T, class Policy>
-   T hypergeometric_cdf_imp(std::u64 x, std::u64 r, std::u64 n, std::u64 N, bool invert, const Policy& pol)
+   T hypergeometric_cdf_imp(std::uint64_t x, std::uint64_t r, std::uint64_t n, std::uint64_t N, bool invert, const Policy& pol)
    {
 #ifdef _MSC_VER
 #  pragma warning(push)
@@ -28,7 +28,7 @@ namespace boost{ namespace math{ namespace detail{
       {
          result = hypergeometric_pdf<T>(x, r, n, N, pol);
          T diff = result;
-         const auto lower_limit = static_cast<std::u64>((std::max)(INT64_C(0), static_cast<std::int64_t>(n + r) - static_cast<std::int64_t>(N)));
+         const auto lower_limit = static_cast<std::uint64_t>((std::max)(INT64_C(0), static_cast<std::int64_t>(n + r) - static_cast<std::int64_t>(N)));
          while(diff > (invert ? T(1) : result) * tools::epsilon<T>())
          {
             diff = T(x) * T((N + x) - n - r) * diff / (T(1 + n - x) * T(1 + r - x));
@@ -70,7 +70,7 @@ namespace boost{ namespace math{ namespace detail{
    }
 
    template <class T, class Policy>
-   inline T hypergeometric_cdf(std::u64 x, std::u64 r, std::u64 n, std::u64 N, bool invert, const Policy&)
+   inline T hypergeometric_cdf(std::uint64_t x, std::uint64_t r, std::uint64_t n, std::uint64_t N, bool invert, const Policy&)
    {
       BOOST_FPU_EXCEPTION_GUARD
       typedef typename tools::promote_args<T>::type result_type;

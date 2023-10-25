@@ -45,7 +45,7 @@ struct ratio_string
 #include <sstream>
 
 
-#if defined(BOOST_NO_CXX11_UNICODE_LITERALS) || defined(BOOST_NO_CXX11_CHAR16_T) || defined(BOOST_NO_CXX11_CHAR32_T) || defined(BOOST_NO_CXX11_U16STRING) || defined(BOOST_NO_CXX11_uint32_tSTRING)
+#if defined(BOOST_NO_CXX11_UNICODE_LITERALS) || defined(BOOST_NO_CXX11_CHAR16_T) || defined(BOOST_NO_CXX11_CHAR32_T) || defined(BOOST_NO_CXX11_U16STRING) || defined(BOOST_NO_CXX11_U32STRING)
 #if defined BOOST_RATIO_HAS_UNICODE_SUPPORT
 #undef BOOST_RATIO_HAS_UNICODE_SUPPORT
 #endif
@@ -130,8 +130,8 @@ struct ratio_string<atto, char16_t>
 template <>
 struct ratio_string<atto, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'a');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"atto");}
+    static std::u32string symbol() {return std::u32string(1, U'a');}
+    static std::u32string prefix()  {return std::u32string(U"atto");}
 };
 
 #endif
@@ -175,8 +175,8 @@ struct ratio_string<femto, char16_t>
 template <>
 struct ratio_string<femto, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'f');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"femto");}
+    static std::u32string symbol() {return std::u32string(1, U'f');}
+    static std::u32string prefix()  {return std::u32string(U"femto");}
 };
 
 #endif
@@ -219,8 +219,8 @@ struct ratio_string<pico, char16_t>
 template <>
 struct ratio_string<pico, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'p');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"pico");}
+    static std::u32string symbol() {return std::u32string(1, U'p');}
+    static std::u32string prefix()  {return std::u32string(U"pico");}
 };
 
 #endif
@@ -263,8 +263,8 @@ struct ratio_string<nano, char16_t>
 template <>
 struct ratio_string<nano, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'n');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"nano");}
+    static std::u32string symbol() {return std::u32string(1, U'n');}
+    static std::u32string prefix()  {return std::u32string(U"nano");}
 };
 
 #endif
@@ -307,8 +307,8 @@ struct ratio_string<micro, char16_t>
 template <>
 struct ratio_string<micro, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'\xB5');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"micro");}
+    static std::u32string symbol() {return std::u32string(1, U'\xB5');}
+    static std::u32string prefix()  {return std::u32string(U"micro");}
 };
 
 #endif
@@ -351,8 +351,8 @@ struct ratio_string<milli, char16_t>
 template <>
 struct ratio_string<milli, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'm');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"milli");}
+    static std::u32string symbol() {return std::u32string(1, U'm');}
+    static std::u32string prefix()  {return std::u32string(U"milli");}
 };
 
 #endif
@@ -395,8 +395,8 @@ struct ratio_string<centi, char16_t>
 template <>
 struct ratio_string<centi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'c');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"centi");}
+    static std::u32string symbol() {return std::u32string(1, U'c');}
+    static std::u32string prefix()  {return std::u32string(U"centi");}
 };
 
 #endif
@@ -440,8 +440,8 @@ struct ratio_string<deci, char16_t>
 template <>
 struct ratio_string<deci, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'd');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"deci");}
+    static std::u32string symbol() {return std::u32string(1, U'd');}
+    static std::u32string prefix()  {return std::u32string(U"deci");}
 };
 
 #endif
@@ -487,8 +487,8 @@ struct ratio_string<deca, char16_t>
 template <>
 struct ratio_string<deca, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"da");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"deca");}
+    static std::u32string symbol() {return std::u32string(U"da");}
+    static std::u32string prefix()  {return std::u32string(U"deca");}
 };
 
 #endif
@@ -531,8 +531,8 @@ struct ratio_string<hecto, char16_t>
 template <>
 struct ratio_string<hecto, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'h');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"hecto");}
+    static std::u32string symbol() {return std::u32string(1, U'h');}
+    static std::u32string prefix()  {return std::u32string(U"hecto");}
 };
 
 #endif
@@ -575,8 +575,8 @@ struct ratio_string<kilo, char16_t>
 template <>
 struct ratio_string<kilo, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'k');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"kilo");}
+    static std::u32string symbol() {return std::u32string(1, U'k');}
+    static std::u32string prefix()  {return std::u32string(U"kilo");}
 };
 
 #endif
@@ -620,8 +620,8 @@ struct ratio_string<mega, char16_t>
 template <>
 struct ratio_string<mega, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'M');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"mega");}
+    static std::u32string symbol() {return std::u32string(1, U'M');}
+    static std::u32string prefix()  {return std::u32string(U"mega");}
 };
 
 #endif
@@ -665,8 +665,8 @@ struct ratio_string<giga, char16_t>
 template <>
 struct ratio_string<giga, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'G');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"giga");}
+    static std::u32string symbol() {return std::u32string(1, U'G');}
+    static std::u32string prefix()  {return std::u32string(U"giga");}
 };
 
 #endif
@@ -710,8 +710,8 @@ struct ratio_string<tera, char16_t>
 template <>
 struct ratio_string<tera, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'T');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"tera");}
+    static std::u32string symbol() {return std::u32string(1, U'T');}
+    static std::u32string prefix()  {return std::u32string(U"tera");}
 };
 
 #endif
@@ -754,8 +754,8 @@ struct ratio_string<peta, char16_t>
 template <>
 struct ratio_string<peta, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'P');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"peta");}
+    static std::u32string symbol() {return std::u32string(1, U'P');}
+    static std::u32string prefix()  {return std::u32string(U"peta");}
 };
 
 #endif
@@ -798,8 +798,8 @@ struct ratio_string<exa, char16_t>
 template <>
 struct ratio_string<exa, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(1, U'E');}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"exa");}
+    static std::u32string symbol() {return std::u32string(1, U'E');}
+    static std::u32string prefix()  {return std::u32string(U"exa");}
 };
 
 #endif
@@ -843,8 +843,8 @@ struct ratio_string<kibi, char16_t>
 template <>
 struct ratio_string<kibi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"Ki");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"kibi");}
+    static std::u32string symbol() {return std::u32string(U"Ki");}
+    static std::u32string prefix()  {return std::u32string(U"kibi");}
 };
 
 #endif
@@ -885,8 +885,8 @@ struct ratio_string<mebi, char16_t>
 template <>
 struct ratio_string<mebi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"Mi");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"mebi");}
+    static std::u32string symbol() {return std::u32string(U"Mi");}
+    static std::u32string prefix()  {return std::u32string(U"mebi");}
 };
 
 #endif
@@ -927,8 +927,8 @@ struct ratio_string<gibi, char16_t>
 template <>
 struct ratio_string<gibi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"Gi");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"gibi");}
+    static std::u32string symbol() {return std::u32string(U"Gi");}
+    static std::u32string prefix()  {return std::u32string(U"gibi");}
 };
 
 #endif
@@ -969,8 +969,8 @@ struct ratio_string<tebi, char16_t>
 template <>
 struct ratio_string<tebi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"Ti");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"tebi");}
+    static std::u32string symbol() {return std::u32string(U"Ti");}
+    static std::u32string prefix()  {return std::u32string(U"tebi");}
 };
 
 #endif
@@ -1011,8 +1011,8 @@ struct ratio_string<pebi, char16_t>
 template <>
 struct ratio_string<pebi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"Pi");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"pebi");}
+    static std::u32string symbol() {return std::u32string(U"Pi");}
+    static std::u32string prefix()  {return std::u32string(U"pebi");}
 };
 
 #endif
@@ -1053,8 +1053,8 @@ struct ratio_string<exbi, char16_t>
 template <>
 struct ratio_string<exbi, char32_t>
 {
-    static std::uint32_tstring symbol() {return std::uint32_tstring(U"Ei");}
-    static std::uint32_tstring prefix()  {return std::uint32_tstring(U"exbi");}
+    static std::u32string symbol() {return std::u32string(U"Ei");}
+    static std::u32string prefix()  {return std::u32string(U"exbi");}
 };
 
 #endif

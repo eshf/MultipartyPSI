@@ -24,7 +24,7 @@ class _LIBCPP_TEMPLATE_VIS basic_string_view;
 
 typedef basic_string_view<char>     string_view;
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-typedef basic_string_view<char8_t>  uint8_tstring_view;
+typedef basic_string_view<char8_t>  u8string_view;
 #endif
 typedef basic_string_view<char16_t> u16string_view;
 typedef basic_string_view<char32_t> u32string_view;
@@ -39,7 +39,7 @@ class _LIBCPP_PREFERRED_NAME(string_view)
       _LIBCPP_PREFERRED_NAME(wstring_view)
 #endif
 #ifndef _LIBCPP_HAS_NO_CHAR8_T
-      _LIBCPP_PREFERRED_NAME(uint8_tstring_view)
+      _LIBCPP_PREFERRED_NAME(u8string_view)
 #endif
       _LIBCPP_PREFERRED_NAME(u16string_view)
       _LIBCPP_PREFERRED_NAME(u32string_view)

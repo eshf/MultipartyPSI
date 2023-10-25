@@ -62,7 +62,7 @@ namespace osuCrypto
             BitVector choices;
             choices.copy(mChoices, start, end - start);
 
-            uint8_t shaBuff[SHA1::HashSize];
+            u8 shaBuff[SHA1::HashSize];
             // do the OT extension for this range of messages.
             PRNG prng(extSeed);
             //std::cout << IoStream::lock << "recv 0 "  << end << std::endl;
@@ -129,7 +129,7 @@ namespace osuCrypto
             {
 
                 // this is the value of our choice bit at index i
-                const uint8_t cc = *choiceIter;
+                const u8 cc = *choiceIter;
                 ++choiceIter;
 
                 //if (i < 100)
@@ -137,7 +137,7 @@ namespace osuCrypto
 
                 // if cc = 1, then this OT message should be opened.
                 auto vv = cncGens[t].get<u32>();
-                const uint8_t c = (vv <= px) & 1;
+                const u8 c = (vv <= px) & 1;
                 if (c)
                 {
                     // ok, this is an opened OT.

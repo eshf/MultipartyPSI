@@ -98,7 +98,7 @@
             string(const Allocator& a = Allocator()) const;
         std::string    string() const;
         std::wstring   wstring() const;
-        std::uint8_tstring  uint8_tstring() const;
+        std::u8string  u8string() const;
         std::u16string u16string() const;
         std::u32string u32string() const;
 
@@ -108,7 +108,7 @@
             generic_string(const Allocator& a = Allocator()) const;
         std::string    generic_string() const;
         std::wstring   generic_wstring() const;
-        std::uint8_tstring  generic_uint8_tstring() const;
+        std::u8string  generic_u8string() const;
         std::u16string generic_u16string() const;
         std::u32string generic_u32string() const;
 
@@ -160,9 +160,9 @@
     size_t hash_value(const path& p) noexcept;
 
     template <class Source>
-      path uint8_tpath(const Source& source);
+      path u8path(const Source& source);
     template <class InputIterator>
-      path uint8_tpath(InputIterator first, InputIterator last);
+      path u8path(InputIterator first, InputIterator last);
 
     class filesystem_error;
 
@@ -446,7 +446,7 @@ inline constexpr bool std::ranges::enable_view<std::filesystem::recursive_direct
 #include <__filesystem/perms.h>
 #include <__filesystem/recursive_directory_iterator.h>
 #include <__filesystem/space_info.h>
-#include <__filesystem/uint8_tpath.h>
+#include <__filesystem/u8path.h>
 #include <version>
 
 // standard-mandated includes

@@ -38,8 +38,8 @@ namespace osuCrypto {
 
         BoostIOOperation op;
 
-        op.mSize = (uint32_t)size;
-        op.mBuffs[1] = boost::asio::buffer((char*)buff, (uint32_t)size);
+        op.mSize = (u32)size;
+        op.mBuffs[1] = boost::asio::buffer((char*)buff, (u32)size);
 
         op.mType = BoostIOOperation::Type::SendData;
 
@@ -53,10 +53,10 @@ namespace osuCrypto {
 
         BoostIOOperation op;
 
-        op.mSize = (uint32_t)buff->ChannelBufferSize();
+        op.mSize = (u32)buff->ChannelBufferSize();
 
 
-        op.mBuffs[1] = boost::asio::buffer((char*)buff->ChannelBufferData(), (uint32_t)buff->ChannelBufferSize());
+        op.mBuffs[1] = boost::asio::buffer((char*)buff->ChannelBufferData(), (u32)buff->ChannelBufferSize());
         op.mType = BoostIOOperation::Type::SendData;
 
         op.mOther = buff.release();
@@ -72,8 +72,8 @@ namespace osuCrypto {
         BoostIOOperation op;
         op.clear();
 
-        op.mSize = (uint32_t)size;
-        op.mBuffs[1] = boost::asio::buffer((char*)buff, (uint32_t)size);
+        op.mSize = (u32)size;
+        op.mBuffs[1] = boost::asio::buffer((char*)buff, (u32)size);
 
 
         op.mType = BoostIOOperation::Type::SendData;
@@ -94,8 +94,8 @@ namespace osuCrypto {
         BoostIOOperation op;
         op.clear();
 
-        op.mSize = (uint32_t)size;
-        op.mBuffs[1] = boost::asio::buffer((char*)buff, (uint32_t)size);
+        op.mSize = (u32)size;
+        op.mBuffs[1] = boost::asio::buffer((char*)buff, (u32)size);
 
         op.mType = BoostIOOperation::Type::RecvData;
 

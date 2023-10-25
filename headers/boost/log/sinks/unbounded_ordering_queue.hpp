@@ -80,7 +80,7 @@ private:
 
 private:
     //! Ordering window duration, in milliseconds
-    const u64 m_ordering_window;
+    const uint64_t m_ordering_window;
     //! Synchronization mutex
     mutex_type m_mutex;
     //! Condition for blocking
@@ -153,7 +153,7 @@ protected:
         {
             const boost::log::aux::timestamp now = boost::log::aux::get_timestamp();
             enqueued_record const& elem = m_queue.top();
-            if (static_cast< u64 >((now - elem.m_timestamp).milliseconds()) >= m_ordering_window)
+            if (static_cast< uint64_t >((now - elem.m_timestamp).milliseconds()) >= m_ordering_window)
             {
                 // We got a new element
                 rec = elem.m_record;
@@ -190,7 +190,7 @@ protected:
             {
                 const boost::log::aux::timestamp now = boost::log::aux::get_timestamp();
                 enqueued_record const& elem = m_queue.top();
-                const u64 difference = (now - elem.m_timestamp).milliseconds();
+                const uint64_t difference = (now - elem.m_timestamp).milliseconds();
                 if (difference >= m_ordering_window)
                 {
                     // We got a new element

@@ -10,7 +10,7 @@
 
 namespace boost { namespace spirit { namespace ucd { namespace detail
 {
-    static const ::boost::u8 lowercase_stage1[] = {
+    static const ::boost::uint8_t lowercase_stage1[] = {
 
       0,   1,   2,   3,   4,   5,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6, 
       7,   6,   6,   8,   6,   6,   6,   6,   6,   6,   6,   6,   9,   6,  10,  11, 

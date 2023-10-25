@@ -67,7 +67,7 @@ using static_u16string =
   basic_static_string<N, char16_t, std::char_traits<char16_t>>;
 
 template<std::size_t N>
-using static_uint32_tstring =
+using static_u32string =
   basic_static_string<N, char32_t, std::char_traits<char32_t>>;
 
 #ifdef __cpp_char8_t
@@ -891,7 +891,7 @@ throw_exception(const char* msg)
 
     @code
     template<std::size_t N>
-    using static_uint32_tstring =
+    using static_u32string =
       basic_static_string<N, char32_t, std::char_traits<char32_t>>;
     @endcode
 
@@ -6324,7 +6324,7 @@ hash_value(
 using static_strings::static_string;
 using static_strings::static_wstring;
 using static_strings::static_u16string;
-using static_strings::static_uint32_tstring;
+using static_strings::static_u32string;
 } // boost
 
 /// std::hash partial specialization for basic_static_string

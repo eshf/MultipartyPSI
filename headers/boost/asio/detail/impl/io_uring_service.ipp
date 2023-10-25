@@ -573,10 +573,10 @@ public:
     for (;;)
     {
       // Only perform one read. The kernel maintains an atomic counter.
-      u64 counter(0);
+      uint64_t counter(0);
       errno = 0;
       int bytes_read = ::read(o->service_->event_fd_,
-          &counter, sizeof(u64));
+          &counter, sizeof(uint64_t));
       if (bytes_read < 0 && errno == EINTR)
         continue;
       break;

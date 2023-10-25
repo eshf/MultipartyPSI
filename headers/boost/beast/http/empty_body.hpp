@@ -46,7 +46,7 @@ struct empty_body
         any chunked Transfer-Encoding will be removed.
     */
     static
-    std::u64
+    std::uint64_t
     size(value_type)
     {
         return 0;
@@ -68,7 +68,7 @@ struct empty_body
         }
 
         void
-        init(boost::optional<std::u64> const&, error_code& ec)
+        init(boost::optional<std::uint64_t> const&, error_code& ec)
         {
             ec = {};
         }

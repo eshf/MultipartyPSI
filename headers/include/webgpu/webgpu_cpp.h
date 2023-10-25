@@ -134,28 +134,28 @@ namespace wgpu {
         }
     }  // namespace detail
 
-    static constexpr u32 kArrayLayerCountUndefined = WGPU_ARRAY_LAYER_COUNT_UNDEFINED;
-    static constexpr u32 kCopyStrideUndefined = WGPU_COPY_STRIDE_UNDEFINED;
-    static constexpr u32 kLimitU32Undefined = WGPU_LIMIT_U32_UNDEFINED;
+    static constexpr uint32_t kArrayLayerCountUndefined = WGPU_ARRAY_LAYER_COUNT_UNDEFINED;
+    static constexpr uint32_t kCopyStrideUndefined = WGPU_COPY_STRIDE_UNDEFINED;
+    static constexpr uint32_t kLimitU32Undefined = WGPU_LIMIT_U32_UNDEFINED;
     static constexpr u64 kLimitU64Undefined = WGPU_LIMIT_U64_UNDEFINED;
-    static constexpr u32 kMipLevelCountUndefined = WGPU_MIP_LEVEL_COUNT_UNDEFINED;
+    static constexpr uint32_t kMipLevelCountUndefined = WGPU_MIP_LEVEL_COUNT_UNDEFINED;
     static constexpr size_t kWholeMapSize = WGPU_WHOLE_MAP_SIZE;
     static constexpr u64 kWholeSize = WGPU_WHOLE_SIZE;
 
-    enum class AdapterType : u32 {
+    enum class AdapterType : uint32_t {
         DiscreteGPU = 0x00000000,
         IntegratedGPU = 0x00000001,
         CPU = 0x00000002,
         Unknown = 0x00000003,
     };
 
-    enum class AddressMode : u32 {
+    enum class AddressMode : uint32_t {
         Repeat = 0x00000000,
         MirrorRepeat = 0x00000001,
         ClampToEdge = 0x00000002,
     };
 
-    enum class BackendType : u32 {
+    enum class BackendType : uint32_t {
         Undefined = 0x00000000,
         Null = 0x00000001,
         WebGPU = 0x00000002,
@@ -167,7 +167,7 @@ namespace wgpu {
         OpenGLES = 0x00000008,
     };
 
-    enum class BlendFactor : u32 {
+    enum class BlendFactor : uint32_t {
         Zero = 0x00000000,
         One = 0x00000001,
         Src = 0x00000002,
@@ -183,7 +183,7 @@ namespace wgpu {
         OneMinusConstant = 0x0000000C,
     };
 
-    enum class BlendOperation : u32 {
+    enum class BlendOperation : uint32_t {
         Add = 0x00000000,
         Subtract = 0x00000001,
         ReverseSubtract = 0x00000002,
@@ -191,14 +191,14 @@ namespace wgpu {
         Max = 0x00000004,
     };
 
-    enum class BufferBindingType : u32 {
+    enum class BufferBindingType : uint32_t {
         Undefined = 0x00000000,
         Uniform = 0x00000001,
         Storage = 0x00000002,
         ReadOnlyStorage = 0x00000003,
     };
 
-    enum class BufferMapAsyncStatus : u32 {
+    enum class BufferMapAsyncStatus : uint32_t {
         Success = 0x00000000,
         ValidationError = 0x00000001,
         Unknown = 0x00000002,
@@ -210,7 +210,7 @@ namespace wgpu {
         SizeOutOfRange = 0x00000008,
     };
 
-    enum class BufferMapState : u32 {
+    enum class BufferMapState : uint32_t {
         Unmapped = 0x00000000,
         Pending = 0x00000001,
         Mapped = 0x00000002,

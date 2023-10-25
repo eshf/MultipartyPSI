@@ -89,7 +89,7 @@ find_stuck_bytes (bool (*func) (unsigned char *key))
 static bool
 generate_arc4random (unsigned char *key)
 {
-  u32 words[arc4random_key_size / 4];
+  uint32_t words[arc4random_key_size / 4];
   _Static_assert (sizeof (words) == arc4random_key_size, "sizeof (words)");
 
   for (int i = 0; i < array_length (words); ++i)

@@ -169,7 +169,7 @@ struct scalar
     {
         bool b;
         std::int64_t i;
-        std::u64 u;
+        std::uint64_t u;
         double d;
     };
 
@@ -199,7 +199,7 @@ struct scalar
     }
 
     explicit
-    scalar(std::u64 u_,
+    scalar(std::uint64_t u_,
         storage_ptr sp_ = {}) noexcept
         : sp(std::move(sp_))
         , k(json::kind::uint64)

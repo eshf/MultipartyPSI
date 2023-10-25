@@ -50,7 +50,7 @@ namespace osuCrypto
         Channel& chl)
     {
 
-        const uint8_t superBlkSize(8);
+        const u8 superBlkSize(8);
 
 
         // round up
@@ -238,7 +238,7 @@ namespace osuCrypto
         block q1 = ZeroBlock;
 
         SHA1 sha;
-        uint8_t hashBuff[20];
+        u8 hashBuff[20];
         u64 doneIdx = 0;
         std::array<block, 128> challenges;
 
@@ -258,7 +258,7 @@ namespace osuCrypto
 
                 // hash the message with delta
                 sha.Reset();
-                sha.Update((uint8_t*)&messages[doneIdx][1], sizeof(block));
+                sha.Update((u8*)&messages[doneIdx][1], sizeof(block));
                 sha.Final(hashBuff);
                 messages[doneIdx][1] = *(block*)hashBuff;
             }

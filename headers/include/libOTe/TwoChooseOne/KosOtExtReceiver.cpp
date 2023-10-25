@@ -261,7 +261,7 @@ namespace osuCrypto
 
 #ifdef KOS_SHA_HASH
         SHA1 sha;
-        uint8_t hashBuff[20];
+        u8 hashBuff[20];
 #endif
 
         u64 doneIdx = (0);
@@ -271,7 +271,7 @@ namespace osuCrypto
         std::array<block, 128> challenges;
 
         std::array<block, 8> expendedChoiceBlk;
-        std::array<std::array<uint8_t, 16>, 8>& expendedChoice = *reinterpret_cast<std::array<std::array<uint8_t, 16>, 8>*>(&expendedChoiceBlk);
+        std::array<std::array<u8, 16>, 8>& expendedChoice = *reinterpret_cast<std::array<std::array<u8, 16>, 8>*>(&expendedChoiceBlk);
 
         block mask = _mm_set_epi8(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
@@ -305,7 +305,7 @@ namespace osuCrypto
 #ifdef KOS_SHA_HASH
                 // hash it
                 sha.Reset();
-                sha.Update((uint8_t*)&messages[dd], sizeof(block));
+                sha.Update((u8*)&messages[dd], sizeof(block));
                 sha.Final(hashBuff);
                 messages[dd] = *(block*)hashBuff;
 #endif

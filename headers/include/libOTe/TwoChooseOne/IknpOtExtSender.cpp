@@ -164,7 +164,7 @@ namespace osuCrypto
 
 #ifdef IKNP_SHA_HASH
         SHA1 sha;
-        uint8_t hashBuff[20];
+        u8 hashBuff[20];
         u64 doneIdx = 0;
 
 
@@ -177,13 +177,13 @@ namespace osuCrypto
             {
                 // hash the message without delta
                 sha.Reset();
-                sha.Update((uint8_t*)&messages[doneIdx][0], sizeof(block));
+                sha.Update((u8*)&messages[doneIdx][0], sizeof(block));
                 sha.Final(hashBuff);
                 messages[doneIdx][0] = *(block*)hashBuff;
 
                 // hash the message with delta
                 sha.Reset();
-                sha.Update((uint8_t*)&messages[doneIdx][1], sizeof(block));
+                sha.Update((u8*)&messages[doneIdx][1], sizeof(block));
                 sha.Final(hashBuff);
                 messages[doneIdx][1] = *(block*)hashBuff;
             }

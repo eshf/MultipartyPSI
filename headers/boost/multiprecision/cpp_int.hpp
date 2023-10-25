@@ -1044,11 +1044,11 @@ struct cpp_int_base<MinBits, MinBits, signed_magnitude, Checked, void, true>
    //
    template <class F>
    BOOST_MP_FORCEINLINE constexpr cpp_int_base(F i, typename std::enable_if<std::is_floating_point<F>::value && (Checked == unchecked)>::type const* = nullptr) noexcept
-       : m_data(static_cast<local_limb_type>(static_cast<std::u64>(i < 0 ? -i : i)) & limb_mask),
+       : m_data(static_cast<local_limb_type>(static_cast<std::uint64_t>(i < 0 ? -i : i)) & limb_mask),
          m_sign(i < 0) {}
    template <class F>
    BOOST_MP_FORCEINLINE BOOST_MP_CXX14_CONSTEXPR cpp_int_base(F i, typename std::enable_if<std::is_floating_point<F>::value && (Checked == checked)>::type const* = nullptr)
-       : m_data(static_cast<local_limb_type>(static_cast<std::u64>(i < 0 ? -i : i)) & limb_mask), m_sign(i < 0) { check_in_range(i); }
+       : m_data(static_cast<local_limb_type>(static_cast<std::uint64_t>(i < 0 ? -i : i)) & limb_mask), m_sign(i < 0) { check_in_range(i); }
 #endif
 
    constexpr cpp_int_base(literals::detail::value_pack<>) noexcept

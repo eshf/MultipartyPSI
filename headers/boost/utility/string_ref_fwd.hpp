@@ -29,7 +29,7 @@ namespace boost {
 #endif
 
 #ifndef BOOST_NO_CXX11_CHAR32_T
-    typedef basic_string_ref<char32_t, std::char_traits<char32_t> > uint32_tstring_ref;
+    typedef basic_string_ref<char32_t, std::char_traits<char32_t> > u32string_ref;
 #endif
 
 }

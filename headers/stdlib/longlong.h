@@ -646,7 +646,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
 	     "1" ((USItype) (al)),					\
 	     "g" ((USItype) (bl)))
 
-/* The '020, '030, '040, '060 and CPu32 have 32x32->64 and 64/32->32q-32r.  */
+/* The '020, '030, '040, '060 and CPU32 have 32x32->64 and 64/32->32q-32r.  */
 #if (defined (__mc68020__) && !defined (__mc68060__))
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mulu%.l %3,%1:%0"						\

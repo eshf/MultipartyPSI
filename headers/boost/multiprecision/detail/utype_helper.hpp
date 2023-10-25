@@ -17,7 +17,7 @@ namespace detail {
 template <const unsigned>
 struct utype_helper
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<0U>
@@ -190,162 +190,162 @@ struct utype_helper<32U>
 template <>
 struct utype_helper<33U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<34U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<35U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<36U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<37U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<38U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<39U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<40U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<41U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<42U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<43U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<44U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<45U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<46U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<47U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<48U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<49U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<50U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<51U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<52U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<53U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<54U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<55U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<56U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<57U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<58U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<59U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<60U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<61U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<62U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<63U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 template <>
 struct utype_helper<64U>
 {
-   using exact = std::u64;
+   using exact = std::uint64_t;
 };
 
 template <class unsigned_type>

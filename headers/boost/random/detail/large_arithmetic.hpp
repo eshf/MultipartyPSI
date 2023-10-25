@@ -51,7 +51,7 @@ inline div_t muldivmod(boost::uintmax_t a, boost::uintmax_t b, boost::uintmax_t 
     for(int i = 0; i < 2; ++i) {
         digit_t carry = 0;
         for(int j = 0; j < 2; ++j) {
-            ::boost::u64 temp = ::boost::uintmax_t(a_[i]) * b_[j] +
+            ::boost::uint64_t temp = ::boost::uintmax_t(a_[i]) * b_[j] +
                 carry + product[i + j];
             product[i + j] = digit_t(temp & mask);
             carry = digit_t(temp >> bits);

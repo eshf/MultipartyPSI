@@ -188,7 +188,7 @@ to "parse" the binary representation of a floating point number.
 Typedef members:
 
   bits -- the target type when copying the leading bytes of a floating
-      point number. It is a typedef for uint32_t or u64.
+      point number. It is a typedef for uint32_t or uint64_t.
 
   method -- tells us whether all bytes are copied or not.
       It is a typedef for ieee_copy_all_bits_tag or ieee_copy_leading_bits_tag.
@@ -260,15 +260,15 @@ template<> struct fp_traits_non_native<double, double_precision>
 {
     typedef ieee_copy_all_bits_tag method;
 
-    static constexpr u64 sign     = static_cast<u64>(0x80000000u) << 32;
-    static constexpr u64 exponent = static_cast<u64>(0x7ff00000) << 32;
-    static constexpr u64 flag     = 0;
-    static constexpr u64 significand
-        = (static_cast<u64>(0x000fffff) << 32) + static_cast<u64>(0xffffffffu);
+    static constexpr uint64_t sign     = static_cast<uint64_t>(0x80000000u) << 32;
+    static constexpr uint64_t exponent = static_cast<uint64_t>(0x7ff00000) << 32;
+    static constexpr uint64_t flag     = 0;
+    static constexpr uint64_t significand
+        = (static_cast<uint64_t>(0x000fffff) << 32) + static_cast<uint64_t>(0xffffffffu);
 
-    typedef u64 bits;
-    static void get_bits(double x, u64& a) { std::memcpy(&a, &x, 8); }
-    static void set_bits(double& x, u64 a) { std::memcpy(&x, &a, 8); }
+    typedef uint64_t bits;
+    static void get_bits(double x, uint64_t& a) { std::memcpy(&a, &x, 8); }
+    static void set_bits(double& x, uint64_t a) { std::memcpy(&x, &a, 8); }
 };
 
 #endif
@@ -313,15 +313,15 @@ template<> struct fp_traits_non_native<long double, double_precision>
 {
     typedef ieee_copy_all_bits_tag method;
 
-    static const u64 sign     = static_cast<u64>(0x80000000u) << 32;
-    static const u64 exponent = static_cast<u64>(0x7ff00000) << 32;
-    static const u64 flag     = 0;
-    static const u64 significand
-        = (static_cast<u64>(0x000fffff) << 32) + static_cast<u64>(0xffffffffu);
+    static const uint64_t sign     = static_cast<uint64_t>(0x80000000u) << 32;
+    static const uint64_t exponent = static_cast<uint64_t>(0x7ff00000) << 32;
+    static const uint64_t flag     = 0;
+    static const uint64_t significand
+        = (static_cast<uint64_t>(0x000fffff) << 32) + static_cast<uint64_t>(0xffffffffu);
 
-    typedef u64 bits;
-    static void get_bits(long double x, u64& a) { std::memcpy(&a, &x, 8); }
-    static void set_bits(long double& x, u64 a) { std::memcpy(&x, &a, 8); }
+    typedef uint64_t bits;
+    static void get_bits(long double x, uint64_t& a) { std::memcpy(&a, &x, 8); }
+    static void set_bits(long double& x, uint64_t a) { std::memcpy(&x, &a, 8); }
 };
 
 #endif

@@ -30,8 +30,8 @@
 
    The algorithm avoids modulo and divide operations, which might be costly
    depending on the architecture.  */
-u32
-__arc4random_uniform (u32 n)
+uint32_t
+__arc4random_uniform (uint32_t n)
 {
   if (n <= 1)
     /* There is no valid return value for a zero limit, and 0 is the
@@ -44,15 +44,15 @@ __arc4random_uniform (u32 n)
 
   /* mask is the smallest power of 2 minus 1 number larger than n.  */
   int z = __builtin_clz (n);
-  u32 mask = ~UINT32_C(0) >> z;
-  int bits = CHAR_BIT * sizeof (u32) - z;
+  uint32_t mask = ~UINT32_C(0) >> z;
+  int bits = CHAR_BIT * sizeof (uint32_t) - z;
 
   while (1)
     {
-      u32 value = __arc4random ();
+      uint32_t value = __arc4random ();
 
       /* Return if the lower power of 2 minus 1 satisfy the condition.  */
-      u32 r = value & mask;
+      uint32_t r = value & mask;
       if (r < n)
 	return r;
 

@@ -86,11 +86,11 @@ inline typename boost::enable_if< boost::is_integral< T >, int >::type integer_l
 // (b) std::numeric_limits are not specialized for __int128 in some standard libraries.
 inline int integer_log2_impl(boost::uint128_type x)
 {
-    const boost::u64 x_hi = static_cast< boost::u64 >(x >> 64u);
+    const boost::uint64_t x_hi = static_cast< boost::uint64_t >(x >> 64u);
     if (x_hi != 0u)
         return 127 - boost::core::countl_zero(x_hi);
     else
-        return 63 - boost::core::countl_zero(static_cast< boost::u64 >(x));
+        return 63 - boost::core::countl_zero(static_cast< boost::uint64_t >(x));
 }
 
 inline int integer_log2_impl(boost::int128_type x)

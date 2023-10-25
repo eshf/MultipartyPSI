@@ -24,7 +24,7 @@ struct int3
 
 struct int_lenenc
 {
-    std::u64 value;
+    std::uint64_t value;
 };
 
 struct string_null

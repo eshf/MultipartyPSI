@@ -202,7 +202,7 @@ open(char const* path, file_mode mode, error_code& ec)
     ec = {};
 }
 
-std::u64
+std::uint64_t
 file_posix::
 size(error_code& ec) const
 {
@@ -221,7 +221,7 @@ size(error_code& ec) const
     return st.st_size;
 }
 
-std::u64
+std::uint64_t
 file_posix::
 pos(error_code& ec) const
 {
@@ -242,7 +242,7 @@ pos(error_code& ec) const
 
 void
 file_posix::
-seek(std::u64 offset, error_code& ec)
+seek(std::uint64_t offset, error_code& ec)
 {
     if(fd_ == -1)
     {

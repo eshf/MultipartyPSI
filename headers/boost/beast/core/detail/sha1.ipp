@@ -263,7 +263,7 @@ finish(
     using sha1::BLOCK_INTS;
     using sha1::BLOCK_BYTES;
 
-    std::u64 total_bits =
+    std::uint64_t total_bits =
         (ctx.blocks*64 + ctx.buflen) * 8;
     // pad
     ctx.buf[ctx.buflen++] = 0x80;
@@ -279,7 +279,7 @@ finish(
             block[i] = 0;
     }
 
-    /* Append total_bits, split this u64 into two uint32_t */
+    /* Append total_bits, split this uint64_t into two uint32_t */
     block[BLOCK_INTS - 1] = total_bits & 0xffffffff;
     block[BLOCK_INTS - 2] = (total_bits >> 32);
     sha1::transform(ctx.digest, block);

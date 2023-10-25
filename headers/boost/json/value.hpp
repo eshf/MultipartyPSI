@@ -477,7 +477,7 @@ public:
     {
     }
 
-    /** Construct a `std::u64`.
+    /** Construct a `std::uint64_t`.
 
         @par Complexity
         Constant.
@@ -494,12 +494,12 @@ public:
     value(
         unsigned char u,
         storage_ptr sp = {}) noexcept
-        : sca_(static_cast<std::u64>(
+        : sca_(static_cast<std::uint64_t>(
             u), std::move(sp))
     {
     }
 
-    /** Construct a `std::u64`.
+    /** Construct a `std::uint64_t`.
 
         @par Complexity
         Constant.
@@ -516,12 +516,12 @@ public:
     value(
         unsigned short u,
         storage_ptr sp = {}) noexcept
-        : sca_(static_cast<std::u64>(u),
+        : sca_(static_cast<std::uint64_t>(u),
             std::move(sp))
     {
     }
 
-    /** Construct a `std::u64`.
+    /** Construct a `std::uint64_t`.
 
         @par Complexity
         Constant.
@@ -538,12 +538,12 @@ public:
     value(
         unsigned int u,
         storage_ptr sp = {}) noexcept
-        : sca_(static_cast<std::u64>(u),
+        : sca_(static_cast<std::uint64_t>(u),
             std::move(sp))
     {
     }
 
-    /** Construct a `std::u64`.
+    /** Construct a `std::uint64_t`.
 
         @par Complexity
         Constant.
@@ -560,12 +560,12 @@ public:
     value(
         unsigned long u,
         storage_ptr sp = {}) noexcept
-        : sca_(static_cast<std::u64>(u),
+        : sca_(static_cast<std::uint64_t>(u),
             std::move(sp))
     {
     }
 
-    /** Construct a `std::u64`.
+    /** Construct a `std::uint64_t`.
 
         @par Complexity
         Constant.
@@ -582,7 +582,7 @@ public:
     value(
         unsigned long long u,
         storage_ptr sp = {}) noexcept
-        : sca_(static_cast<std::u64>(u),
+        : sca_(static_cast<std::uint64_t>(u),
             std::move(sp))
     {
     }
@@ -1277,7 +1277,7 @@ public:
         else
         {
             ::new(&sca_) scalar(static_cast<
-                std::u64>(u), destroy());
+                std::uint64_t>(u), destroy());
         }
         return *this;
     }
@@ -1501,9 +1501,9 @@ public:
         return sca_.i;
     }
 
-    /** Return a reference to a `std::u64`, changing the kind and replacing the contents.
+    /** Return a reference to a `std::uint64_t`, changing the kind and replacing the contents.
 
-        The value is replaced with a `std::u64`
+        The value is replaced with a `std::uint64_t`
         initialized to zero, destroying the
         previous contents.
 
@@ -1513,10 +1513,10 @@ public:
         @par Exception Safety
         No-throw guarantee.
     */
-    std::u64&
+    std::uint64_t&
     emplace_uint64() noexcept
     {
-        *this = std::u64{};
+        *this = std::uint64_t{};
         return sca_.u;
     }
 
@@ -2148,7 +2148,7 @@ public:
         return nullptr;
     }
 
-    /** Return a `u64` pointer if this is an unsigned integer, else return `nullptr`
+    /** Return a `uint64_t` pointer if this is an unsigned integer, else return `nullptr`
 
         If `this->kind() == kind::uint64`, returns a pointer
         to the underlying unsigned integer. Otherwise, returns
@@ -2168,7 +2168,7 @@ public:
         @par Exception Safety
         No-throw guarantee.
     */
-    std::u64 const*
+    std::uint64_t const*
     if_uint64() const noexcept
     {
         if(kind() == json::kind::uint64)
@@ -2176,7 +2176,7 @@ public:
         return nullptr;
     }
 
-    /** Return a `u64` pointer if this is an unsigned integer, else return `nullptr`
+    /** Return a `uint64_t` pointer if this is an unsigned integer, else return `nullptr`
 
         If `this->kind() == kind::uint64`, returns a pointer
         to the underlying unsigned integer. Otherwise, returns
@@ -2196,7 +2196,7 @@ public:
         @par Exception Safety
         No-throw guarantee.
     */
-    std::u64*
+    std::uint64_t*
     if_uint64() noexcept
     {
         if(kind() == json::kind::uint64)
@@ -2653,10 +2653,10 @@ public:
         detail::throw_system_error( error::not_int64, &loc );
     }
 
-    /** Return a reference to the underlying `std::u64`, or throw an exception.
+    /** Return a reference to the underlying `std::uint64_t`, or throw an exception.
 
         If @ref is_uint64() is `true`, returns
-        a reference to the underlying `std::u64`,
+        a reference to the underlying `std::uint64_t`,
         otherwise throws an exception.
 
         @par Complexity
@@ -2667,7 +2667,7 @@ public:
 
         @throw system_error `! this->is_uint64()`
     */
-    std::u64&
+    std::uint64_t&
     as_uint64()
     {
         if( is_uint64() )
@@ -2676,10 +2676,10 @@ public:
         detail::throw_system_error( error::not_uint64, &loc );
     }
 
-    /** Return the underlying `std::u64`, or throw an exception.
+    /** Return the underlying `std::uint64_t`, or throw an exception.
 
         If @ref is_uint64() is `true`, returns
-        the underlying `std::u64`,
+        the underlying `std::uint64_t`,
         otherwise throws an exception.
 
         @par Complexity
@@ -2690,7 +2690,7 @@ public:
 
         @throw system_error `! this->is_uint64()`
     */
-    std::u64
+    std::uint64_t
     as_uint64() const
     {
         if( is_uint64() )
@@ -2961,7 +2961,7 @@ public:
         return sca_.i;
     }
 
-    /** Return a reference to the underlying `std::u64`, without checking.
+    /** Return a reference to the underlying `std::uint64_t`, without checking.
 
         This is the fastest way to access the underlying
         representation when the kind is known in advance.
@@ -2978,14 +2978,14 @@ public:
         @par Exception Safety
         No-throw guarantee.
     */
-    std::u64&
+    std::uint64_t&
     get_uint64() noexcept
     {
         BOOST_ASSERT(is_uint64());
         return sca_.u;
     }
 
-    /** Return the underlying `std::u64`, without checking.
+    /** Return the underlying `std::uint64_t`, without checking.
 
         This is the fastest way to access the underlying
         representation when the kind is known in advance.
@@ -3002,7 +3002,7 @@ public:
         @par Exception Safety
         No-throw guarantee.
     */
-    std::u64
+    std::uint64_t
     get_uint64() const noexcept
     {
         BOOST_ASSERT(is_uint64());
@@ -3586,7 +3586,7 @@ private:
         else if(sca_.k == json::kind::uint64)
         {
             auto const u = sca_.u;
-            if(u <= static_cast<std::u64>((
+            if(u <= static_cast<std::uint64_t>((
                 std::numeric_limits<T>::max)()))
             {
                 e = {};
@@ -3626,7 +3626,7 @@ private:
         if(sca_.k == json::kind::int64)
         {
             auto const i = sca_.i;
-            if( i >= 0 && static_cast<std::u64>(i) <=
+            if( i >= 0 && static_cast<std::uint64_t>(i) <=
                 (std::numeric_limits<T>::max)())
             {
                 e = {};

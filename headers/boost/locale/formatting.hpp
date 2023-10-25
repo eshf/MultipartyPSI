@@ -97,24 +97,24 @@ namespace boost { namespace locale {
         static ios_info& get(std::ios_base& ios);
 
         /// Set flags that define how to format data, e.g. number, spell, currency etc.
-        void display_flags(u64 flags);
+        void display_flags(uint64_t flags);
         /// Get flags that define how to format data, e.g. number, spell, currency etc.
-        u64 display_flags() const;
+        uint64_t display_flags() const;
 
         /// Set flags that define how to format currency
-        void currency_flags(u64 flags);
+        void currency_flags(uint64_t flags);
         /// Get flags that define how to format currency
-        u64 currency_flags() const;
+        uint64_t currency_flags() const;
 
         /// Set flags that define how to format date
-        void date_flags(u64 flags);
+        void date_flags(uint64_t flags);
         /// Get flags that define how to format date
-        u64 date_flags() const;
+        uint64_t date_flags() const;
 
         /// Set flags that define how to format time
-        void time_flags(u64 flags);
+        void time_flags(uint64_t flags);
         /// Get flags that define how to format time
-        u64 time_flags() const;
+        uint64_t time_flags() const;
 
         /// Set special message domain identification
         void domain_id(int);
@@ -185,7 +185,7 @@ namespace boost { namespace locale {
             char* ptr;
         };
 
-        u64 flags_;
+        uint64_t flags_;
         int domain_id_;
         std::string time_zone_;
         string_set datetime_;

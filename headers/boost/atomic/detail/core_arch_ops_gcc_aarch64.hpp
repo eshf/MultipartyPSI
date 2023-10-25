@@ -1615,7 +1615,7 @@ struct core_arch_operations< 16u, Signed, Interprocess > :
     union storage_union
     {
         storage_type as_storage;
-        u64 as_uint64[2u];
+        uint64_t as_uint64[2u];
     };
 
     static BOOST_FORCEINLINE void store(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT

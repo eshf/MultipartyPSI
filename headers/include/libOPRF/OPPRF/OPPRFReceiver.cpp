@@ -824,11 +824,11 @@ namespace osuCrypto
 					{
 						u64 curStepSize = std::min(stepSize, binEnd - bIdx);
 
-						MatrixView<uint8_t> maskView;
+						MatrixView<u8> maskView;
 						ByteStream maskBuffer;
 						chl.recv(maskBuffer);
-						//maskView = maskBuffer.getMatrixView<uint8_t>(mTheirBins_mMaxBinSize * maskSize + mTheirBins_mNumBits * sizeof(uint8_t));
-						maskView = maskBuffer.getMatrixView<uint8_t>(mTheirBins_mMaxBinSize * bins.mMaskSize + mTheirBins_mNumBits * sizeof(uint8_t));
+						//maskView = maskBuffer.getMatrixView<u8>(mTheirBins_mMaxBinSize * maskSize + mTheirBins_mNumBits * sizeof(u8));
+						maskView = maskBuffer.getMatrixView<u8>(mTheirBins_mMaxBinSize * bins.mMaskSize + mTheirBins_mNumBits * sizeof(u8));
 						if (maskView.size()[0] != curStepSize)
 							throw std::runtime_error("size not expedted");
 
@@ -845,7 +845,7 @@ namespace osuCrypto
 								for (u64 i = 0; i < b.mMaxBitSize; i++)
 								{
 									int idxPos = 0;
-									memcpy(&idxPos, maskView[baseMaskIdx].data() + i, sizeof(uint8_t));
+									memcpy(&idxPos, maskView[baseMaskIdx].data() + i, sizeof(u8));
 									b.mPos.push_back(idxPos);
 								}
 #ifdef PRINT
@@ -859,7 +859,7 @@ namespace osuCrypto
 #endif
 								u64 inputIdx = bin.idx();
 								auto myMask = bin.mValOPRF[IdxP];
-								//	uint8_t myMaskPos = 0;
+								//	u8 myMaskPos = 0;
 								b.getMask(myMask, bin.mValMap[IdxP]);
 
 								u64	MaskIdx = bin.mValMap[IdxP] * bins.mMaskSize + mTheirBins_mNumBits;
@@ -867,7 +867,7 @@ namespace osuCrypto
 								auto theirMask = ZeroBlock;
 								memcpy(&theirMask, maskView[baseMaskIdx].data() + MaskIdx, bins.mMaskSize);
 
-								//if (!memcmp((uint8_t*)&myMask, &theirMask, maskSize))
+								//if (!memcmp((u8*)&myMask, &theirMask, maskSize))
 								//{
 								//Log::out << "inputIdx: " << inputIdx << Log::endl;
 								//	Log::out << "myMask: " << myMask << Log::endl;
@@ -960,11 +960,11 @@ namespace osuCrypto
 					{
 						u64 curStepSize = std::min(stepSize, binEnd - bIdx);
 
-						MatrixView<uint8_t> maskView;
+						MatrixView<u8> maskView;
 						ByteStream maskBuffer;
 						chl.recv(maskBuffer);
 
-						maskView = maskBuffer.getMatrixView<uint8_t>(mTheirBins_mMaxBinSize*bins.mMaskSize);
+						maskView = maskBuffer.getMatrixView<u8>(mTheirBins_mMaxBinSize*bins.mMaskSize);
 
 						if (maskView.size()[0] != curStepSize)
 							throw std::runtime_error("size not expedted");
@@ -1049,7 +1049,7 @@ namespace osuCrypto
 		NTL::GF2E e;
 		std::vector<NTL::GF2EX> polynomial(numHashes);
 
-		auto maskView = maskBuffer.getMatrixView<uint8_t>(bins.mMaskSize);
+		auto maskView = maskBuffer.getMatrixView<u8>(bins.mMaskSize);
 
 		//std::cout << "maskView.size()" << maskView.size()[0] << "\n";
 		//std::cout << "totalMask: " << totalMask << "\n";
@@ -1176,7 +1176,7 @@ namespace osuCrypto
 		ByteStream maskBuffer;
 		chl.recv(maskBuffer);
 
-		auto maskBFView = maskBuffer.getMatrixView<uint8_t>(bins.mMaskSize);
+		auto maskBFView = maskBuffer.getMatrixView<u8>(bins.mMaskSize);
 
 		//std::cout << "\nr[" << IdxP << "]-maskBFView.size() " << maskBFView.size()[0] << "\n";
 		//	std::cout << "\nr[" << IdxP << "]-mBfBitCount " << mBfSize << "\n";
@@ -1323,8 +1323,8 @@ namespace osuCrypto
 					{
 						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						uPtr<Buff> sendMaskBuff(new Buff);
-						sendMaskBuff->resize(currentStepSize * (bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType] * sizeof(uint8_t)));
-						auto maskView = sendMaskBuff->getMatrixView<uint8_t>(bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType] * sizeof(uint8_t));
+						sendMaskBuff->resize(currentStepSize * (bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType] * sizeof(u8)));
+						auto maskView = sendMaskBuff->getMatrixView<u8>(bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize + bins.mSimpleBins.mNumBits[bIdxType] * sizeof(u8));
 
 						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
@@ -1359,7 +1359,7 @@ namespace osuCrypto
 									//	Log::out << static_cast<int16_t>(bin.mBits[IdxP].mPos[idxPos]) << " ";
 									memcpy(
 										maskView[baseMaskIdx].data() + idxPos,
-										(uint8_t*)&bin.mBits[IdxP].mPos[idxPos], sizeof(uint8_t));
+										(u8*)&bin.mBits[IdxP].mPos[idxPos], sizeof(u8));
 								}
 								//Log::out << Log::endl;
 
@@ -1377,7 +1377,7 @@ namespace osuCrypto
 
 									memcpy(
 										maskView[baseMaskIdx].data() + MaskIdx,
-										(uint8_t*)&encr,
+										(u8*)&encr,
 										bins.mMaskSize);
 
 									//	Log::out << Log::endl;
@@ -1395,7 +1395,7 @@ namespace osuCrypto
 										//	Log::out << "    cc_Map=" << i << Log::endl;
 										memcpy(
 											maskView[baseMaskIdx].data() + MaskIdx,
-											(uint8_t*)&ZeroBlock,  //make randome
+											(u8*)&ZeroBlock,  //make randome
 											bins.mMaskSize);
 									}
 								}
@@ -1403,7 +1403,7 @@ namespace osuCrypto
 							else //pad all dummy
 							{
 								//bit positions
-								std::vector<uint8_t> dummyPos;
+								std::vector<u8> dummyPos;
 								auto idxDummyPos = 0;
 								while (dummyPos.size()<bins.mSimpleBins.mNumBits[bIdxType])
 								{
@@ -1413,7 +1413,7 @@ namespace osuCrypto
 										dummyPos.push_back(rand);
 										memcpy(
 											maskView[baseMaskIdx].data() + idxDummyPos,
-											(uint8_t*)&rand, sizeof(uint8_t));
+											(u8*)&rand, sizeof(u8));
 										idxDummyPos++;
 									}
 								}
@@ -1424,7 +1424,7 @@ namespace osuCrypto
 									//	Log::out << "    cc_Map=" << i << Log::endl;
 									memcpy(
 										maskView[baseMaskIdx].data() + MaskIdx,
-										(uint8_t*)&ZeroBlock,  //make randome
+										(u8*)&ZeroBlock,  //make randome
 										bins.mMaskSize);
 
 								}
@@ -1547,7 +1547,7 @@ namespace osuCrypto
 						u64 currentStepSize = std::min(stepSize, binEnd - bIdx);
 						uPtr<Buff> sendMaskBuff(new Buff);
 						sendMaskBuff->resize(currentStepSize * (bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize));
-						auto maskView = sendMaskBuff->getMatrixView<uint8_t>(bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize);
+						auto maskView = sendMaskBuff->getMatrixView<u8>(bins.mSimpleBins.mMaxBinSize[bIdxType] * bins.mMaskSize);
 
 						for (u64 stepIdx = 0; stepIdx < currentStepSize; ++bIdx, ++stepIdx)
 						{
@@ -1598,7 +1598,7 @@ namespace osuCrypto
 								{
 									memcpy(
 										maskView[baseMaskIdx].data() + i* bins.mMaskSize,
-										(uint8_t*)&coeffs[i],
+										(u8*)&coeffs[i],
 										bins.mMaskSize);
 								}
 
@@ -1609,7 +1609,7 @@ namespace osuCrypto
 								{
 									memcpy(
 										maskView[baseMaskIdx].data() + i* bins.mMaskSize,
-										(uint8_t*)&ZeroBlock,  //make randome
+										(u8*)&ZeroBlock,  //make randome
 										bins.mMaskSize);
 								}
 							}
@@ -1768,7 +1768,7 @@ namespace osuCrypto
 
 		uPtr<Buff> sendMaskBuff(new Buff);
 		sendMaskBuff->resize(bins.mN*numHashes* bins.mMaskSize);
-		auto maskView = sendMaskBuff->getMatrixView<uint8_t>(bins.mMaskSize);
+		auto maskView = sendMaskBuff->getMatrixView<u8>(bins.mMaskSize);
 
 #if 1
 
@@ -1780,8 +1780,8 @@ namespace osuCrypto
 			{
 				memcpy(
 					maskView[hIdx*mN + i].data(),
-					(uint8_t*)&coeffs[hIdx][i],  //make randome
-											//(uint8_t*)&ZeroBlock,  //make randome
+					(u8*)&coeffs[hIdx][i],  //make randome
+											//(u8*)&ZeroBlock,  //make randome
 					bins.mMaskSize);
 			}
 		}
@@ -1823,7 +1823,7 @@ namespace osuCrypto
 
 		uPtr<Buff> sendMaskBuff(new Buff);
 		sendMaskBuff->resize(mBfSize* bins.mMaskSize*numHashes);
-		auto maskBFView = sendMaskBuff->getMatrixView<uint8_t>(bins.mMaskSize);
+		auto maskBFView = sendMaskBuff->getMatrixView<u8>(bins.mMaskSize);
 
 		//y-oprf1(x)||y-oprf2(x)||...||y-oprf5(x)
 		std::vector<std::vector<block>> GarbleBF(numHashes);
@@ -1897,7 +1897,7 @@ namespace osuCrypto
 									else
 									{
 										GarbleBF[hIdx][idx] = mPrng.get<block>();
-										memcpy(maskBFView[hIdx*mBfSize + idx].data(), (uint8_t*)&GarbleBF[hIdx][idx], bins.mMaskSize);
+										memcpy(maskBFView[hIdx*mBfSize + idx].data(), (u8*)&GarbleBF[hIdx][idx], bins.mMaskSize);
 										//	std::cout << garbledBF[idx] <<"\n";
 										sum = sum ^ GarbleBF[hIdx][idx];
 										//std::cout << idx << " " << maskBFView[idx] << std::endl;
@@ -1911,7 +1911,7 @@ namespace osuCrypto
 							}
 
 							GarbleBF[hIdx][firstFreeIdx] = sum^plaintexts[inputIdx] ^ bins.mSimpleBins.mOprfs[IdxP][inputIdx][hIdx];
-							memcpy(maskBFView[hIdx*mBfSize + firstFreeIdx].data(), (uint8_t*)&GarbleBF[hIdx][firstFreeIdx], bins.mMaskSize);
+							memcpy(maskBFView[hIdx*mBfSize + firstFreeIdx].data(), (u8*)&GarbleBF[hIdx][firstFreeIdx], bins.mMaskSize);
 
 
 							/*	if (inputIdx == 0)
@@ -1948,7 +1948,7 @@ namespace osuCrypto
 				{
 
 					GarbleBF[hIdx][i] = mPrng.get<block>();
-					memcpy(maskBFView[hIdx*mBfSize + i].data(), (uint8_t*)&GarbleBF[hIdx][i], bins.mMaskSize);
+					memcpy(maskBFView[hIdx*mBfSize + i].data(), (u8*)&GarbleBF[hIdx][i], bins.mMaskSize);
 
 				}
 			}

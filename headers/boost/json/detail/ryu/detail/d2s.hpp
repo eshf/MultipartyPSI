@@ -50,10 +50,10 @@ constexpr int DOUBLE_POW5_BITCOUNT = 121;
 constexpr int POW5_TABLE_SIZE = 26;
 
 inline
-std::u64 const
+std::uint64_t const
 (&DOUBLE_POW5_TABLE() noexcept)[POW5_TABLE_SIZE]
 {
-    static constexpr std::u64 arr[26] = {
+    static constexpr std::uint64_t arr[26] = {
     1ull, 5ull, 25ull, 125ull, 625ull, 3125ull, 15625ull, 78125ull, 390625ull,
     1953125ull, 9765625ull, 48828125ull, 244140625ull, 1220703125ull, 6103515625ull,
     30517578125ull, 152587890625ull, 762939453125ull, 3814697265625ull,
@@ -65,10 +65,10 @@ std::u64 const
 }
 
 inline
-std::u64 const
+std::uint64_t const
 (&DOUBLE_POW5_SPLIT2() noexcept)[13][2]
 {
-    static constexpr std::u64 arr[13][2] = {
+    static constexpr std::uint64_t arr[13][2] = {
     {                    0u,  72057594037927936u },
     { 10376293541461622784u,  93132257461547851u },
     { 15052517733678820785u, 120370621524202240u },
@@ -99,10 +99,10 @@ std::uint32_t const
 }
 
 inline
-std::u64 const
+std::uint64_t const
 (&DOUBLE_POW5_INV_SPLIT2() noexcept)[13][2]
 {
-    static constexpr std::u64 arr[13][2] = {
+    static constexpr std::uint64_t arr[13][2] = {
     {                    1u, 288230376151711744u },
     {  7661987648932456967u, 223007451985306231u },
     { 12652048002903177473u, 172543658669764094u },
@@ -138,25 +138,25 @@ inline
 void
 double_computePow5(
     const std::uint32_t i,
-    std::u64* const result)
+    std::uint64_t* const result)
 {
     const std::uint32_t base = i / POW5_TABLE_SIZE;
     const std::uint32_t base2 = base * POW5_TABLE_SIZE;
     const std::uint32_t offset = i - base2;
-    const std::u64* const mul = DOUBLE_POW5_SPLIT2()[base];
+    const std::uint64_t* const mul = DOUBLE_POW5_SPLIT2()[base];
     if (offset == 0)
     {
         result[0] = mul[0];
         result[1] = mul[1];
         return;
     }
-    const std::u64 m = DOUBLE_POW5_TABLE()[offset];
+    const std::uint64_t m = DOUBLE_POW5_TABLE()[offset];
     const uint128_t b0 = ((uint128_t)m) * mul[0];
     const uint128_t b2 = ((uint128_t)m) * mul[1];
     const std::uint32_t delta = pow5bits(i) - pow5bits(base2);
     const uint128_t shiftedSum = (b0 >> delta) + (b2 << (64 - delta)) + ((POW5_OFFSETS()[base] >> offset) & 1);
-    result[0] = (std::u64)shiftedSum;
-    result[1] = (std::u64)(shiftedSum >> 64);
+    result[0] = (std::uint64_t)shiftedSum;
+    result[1] = (std::uint64_t)(shiftedSum >> 64);
 }
 
 // Computes 5^-i in the form required by Ryu, and stores it in the given pointer.
@@ -164,26 +164,26 @@ inline
 void
 double_computeInvPow5(
     const std::uint32_t i,
-    std::u64* const result)
+    std::uint64_t* const result)
 {
     const std::uint32_t base = (i + POW5_TABLE_SIZE - 1) / POW5_TABLE_SIZE;
     const std::uint32_t base2 = base * POW5_TABLE_SIZE;
     const std::uint32_t offset = base2 - i;
-    const std::u64* const mul = DOUBLE_POW5_INV_SPLIT2()[base]; // 1/5^base2
+    const std::uint64_t* const mul = DOUBLE_POW5_INV_SPLIT2()[base]; // 1/5^base2
     if (offset == 0)
     {
         result[0] = mul[0];
         result[1] = mul[1];
         return;
     }
-    const std::u64 m = DOUBLE_POW5_TABLE()[offset]; // 5^offset
+    const std::uint64_t m = DOUBLE_POW5_TABLE()[offset]; // 5^offset
     const uint128_t b0 = ((uint128_t)m) * (mul[0] - 1);
     const uint128_t b2 = ((uint128_t)m) * mul[1]; // 1/5^base2 * 5^offset = 1/5^(base2-offset) = 1/5^i
     const std::uint32_t delta = pow5bits(base2) - pow5bits(i);
     const uint128_t shiftedSum =
         ((b0 >> delta) + (b2 << (64 - delta))) + 1 + ((POW5_INV_OFFSETS()[i / 16] >> ((i % 16) << 1)) & 3);
-    result[0] = (std::u64)shiftedSum;
-    result[1] = (std::u64)(shiftedSum >> 64);
+    result[0] = (std::uint64_t)shiftedSum;
+    result[1] = (std::uint64_t)(shiftedSum >> 64);
 }
 
 #else // defined(BOOST_JSON_RYU_HAS_UINT128)
@@ -193,24 +193,24 @@ inline
 void
 double_computePow5(
     const std::uint32_t i,
-    std::u64* const result)
+    std::uint64_t* const result)
 {
     const std::uint32_t base = i / POW5_TABLE_SIZE;
     const std::uint32_t base2 = base * POW5_TABLE_SIZE;
     const std::uint32_t offset = i - base2;
-    const std::u64* const mul = DOUBLE_POW5_SPLIT2()[base];
+    const std::uint64_t* const mul = DOUBLE_POW5_SPLIT2()[base];
     if (offset == 0)
     {
         result[0] = mul[0];
         result[1] = mul[1];
         return;
     }
-    std::u64 const m = DOUBLE_POW5_TABLE()[offset];
-    std::u64 high1;
-    std::u64 const low1 = umul128(m, mul[1], &high1);
-    std::u64 high0;
-    std::u64 const low0 = umul128(m, mul[0], &high0);
-    std::u64 const sum = high0 + low1;
+    std::uint64_t const m = DOUBLE_POW5_TABLE()[offset];
+    std::uint64_t high1;
+    std::uint64_t const low1 = umul128(m, mul[1], &high1);
+    std::uint64_t high0;
+    std::uint64_t const low0 = umul128(m, mul[0], &high0);
+    std::uint64_t const sum = high0 + low1;
     if (sum < high0)
         ++high1; // overflow into high1
     // high1 | sum | low0
@@ -224,24 +224,24 @@ inline
 void
 double_computeInvPow5(
     const std::uint32_t i,
-    std::u64* const result)
+    std::uint64_t* const result)
 {
     const std::uint32_t base = (i + POW5_TABLE_SIZE - 1) / POW5_TABLE_SIZE;
     const std::uint32_t base2 = base * POW5_TABLE_SIZE;
     const std::uint32_t offset = base2 - i;
-    const std::u64* const mul = DOUBLE_POW5_INV_SPLIT2()[base]; // 1/5^base2
+    const std::uint64_t* const mul = DOUBLE_POW5_INV_SPLIT2()[base]; // 1/5^base2
     if (offset == 0)
     {
         result[0] = mul[0];
         result[1] = mul[1];
         return;
     }
-    std::u64 const m = DOUBLE_POW5_TABLE()[offset];
-    std::u64 high1;
-    std::u64 const low1 = umul128(m, mul[1], &high1);
-    std::u64 high0;
-    std::u64 const low0 = umul128(m, mul[0] - 1, &high0);
-    std::u64 const sum = high0 + low1;
+    std::uint64_t const m = DOUBLE_POW5_TABLE()[offset];
+    std::uint64_t high1;
+    std::uint64_t const low1 = umul128(m, mul[1], &high1);
+    std::uint64_t high0;
+    std::uint64_t const low0 = umul128(m, mul[0] - 1, &high0);
+    std::uint64_t const sum = high0 + low1;
     if (sum < high0)
         ++high1; // overflow into high1
     // high1 | sum | low0

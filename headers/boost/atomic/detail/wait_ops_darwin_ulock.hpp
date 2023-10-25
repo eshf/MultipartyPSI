@@ -35,12 +35,12 @@ namespace detail {
 
 extern "C" {
 // Timeout is in microseconds with zero meaning no timeout
-int __ulock_wait(uint32_t operation, void* addr, u64 value, uint32_t timeout);
+int __ulock_wait(uint32_t operation, void* addr, uint64_t value, uint32_t timeout);
 #if defined(BOOST_ATOMIC_DETAIL_HAS_DARWIN_ULOCK_WAIT2)
 // Timeout is in nanoseconds with zero meaning no timeout
-int __ulock_wait2(uint32_t operation, void* addr, u64 value, u64 timeout, u64 value2);
+int __ulock_wait2(uint32_t operation, void* addr, uint64_t value, uint64_t timeout, uint64_t value2);
 #endif // defined(BOOST_ATOMIC_DETAIL_HAS_DARWIN_ULOCK_WAIT2)
-int __ulock_wake(uint32_t operation, void* addr, u64 wake_value);
+int __ulock_wake(uint32_t operation, void* addr, uint64_t wake_value);
 } // extern "C"
 
 enum ulock_op
@@ -133,7 +133,7 @@ struct wait_operations< Base, sizeof(uint32_t), true, true > :
 #if defined(BOOST_ATOMIC_DETAIL_HAS_DARWIN_ULOCK64)
 
 template< typename Base >
-struct wait_operations< Base, sizeof(u64), true, false > :
+struct wait_operations< Base, sizeof(uint64_t), true, false > :
     public wait_operations_darwin_ulock_common< Base, ulock_op_compare_and_wait64 >
 {
 };
@@ -141,7 +141,7 @@ struct wait_operations< Base, sizeof(u64), true, false > :
 #if defined(BOOST_ATOMIC_DETAIL_HAS_DARWIN_ULOCK_SHARED)
 
 template< typename Base >
-struct wait_operations< Base, sizeof(u64), true, true > :
+struct wait_operations< Base, sizeof(uint64_t), true, true > :
     public wait_operations_darwin_ulock_common< Base, ulock_op_compare_and_wait64_shared >
 {
 };

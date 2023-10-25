@@ -17,7 +17,7 @@ namespace boost {
 namespace urls {
 namespace detail {
 
-// std::u64
+// std::uint64_t
 // 18446744073709551615
 //          1          2
 template<class T>

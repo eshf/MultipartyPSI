@@ -154,7 +154,7 @@ public:
      * \par Preconditions
      * `this->complete() == true || this->should_read_head() == true`
      */
-    std::u64 affected_rows() const noexcept { return impl_.get_affected_rows(); }
+    std::uint64_t affected_rows() const noexcept { return impl_.get_affected_rows(); }
 
     /**
      * \brief Returns the last insert ID produced by the SQL statement associated to this resultset.
@@ -164,7 +164,7 @@ public:
      * \par Preconditions
      * `this->complete() == true || this->should_read_head() == true`
      */
-    std::u64 last_insert_id() const noexcept { return impl_.get_last_insert_id(); }
+    std::uint64_t last_insert_id() const noexcept { return impl_.get_last_insert_id(); }
 
     /**
      * \brief Returns the number of warnings produced by the SQL statement associated to this resultset.

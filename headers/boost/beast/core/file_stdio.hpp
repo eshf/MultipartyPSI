@@ -113,7 +113,7 @@ public:
         @return The size in bytes
     */
     BOOST_BEAST_DECL
-    std::u64
+    std::uint64_t
     size(error_code& ec) const;
 
     /** Return the current position in the open file
@@ -123,7 +123,7 @@ public:
         @return The offset in bytes from the beginning of the file
     */
     BOOST_BEAST_DECL
-    std::u64
+    std::uint64_t
     pos(error_code& ec) const;
 
     /** Adjust the current position in the open file
@@ -134,7 +134,7 @@ public:
     */
     BOOST_BEAST_DECL
     void
-    seek(std::u64 offset, error_code& ec);
+    seek(std::uint64_t offset, error_code& ec);
 
     /** Read from the open file
 

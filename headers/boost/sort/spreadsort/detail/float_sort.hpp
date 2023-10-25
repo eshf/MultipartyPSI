@@ -711,7 +711,7 @@ namespace spreadsort {
 
     //Checking whether the value type is a double, and using a 64-bit integer
     template <class RandomAccessIter>
-    inline typename boost::enable_if_c< sizeof(boost::u64) ==
+    inline typename boost::enable_if_c< sizeof(boost::uint64_t) ==
       sizeof(typename std::iterator_traits<RandomAccessIter>::value_type)
       && std::numeric_limits<typename
       std::iterator_traits<RandomAccessIter>::value_type>::is_iec559,
@@ -720,12 +720,12 @@ namespace spreadsort {
     {
       size_t bin_sizes[1 << max_finishing_splits];
       std::vector<RandomAccessIter> bin_cache;
-      float_sort_rec<RandomAccessIter, boost::int64_t, boost::u64>
+      float_sort_rec<RandomAccessIter, boost::int64_t, boost::uint64_t>
         (first, last, bin_cache, 0, bin_sizes);
     }
 
     template <class RandomAccessIter>
-    inline typename boost::disable_if_c< (sizeof(boost::u64) ==
+    inline typename boost::disable_if_c< (sizeof(boost::uint64_t) ==
       sizeof(typename std::iterator_traits<RandomAccessIter>::value_type)
       || sizeof(boost::uint32_t) ==
       sizeof(typename std::iterator_traits<RandomAccessIter>::value_type))
@@ -734,7 +734,7 @@ namespace spreadsort {
       void >::type
     float_sort(RandomAccessIter first, RandomAccessIter last)
     {
-      BOOST_STATIC_ASSERT(!(sizeof(boost::u64) ==
+      BOOST_STATIC_ASSERT(!(sizeof(boost::uint64_t) ==
       sizeof(typename std::iterator_traits<RandomAccessIter>::value_type)
       || sizeof(boost::uint32_t) ==
       sizeof(typename std::iterator_traits<RandomAccessIter>::value_type))

@@ -174,7 +174,7 @@ struct is_body_reader : std::false_type {};
 template<class T>
 struct is_body_reader<T, beast::detail::void_t<decltype(
     std::declval<typename T::reader&>().init(
-        boost::optional<std::u64>(),
+        boost::optional<std::uint64_t>(),
         std::declval<error_code&>()),
     std::declval<std::size_t&>() =
         std::declval<typename T::reader&>().put(

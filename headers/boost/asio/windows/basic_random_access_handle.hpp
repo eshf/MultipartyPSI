@@ -250,7 +250,7 @@ public:
    * std::vector.
    */
   template <typename ConstBufferSequence>
-  std::size_t write_some_at(u64 offset,
+  std::size_t write_some_at(uint64_t offset,
       const ConstBufferSequence& buffers)
   {
     boost::system::error_code ec;
@@ -279,7 +279,7 @@ public:
    * all data is written before the blocking operation completes.
    */
   template <typename ConstBufferSequence>
-  std::size_t write_some_at(u64 offset,
+  std::size_t write_some_at(uint64_t offset,
       const ConstBufferSequence& buffers, boost::system::error_code& ec)
   {
     return this->impl_.get_service().write_some_at(
@@ -345,7 +345,7 @@ public:
           BOOST_ASIO_DEFAULT_COMPLETION_TOKEN_TYPE(executor_type)>
   BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(WriteToken,
       void (boost::system::error_code, std::size_t))
-  async_write_some_at(u64 offset,
+  async_write_some_at(uint64_t offset,
       const ConstBufferSequence& buffers,
       BOOST_ASIO_MOVE_ARG(WriteToken) token
         BOOST_ASIO_DEFAULT_COMPLETION_TOKEN(executor_type))
@@ -390,7 +390,7 @@ public:
    * std::vector.
    */
   template <typename MutableBufferSequence>
-  std::size_t read_some_at(u64 offset,
+  std::size_t read_some_at(uint64_t offset,
       const MutableBufferSequence& buffers)
   {
     boost::system::error_code ec;
@@ -420,7 +420,7 @@ public:
    * completes.
    */
   template <typename MutableBufferSequence>
-  std::size_t read_some_at(u64 offset,
+  std::size_t read_some_at(uint64_t offset,
       const MutableBufferSequence& buffers, boost::system::error_code& ec)
   {
     return this->impl_.get_service().read_some_at(
@@ -487,7 +487,7 @@ public:
           BOOST_ASIO_DEFAULT_COMPLETION_TOKEN_TYPE(executor_type)>
   BOOST_ASIO_INITFN_AUTO_RESULT_TYPE_PREFIX(ReadToken,
       void (boost::system::error_code, std::size_t))
-  async_read_some_at(u64 offset,
+  async_read_some_at(uint64_t offset,
       const MutableBufferSequence& buffers,
       BOOST_ASIO_MOVE_ARG(ReadToken) token
         BOOST_ASIO_DEFAULT_COMPLETION_TOKEN(executor_type))
@@ -519,7 +519,7 @@ private:
 
     template <typename WriteHandler, typename ConstBufferSequence>
     void operator()(BOOST_ASIO_MOVE_ARG(WriteHandler) handler,
-        u64 offset, const ConstBufferSequence& buffers) const
+        uint64_t offset, const ConstBufferSequence& buffers) const
     {
       // If you get an error on the following line it means that your handler
       // does not meet the documented type requirements for a WriteHandler.
@@ -552,7 +552,7 @@ private:
 
     template <typename ReadHandler, typename MutableBufferSequence>
     void operator()(BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-        u64 offset, const MutableBufferSequence& buffers) const
+        uint64_t offset, const MutableBufferSequence& buffers) const
     {
       // If you get an error on the following line it means that your handler
       // does not meet the documented type requirements for a ReadHandler.

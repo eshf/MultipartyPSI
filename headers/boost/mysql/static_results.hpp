@@ -192,7 +192,7 @@ public:
      * Constant.
      */
     template <std::size_t I = 0>
-    std::u64 affected_rows() const noexcept
+    std::uint64_t affected_rows() const noexcept
     {
         static_assert(I < sizeof...(StaticRow), "Index I out of range");
         BOOST_ASSERT(has_value());
@@ -216,7 +216,7 @@ public:
      * Constant.
      */
     template <std::size_t I = 0>
-    std::u64 last_insert_id() const noexcept
+    std::uint64_t last_insert_id() const noexcept
     {
         static_assert(I < sizeof...(StaticRow), "I index out of range");
         BOOST_ASSERT(has_value());

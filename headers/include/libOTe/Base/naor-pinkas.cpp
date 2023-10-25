@@ -45,7 +45,7 @@ namespace osuCrypto
         EllipticCurve curve(params, seed);
         auto& g = curve.getGenerator();
 
-        //std::unique_ptr<pk_crypto> mainPkGen(new ecc_field(eccSecLevel, (uint8_t*)&seed));
+        //std::unique_ptr<pk_crypto> mainPkGen(new ecc_field(eccSecLevel, (u8*)&seed));
         //uint32_t fieldElementSize = mainPkGen->fe_byte_size();
         u64 fieldElementSize = g.sizeBytes();
 
@@ -61,7 +61,7 @@ namespace osuCrypto
         std::future<void> PK0Furture(PK0Prom.get_future());
 
 
-        std::vector<uint8_t> cBuff(nSndVals * fieldElementSize);
+        std::vector<u8> cBuff(nSndVals * fieldElementSize);
         auto cRecvFuture = socket.asyncRecv(cBuff.data(), cBuff.size()).share();
 
 
@@ -134,7 +134,7 @@ namespace osuCrypto
 
                 for (u64 i = mStart, j = 0; i < mEnd; ++i, ++j)
                 {
-                    uint8_t choice = choices[i];
+                    u8 choice = choices[i];
 
                     if (choice != 0) {
                         PK0 = pC[choice] - PK_sigma[j]; // ->set_div(, );
@@ -164,7 +164,7 @@ namespace osuCrypto
 
 
 
-                //uint8_t shaBuff[SHA1::HashSize];
+                //u8 shaBuff[SHA1::HashSize];
 
                 ByteStream bs;
                 bs.resize(SHA1::HashSize);
@@ -173,7 +173,7 @@ namespace osuCrypto
                 auto& gka = PK0;
                 SHA1 sha;
 
-                std::vector<uint8_t>buff(fieldElementSize);
+                std::vector<u8>buff(fieldElementSize);
                 //std::unique_ptr<brickexp>bc(thrdPkGen->get_brick(pC[0]));
                 EccBrick bc(pC[0]);
 
@@ -185,7 +185,7 @@ namespace osuCrypto
                     gka.toBytes(buff.data());
 
                     sha.Reset();
-                    sha.Update((uint8_t*)&i, sizeof(i));
+                    sha.Update((u8*)&i, sizeof(i));
                     sha.Update(buff.data(), buff.size());
                     sha.Final(bs.data());
 
@@ -235,7 +235,7 @@ namespace osuCrypto
 
         auto seed = prng.get<block>();
         EllipticCurve curve(params, seed);
-        //std::unique_ptr<ecc_field> mainPk(new ecc_field(LT, (uint8_t*)&seed));
+        //std::unique_ptr<ecc_field> mainPk(new ecc_field(LT, (u8*)&seed));
 
         //std::unique_ptr<num>
         EccNumber
@@ -290,7 +290,7 @@ namespace osuCrypto
 
 
 
-        std::vector<uint8_t> buff(fieldElementSize * messages.size());
+        std::vector<u8> buff(fieldElementSize * messages.size());
         auto recvFuture = socket.asyncRecv(buff.data(), buff.size()).share();
 
         for (u64 t = 0; t < numThreads; ++t)
@@ -302,7 +302,7 @@ namespace osuCrypto
             {
 
                 EllipticCurve curve(params, seed);
-                //std::unique_ptr<ecc_field> thrdPK(new ecc_field(LT, (uint8_t*)&seed));
+                //std::unique_ptr<ecc_field> thrdPK(new ecc_field(LT, (u8*)&seed));
 
                 //std::unique_ptr<fe>
                 EccPoint
@@ -321,8 +321,8 @@ namespace osuCrypto
                     c.emplace_back(curve, pC[i]);
                 }
 
-                std::vector<uint8_t> hashInBuff(fieldElementSize);
-                uint8_t shaBuff[SHA1::HashSize];
+                std::vector<u8> hashInBuff(fieldElementSize);
+                u8 shaBuff[SHA1::HashSize];
                 SHA1 sha;
 
 
@@ -347,7 +347,7 @@ namespace osuCrypto
                     PK0a.toBytes(hashInBuff.data());
 
                     sha.Reset();
-                    sha.Update((uint8_t*)&i, sizeof(i));
+                    sha.Update((u8*)&i, sizeof(i));
                     sha.Update(hashInBuff.data(), hashInBuff.size());
                     sha.Final(shaBuff);
 
@@ -367,7 +367,7 @@ namespace osuCrypto
                         //    << "  c^a/PK0^a:    " << fetmp<< std::endl;
 
                         sha.Reset();
-                        sha.Update((uint8_t*)&i, sizeof(i));
+                        sha.Update((u8*)&i, sizeof(i));
                         sha.Update(hashInBuff.data(), hashInBuff.size());
                         sha.Final(shaBuff);
 

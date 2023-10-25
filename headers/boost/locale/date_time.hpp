@@ -722,7 +722,7 @@ namespace boost { namespace locale {
     std::basic_ostream<CharType>& operator<<(std::basic_ostream<CharType>& out, const date_time& t)
     {
         double time_point = t.time();
-        u64 display_flags = ios_info::get(out).display_flags();
+        uint64_t display_flags = ios_info::get(out).display_flags();
         if(display_flags == flags::date || display_flags == flags::time || display_flags == flags::datetime
            || display_flags == flags::strftime)
         {
@@ -742,7 +742,7 @@ namespace boost { namespace locale {
     std::basic_istream<CharType>& operator>>(std::basic_istream<CharType>& in, date_time& t)
     {
         double v;
-        u64 display_flags = ios_info::get(in).display_flags();
+        uint64_t display_flags = ios_info::get(in).display_flags();
         if(display_flags == flags::date || display_flags == flags::time || display_flags == flags::datetime
            || display_flags == flags::strftime)
         {

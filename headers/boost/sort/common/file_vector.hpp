@@ -56,7 +56,7 @@ inline int generate_file(const std::string & filename, size_t NElem)
 
     for (size_t i = 0; i < NElem; ++i)
     {
-        u64 Aux = my_rand();
+        uint64_t Aux = my_rand();
         ofile.write((char *) &Aux, 8);
     }
     ofile.close();
@@ -65,7 +65,7 @@ inline int generate_file(const std::string & filename, size_t NElem)
 //
 //-----------------------------------------------------------------------------
 //  function : fill_vector_uint64
-/// @brief : fill a vector of u64 elements from a file
+/// @brief : fill a vector of uint64_t elements from a file
 /// @param [in] filename : name of the file
 /// @param [in] V : vector to fill
 /// @param [in] NElem : number of elements for to read from the file
@@ -74,7 +74,7 @@ inline int generate_file(const std::string & filename, size_t NElem)
 /// @remarks
 //-----------------------------------------------------------------------------
 inline int fill_vector_uint64(const std::string & filename,
-                              std::vector<u64> & V, size_t NElem)
+                              std::vector<uint64_t> & V, size_t NElem)
 {   //----------------------- begin ------------------------------------------
     std::ifstream input(filename, std::ios_base::in | std::ios_base::binary);
     if (input.fail())
@@ -94,7 +94,7 @@ inline int fill_vector_uint64(const std::string & filename,
     V.clear();
     V.reserve(NElem);
 
-    u64 Aux = 0;
+    uint64_t Aux = 0;
     input.seekg(0, std::ios_base::beg);
     for (size_t i = 0; i < NElem; ++i)
     {
@@ -108,14 +108,14 @@ inline int fill_vector_uint64(const std::string & filename,
 //
 //-----------------------------------------------------------------------------
 //  function :write_file_uint64
-/// @brief Write a file with the contnt of a vector of u64 elements
+/// @brief Write a file with the contnt of a vector of Uint64_t elements
 /// @param [in] V : vector from read the numbersl
 /// @param [in] filename : name of the file
 /// @exception
 /// @return
 /// @remarks
 //-----------------------------------------------------------------------------
-inline int write_file_uint64 (const std::vector<u64> & V,
+inline int write_file_uint64 (const std::vector<uint64_t> & V,
                               const std::string & filename)
 {   //--------------------------------- begin --------------------------------
     std::ofstream ofile;
@@ -249,14 +249,14 @@ struct uint64_file_generator
 
     size_t size() const { return NMax; };
 
-    u64 get(void)
+    uint64_t get(void)
     {
-        u64 Aux;
+        uint64_t Aux;
         input.read(reinterpret_cast<char *>(&Aux), 8);
         return (Aux % Max_Val);
     };
 
-    u64 operator ( )(){ return get(); };
+    uint64_t operator ( )(){ return get(); };
 
     void reset(void) { input.seekg(0, std::ios_base::beg); };
 

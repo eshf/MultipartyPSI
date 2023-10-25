@@ -41,7 +41,7 @@ enum
 
 static const struct
 {
-  u32 len;
+  uint32_t len;
   /* Adjust the size if new elements are added.  */
   const char name[12];
 } keywords[] =

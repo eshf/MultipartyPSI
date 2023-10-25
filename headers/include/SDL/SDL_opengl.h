@@ -3702,7 +3702,7 @@ extern "C" {
 #define GL_BUMP_NUM_TEX_UNITS_ATI         0x8777
 #define GL_BUMP_TEX_UNITS_ATI             0x8778
 #define GL_DUDV_ATI                       0x8779
-#define GL_Duint8_tDV8_ATI                     0x877A
+#define GL_DU8DV8_ATI                     0x877A
 #define GL_BUMP_ENVMAP_ATI                0x877B
 #define GL_BUMP_TARGET_ATI                0x877C
 #endif

@@ -47,7 +47,7 @@ public:
     // Only this service will have access to the internal values.
     friend class win_iocp_file_service;
 
-    u64 offset_;
+    uint64_t offset_;
     bool is_stream_;
   };
 
@@ -146,12 +146,12 @@ public:
   }
 
   // Get the size of the file.
-  BOOST_ASIO_DECL u64 size(const implementation_type& impl,
+  BOOST_ASIO_DECL uint64_t size(const implementation_type& impl,
       boost::system::error_code& ec) const;
 
   // Alter the size of the file.
   BOOST_ASIO_DECL boost::system::error_code resize(implementation_type& impl,
-      u64 n, boost::system::error_code& ec);
+      uint64_t n, boost::system::error_code& ec);
 
   // Synchronise the file to disk.
   BOOST_ASIO_DECL boost::system::error_code sync_all(implementation_type& impl,
@@ -162,7 +162,7 @@ public:
       boost::system::error_code& ec);
 
   // Seek to a position in the file.
-  BOOST_ASIO_DECL u64 seek(implementation_type& impl, int64_t offset,
+  BOOST_ASIO_DECL uint64_t seek(implementation_type& impl, int64_t offset,
       file_base::seek_basis whence, boost::system::error_code& ec);
 
   // Write the given data. Returns the number of bytes written.
@@ -170,7 +170,7 @@ public:
   size_t write_some(implementation_type& impl,
       const ConstBufferSequence& buffers, boost::system::error_code& ec)
   {
-    u64 offset = impl.offset_;
+    uint64_t offset = impl.offset_;
     impl.offset_ += boost::asio::buffer_size(buffers);
     return handle_service_.write_some_at(impl, offset, buffers, ec);
   }
@@ -182,7 +182,7 @@ public:
       const ConstBufferSequence& buffers,
       Handler& handler, const IoExecutor& io_ex)
   {
-    u64 offset = impl.offset_;
+    uint64_t offset = impl.offset_;
     impl.offset_ += boost::asio::buffer_size(buffers);
     handle_service_.async_write_some_at(impl, offset, buffers, handler, io_ex);
   }
@@ -190,7 +190,7 @@ public:
   // Write the given data at the specified location. Returns the number of
   // bytes written.
   template <typename ConstBufferSequence>
-  size_t write_some_at(implementation_type& impl, u64 offset,
+  size_t write_some_at(implementation_type& impl, uint64_t offset,
       const ConstBufferSequence& buffers, boost::system::error_code& ec)
   {
     return handle_service_.write_some_at(impl, offset, buffers, ec);
@@ -200,7 +200,7 @@ public:
   // written must be valid for the lifetime of the asynchronous operation.
   template <typename ConstBufferSequence, typename Handler, typename IoExecutor>
   void async_write_some_at(implementation_type& impl,
-      u64 offset, const ConstBufferSequence& buffers,
+      uint64_t offset, const ConstBufferSequence& buffers,
       Handler& handler, const IoExecutor& io_ex)
   {
     handle_service_.async_write_some_at(impl, offset, buffers, handler, io_ex);
@@ -211,7 +211,7 @@ public:
   size_t read_some(implementation_type& impl,
       const MutableBufferSequence& buffers, boost::system::error_code& ec)
   {
-    u64 offset = impl.offset_;
+    uint64_t offset = impl.offset_;
     impl.offset_ += boost::asio::buffer_size(buffers);
     return handle_service_.read_some_at(impl, offset, buffers, ec);
   }
@@ -224,14 +224,14 @@ public:
       const MutableBufferSequence& buffers,
       Handler& handler, const IoExecutor& io_ex)
   {
-    u64 offset = impl.offset_;
+    uint64_t offset = impl.offset_;
     impl.offset_ += boost::asio::buffer_size(buffers);
     handle_service_.async_read_some_at(impl, offset, buffers, handler, io_ex);
   }
 
   // Read some data. Returns the number of bytes read.
   template <typename MutableBufferSequence>
-  size_t read_some_at(implementation_type& impl, u64 offset,
+  size_t read_some_at(implementation_type& impl, uint64_t offset,
       const MutableBufferSequence& buffers, boost::system::error_code& ec)
   {
     return handle_service_.read_some_at(impl, offset, buffers, ec);
@@ -242,7 +242,7 @@ public:
   template <typename MutableBufferSequence,
       typename Handler, typename IoExecutor>
   void async_read_some_at(implementation_type& impl,
-      u64 offset, const MutableBufferSequence& buffers,
+      uint64_t offset, const MutableBufferSequence& buffers,
       Handler& handler, const IoExecutor& io_ex)
   {
     handle_service_.async_read_some_at(impl, offset, buffers, handler, io_ex);

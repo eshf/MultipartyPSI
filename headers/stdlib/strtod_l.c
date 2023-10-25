@@ -96,7 +96,7 @@ extern double ____strtod_l_internal (const char *, char **, int, locale_t);
   (current->values[_NL_ITEM_INDEX (item)].string)
 #undef _NL_CURRENT_WORD
 #define _NL_CURRENT_WORD(category, item) \
-  ((u32) current->values[_NL_ITEM_INDEX (item)].word)
+  ((uint32_t) current->values[_NL_ITEM_INDEX (item)].word)
 
 #if defined _LIBC || defined HAVE_WCHAR_H
 # include <wchar.h>

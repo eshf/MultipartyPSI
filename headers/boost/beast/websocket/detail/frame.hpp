@@ -49,7 +49,7 @@ enum class opcode : std::uint8_t
 // Contents of a WebSocket frame header
 struct frame_header
 {
-    std::u64 len;
+    std::uint64_t len;
     std::uint32_t key;
     opcode op;
     bool fin  : 1;
@@ -160,7 +160,7 @@ write(DynamicBuffer& db, frame_header const& fh)
     {
         b[1] |= 127;
         auto len_be = endian::native_to_big(
-            static_cast<std::u64>(fh.len));
+            static_cast<std::uint64_t>(fh.len));
         std::memcpy(&b[2], &len_be, sizeof(len_be));
         n = 10;
     }

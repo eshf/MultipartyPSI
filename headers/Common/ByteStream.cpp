@@ -144,8 +144,8 @@ namespace osuCrypto {
         ss << std::hex;
         for (u64 i = 0; i < o.mPutHead; i++)
         {
-            uint32_t t0 = o.mData[i] & 15;
-            uint32_t t1 = o.mData[i] >> 4;
+            u32 t0 = o.mData[i] & 15;
+            u32 t1 = o.mData[i] >> 4;
             ss  << t1 << t0;
         }
         s << ss.str();

@@ -151,8 +151,8 @@ namespace boost { namespace pfr { namespace detail {
     }
 
 #if defined(INT64_MIN) && defined(UINT64_MAX)
-    constexpr void hash_combine(std::u64& h, std::u64 k) noexcept {
-        const std::u64 m = 0xc6a4a7935bd1e995ULL;
+    constexpr void hash_combine(std::uint64_t& h, std::uint64_t k) noexcept {
+        const std::uint64_t m = 0xc6a4a7935bd1e995ULL;
         const int r = 47;
 
         k *= m;

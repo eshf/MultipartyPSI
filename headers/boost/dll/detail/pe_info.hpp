@@ -38,7 +38,7 @@ typedef boost::uint32_t DWORD_;
 typedef boost::int32_t LONG_;
 typedef boost::uint32_t ULONG_;
 typedef boost::int64_t LONGLONG_;
-typedef boost::u64 ULONGLONG_;
+typedef boost::uint64_t ULONGLONG_;
 
 struct IMAGE_DOS_HEADER_ { // 32/64 independent header
     boost::dll::detail::WORD_   e_magic;        // Magic number

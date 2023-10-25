@@ -10,7 +10,7 @@
 
 namespace boost { namespace spirit { namespace ucd { namespace detail
 {
-    static const ::boost::u8 script_stage1[] = {
+    static const ::boost::uint8_t script_stage1[] = {
 
       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15, 
      16,  17,  18,  19,  20,  20,  21,  22,  23,  24,  25,  26,  27,  28,   1,  29, 
@@ -286,7 +286,7 @@ namespace boost { namespace spirit { namespace ucd { namespace detail
      56,  56,  56,  56,  56,  56,  56,  56,  56,  56,  56,  56,  56,  56,  56,  56
     };
 
-    static const ::boost::u8 script_stage2[] = {
+    static const ::boost::uint8_t script_stage2[] = {
 
     // block 0
     163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 
@@ -3309,7 +3309,7 @@ namespace boost { namespace spirit { namespace ucd { namespace detail
     164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164
     };
 
-    inline ::boost::u8 script_lookup(::boost::uint32_t ch)
+    inline ::boost::uint8_t script_lookup(::boost::uint32_t ch)
     {
         ::boost::uint32_t block_offset = script_stage1[ch / 256] * 256;
         return script_stage2[block_offset + ch % 256];

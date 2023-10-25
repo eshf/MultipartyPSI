@@ -64,15 +64,15 @@ static void
 generate_arc4random (unsigned char *bytes, size_t size)
 {
   int i;
-  for (i = 0; i < size / sizeof (u32); i++)
+  for (i = 0; i < size / sizeof (uint32_t); i++)
     {
-      u32 x = arc4random ();
+      uint32_t x = arc4random ();
       memcpy (&bytes[4 * i], &x, sizeof x);
     }
-  int rem = size % sizeof (u32);
+  int rem = size % sizeof (uint32_t);
   if (rem > 0)
     {
-      u32 x = arc4random ();
+      uint32_t x = arc4random ();
       memcpy (&bytes[4 * i], &x, rem);
     }
 }

@@ -579,7 +579,7 @@ equal(value const& other) const noexcept
         case json::kind::uint64:
             if(get_int64() < 0)
                 return false;
-            return static_cast<std::u64>(
+            return static_cast<std::uint64_t>(
                 get_int64()) == other.get_uint64();
         default:
             return false;
@@ -593,7 +593,7 @@ equal(value const& other) const noexcept
         case json::kind::int64:
             if(other.get_int64() < 0)
                 return false;
-            return static_cast<std::u64>(
+            return static_cast<std::uint64_t>(
                 other.get_int64()) == get_uint64();
         default:
             return false;

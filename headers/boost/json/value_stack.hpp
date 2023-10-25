@@ -456,7 +456,7 @@ public:
     BOOST_JSON_DECL
     void
     push_uint64(
-        u64 u);
+        uint64_t u);
 
     /** Push a number onto the stack
 

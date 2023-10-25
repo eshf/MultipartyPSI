@@ -68,10 +68,10 @@ beast::detail::pcg make_pcg()
 {
     auto const pv = prng_seed();
     return beast::detail::pcg{
-        ((static_cast<std::u64>(pv[0])<<32)+pv[1]) ^
-        ((static_cast<std::u64>(pv[2])<<32)+pv[3]) ^
-        ((static_cast<std::u64>(pv[4])<<32)+pv[5]) ^
-        ((static_cast<std::u64>(pv[6])<<32)+pv[7]), make_nonce()};
+        ((static_cast<std::uint64_t>(pv[0])<<32)+pv[1]) ^
+        ((static_cast<std::uint64_t>(pv[2])<<32)+pv[3]) ^
+        ((static_cast<std::uint64_t>(pv[4])<<32)+pv[5]) ^
+        ((static_cast<std::uint64_t>(pv[6])<<32)+pv[7]), make_nonce()};
 }
 
 #ifdef BOOST_NO_CXX11_THREAD_LOCAL

@@ -75,7 +75,7 @@ BOOST_JSON_CXX14_CONSTEXPR int num_digits(std::uint32_t x) noexcept
 }
 
 template <>
-BOOST_JSON_CXX14_CONSTEXPR int num_digits(std::u64 x) noexcept
+BOOST_JSON_CXX14_CONSTEXPR int num_digits(std::uint64_t x) noexcept
 {
     if (x >= UINT64_C(10000000000))
     {
@@ -157,7 +157,7 @@ BOOST_JSON_CXX14_CONSTEXPR int num_digits(std::u64 x) noexcept
 }
 
 #ifdef BOOST_HAS_INT128
-static constexpr std::array<std::u64, 20> powers_of_10 =
+static constexpr std::array<std::uint64_t, 20> powers_of_10 =
 {{
     UINT64_C(1), UINT64_C(10), UINT64_C(100), UINT64_C(1000), UINT64_C(10000), UINT64_C(100000), UINT64_C(1000000),
     UINT64_C(10000000), UINT64_C(100000000), UINT64_C(1000000000), UINT64_C(10000000000), UINT64_C(100000000000),
@@ -170,7 +170,7 @@ static constexpr std::array<std::u64, 20> powers_of_10 =
 BOOST_JSON_CXX14_CONSTEXPR int num_digits(boost::uint128_type x) noexcept
 {
     // There is not literal for boost::uint128_type so we need to calculate them using the max value of the
-    // std::u64 powers of 10
+    // std::uint64_t powers of 10
     constexpr boost::uint128_type digits_39 = static_cast<boost::uint128_type>(UINT64_C(10000000000000000000)) *
                                               static_cast<boost::uint128_type>(UINT64_C(10000000000000000000));
 

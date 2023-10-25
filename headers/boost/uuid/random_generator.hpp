@@ -150,7 +150,7 @@ public:
                 i = 0;
             }
 
-            // static_cast gets rid of warnings of converting unsigned long to boost::u8
+            // static_cast gets rid of warnings of converting unsigned long to boost::uint8_t
             *it = static_cast<uuid::value_type>((random_value >> (i*8)) & 0xFF);
         }
 

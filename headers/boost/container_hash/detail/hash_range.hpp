@@ -84,9 +84,9 @@ template<class T> inline boost::uint32_t read32le( T* p )
 
 #endif
 
-inline boost::u64 mul32( boost::uint32_t x, boost::uint32_t y )
+inline boost::uint64_t mul32( boost::uint32_t x, boost::uint32_t y )
 {
-    return static_cast<boost::u64>( x ) * y;
+    return static_cast<boost::uint64_t>( x ) * y;
 }
 
 template<class It>
@@ -103,7 +103,7 @@ std::size_t>::type
     boost::uint32_t const q = 0x9e3779b9U;
     boost::uint32_t const k = 0xe35e67b1U; // q * q
 
-    boost::u64 h = mul32( static_cast<boost::uint32_t>( seed ) + q, k );
+    boost::uint64_t h = mul32( static_cast<boost::uint32_t>( seed ) + q, k );
     boost::uint32_t w = static_cast<boost::uint32_t>( h & 0xFFFFFFFF );
 
     h ^= n;
@@ -156,7 +156,7 @@ std::size_t>::type
     boost::uint32_t const q = 0x9e3779b9U;
     boost::uint32_t const k = 0xe35e67b1U; // q * q
 
-    boost::u64 h = mul32( static_cast<boost::uint32_t>( seed ) + q, k );
+    boost::uint64_t h = mul32( static_cast<boost::uint32_t>( seed ) + q, k );
     boost::uint32_t w = static_cast<boost::uint32_t>( h & 0xFFFFFFFF );
 
     boost::uint32_t v1 = 0;
@@ -218,26 +218,26 @@ std::size_t>::type
 
 // specialized char[] version, 64 bit
 
-template<class It> inline boost::u64 read64le( It p )
+template<class It> inline boost::uint64_t read64le( It p )
 {
-    boost::u64 w =
-        static_cast<boost::u64>( static_cast<unsigned char>( p[0] ) ) |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[1] ) ) <<  8 |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[2] ) ) << 16 |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[3] ) ) << 24 |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[4] ) ) << 32 |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[5] ) ) << 40 |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[6] ) ) << 48 |
-        static_cast<boost::u64>( static_cast<unsigned char>( p[7] ) ) << 56;
+    boost::uint64_t w =
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[0] ) ) |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[1] ) ) <<  8 |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[2] ) ) << 16 |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[3] ) ) << 24 |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[4] ) ) << 32 |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[5] ) ) << 40 |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[6] ) ) << 48 |
+        static_cast<boost::uint64_t>( static_cast<unsigned char>( p[7] ) ) << 56;
 
     return w;
 }
 
 #if defined(_MSC_VER) && !defined(__clang__)
 
-template<class T> inline boost::u64 read64le( T* p )
+template<class T> inline boost::uint64_t read64le( T* p )
 {
-    boost::u64 w;
+    boost::uint64_t w;
 
     std::memcpy( &w, p, 8 );
     return w;
@@ -256,15 +256,15 @@ std::size_t>::type
     It p = first;
     std::size_t n = static_cast<std::size_t>( last - first );
 
-    boost::u64 const q = static_cast<boost::u64>( 0x9e3779b9 ) << 32 | 0x7f4a7c15;
-    boost::u64 const k = static_cast<boost::u64>( 0xdf442d22 ) << 32 | 0xce4859b9; // q * q
+    boost::uint64_t const q = static_cast<boost::uint64_t>( 0x9e3779b9 ) << 32 | 0x7f4a7c15;
+    boost::uint64_t const k = static_cast<boost::uint64_t>( 0xdf442d22 ) << 32 | 0xce4859b9; // q * q
 
-    boost::u64 w = mulx( seed + q, k );
-    boost::u64 h = w ^ n;
+    boost::uint64_t w = mulx( seed + q, k );
+    boost::uint64_t h = w ^ n;
 
     while( n >= 8 )
     {
-        boost::u64 v1 = read64le( p );
+        boost::uint64_t v1 = read64le( p );
 
         w += q;
         h ^= mulx( v1 + w, k );
@@ -274,11 +274,11 @@ std::size_t>::type
     }
 
     {
-        boost::u64 v1 = 0;
+        boost::uint64_t v1 = 0;
 
         if( n >= 4 )
         {
-            v1 = static_cast<boost::u64>( read32le( p + static_cast<std::ptrdiff_t>( n - 4 ) ) ) << ( n - 4 ) * 8 | read32le( p );
+            v1 = static_cast<boost::uint64_t>( read32le( p + static_cast<std::ptrdiff_t>( n - 4 ) ) ) << ( n - 4 ) * 8 | read32le( p );
         }
         else if( n >= 1 )
         {
@@ -286,9 +286,9 @@ std::size_t>::type
             std::size_t const x2 = n >> 1;        // 1: 0, 2: 1, 3: 1
 
             v1 =
-                static_cast<boost::u64>( static_cast<unsigned char>( p[ static_cast<std::ptrdiff_t>( x1 ) ] ) ) << x1 * 8 |
-                static_cast<boost::u64>( static_cast<unsigned char>( p[ static_cast<std::ptrdiff_t>( x2 ) ] ) ) << x2 * 8 |
-                static_cast<boost::u64>( static_cast<unsigned char>( p[ 0 ] ) );
+                static_cast<boost::uint64_t>( static_cast<unsigned char>( p[ static_cast<std::ptrdiff_t>( x1 ) ] ) ) << x1 * 8 |
+                static_cast<boost::uint64_t>( static_cast<unsigned char>( p[ static_cast<std::ptrdiff_t>( x2 ) ] ) ) << x2 * 8 |
+                static_cast<boost::uint64_t>( static_cast<unsigned char>( p[ 0 ] ) );
         }
 
         w += q;
@@ -308,13 +308,13 @@ std::size_t>::type
 {
     std::size_t n = 0;
 
-    boost::u64 const q = static_cast<boost::u64>( 0x9e3779b9 ) << 32 | 0x7f4a7c15;
-    boost::u64 const k = static_cast<boost::u64>( 0xdf442d22 ) << 32 | 0xce4859b9; // q * q
+    boost::uint64_t const q = static_cast<boost::uint64_t>( 0x9e3779b9 ) << 32 | 0x7f4a7c15;
+    boost::uint64_t const k = static_cast<boost::uint64_t>( 0xdf442d22 ) << 32 | 0xce4859b9; // q * q
 
-    boost::u64 w = mulx( seed + q, k );
-    boost::u64 h = w;
+    boost::uint64_t w = mulx( seed + q, k );
+    boost::uint64_t h = w;
 
-    boost::u64 v1 = 0;
+    boost::uint64_t v1 = 0;
 
     for( ;; )
     {
@@ -325,7 +325,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) );
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) );
         ++first;
         ++n;
 
@@ -334,7 +334,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 8;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 8;
         ++first;
         ++n;
 
@@ -343,7 +343,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 16;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 16;
         ++first;
         ++n;
 
@@ -352,7 +352,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 24;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 24;
         ++first;
         ++n;
 
@@ -361,7 +361,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 32;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 32;
         ++first;
         ++n;
 
@@ -370,7 +370,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 40;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 40;
         ++first;
         ++n;
 
@@ -379,7 +379,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 48;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 48;
         ++first;
         ++n;
 
@@ -388,7 +388,7 @@ std::size_t>::type
             break;
         }
 
-        v1 |= static_cast<boost::u64>( static_cast<unsigned char>( *first ) ) << 56;
+        v1 |= static_cast<boost::uint64_t>( static_cast<unsigned char>( *first ) ) << 56;
         ++first;
         ++n;
 

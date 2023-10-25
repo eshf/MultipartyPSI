@@ -40,13 +40,13 @@ namespace osuCrypto {
     template<typename T> using uPtr = std::unique_ptr<T>;
     template<typename T> using sPtr = std::shared_ptr<T>;
 
-    typedef u64 u64;
+    typedef uint64_t u64;
     typedef int64_t i64;
-    typedef uint32_t uint32_t;
+    typedef uint32_t u32;
     typedef int32_t i32;
     typedef uint16_t u16;
     typedef int16_t i16;
-    typedef u8 u8;
+    typedef uint8_t u8;
     typedef int8_t i8;
 
     enum Role

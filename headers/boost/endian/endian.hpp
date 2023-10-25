@@ -108,9 +108,9 @@ namespace endian
   typedef endian_arithmetic< order::little, uint32_t, 32, align::yes >  aligned_ulittle32_t;
 
   typedef endian_arithmetic< order::big, int64_t, 64, align::yes >      aligned_big64_t;
-  typedef endian_arithmetic< order::big, u64, 64, align::yes >     aligned_ubig64_t;
+  typedef endian_arithmetic< order::big, uint64_t, 64, align::yes >     aligned_ubig64_t;
   typedef endian_arithmetic< order::little, int64_t, 64, align::yes >   aligned_little64_t;
-  typedef endian_arithmetic< order::little, u64, 64, align::yes >  aligned_ulittle64_t;
+  typedef endian_arithmetic< order::little, uint64_t, 64, align::yes >  aligned_ulittle64_t;
 
 } // namespace endian
 } // namespace boost

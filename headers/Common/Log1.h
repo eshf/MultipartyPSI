@@ -49,7 +49,7 @@ namespace osuCrypto
 	//{
 	//	u64 mThreadID;
 	//	std::string mName;
-	//	std::list<std::pair<uint32_t, std::stringstream>>* mBuffer;
+	//	std::list<std::pair<u32, std::stringstream>>* mBuffer;
 	//};
 
 	class Log

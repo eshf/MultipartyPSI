@@ -181,9 +181,9 @@ namespace osuCrypto
 
         // now hash it to remove the correlation.
         SHA1  sha1;
-        uint8_t hashBuff[SHA1::HashSize];
+        u8 hashBuff[SHA1::HashSize];
 
-        sha1.Update((uint8_t*)mT0[otIdx].data(), mT0[otIdx].size() * sizeof(block));
+        sha1.Update((u8*)mT0[otIdx].data(), mT0[otIdx].size() * sizeof(block));
         sha1.Final(hashBuff);
 
         val = toBlock(hashBuff);

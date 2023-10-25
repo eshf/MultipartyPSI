@@ -76,7 +76,7 @@ boost::system::error_code io_uring_file_service::open(
   return ec;
 }
 
-u64 io_uring_file_service::size(
+uint64_t io_uring_file_service::size(
     const io_uring_file_service::implementation_type& impl,
     boost::system::error_code& ec) const
 {
@@ -89,7 +89,7 @@ u64 io_uring_file_service::size(
 
 boost::system::error_code io_uring_file_service::resize(
     io_uring_file_service::implementation_type& impl,
-    u64 n, boost::system::error_code& ec)
+    uint64_t n, boost::system::error_code& ec)
 {
   int result = ::ftruncate(native_handle(impl), n);
   descriptor_ops::get_last_error(ec, result != 0);
@@ -120,14 +120,14 @@ boost::system::error_code io_uring_file_service::sync_data(
   return ec;
 }
 
-u64 io_uring_file_service::seek(
+uint64_t io_uring_file_service::seek(
     io_uring_file_service::implementation_type& impl, int64_t offset,
     file_base::seek_basis whence, boost::system::error_code& ec)
 {
   int64_t result = ::lseek(native_handle(impl), offset, whence);
   descriptor_ops::get_last_error(ec, result < 0);
   BOOST_ASIO_ERROR_LOCATION(ec);
-  return !ec ? static_cast<u64>(result) : 0;
+  return !ec ? static_cast<uint64_t>(result) : 0;
 }
 
 } // namespace detail

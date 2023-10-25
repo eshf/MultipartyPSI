@@ -156,21 +156,21 @@ bool
 basic_parser_base::
 parse_dec(
     string_view s,
-    std::u64& v)
+    std::uint64_t& v)
 {
     char const* it = s.data();
     char const* last = it + s.size();
     if(it == last)
         return false;
-    std::u64 tmp = 0;
+    std::uint64_t tmp = 0;
     do
     {
         if((! is_digit(*it)) ||
-            tmp > (std::numeric_limits<std::u64>::max)() / 10)
+            tmp > (std::numeric_limits<std::uint64_t>::max)() / 10)
             return false;
         tmp *= 10;
-        std::u64 const d = *it - '0';
-        if((std::numeric_limits<std::u64>::max)() - tmp < d)
+        std::uint64_t const d = *it - '0';
+        if((std::numeric_limits<std::uint64_t>::max)() - tmp < d)
             return false;
         tmp += d;
     }
@@ -181,18 +181,18 @@ parse_dec(
 
 bool
 basic_parser_base::
-parse_hex(char const*& it, std::u64& v)
+parse_hex(char const*& it, std::uint64_t& v)
 {
     unsigned char d;
     if(! unhex(d, *it))
         return false;
-    std::u64 tmp = 0;
+    std::uint64_t tmp = 0;
     do
     {
-        if(tmp > (std::numeric_limits<std::u64>::max)() / 16)
+        if(tmp > (std::numeric_limits<std::uint64_t>::max)() / 16)
             return false;
         tmp *= 16;
-        if((std::numeric_limits<std::u64>::max)() - tmp < d)
+        if((std::numeric_limits<std::uint64_t>::max)() - tmp < d)
             return false;
         tmp += d;
     }

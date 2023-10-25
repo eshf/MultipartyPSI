@@ -146,7 +146,7 @@ namespace osuCrypto {
 
     std::ostream& operator<<(std::ostream& out, const BitReference& bit)
     {
-        out << (uint32_t)bit;
+        out << (u32)bit;
         return out;
     }
 
@@ -364,7 +364,7 @@ namespace osuCrypto {
     {
         //for (i64 i = static_cast<i64>(val.size()) - 1; i > -1; --i)
         //{
-        //    in << (uint32_t)val[i];
+        //    in << (u32)val[i];
         //}
 
         //return in;

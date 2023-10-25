@@ -55,10 +55,10 @@ public:
  */
 class timestamp
 {
-    u64 m_ticks;
+    uint64_t m_ticks;
 
 public:
-    explicit timestamp(u64 ticks = 0) BOOST_NOEXCEPT : m_ticks(ticks) {}
+    explicit timestamp(uint64_t ticks = 0) BOOST_NOEXCEPT : m_ticks(ticks) {}
 
     duration operator- (timestamp that) const
     {
@@ -76,7 +76,7 @@ public:
  */
 #if defined(BOOST_WINDOWS) && !defined(__CYGWIN__)
 
-typedef u64 (BOOST_WINAPI_WINAPI_CC* get_tick_count_t)();
+typedef uint64_t (BOOST_WINAPI_WINAPI_CC* get_tick_count_t)();
 extern BOOST_LOG_API get_tick_count_t get_tick_count;
 
 inline timestamp get_timestamp()

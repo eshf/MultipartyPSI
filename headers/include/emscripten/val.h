@@ -56,7 +56,7 @@ EM_VAL _emval_new_array(void);
 EM_VAL _emval_new_array_from_memory_view(EM_VAL mv);
 EM_VAL _emval_new_object(void);
 EM_VAL _emval_new_cstring(const char*);
-EM_VAL _emval_new_uint8_tstring(const char*);
+EM_VAL _emval_new_u8string(const char*);
 EM_VAL _emval_new_u16string(const char16_t*);
 
 EM_VAL _emval_take_value(TYPEID type, EM_VAR_ARGS argv);
@@ -353,8 +353,8 @@ public:
     return val(internal::_emval_new_object());
   }
 
-  static val uint8_tstring(const char* s) {
-    return val(internal::_emval_new_uint8_tstring(s));
+  static val u8string(const char* s) {
+    return val(internal::_emval_new_u8string(s));
   }
 
   static val u16string(const char16_t* s) {

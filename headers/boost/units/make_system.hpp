@@ -63,7 +63,7 @@ template<
     class U5 = na,
     class U6 = na,
     class U7 = na,
-    class u8 = na,
+    class U8 = na,
     class U9 = na
 >
 struct make_system;

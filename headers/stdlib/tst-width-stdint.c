@@ -59,7 +59,7 @@ do_test (void)
 #ifndef UINT8_WIDTH
 # error "missing UINT8_WIDTH"
 #endif
-  CHECK_WIDTH (u8, UINT8_MAX, UINT8_WIDTH);
+  CHECK_WIDTH (uint8_t, UINT8_MAX, UINT8_WIDTH);
 #ifndef UINT16_WIDTH
 # error "missing UINT16_WIDTH"
 #endif
@@ -67,7 +67,7 @@ do_test (void)
 #ifndef UINT32_WIDTH
 # error "missing UINT32_WIDTH"
 #endif
-  CHECK_WIDTH (u32, UINT32_MAX, UINT32_WIDTH);
+  CHECK_WIDTH (uint32_t, UINT32_MAX, UINT32_WIDTH);
 #ifndef UINT64_WIDTH
 # error "missing UINT64_WIDTH"
 #endif

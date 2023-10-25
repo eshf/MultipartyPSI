@@ -720,7 +720,7 @@ struct lanczos17m64 : public std::integral_constant<int, 64>
          static_cast<T>(BOOST_MATH_BIG_CONSTANT(T, 64, 488.0063567520005730476791712814838113252)),
          static_cast<T>(BOOST_MATH_BIG_CONSTANT(T, 64, 2.50662827463100050241576877135758834683))
       };
-      static const BOOST_MATH_INT_TABLE_TYPE(T, std::u64) denom[17] = {
+      static const BOOST_MATH_INT_TABLE_TYPE(T, std::uint64_t) denom[17] = {
          BOOST_MATH_INT_VALUE_SUFFIX(0, uLL),
          BOOST_MATH_INT_VALUE_SUFFIX(1307674368000, uLL),
          BOOST_MATH_INT_VALUE_SUFFIX(4339163001600, uLL),
@@ -765,7 +765,7 @@ struct lanczos17m64 : public std::integral_constant<int, 64>
          static_cast<T>(BOOST_MATH_BIG_CONSTANT(T, 64, 0.002393749522058449186690627996063983095463)),
          static_cast<T>(BOOST_MATH_BIG_CONSTANT(T, 64, 0.1229541408909435212800785616808830746135e-4))
       };
-      static const BOOST_MATH_INT_TABLE_TYPE(T, std::u64) denom[17] = {
+      static const BOOST_MATH_INT_TABLE_TYPE(T, std::uint64_t) denom[17] = {
          BOOST_MATH_INT_VALUE_SUFFIX(0, uLL),
          BOOST_MATH_INT_VALUE_SUFFIX(1307674368000, uLL),
          BOOST_MATH_INT_VALUE_SUFFIX(4339163001600, uLL),

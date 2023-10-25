@@ -136,7 +136,7 @@ enum class error
     /// std::int64_t was expected during conversion
     not_int64,
 
-    /// std::u64 was expected during conversion
+    /// std::uint64_t was expected during conversion
     not_uint64,
 
     /// `double` was expected during conversion

@@ -55,14 +55,14 @@ template <class Allocator>
 struct large_int : totally_ordered<large_int<Allocator>, large_int<Allocator>>,
                    partially_ordered<large_int<Allocator>, void> {
   explicit large_int(const Allocator& a = {}) : data(1, 0, a) {}
-  explicit large_int(std::u64 v, const Allocator& a = {}) : data(1, v, a) {}
+  explicit large_int(std::uint64_t v, const Allocator& a = {}) : data(1, v, a) {}
 
   large_int(const large_int&) = default;
   large_int& operator=(const large_int&) = default;
   large_int(large_int&&) = default;
   large_int& operator=(large_int&&) = default;
 
-  large_int& operator=(std::u64 o) {
+  large_int& operator=(std::uint64_t o) {
     data = decltype(data)(1, o);
     return *this;
   }
@@ -88,7 +88,7 @@ struct large_int : totally_ordered<large_int<Allocator>, large_int<Allocator>>,
     }
     bool carry = false;
     std::size_t i = 0;
-    for (std::u64 oi : o.data) {
+    for (std::uint64_t oi : o.data) {
       auto& di = maybe_extend(i);
       if (carry) {
         if (safe_increment(oi))
@@ -113,7 +113,7 @@ struct large_int : totally_ordered<large_int<Allocator>, large_int<Allocator>>,
     return *this;
   }
 
-  large_int& operator+=(std::u64 o) {
+  large_int& operator+=(std::uint64_t o) {
     assert(data.size() > 0u);
     if (safe_radd(data[0], o)) return *this;
     add_remainder(data[0], o);
@@ -225,17 +225,17 @@ struct large_int : totally_ordered<large_int<Allocator>, large_int<Allocator>>,
     return operator double() == o;
   }
 
-  std::u64& maybe_extend(std::size_t i) {
+  std::uint64_t& maybe_extend(std::size_t i) {
     while (i >= data.size()) data.push_back(0);
     return data[i];
   }
 
-  static void add_remainder(std::u64& d, const std::u64 o) noexcept {
+  static void add_remainder(std::uint64_t& d, const std::uint64_t o) noexcept {
     assert(d > 0u);
     // in decimal system it would look like this:
     // 8 + 8 = 6 = 8 - (9 - 8) - 1
     // 9 + 1 = 0 = 9 - (9 - 1) - 1
-    auto tmp = (std::numeric_limits<std::u64>::max)();
+    auto tmp = (std::numeric_limits<std::uint64_t>::max)();
     tmp -= o;
     --d -= tmp;
   }
@@ -245,7 +245,7 @@ struct large_int : totally_ordered<large_int<Allocator>, large_int<Allocator>>,
     ar& make_nvp("data", data);
   }
 
-  std::vector<std::u64, Allocator> data;
+  std::vector<std::uint64_t, Allocator> data;
 };
 
 } // namespace detail

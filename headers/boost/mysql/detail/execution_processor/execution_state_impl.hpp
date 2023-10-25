@@ -31,8 +31,8 @@ class execution_state_impl final : public execution_processor
     struct ok_data
     {
         bool has_value{false};           // The OK packet information is default constructed, or actual data?
-        std::u64 affected_rows{};   // OK packet data
-        std::u64 last_insert_id{};  // OK packet data
+        std::uint64_t affected_rows{};   // OK packet data
+        std::uint64_t last_insert_id{};  // OK packet data
         std::uint16_t warnings{};        // OK packet data
         bool is_out_params{false};       // Does this resultset contain OUT param information?
     };
@@ -79,13 +79,13 @@ public:
 
     metadata_collection_view meta() const noexcept { return meta_; }
 
-    std::u64 get_affected_rows() const noexcept
+    std::uint64_t get_affected_rows() const noexcept
     {
         BOOST_ASSERT(eof_data_.has_value);
         return eof_data_.affected_rows;
     }
 
-    std::u64 get_last_insert_id() const noexcept
+    std::uint64_t get_last_insert_id() const noexcept
     {
         BOOST_ASSERT(eof_data_.has_value);
         return eof_data_.last_insert_id;

@@ -24,7 +24,7 @@ namespace boost { namespace json { namespace detail { namespace charconv { names
 // doing `8 * sizeof(limb)`.
 #if defined(BOOST_JSON_FASTFLOAT_64BIT) && !defined(__sparc)
 #define BOOST_JSON_FASTFLOAT_64BIT_LIMB 1
-typedef u64 limb;
+typedef uint64_t limb;
 constexpr size_t limb_bits = 64;
 #else
 #define BOOST_JSON_FASTFLOAT_32BIT_LIMB
@@ -162,20 +162,20 @@ struct stackvec {
 };
 
 BOOST_FORCEINLINE BOOST_JSON_CXX14_CONSTEXPR_NO_INLINE
-u64 empty_hi64(bool& truncated) noexcept {
+uint64_t empty_hi64(bool& truncated) noexcept {
   truncated = false;
   return 0;
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-u64 uint64_hi64(u64 r0, bool& truncated) noexcept {
+uint64_t uint64_hi64(uint64_t r0, bool& truncated) noexcept {
   truncated = false;
   int shl = leading_zeroes(r0);
   return r0 << shl;
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-u64 uint64_hi64(u64 r0, u64 r1, bool& truncated) noexcept {
+uint64_t uint64_hi64(uint64_t r0, uint64_t r1, bool& truncated) noexcept {
   int shl = leading_zeroes(r0);
   if (shl == 0) {
     truncated = r1 != 0;
@@ -188,22 +188,22 @@ u64 uint64_hi64(u64 r0, u64 r1, bool& truncated) noexcept {
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-u64 uint32_hi64(uint32_t r0, bool& truncated) noexcept {
+uint64_t uint32_hi64(uint32_t r0, bool& truncated) noexcept {
   return uint64_hi64(r0, truncated);
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-u64 uint32_hi64(uint32_t r0, uint32_t r1, bool& truncated) noexcept {
-  u64 x0 = r0;
-  u64 x1 = r1;
+uint64_t uint32_hi64(uint32_t r0, uint32_t r1, bool& truncated) noexcept {
+  uint64_t x0 = r0;
+  uint64_t x1 = r1;
   return uint64_hi64((x0 << 32) | x1, truncated);
 }
 
 BOOST_FORCEINLINE BOOST_JSON_FASTFLOAT_CONSTEXPR20
-u64 uint32_hi64(uint32_t r0, uint32_t r1, uint32_t r2, bool& truncated) noexcept {
-  u64 x0 = r0;
-  u64 x1 = r1;
-  u64 x2 = r2;
+uint64_t uint32_hi64(uint32_t r0, uint32_t r1, uint32_t r2, bool& truncated) noexcept {
+  uint64_t x0 = r0;
+  uint64_t x1 = r1;
+  uint64_t x2 = r2;
   return uint64_hi64(x0, (x1 << 32) | x2, truncated);
 }
 
@@ -245,12 +245,12 @@ limb scalar_mul(limb x, limb y, limb& carry) noexcept {
   value128 z = full_multiplication(x, y);
   bool overflow;
   z.low = scalar_add(z.low, carry, overflow);
-  z.high += u64(overflow);  // cannot overflow
+  z.high += uint64_t(overflow);  // cannot overflow
   carry = z.high;
   return z.low;
   #endif
 #else
-  u64 z = u64(x) * u64(y) + u64(carry);
+  uint64_t z = uint64_t(x) * uint64_t(y) + uint64_t(carry);
   carry = limb(z >> limb_bits);
   return limb(z);
 #endif
@@ -379,7 +379,7 @@ bool large_mul(stackvec<size>& x, limb_span y) noexcept {
 template <typename = void>
 struct pow5_tables {
   static constexpr uint32_t large_step = 135;
-  static constexpr u64 small_power_of_5[] = {
+  static constexpr uint64_t small_power_of_5[] = {
     1UL, 5UL, 25UL, 125UL, 625UL, 3125UL, 15625UL, 78125UL, 390625UL,
     1953125UL, 9765625UL, 48828125UL, 244140625UL, 1220703125UL,
     6103515625UL, 30517578125UL, 152587890625UL, 762939453125UL,
@@ -402,7 +402,7 @@ template <typename T>
 constexpr uint32_t pow5_tables<T>::large_step;
 
 template <typename T>
-constexpr u64 pow5_tables<T>::small_power_of_5[];
+constexpr uint64_t pow5_tables<T>::small_power_of_5[];
 
 template <typename T>
 constexpr limb pow5_tables<T>::large_power_of_5[];
@@ -421,7 +421,7 @@ struct bigint : pow5_tables<> {
   bigint(bigint &&) = delete;
   bigint &operator=(bigint &&other) = delete;
 
-  BOOST_JSON_FASTFLOAT_CONSTEXPR20 bigint(u64 value): vec() {
+  BOOST_JSON_FASTFLOAT_CONSTEXPR20 bigint(uint64_t value): vec() {
 #ifdef BOOST_JSON_FASTFLOAT_64BIT_LIMB
     vec.push_unchecked(value);
 #else
@@ -433,14 +433,14 @@ struct bigint : pow5_tables<> {
 
   // get the high 64 bits from the vector, and if bits were truncated.
   // this is to get the significant digits for the float.
-  BOOST_JSON_FASTFLOAT_CONSTEXPR20 u64 hi64(bool& truncated) const noexcept {
+  BOOST_JSON_FASTFLOAT_CONSTEXPR20 uint64_t hi64(bool& truncated) const noexcept {
 #ifdef BOOST_JSON_FASTFLOAT_64BIT_LIMB
     if (vec.len() == 0) {
       return empty_hi64(truncated);
     } else if (vec.len() == 1) {
       return uint64_hi64(vec.rindex(0), truncated);
     } else {
-      u64 result = uint64_hi64(vec.rindex(0), vec.rindex(1), truncated);
+      uint64_t result = uint64_hi64(vec.rindex(0), vec.rindex(1), truncated);
       truncated |= vec.nonzero(2);
       return result;
     }
@@ -452,7 +452,7 @@ struct bigint : pow5_tables<> {
     } else if (vec.len() == 2) {
       return uint32_hi64(vec.rindex(0), vec.rindex(1), truncated);
     } else {
-      u64 result = uint32_hi64(vec.rindex(0), vec.rindex(1), vec.rindex(2), truncated);
+      uint64_t result = uint32_hi64(vec.rindex(0), vec.rindex(1), vec.rindex(2), truncated);
       truncated |= vec.nonzero(3);
       return result;
     }
@@ -554,7 +554,7 @@ struct bigint : pow5_tables<> {
       return leading_zeroes(vec.rindex(0));
 #else
       // no use defining a specialized leading_zeroes for a 32-bit type.
-      u64 r0 = vec.rindex(0);
+      uint64_t r0 = vec.rindex(0);
       return leading_zeroes(r0 << 32);
 #endif
     }

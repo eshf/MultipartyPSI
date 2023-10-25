@@ -36,7 +36,7 @@ namespace osuCrypto {
 
 
 
-    void BtAcceptor::bind(uint32_t port, std::string ip)
+    void BtAcceptor::bind(u32 port, std::string ip)
     {
         auto pStr = std::to_string(port);
         mPort = port;
@@ -102,7 +102,7 @@ namespace osuCrypto {
                     {
                         if(!ec2 || bytesTransferred != 4)
                         {
-                            uint32_t size = buff->getArrayView<uint32_t>()[0];
+                            u32 size = buff->getArrayView<u32>()[0];
 
                             buff->reserve(size);
                             buff->setp(size);

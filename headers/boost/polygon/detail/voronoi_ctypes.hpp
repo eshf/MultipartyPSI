@@ -25,7 +25,7 @@ namespace detail {
 typedef boost::int32_t int32;
 typedef boost::int64_t int64;
 typedef boost::uint32_t uint32;
-typedef boost::u64 uint64;
+typedef boost::uint64_t uint64;
 typedef double fpt64;
 
 // If two floating-point numbers in the same format are ordered (x < y),

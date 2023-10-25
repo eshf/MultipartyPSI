@@ -27,7 +27,7 @@ static constexpr double powers_of_ten[] = {
 // This function will only work in some cases, when it does not work, success is
 // set to false. This should work *most of the time* (like 99% of the time).
 // We assume that power is in the [-325, 308] interval.
-inline double compute_float64(std::int64_t power, std::u64 i, bool negative, bool& success) noexcept
+inline double compute_float64(std::int64_t power, std::uint64_t i, bool negative, bool& success) noexcept
 {
     static constexpr auto smallest_power = -325;
     static constexpr auto largest_power = 308;
@@ -98,14 +98,14 @@ inline double compute_float64(std::int64_t power, std::u64 i, bool negative, boo
         return negative ? -HUGE_VAL : HUGE_VAL;
     }
 
-    const std::u64 factor_significand = significand_64[power - smallest_power];
+    const std::uint64_t factor_significand = significand_64[power - smallest_power];
     const std::int64_t exponent = (((152170 + 65536) * power) >> 16) + 1024 + 63;
     int leading_zeros = boost::core::countl_zero(i);
-    i <<= static_cast<std::u64>(leading_zeros);
+    i <<= static_cast<std::uint64_t>(leading_zeros);
 
     uint128 product = umul128(i, factor_significand);
-    std::u64 low = product.low;
-    std::u64 high = product.high;
+    std::uint64_t low = product.low;
+    std::uint64_t high = product.high;
 
     // We know that upper has at most one leading zero because
     // both i and  factor_mantissa have a leading one. This means
@@ -123,13 +123,13 @@ inline double compute_float64(std::int64_t power, std::u64 i, bool negative, boo
     // lower + i < lower to be true (proba. much higher than 1%).
     if (BOOST_UNLIKELY((high & 0x1FF) == 0x1FF) && (low + i < low))
     {
-        const std::u64 factor_significand_low = significand_128[power - smallest_power];
+        const std::uint64_t factor_significand_low = significand_128[power - smallest_power];
         product = umul128(i, factor_significand_low);
-        //const std::u64 product_low = product.low;
-        const std::u64 product_middle2 = product.high;
-        const std::u64 product_middle1 = low;
-        std::u64 product_high = high;
-        const std::u64 product_middle = product_middle1 + product_middle2;
+        //const std::uint64_t product_low = product.low;
+        const std::uint64_t product_middle2 = product.high;
+        const std::uint64_t product_middle1 = low;
+        std::uint64_t product_high = high;
+        const std::uint64_t product_middle = product_middle1 + product_middle2;
 
         if (product_middle < product_middle1)
         {
@@ -154,8 +154,8 @@ inline double compute_float64(std::int64_t power, std::u64 i, bool negative, boo
 
     // The final significand should be 53 bits with a leading 1
     // We shift it so that it occupies 54 bits with a leading 1
-    const std::u64 upper_bit = high >> 63;
-    std::u64 significand = high >> (upper_bit + 9);
+    const std::uint64_t upper_bit = high >> 63;
+    std::uint64_t significand = high >> (upper_bit + 9);
     leading_zeros += static_cast<int>(1 ^ upper_bit);
 
     // If we have lots of trailing zeros we may fall between two values
@@ -177,7 +177,7 @@ inline double compute_float64(std::int64_t power, std::u64 i, bool negative, boo
     }
 
     significand &= ~(UINT64_C(1) << 52);
-    const std::u64 real_exponent = exponent - leading_zeros;
+    const std::uint64_t real_exponent = exponent - leading_zeros;
 
     // We have to check that real_exponent is in range, otherwise fail
     if (BOOST_UNLIKELY((real_exponent < 1) || (real_exponent > 2046)))
@@ -187,7 +187,7 @@ inline double compute_float64(std::int64_t power, std::u64 i, bool negative, boo
     }
 
     significand |= real_exponent << 52;
-    significand |= ((static_cast<std::u64>(negative) << 63));
+    significand |= ((static_cast<std::uint64_t>(negative) << 63));
 
     double d;
     std::memcpy(&d, &significand, sizeof(d));

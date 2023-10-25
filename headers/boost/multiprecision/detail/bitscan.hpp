@@ -177,7 +177,7 @@ BOOST_FORCEINLINE std::size_t find_msb(uint128_type mask, std::integral_constant
    union
    {
       uint128_type    v;
-      std::u64 sv[2];
+      std::uint64_t sv[2];
    } val;
    val.v = mask;
 #if BOOST_MP_ENDIAN_LITTLE_BYTE
@@ -195,7 +195,7 @@ BOOST_FORCEINLINE std::size_t find_lsb(uint128_type mask, std::integral_constant
    union
    {
       uint128_type    v;
-      std::u64 sv[2];
+      std::uint64_t sv[2];
    } val;
    val.v = mask;
 #if BOOST_MP_ENDIAN_LITTLE_BYTE

@@ -226,7 +226,7 @@ template <class T>
 struct int_traits<T, false, 8>
 {
     static constexpr bool is_supported = true;
-    static constexpr const char* type_name = "u64";
+    static constexpr const char* type_name = "uint64_t";
     static bool meta_check(meta_check_context& ctx)
     {
         switch (ctx.current_meta().type())
@@ -241,7 +241,7 @@ struct int_traits<T, false, 8>
         default: return false;
         }
     }
-    static error_code parse(field_view input, std::u64& output)
+    static error_code parse(field_view input, std::uint64_t& output)
     {
         return parse_unsigned_int(input, output);
     }

@@ -537,7 +537,7 @@ DWORD win_iocp_io_context::get_gqcs_timeout()
   osvi.dwOSVersionInfoSize = sizeof(osvi);
   osvi.dwMajorVersion = 6ul;
 
-  const u64 condition_mask = ::VerSetConditionMask(
+  const uint64_t condition_mask = ::VerSetConditionMask(
       0, VER_MAJORVERSION, VER_GREATER_EQUAL);
 
   if (!!::VerifyVersionInfo(&osvi, VER_MAJORVERSION, condition_mask))

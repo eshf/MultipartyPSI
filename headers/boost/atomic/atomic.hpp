@@ -98,7 +98,7 @@ typedef atomic< uint32_t > atomic_uint32_t;
 typedef atomic< int32_t > atomic_int32_t;
 typedef atomic< unsigned long > atomic_ulong;
 typedef atomic< long > atomic_long;
-typedef atomic< u64 > atomic_u64;
+typedef atomic< uint64_t > atomic_uint64_t;
 typedef atomic< int64_t > atomic_int64_t;
 #ifdef BOOST_HAS_LONG_LONG
 typedef atomic< boost::ulong_long_type > atomic_ullong;
@@ -156,7 +156,7 @@ typedef atomic< boost::uintptr_t > atomic_uintptr_t;
 typedef atomic< uint32_t > atomic_unsigned_lock_free;
 typedef atomic< int32_t > atomic_signed_lock_free;
 #elif BOOST_ATOMIC_INT64_LOCK_FREE == 2 && BOOST_ATOMIC_HAS_NATIVE_INT64_WAIT_NOTIFY == 2
-typedef atomic< u64 > atomic_unsigned_lock_free;
+typedef atomic< uint64_t > atomic_unsigned_lock_free;
 typedef atomic< int64_t > atomic_signed_lock_free;
 #elif BOOST_ATOMIC_INT16_LOCK_FREE == 2 && BOOST_ATOMIC_HAS_NATIVE_INT16_WAIT_NOTIFY == 2
 typedef atomic< uint16_t > atomic_unsigned_lock_free;
@@ -168,7 +168,7 @@ typedef atomic< int8_t > atomic_signed_lock_free;
 typedef atomic< uint32_t > atomic_unsigned_lock_free;
 typedef atomic< int32_t > atomic_signed_lock_free;
 #elif BOOST_ATOMIC_INT64_LOCK_FREE == 2
-typedef atomic< u64 > atomic_unsigned_lock_free;
+typedef atomic< uint64_t > atomic_unsigned_lock_free;
 typedef atomic< int64_t > atomic_signed_lock_free;
 #elif BOOST_ATOMIC_INT16_LOCK_FREE == 2
 typedef atomic< uint16_t > atomic_unsigned_lock_free;
@@ -199,7 +199,7 @@ using atomics::atomic_uint32_t;
 using atomics::atomic_int32_t;
 using atomics::atomic_ulong;
 using atomics::atomic_long;
-using atomics::atomic_u64;
+using atomics::atomic_uint64_t;
 using atomics::atomic_int64_t;
 #ifdef BOOST_HAS_LONG_LONG
 using atomics::atomic_ullong;
