@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the document</title>
+         
+    <link rel="stylesheet" href="styles.css">
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="title">
+          <h2>
+            nPSI
+            <hr>
+          </h2>
+        </div>
+        <form class="form" action="npsiform.html" method="post" id="npsiForm">
+        <div class="labelTitle">No. of Parties
+        <input class="form-input" type="text" name="npsi" id="npsi" formaction="npsiform.html" method="post">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" formaction="npsiform.html" method="post">
+        <label for="semiH">Semi Honest</label>
+        <input type="radio" id="augmented" name="psimodel" value="augmented" formaction="npsiform.html" method="post">
+        <label for="augmented">Augmented</label>
+        <input type="radio" id="leader" name="role" value="leader" formaction="npsiform.html" method="post">
+        <label for="leader">Leader</label>
+        <input type="radio" id="member" name="role" value="member"formaction="npsiform.html" method="post">
+
+        <label for="member">Member</label>
+        </div>
+        <button id="npsibutton">Submit</button>
+        </form>
+      </div>
+  </body>
+</html>
