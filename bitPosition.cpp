@@ -1,5 +1,3 @@
-
-
 #include "OPPRF/OPPRFReceiver.h"
 #include "OPPRF/OPPRFSender.h"
 
@@ -21,7 +19,7 @@ using namespace std;
 #include <emscripten/emscripten.h>
 #include <wasm_simd128.h>
 
-extern "C"{
+
 void Bit_Position_Test()
 {
 	u64 setSize = 32;
@@ -276,4 +274,3 @@ void Channel_Test() {
 }
 
 
-}

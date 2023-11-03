@@ -15,7 +15,7 @@
             <hr>
           </h2>
         </div>
-        <form class="form" method="post" name="npsiform" id="npsiform">
+        <form class="form" method="get" name="npsiform" id="npsiform" action="npsiform.html">
         <div class="labelTitle">No. of Parties
         <input class="form-input" type="text" name="npsi" id="npsi">
         <input type="radio" id="semiH" name="psimodel" value="semiH">
@@ -27,7 +27,7 @@
         <input type="radio" id="member" name="role" value="member">
         <label for="member">Member</label>
         </div>
-        <button id="npsibutton" onclick="submitnpsi();">Submit</button>
+        <button type="submit" onclick="submitFormData()" method="post" id="npsibutton">Submit</button>
         </form>
       </div>
   </body>
