@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" name="viewport" content="width=device-width, initial-scale=1">
+    <title>View MultipartyPSI Results</title>
+
+</head>
+
+  <script>
+    fetch("channel.wasm")
+    .then(response => response.arrayBuffer())
+    .then(bytes => WebAssembly.instantiate(bytes))
+    .then(channel => {
+      // Get the exported function from the module
+      const _Channel_test = channel.instance.exports._Channel_test;
+   
+      // Call the function and print the result
+      const results = _Channel_test();
+      console.log(results);
+    });
+  
+    </script>
+    </body>
+    </html>>
+  </html>
