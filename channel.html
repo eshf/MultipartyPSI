@@ -7,19 +7,25 @@
 </head>
 
   <script>
-    fetch("channel.wasm")
-    .then(response => response.arrayBuffer())
-    .then(bytes => WebAssembly.instantiate(bytes))
-    .then(channel => {
-      // Get the exported function from the module
-      const _Channel_test = channel.instance.exports._Channel_test;
-   
-      // Call the function and print the result
-      const results = _Channel_test();
-      console.log(results);
+    const importObject = {
+      module: {},
+      env: {
+        memory: new WebAssembly.Memory({ initial: 256 }),
+      }
+    };
+
+    WebAssembly.instantiateStreaming(
+      fetch("testmain.wasm"),
+      importObject
+    ).then(result => {
+      const npsi = result.instance.exports.npsi;
+      console.log(npsi(2, 5));
+      console.log(npsi(10, 10));
     });
-  
     </script>
     </body>
     </html>>
   </html>
+
+
+
