@@ -1,0 +1,19 @@
+{
+  "name": "multipartypsi",
+  "version": "1.0.0",
+  "description": "This is the implementation of our [CCS 2017](http://dl.acm.org/xxx)  paper: **Practical Multi-party Private Set Intersection from Symmetric-Key Techniques**[[ePrint](https://eprint.iacr.org/2017/xxx)].",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodejs": "^0.0.0",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {}
+}
