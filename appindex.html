@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Title of the document</title>
+         
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript">
+      let obj = Emval.fromHandle($0);
+      console.log(obj);
+      obj.as_handle();
+    
+      mergeInto(LibraryManager.library, {
+      log_value: function (val_handle) {
+      let value = Emval.toValue(val_handle);
+      console.log(value);
+      }
+    });
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="title">
+          <h2>
+            nPSI
+            <hr>
+          </h2>
+        </div>
+        <form class="form" formaction="npsiform.html" method="get" id="npsiForm">
+        <div class="labelTitle">No. of Parties
+        <input class="form-input" type="text" name="npsi" id="npsi" formaction="npsiform.html" method="post">
+        <input type="radio" id="semiH" name="psimodel" value="semiH" formaction="npsiform.html" method="post">
+        <label for="semiH">Semi Honest</label>
+        <input type="radio" id="augmented" name="psimodel" value="augmented" formaction="npsiform.html" method="post">
+        <label for="augmented">Augmented</label>
+        <input type="radio" id="leader" name="role" value="leader" formaction="npsiform.html" method="post">
+        <label for="leader">Leader</label>
+        <input type="radio" id="member" name="role" value="member" formaction="npsiform.html" method="post">
+        <label for="member">Member</label>
+        </div>
+        <input type="submit" id="npsibutton" onclick="this.form.submit()">      
+      </form>
+      </div>
+  </body>
+</html>

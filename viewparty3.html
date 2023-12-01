@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" name="viewport" content="width=device-width, initial-scale=1">
+    <title>View MultipartyPSI Results</title>
+
+</head>
+
+  <script>
+    const importObject = {
+      env: {
+        memory: new WebAssembly.Memory({ initial: 256 }),
+      }
+    };
+
+    WebAssembly.instantiateStreaming(fetch("viewpsi.wasm"),importObject).then(result => {
+      const npsi = result.instance.exports.npsi;
+    });
+    </script>
+    </body>
+    </html>>
+  </html>

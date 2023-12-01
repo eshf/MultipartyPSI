@@ -1,4 +1,6 @@
 {
-    "projectManager.git.ignoredFolders": []
-
+  "C_Cpp_Runner.linkerArgs": [],
+  "C_Cpp.errorSquiggles": "enabled",
+  "cmake.configureOnOpen": true,
+  "files.eol": "\n"
 }
