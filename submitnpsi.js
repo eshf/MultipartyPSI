@@ -1,6 +1,4 @@
-  let obj = Emval.fromHandle($0);
-  console.log(obj);
-  obj.as_handle();
+  view();
 
   mergeInto(LibraryManager.library, {
   my_emjs: function (val_handle) {
@@ -8,3 +6,9 @@
   console.log(value);
   }
 });
+
+function view() {
+  let obj = Emval.fromHandle($0);
+  console.log(obj);
+  obj.as_handle();
+}
