@@ -40,7 +40,7 @@ _Static_assert(_Alignof(uint16_t) == 2, "non-wasi data layout");
 _Static_assert(_Alignof(int32_t) == 4, "non-wasi data layout");
 _Static_assert(_Alignof(uint32_t) == 4, "non-wasi data layout");
 _Static_assert(_Alignof(int64_t) == 8, "non-wasi data layout");
-_Static_assert(_Alignof(u64) == 8, "non-wasi data layout");
+_Static_assert(_Alignof(uint64_t) == 8, "non-wasi data layout");
 _Static_assert(_Alignof(void*) == 4, "non-wasi data layout");
 
 #ifdef __cplusplus
@@ -57,7 +57,7 @@ _Static_assert(_Alignof(__wasi_size_t) == 4, "witx calculated align");
 /**
  * Non-negative file size or length of a region within a file.
  */
-typedef u64 __wasi_filesize_t;
+typedef uint64_t __wasi_filesize_t;
 
 _Static_assert(sizeof(__wasi_filesize_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_filesize_t) == 8, "witx calculated align");
@@ -65,7 +65,7 @@ _Static_assert(_Alignof(__wasi_filesize_t) == 8, "witx calculated align");
 /**
  * Timestamp in nanoseconds.
  */
-typedef u64 __wasi_timestamp_t;
+typedef uint64_t __wasi_timestamp_t;
 
 _Static_assert(sizeof(__wasi_timestamp_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_timestamp_t) == 8, "witx calculated align");
@@ -501,7 +501,7 @@ _Static_assert(_Alignof(__wasi_errno_t) == 2, "witx calculated align");
 /**
  * File descriptor rights, determining which actions may be performed.
  */
-typedef u64 __wasi_rights_t;
+typedef uint64_t __wasi_rights_t;
 
 /**
  * The right to invoke `fd_datasync`.
@@ -749,7 +749,7 @@ _Static_assert(_Alignof(__wasi_whence_t) == 1, "witx calculated align");
  * 
  * The value 0 signifies the start of the directory.
  */
-typedef u64 __wasi_dircookie_t;
+typedef uint64_t __wasi_dircookie_t;
 
 _Static_assert(sizeof(__wasi_dircookie_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_dircookie_t) == 8, "witx calculated align");
@@ -765,7 +765,7 @@ _Static_assert(_Alignof(__wasi_dirnamlen_t) == 4, "witx calculated align");
 /**
  * File serial number that is unique within its file system.
  */
-typedef u64 __wasi_inode_t;
+typedef uint64_t __wasi_inode_t;
 
 _Static_assert(sizeof(__wasi_inode_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_inode_t) == 8, "witx calculated align");
@@ -962,7 +962,7 @@ _Static_assert(offsetof(__wasi_fdstat_t, fs_rights_inheriting) == 16, "witx calc
  * Identifier for a device containing a file system. Can be used in combination
  * with `inode` to uniquely identify a file or directory in the filesystem.
  */
-typedef u64 __wasi_device_t;
+typedef uint64_t __wasi_device_t;
 
 _Static_assert(sizeof(__wasi_device_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_device_t) == 8, "witx calculated align");
@@ -1039,7 +1039,7 @@ _Static_assert(_Alignof(__wasi_oflags_t) == 2, "witx calculated align");
 /**
  * Number of hard links to an inode.
  */
-typedef u64 __wasi_linkcount_t;
+typedef uint64_t __wasi_linkcount_t;
 
 _Static_assert(sizeof(__wasi_linkcount_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_linkcount_t) == 8, "witx calculated align");
@@ -1105,7 +1105,7 @@ _Static_assert(offsetof(__wasi_filestat_t, ctim) == 56, "witx calculated offset"
  * User-provided value that may be attached to objects that is retained when
  * extracted from the implementation.
  */
-typedef u64 __wasi_userdata_t;
+typedef uint64_t __wasi_userdata_t;
 
 _Static_assert(sizeof(__wasi_userdata_t) == 8, "witx calculated size");
 _Static_assert(_Alignof(__wasi_userdata_t) == 8, "witx calculated align");

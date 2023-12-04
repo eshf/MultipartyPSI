@@ -1384,7 +1384,7 @@ GLAPI void APIENTRY glUniformBlockBinding (GLuint program, GLuint uniformBlockIn
 #ifndef GL_VERSION_3_2
 #define GL_VERSION_3_2 1
 typedef struct __GLsync *GLsync;
-typedef khronos_u64 GLuint64;
+typedef khronos_uint64_t GLuint64;
 typedef khronos_int64_t GLint64;
 #define GL_CONTEXT_CORE_PROFILE_BIT       0x00000001
 #define GL_CONTEXT_COMPATIBILITY_PROFILE_BIT 0x00000002
@@ -2900,7 +2900,7 @@ GLAPI void APIENTRY glPrimitiveBoundingBoxARB (GLfloat minX, GLfloat minY, GLflo
 
 #ifndef GL_ARB_bindless_texture
 #define GL_ARB_bindless_texture 1
-typedef khronos_u64 GLuint64EXT;
+typedef khronos_uint64_t GLuint64EXT;
 #define GL_UNSIGNED_INT64_ARB             0x140F
 typedef GLuint64 (APIENTRYP PFNGLGETTEXTUREHANDLEARBPROC) (GLuint texture);
 typedef GLuint64 (APIENTRYP PFNGLGETTEXTURESAMPLERHANDLEARBPROC) (GLuint texture, GLuint sampler);

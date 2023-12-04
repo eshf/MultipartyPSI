@@ -95,7 +95,7 @@ __parse_number(const _CharT* __begin, const _CharT* __end_input) {
    * Limit the input to 9 digits, otherwise we need two checks during every
    * iteration:
    * - Are we at the end of the input?
-   * - Does the value exceed width of an uint32_t? (Switching to u64 would
+   * - Does the value exceed width of an uint32_t? (Switching to uint64_t would
    *   have the same issue, but with a higher maximum.)
    */
   const _CharT* __end = __end_input - __begin > 9 ? __begin + 9 : __end_input;
@@ -116,7 +116,7 @@ __parse_number(const _CharT* __begin, const _CharT* __end_input) {
      * - Are there more than 10 digits?
      * (More than 10 digits always overflows the maximum.)
      */
-    u64 __v = u64(__value) * 10 + *__begin++ - _CharT('0');
+    uint64_t __v = uint64_t(__value) * 10 + *__begin++ - _CharT('0');
     if (__v > __number_max ||
         (__begin != __end_input && *__begin >= _CharT('0') &&
          *__begin <= _CharT('9')))

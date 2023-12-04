@@ -22,7 +22,7 @@ extern "C" {
 uint8_t emscripten_atomic_exchange_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t newVal);
 uint16_t emscripten_atomic_exchange_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t newVal);
 uint32_t emscripten_atomic_exchange_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t newVal);
-u64 emscripten_atomic_exchange_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 newVal);
+uint64_t emscripten_atomic_exchange_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t newVal);
 
 // CAS returns the *old* value that was in the memory location before the
 // operation took place.
@@ -31,13 +31,13 @@ u64 emscripten_atomic_exchange_u64(void/*u64*/ *addr __attribute__((nonnull)), u
 uint8_t emscripten_atomic_cas_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t oldVal, uint8_t newVal);
 uint16_t emscripten_atomic_cas_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t oldVal, uint16_t newVal);
 uint32_t emscripten_atomic_cas_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t oldVal, uint32_t newVal);
-u64 emscripten_atomic_cas_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 oldVal, u64 newVal);
+uint64_t emscripten_atomic_cas_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t oldVal, uint64_t newVal);
 
 uint8_t emscripten_atomic_load_u8(const void/*uint8_t*/ *addr __attribute__((nonnull)));
 uint16_t emscripten_atomic_load_u16(const void/*uint16_t*/ *addr __attribute__((nonnull)));
 uint32_t emscripten_atomic_load_u32(const void/*uint32_t*/ *addr __attribute__((nonnull)));
 float emscripten_atomic_load_f32(const void/*float*/ *addr __attribute__((nonnull)));
-u64 emscripten_atomic_load_u64(const void/*u64*/ *addr __attribute__((nonnull)));
+uint64_t emscripten_atomic_load_u64(const void/*uint64_t*/ *addr __attribute__((nonnull)));
 double emscripten_atomic_load_f64(const void/*double*/ *addr __attribute__((nonnull)));
 
 // Returns the value that was stored (i.e. 'val')
@@ -45,7 +45,7 @@ uint8_t emscripten_atomic_store_u8(void/*uint8_t*/ *addr __attribute__((nonnull)
 uint16_t emscripten_atomic_store_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t val);
 uint32_t emscripten_atomic_store_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t val);
 float emscripten_atomic_store_f32(void/*float*/ *addr __attribute__((nonnull)), float val);
-u64 emscripten_atomic_store_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 val);
+uint64_t emscripten_atomic_store_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t val);
 double emscripten_atomic_store_f64(void/*double*/ *addr __attribute__((nonnull)), double val);
 
 void emscripten_atomic_fence(void);
@@ -55,27 +55,27 @@ void emscripten_atomic_fence(void);
 uint8_t emscripten_atomic_add_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t val);
 uint16_t emscripten_atomic_add_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t val);
 uint32_t emscripten_atomic_add_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t val);
-u64 emscripten_atomic_add_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 val);
+uint64_t emscripten_atomic_add_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t val);
 
 uint8_t emscripten_atomic_sub_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t val);
 uint16_t emscripten_atomic_sub_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t val);
 uint32_t emscripten_atomic_sub_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t val);
-u64 emscripten_atomic_sub_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 val);
+uint64_t emscripten_atomic_sub_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t val);
 
 uint8_t emscripten_atomic_and_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t val);
 uint16_t emscripten_atomic_and_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t val);
 uint32_t emscripten_atomic_and_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t val);
-u64 emscripten_atomic_and_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 val);
+uint64_t emscripten_atomic_and_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t val);
 
 uint8_t emscripten_atomic_or_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t val);
 uint16_t emscripten_atomic_or_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t val);
 uint32_t emscripten_atomic_or_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t val);
-u64 emscripten_atomic_or_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 val);
+uint64_t emscripten_atomic_or_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t val);
 
 uint8_t emscripten_atomic_xor_u8(void/*uint8_t*/ *addr __attribute__((nonnull)), uint8_t val);
 uint16_t emscripten_atomic_xor_u16(void/*uint16_t*/ *addr __attribute__((nonnull)), uint16_t val);
 uint32_t emscripten_atomic_xor_u32(void/*uint32_t*/ *addr __attribute__((nonnull)), uint32_t val);
-u64 emscripten_atomic_xor_u64(void/*u64*/ *addr __attribute__((nonnull)), u64 val);
+uint64_t emscripten_atomic_xor_u64(void/*uint64_t*/ *addr __attribute__((nonnull)), uint64_t val);
 
 #ifdef __cplusplus
 }

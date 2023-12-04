@@ -193,17 +193,17 @@ _LIBCPP_HIDE_FROM_ABI basic_format_arg<_Context> __create_format_arg(_Tp&& __val
 }
 
 template <class _Context, class... _Args>
-_LIBCPP_HIDE_FROM_ABI void __create_packed_storage(u64& __types, __basic_format_arg_value<_Context>* __values,
+_LIBCPP_HIDE_FROM_ABI void __create_packed_storage(uint64_t& __types, __basic_format_arg_value<_Context>* __values,
                                                    _Args&&... __args) noexcept {
   int __shift = 0;
   (
       [&] {
         basic_format_arg<_Context> __arg = __format::__create_format_arg<_Context>(__args);
         if (__shift != 0)
-          __types |= static_cast<u64>(__arg.__type_) << __shift;
+          __types |= static_cast<uint64_t>(__arg.__type_) << __shift;
         else
           // Assigns the initial value.
-          __types = static_cast<u64>(__arg.__type_);
+          __types = static_cast<uint64_t>(__arg.__type_);
         __shift += __packed_arg_t_bits;
         *__values++ = __arg.__value_;
       }(),
@@ -218,7 +218,7 @@ _LIBCPP_HIDE_FROM_ABI void __store_basic_format_arg(basic_format_arg<_Context>* 
 template <class _Context, size_t N>
 struct __packed_format_arg_store {
   __basic_format_arg_value<_Context> __values_[N];
-  u64 __types_;
+  uint64_t __types_;
 };
 
 template <class _Context, size_t N>

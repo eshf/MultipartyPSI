@@ -9,7 +9,7 @@
 #define __NEED_uint8_t
 #define __NEED_uint16_t
 #define __NEED_uint32_t
-#define __NEED_u64
+#define __NEED_uint64_t
 
 #define __NEED_intptr_t
 #define __NEED_uintptr_t
@@ -28,12 +28,12 @@ typedef int32_t int_least32_t;
 typedef int64_t int_least64_t;
 
 typedef uint8_t uint_fast8_t;
-typedef u64 uint_fast64_t;
+typedef uint64_t uint_fast64_t;
 
 typedef uint8_t  uint_least8_t;
 typedef uint16_t uint_least16_t;
 typedef uint32_t uint_least32_t;
-typedef u64 uint_least64_t;
+typedef uint64_t uint_least64_t;
 
 #define INT8_MIN   (-1-0x7f)
 #define INT16_MIN  (-1-0x7fff)

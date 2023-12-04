@@ -34,15 +34,15 @@ private:
     static_assert(__is_duration<_Duration>::value, "template parameter of hh_mm_ss must be a std::chrono::duration");
     using __CommonType = common_type_t<_Duration, chrono::seconds>;
 
-    _LIBCPP_HIDE_FROM_ABI static constexpr u64 __pow10(unsigned __exp)
+    _LIBCPP_HIDE_FROM_ABI static constexpr uint64_t __pow10(unsigned __exp)
     {
-        u64 __ret = 1;
+        uint64_t __ret = 1;
         for (unsigned __i = 0; __i < __exp; ++__i)
             __ret *= 10U;
         return __ret;
     }
 
-    _LIBCPP_HIDE_FROM_ABI static constexpr unsigned __width(u64 __n, u64 __d = 10, unsigned __w = 0)
+    _LIBCPP_HIDE_FROM_ABI static constexpr unsigned __width(uint64_t __n, uint64_t __d = 10, unsigned __w = 0)
     {
         if (__n >= 2 && __d != 0 && __w < 19)
             return 1 + __width(__n, __d % __n * 10, __w+1);

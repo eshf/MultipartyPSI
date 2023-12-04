@@ -200,7 +200,7 @@ subtract_with_carry_engine<_UIntType, __w, __s, __r>::seed(result_type __sd,
     {
         result_type __e0 = __e();
         __x_[__i] = static_cast<result_type>(
-                                    (__e0 + ((u64)__e() << 32)) & _Max);
+                                    (__e0 + ((uint64_t)__e() << 32)) & _Max);
     }
     __c_ = __x_[__r-1] == 0;
     __i_ = 0;
@@ -232,7 +232,7 @@ subtract_with_carry_engine<_UIntType, __w, __s, __r>::__seed(_Sseq& __q,
     __q.generate(__ar, __ar + __r * __k);
     for (size_t __i = 0; __i < __r; ++__i)
         __x_[__i] = static_cast<result_type>(
-                  (__ar[2 * __i] + ((u64)__ar[2 * __i + 1] << 32)) & _Max);
+                  (__ar[2 * __i] + ((uint64_t)__ar[2 * __i + 1] << 32)) & _Max);
     __c_ = __x_[__r-1] == 0;
     __i_ = 0;
 }

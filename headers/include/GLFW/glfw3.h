@@ -5420,7 +5420,7 @@ GLFWAPI void glfwSetTime(double time);
  *
  *  @ingroup input
  */
-GLFWAPI u64 glfwGetTimerValue(void);
+GLFWAPI uint64_t glfwGetTimerValue(void);
 
 /*! @brief Returns the frequency, in Hz, of the raw timer.
  *
@@ -5440,7 +5440,7 @@ GLFWAPI u64 glfwGetTimerValue(void);
  *
  *  @ingroup input
  */
-GLFWAPI u64 glfwGetTimerFrequency(void);
+GLFWAPI uint64_t glfwGetTimerFrequency(void);
 
 /*! @brief Makes the context of the specified window current for the calling
  *  thread.

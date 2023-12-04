@@ -19,15 +19,17 @@ using namespace osuCrypto;
 
 extern "C" 
 {
-	extern int my_emjs(emscripten::EM_VAL val_handle);
-	
+	extern void my_emjs(emscripten::EM_VAL val_handle);
+}
+
+
 	void usage(const char* argv0)
     {
 	std::cout << "Error! Please use:" << std::endl;
 	std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
 	std::cout << "\t 2. For simulation (5 parties <=> 5 terminals): " << std::endl;;
 	std::cout << "\t\t each terminal: " << argv0 << " -n 5 -t 2 -m 12 -p [pIdx]" << std::endl;
-	
+
 	}
 	int main(int argc, char** argv)
 	{
@@ -44,7 +46,6 @@ extern "C"
 	//OPPRFnt_EmptrySet_Test_Main();
 	//OPPRF2_EmptrySet_Test_Main();
 	//return 0;
-
 	u64 trials = 1;
 	u64 pSetSize = 5, psiSecParam = 40, bitSize = 128;
 
@@ -151,8 +152,8 @@ extern "C"
 		}
 		break;
 	}
-	my_emjs(usage(argv[0]));
+	my_emjs(usage(argv0[0]));
 	return 0;
 }
-}
+
 

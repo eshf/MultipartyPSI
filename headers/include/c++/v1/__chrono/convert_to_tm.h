@@ -81,7 +81,7 @@ _LIBCPP_HIDE_FROM_ABI _Tm __convert_to_tm(const _ChronoT& __value) {
     //   ...  However, if a flag refers to a "time of day" (e.g. %H, %I, %p,
     //   etc.), then a specialization of duration is interpreted as the time of
     //   day elapsed since midnight.
-    u64 __sec = chrono::duration_cast<chrono::seconds>(__value).count();
+    uint64_t __sec = chrono::duration_cast<chrono::seconds>(__value).count();
     __sec %= 24 * 3600;
     __result.tm_hour = __sec / 3600;
     __sec %= 3600;

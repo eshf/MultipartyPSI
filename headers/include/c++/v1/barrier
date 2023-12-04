@@ -224,23 +224,23 @@ public:
 template<>
 class __barrier_base<__empty_completion> {
 
-    static constexpr u64 __expected_unit = 1ull;
-    static constexpr u64 __arrived_unit = 1ull << 32;
-    static constexpr u64 __expected_mask = __arrived_unit - 1;
-    static constexpr u64 __phase_bit = 1ull << 63;
-    static constexpr u64 __arrived_mask = (__phase_bit - 1) & ~__expected_mask;
+    static constexpr uint64_t __expected_unit = 1ull;
+    static constexpr uint64_t __arrived_unit = 1ull << 32;
+    static constexpr uint64_t __expected_mask = __arrived_unit - 1;
+    static constexpr uint64_t __phase_bit = 1ull << 63;
+    static constexpr uint64_t __arrived_mask = (__phase_bit - 1) & ~__expected_mask;
 
-    __atomic_base<u64>   __phase_arrived_expected;
+    __atomic_base<uint64_t>   __phase_arrived_expected;
 
     static _LIBCPP_INLINE_VISIBILITY
-    constexpr u64 __init(ptrdiff_t __count) _NOEXCEPT
+    constexpr uint64_t __init(ptrdiff_t __count) _NOEXCEPT
     {
-        return ((u64(1u << 31) - __count) << 32)
-              | (u64(1u << 31) - __count);
+        return ((uint64_t(1u << 31) - __count) << 32)
+              | (uint64_t(1u << 31) - __count);
     }
 
 public:
-    using arrival_token = u64;
+    using arrival_token = uint64_t;
 
     static constexpr ptrdiff_t max() noexcept {
         return ptrdiff_t(1u << 31) - 1;
@@ -266,7 +266,7 @@ public:
     void wait(arrival_token&& __phase) const
     {
         auto const __test_fn = [=]() -> bool {
-            u64 const __current = __phase_arrived_expected.load(memory_order_acquire);
+            uint64_t const __current = __phase_arrived_expected.load(memory_order_acquire);
             return ((__current & __phase_bit) != __phase);
         };
         __libcpp_thread_poll_with_backoff(__test_fn, __libcpp_timed_backoff_policy());

@@ -161,18 +161,18 @@ typedef struct emscripten_fetch_t {
   // Specifies the length of the above data block in bytes. When the download
   // finishes, this field will be valid even if EMSCRIPTEN_FETCH_LOAD_TO_MEMORY
   // was not specified.
-  u64 numBytes;
+  uint64_t numBytes;
 
   // If EMSCRIPTEN_FETCH_STREAM_DATA is being performed, this indicates the byte
   // offset from the start of the stream that the data block specifies. (for
   // onprogress() streaming XHR transfer, the number of bytes downloaded so far
   // before this chunk)
-  u64 dataOffset;
+  uint64_t dataOffset;
 
   // Specifies the total number of bytes that the response body will be.
   // Note: This field may be zero, if the server does not report the
   // Content-Length field.
-  u64 totalBytes;
+  uint64_t totalBytes;
 
   // Specifies the readyState of the XHR request:
   // 0: UNSENT: request not sent yet

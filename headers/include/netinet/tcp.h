@@ -225,24 +225,24 @@ struct tcp_info {
 	uint32_t tcpi_rcv_rtt;
 	uint32_t tcpi_rcv_space;
 	uint32_t tcpi_total_retrans;
-	u64 tcpi_pacing_rate;
-	u64 tcpi_max_pacing_rate;
-	u64 tcpi_bytes_acked;
-	u64 tcpi_bytes_received;
+	uint64_t tcpi_pacing_rate;
+	uint64_t tcpi_max_pacing_rate;
+	uint64_t tcpi_bytes_acked;
+	uint64_t tcpi_bytes_received;
 	uint32_t tcpi_segs_out;
 	uint32_t tcpi_segs_in;
 	uint32_t tcpi_notsent_bytes;
 	uint32_t tcpi_min_rtt;
 	uint32_t tcpi_data_segs_in;
 	uint32_t tcpi_data_segs_out;
-	u64 tcpi_delivery_rate;
-	u64 tcpi_busy_time;
-	u64 tcpi_rwnd_limited;
-	u64 tcpi_sndbuf_limited;
+	uint64_t tcpi_delivery_rate;
+	uint64_t tcpi_busy_time;
+	uint64_t tcpi_rwnd_limited;
+	uint64_t tcpi_sndbuf_limited;
 	uint32_t tcpi_delivered;
 	uint32_t tcpi_delivered_ce;
-	u64 tcpi_bytes_sent;
-	u64 tcpi_bytes_retrans;
+	uint64_t tcpi_bytes_sent;
+	uint64_t tcpi_bytes_retrans;
 	uint32_t tcpi_dsack_dups;
 	uint32_t tcpi_reord_seen;
 	uint32_t tcpi_rcv_ooopack;
@@ -286,16 +286,16 @@ struct tcp_repair_window {
 #define TCP_RECEIVE_ZEROCOPY_FLAG_TLB_CLEAN_HINT 0x1
 
 struct tcp_zerocopy_receive {
-	u64 address;
+	uint64_t address;
 	uint32_t length;
 	uint32_t recv_skip_hint;
 	uint32_t inq;
 	int32_t err;
-	u64 copybuf_address;
+	uint64_t copybuf_address;
 	int32_t copybuf_len;
 	uint32_t flags;
-	u64 msg_control;
-	u64 msg_controllen;
+	uint64_t msg_control;
+	uint64_t msg_controllen;
 	uint32_t msg_flags;
 	uint32_t reserved;
 };

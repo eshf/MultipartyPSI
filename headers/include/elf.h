@@ -15,16 +15,16 @@ typedef	int32_t  Elf32_Sword;
 typedef uint32_t Elf64_Word;
 typedef	int32_t  Elf64_Sword;
 
-typedef u64 Elf32_Xword;
+typedef uint64_t Elf32_Xword;
 typedef	int64_t  Elf32_Sxword;
-typedef u64 Elf64_Xword;
+typedef uint64_t Elf64_Xword;
 typedef	int64_t  Elf64_Sxword;
 
 typedef uint32_t Elf32_Addr;
-typedef u64 Elf64_Addr;
+typedef uint64_t Elf64_Addr;
 
 typedef uint32_t Elf32_Off;
-typedef u64 Elf64_Off;
+typedef uint64_t Elf64_Off;
 
 typedef uint16_t Elf32_Section;
 typedef uint16_t Elf64_Section;
@@ -977,9 +977,9 @@ typedef struct {
 } Elf32_auxv_t;
 
 typedef struct {
-  u64 a_type;
+  uint64_t a_type;
   union {
-      u64 a_val;
+      uint64_t a_val;
   } a_un;
 } Elf64_auxv_t;
 

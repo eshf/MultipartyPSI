@@ -61,7 +61,7 @@ struct exit_function_list
 
 extern struct exit_function_list *__exit_funcs attribute_hidden;
 extern struct exit_function_list *__quick_exit_funcs attribute_hidden;
-extern u64 __new_exitfn_called attribute_hidden;
+extern uint64_t __new_exitfn_called attribute_hidden;
 
 /* True once all registered atexit/at_quick_exit/onexit handlers have been
    called */

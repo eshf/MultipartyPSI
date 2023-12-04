@@ -67,7 +67,7 @@ typedef khronos_uint16_t GLushort;
 typedef void GLvoid;
 typedef struct __GLsync *GLsync;
 typedef khronos_int64_t GLint64;
-typedef khronos_u64 GLuint64;
+typedef khronos_uint64_t GLuint64;
 typedef unsigned int GLenum;
 typedef unsigned int GLuint;
 typedef char GLchar;

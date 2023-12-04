@@ -2,7 +2,6 @@
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use. 
 #include "Common/Defines.h"
 #define AES_DECRYPTION
-#include <wmmintrin.h>
 
 namespace osuCrypto {
 

@@ -66,7 +66,7 @@ private:
   union {
     struct {
       const __basic_format_arg_value<_Context>* __values_;
-      u64 __types_;
+      uint64_t __types_;
     };
     const basic_format_arg<_Context>* __args_;
   };

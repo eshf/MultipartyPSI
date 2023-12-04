@@ -67,7 +67,7 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
       while (cur->idx > 0)
 	{
 	  struct exit_function *const f = &cur->fns[--cur->idx];
-	  const u64 new_exitfn_called = __new_exitfn_called;
+	  const uint64_t new_exitfn_called = __new_exitfn_called;
 
 	  switch (f->flavor)
 	    {

@@ -1,7 +1,9 @@
 #pragma once
 #include "Common/Defines.h"
+#include "Common/Log.h"
 #include "Common/BitVector.h"
-
+#include "Common/ArrayView.h"
+#include "Common/MatrixView.h"
 //#include <mutex>
 #include <atomic>
 #include <unordered_map>

@@ -26,26 +26,26 @@ _LIBCPP_PUSH_MACROS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-template <u64 _Xp, u64 _Yp>
+template <uint64_t _Xp, uint64_t _Yp>
 struct __ugcd
 {
-    static _LIBCPP_CONSTEXPR const u64 value = __ugcd<_Yp, _Xp % _Yp>::value;
+    static _LIBCPP_CONSTEXPR const uint64_t value = __ugcd<_Yp, _Xp % _Yp>::value;
 };
 
-template <u64 _Xp>
+template <uint64_t _Xp>
 struct __ugcd<_Xp, 0>
 {
-    static _LIBCPP_CONSTEXPR const u64 value = _Xp;
+    static _LIBCPP_CONSTEXPR const uint64_t value = _Xp;
 };
 
-template <u64 _Np, u64 _Dp>
+template <uint64_t _Np, uint64_t _Dp>
 class __uratio
 {
     static_assert(_Dp != 0, "__uratio divide by 0");
-    static _LIBCPP_CONSTEXPR const u64 __gcd = __ugcd<_Np, _Dp>::value;
+    static _LIBCPP_CONSTEXPR const uint64_t __gcd = __ugcd<_Np, _Dp>::value;
 public:
-    static _LIBCPP_CONSTEXPR const u64 num = _Np / __gcd;
-    static _LIBCPP_CONSTEXPR const u64 den = _Dp / __gcd;
+    static _LIBCPP_CONSTEXPR const uint64_t num = _Np / __gcd;
+    static _LIBCPP_CONSTEXPR const uint64_t den = _Dp / __gcd;
 
     typedef __uratio<num, den> type;
 };
@@ -171,7 +171,7 @@ private:
     _LIBCPP_INLINE_VISIBILITY
     result_type __eval2(true_type) {return __evalf<__k, 0>();}
 
-    template <u64 _Np, u64 _Dp>
+    template <uint64_t _Np, uint64_t _Dp>
         _LIBCPP_INLINE_VISIBILITY
         typename enable_if
         <
@@ -181,7 +181,7 @@ private:
         __eval(__uratio<_Np, _Dp>)
             {return __evalf<__uratio<_Np, _Dp>::num, __uratio<_Np, _Dp>::den>();}
 
-    template <u64 _Np, u64 _Dp>
+    template <uint64_t _Np, uint64_t _Dp>
         _LIBCPP_INLINE_VISIBILITY
         typename enable_if
         <
@@ -197,7 +197,7 @@ private:
             return __y_;
         }
 
-    template <u64 __n, u64 __d>
+    template <uint64_t __n, uint64_t __d>
         _LIBCPP_INLINE_VISIBILITY
         result_type __evalf()
         {

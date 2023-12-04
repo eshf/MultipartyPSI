@@ -68,12 +68,12 @@ enum {
 };
 
 struct unw_context_t {
-  u64 data[_LIBUNWIND_CONTEXT_SIZE];
+  uint64_t data[_LIBUNWIND_CONTEXT_SIZE];
 };
 typedef struct unw_context_t unw_context_t;
 
 struct unw_cursor_t {
-  u64 data[_LIBUNWIND_CURSOR_SIZE];
+  uint64_t data[_LIBUNWIND_CURSOR_SIZE];
 } LIBUNWIND_CURSOR_ALIGNMENT_ATTR;
 typedef struct unw_cursor_t unw_cursor_t;
 
@@ -82,7 +82,7 @@ typedef struct unw_addr_space *unw_addr_space_t;
 typedef int unw_regnum_t;
 typedef uintptr_t unw_word_t;
 #if defined(__arm__) && !defined(__ARM_DWARF_EH__) && !defined(__SEH__)
-typedef u64 unw_fpreg_t;
+typedef uint64_t unw_fpreg_t;
 #else
 typedef double unw_fpreg_t;
 #endif

@@ -2863,7 +2863,7 @@ GL_APICALL void GL_APIENTRY glRenderbufferStorageMultisampleNV (GLenum target, G
 #ifndef GL_NV_gpu_shader5
 #define GL_NV_gpu_shader5 1
 typedef khronos_int64_t GLint64EXT;
-typedef khronos_u64 GLuint64EXT;
+typedef khronos_uint64_t GLuint64EXT;
 #define GL_INT64_NV                       0x140E
 #define GL_UNSIGNED_INT64_NV              0x140F
 #define GL_INT8_NV                        0x8FE0

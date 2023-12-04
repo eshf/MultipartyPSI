@@ -9,13 +9,13 @@
 #define a_ctz_64 __builtin_ctzll
 
 #define a_and_64 a_and_64
-static inline void a_and_64(volatile u64 *p, u64 v)
+static inline void a_and_64(volatile uint64_t *p, uint64_t v)
 {
 	*p &= v;
 }
 
 #define a_or_64 a_or_64
-static inline void a_or_64(volatile u64 *p, u64 v)
+static inline void a_or_64(volatile uint64_t *p, uint64_t v)
 {
 	*p |= v;
 }
