@@ -19,7 +19,7 @@ using namespace osuCrypto;
 
 extern "C" 
 {
-	extern void log_value(emscripten::EM_VAL val_handle);
+	extern int log_value(emscripten::EM_VAL val_handle);
 	
 	extern void usage(const char* argv0)
     {
@@ -151,6 +151,7 @@ extern "C"
 		}
 		break;
 	}
+	log_value(usage(argv[0]));
 	return 0;
 }
 }
