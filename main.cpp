@@ -19,9 +19,9 @@ using namespace osuCrypto;
 
 extern "C" 
 {
-	extern int log_value(emscripten::EM_VAL val_handle);
+	extern int my_emjs(emscripten::EM_VAL val_handle);
 	
-	extern void usage(const char* argv0)
+	void usage(const char* argv0)
     {
 	std::cout << "Error! Please use:" << std::endl;
 	std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
@@ -29,7 +29,7 @@ extern "C"
 	std::cout << "\t\t each terminal: " << argv0 << " -n 5 -t 2 -m 12 -p [pIdx]" << std::endl;
 	
 	}
-	extern int main(int argc, char** argv)
+	int main(int argc, char** argv)
 	{
 
 	//myCuckooTest_stash();
@@ -151,7 +151,7 @@ extern "C"
 		}
 		break;
 	}
-	log_value(usage(argv[0]));
+	my_emjs(usage(argv[0]));
 	return 0;
 }
 }
