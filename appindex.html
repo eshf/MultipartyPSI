@@ -5,18 +5,6 @@
     <title>Title of the document</title>
          
     <link rel="stylesheet" href="styles.css">
-    <script type="text/javascript">
-      let obj = Emval.fromHandle($0);
-      console.log(obj);
-      obj.as_handle();
-    
-      mergeInto(LibraryManager.library, {
-      log_value: function (val_handle) {
-      let value = Emval.toValue(val_handle);
-      console.log(value);
-      }
-    });
-    </script>
   </head>
   <body>
     <div class="wrapper">

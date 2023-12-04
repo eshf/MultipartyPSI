@@ -15,6 +15,7 @@ using namespace osuCrypto;
 
 #include <emscripten/bind.h>
 #include <emscripten/emscripten.h>
+#include <emscripten/val.h>
 
 extern "C" 
 {
