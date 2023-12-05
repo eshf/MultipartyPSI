@@ -73,12 +73,12 @@
                 "${workspaceFolder}/emscripten/cmake/**",
                 "${workspaceFolder}/emscripten/.github/**",
                 "${workspaceFolder}/emscripten/.circleci/**",
-                "${workspaceFolder}/emscripten/**"
+                "${workspaceFolder}/emscripten/**",
+                "${workspaceFolder}/cryptoTools"
             ],
             "cStandard": "c23",
             "cppStandard": "c++23",
-            "intelliSenseMode": "linux-gcc-x64",
-            "compilerPath": "/usr/bin/gcc"
+            "intelliSenseMode": "linux-gcc-x64"
         },
         {
             "name": "Win32",

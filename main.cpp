@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Network/BtChannel.h"
 #include "Network/BtEndpoint.h"
 
@@ -13,14 +12,6 @@ using namespace osuCrypto;
 #include "Common/Log.h"
 //int miraclTestMain();
 
-#include <emscripten/bind.h>
-#include <emscripten/emscripten.h>
-#include <emscripten/val.h>
-
-extern "C" 
-{
-	extern void my_emjs(emscripten::EM_VAL val_handle);
-}
 
 
 	void usage(const char* argv0)
@@ -29,8 +20,8 @@ extern "C"
 	std::cout << "\t 1. For unit test: " << argv0 << " -u" << std::endl;
 	std::cout << "\t 2. For simulation (5 parties <=> 5 terminals): " << std::endl;;
 	std::cout << "\t\t each terminal: " << argv0 << " -n 5 -t 2 -m 12 -p [pIdx]" << std::endl;
-
 	}
+
 	int main(int argc, char** argv)
 	{
 
@@ -152,7 +143,6 @@ extern "C"
 		}
 		break;
 	}
-	my_emjs(usage(argv0[0]));
 	return 0;
 }
 

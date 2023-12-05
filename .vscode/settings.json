@@ -2,5 +2,6 @@
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp.errorSquiggles": "enabled",
   "cmake.configureOnOpen": true,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++-13"
 }

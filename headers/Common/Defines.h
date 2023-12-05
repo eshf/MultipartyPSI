@@ -1,7 +1,7 @@
 #pragma once
 // This file and the associated implementation has been placed in the public domain, waiving all copyright. No restrictions are placed on its use.
-
-#include <cinttypes>
+#include <stdint.h>
+#include <inttypes.h>
 #include <iomanip>
 #include <vector>
 #include <emmintrin.h>
